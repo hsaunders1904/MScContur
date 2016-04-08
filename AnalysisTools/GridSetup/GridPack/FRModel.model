@@ -1,0 +1,263 @@
+###################################################
+#
+#  Particle Data objects
+#
+###################################################
+mkdir /Herwig/FRModel
+
+mkdir /Herwig/FRModel/Particles
+cd /Herwig/FRModel/Particles
+
+create Herwig::GenericHPPVertex /Herwig/FRModel/V_GenericHPP
+create Herwig::GenericHGGVertex /Herwig/FRModel/V_GenericHGG
+
+
+set /Herwig/Particles/h0:Mass_generator NULL
+set /Herwig/Particles/h0:Width_generator NULL
+rm /Herwig/Masses/HiggsMass
+rm /Herwig/Widths/hWidth
+
+create ThePEG::ParticleData H
+# values set to 999999 are recalculated later from other model parameters
+setup H 25 H 125 0.00407 0.0407 4.8483283317e-11 0 0 1 0
+insert /Herwig/NewPhysics/NewModel:DecayParticles 0 H
+insert /Herwig/Shower/ShowerHandler:DecayInShower 0 25 #  H
+insert /Herwig/FRModel/V_GenericHPP:Bosons 0 H
+insert /Herwig/FRModel/V_GenericHGG:Bosons 0 H
+
+create ThePEG::ParticleData Xm
+# values set to 999999 are recalculated later from other model parameters
+setup Xm 18 Xm 100.0 999999.0 999999.0 999999.0 0 0 2 0
+insert /Herwig/NewPhysics/NewModel:DecayParticles 0 Xm
+insert /Herwig/Shower/ShowerHandler:DecayInShower 0 18 #  Xm
+create ThePEG::ParticleData Y1
+# values set to 999999 are recalculated later from other model parameters
+setup Y1 9000006 Y1 500.0 10.0 100.0 1.973269631e-14 0 0 3 0
+insert /Herwig/NewPhysics/NewModel:DecayParticles 0 Y1
+insert /Herwig/Shower/ShowerHandler:DecayInShower 0 9000006 #  Y1
+
+
+
+###################################################
+#
+#  Main directory and model object
+#
+###################################################
+mkdir /Herwig/FRModel
+cd /Herwig/FRModel
+
+library FRModel.so
+
+#### create Herwig::FRModel FRModel
+create Herwig::FRModel FRModel
+# cp /Herwig/Model FRModel
+
+# SM couplings
+
+set FRModel:QCD/RunningAlphaS /Herwig/Couplings/NLOAlphaS
+set FRModel:EW/RunningAlphaEM /Herwig/Couplings/AlphaEM
+set FRModel:EW/CKM /Herwig/CKM
+set FRModel:RunningMass /Herwig/RunningMass
+
+set FRModel:gAXm 1.0
+set FRModel:gVq 0.25
+set FRModel:aEWM1 127.9
+set FRModel:Gf 1.16637e-05
+set FRModel:aS 0.1184
+set FRModel:ymb 4.7
+set FRModel:ymt 172
+set FRModel:ymtau 1.777
+set FRModel:MZ 91.1876
+set FRModel:MTA 1.777
+set FRModel:MT 172
+set FRModel:MB 4.7
+set FRModel:MH 125
+set FRModel:MXm 100.0
+set FRModel:MY1 500.0
+set FRModel:WZ 2.4952
+set FRModel:WW 2.085
+set FRModel:WT 1.50833649
+set FRModel:WH 0.00407
+set FRModel:WY1 10.0
+
+###################################################
+#
+#  Vertices
+#
+###################################################
+# create FR model vertices
+
+# SM vertices
+set FRModel:Vertex/FFZ /Herwig/Vertices/FFZVertex
+set FRModel:Vertex/FFW /Herwig/Vertices/FFWVertex
+set FRModel:Vertex/FFH /Herwig/Vertices/FFHVertex
+set FRModel:Vertex/FFG /Herwig/Vertices/FFGVertex
+set FRModel:Vertex/FFP /Herwig/Vertices/FFPVertex
+set FRModel:Vertex/GGG /Herwig/Vertices/GGGVertex
+set FRModel:Vertex/GGGG /Herwig/Vertices/GGGGVertex
+set FRModel:Vertex/WWH /Herwig/Vertices/WWHVertex
+set FRModel:Vertex/WWW /Herwig/Vertices/WWWVertex
+set FRModel:Vertex/WWWW /Herwig/Vertices/WWWWVertex
+set FRModel:Vertex/HGG /Herwig/Vertices/HGGVertex
+set FRModel:Vertex/HPP /Herwig/Vertices/HPPVertex
+
+library FRModel.so
+create Herwig::FRModelV_V_1 /Herwig/FRModel/V_V_1
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_1
+create Herwig::FRModelV_V_2 /Herwig/FRModel/V_V_2
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_2
+create Herwig::FRModelV_V_4 /Herwig/FRModel/V_V_4
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_4
+create Herwig::FRModelV_V_5 /Herwig/FRModel/V_V_5
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_5
+create Herwig::FRModelV_V_6 /Herwig/FRModel/V_V_6
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_6
+create Herwig::FRModelV_V_7 /Herwig/FRModel/V_V_7
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_7
+create Herwig::FRModelV_V_8 /Herwig/FRModel/V_V_8
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_8
+create Herwig::FRModelV_V_9 /Herwig/FRModel/V_V_9
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_9
+create Herwig::FRModelV_V_10 /Herwig/FRModel/V_V_10
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_10
+create Herwig::FRModelV_V_11 /Herwig/FRModel/V_V_11
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_11
+create Herwig::FRModelV_V_12 /Herwig/FRModel/V_V_12
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_12
+create Herwig::FRModelV_V_13 /Herwig/FRModel/V_V_13
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_13
+create Herwig::FRModelV_V_14 /Herwig/FRModel/V_V_14
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_14
+create Herwig::FRModelV_V_15 /Herwig/FRModel/V_V_15
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_15
+create Herwig::FRModelV_V_16 /Herwig/FRModel/V_V_16
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_16
+create Herwig::FRModelV_V_17 /Herwig/FRModel/V_V_17
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_17
+create Herwig::FRModelV_V_18 /Herwig/FRModel/V_V_18
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_18
+create Herwig::FRModelV_V_19 /Herwig/FRModel/V_V_19
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_19
+create Herwig::FRModelV_V_20 /Herwig/FRModel/V_V_20
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_20
+create Herwig::FRModelV_V_21 /Herwig/FRModel/V_V_21
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_21
+create Herwig::FRModelV_V_22 /Herwig/FRModel/V_V_22
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_22
+create Herwig::FRModelV_V_23 /Herwig/FRModel/V_V_23
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_23
+create Herwig::FRModelV_V_24 /Herwig/FRModel/V_V_24
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_24
+create Herwig::FRModelV_V_25 /Herwig/FRModel/V_V_25
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_25
+create Herwig::FRModelV_V_26 /Herwig/FRModel/V_V_26
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_26
+create Herwig::FRModelV_V_27 /Herwig/FRModel/V_V_27
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_27
+create Herwig::FRModelV_V_28 /Herwig/FRModel/V_V_28
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_28
+create Herwig::FRModelV_V_29 /Herwig/FRModel/V_V_29
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_29
+create Herwig::FRModelV_V_30 /Herwig/FRModel/V_V_30
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_30
+create Herwig::FRModelV_V_31 /Herwig/FRModel/V_V_31
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_31
+create Herwig::FRModelV_V_32 /Herwig/FRModel/V_V_32
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_32
+create Herwig::FRModelV_V_33 /Herwig/FRModel/V_V_33
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_33
+create Herwig::FRModelV_V_34 /Herwig/FRModel/V_V_34
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_34
+create Herwig::FRModelV_V_35 /Herwig/FRModel/V_V_35
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_35
+create Herwig::FRModelV_V_36 /Herwig/FRModel/V_V_36
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_36
+create Herwig::FRModelV_V_37 /Herwig/FRModel/V_V_37
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_37
+create Herwig::FRModelV_V_38 /Herwig/FRModel/V_V_38
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_38
+create Herwig::FRModelV_V_39 /Herwig/FRModel/V_V_39
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_39
+create Herwig::FRModelV_V_40 /Herwig/FRModel/V_V_40
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_40
+create Herwig::FRModelV_V_41 /Herwig/FRModel/V_V_41
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_41
+create Herwig::FRModelV_V_42 /Herwig/FRModel/V_V_42
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_42
+create Herwig::FRModelV_V_43 /Herwig/FRModel/V_V_43
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_43
+create Herwig::FRModelV_V_44 /Herwig/FRModel/V_V_44
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_44
+create Herwig::FRModelV_V_45 /Herwig/FRModel/V_V_45
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_45
+create Herwig::FRModelV_V_46 /Herwig/FRModel/V_V_46
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_46
+create Herwig::FRModelV_V_47 /Herwig/FRModel/V_V_47
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_47
+create Herwig::FRModelV_V_48 /Herwig/FRModel/V_V_48
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_48
+create Herwig::FRModelV_V_49 /Herwig/FRModel/V_V_49
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_49
+create Herwig::FRModelV_V_50 /Herwig/FRModel/V_V_50
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_50
+create Herwig::FRModelV_V_51 /Herwig/FRModel/V_V_51
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_51
+create Herwig::FRModelV_V_52 /Herwig/FRModel/V_V_52
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_52
+create Herwig::FRModelV_V_53 /Herwig/FRModel/V_V_53
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_53
+create Herwig::FRModelV_V_54 /Herwig/FRModel/V_V_54
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_54
+create Herwig::FRModelV_V_55 /Herwig/FRModel/V_V_55
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_55
+create Herwig::FRModelV_V_56 /Herwig/FRModel/V_V_56
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_56
+create Herwig::FRModelV_V_57 /Herwig/FRModel/V_V_57
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_57
+create Herwig::FRModelV_V_58 /Herwig/FRModel/V_V_58
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_58
+create Herwig::FRModelV_V_59 /Herwig/FRModel/V_V_59
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_59
+create Herwig::FRModelV_V_60 /Herwig/FRModel/V_V_60
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_60
+create Herwig::FRModelV_V_61 /Herwig/FRModel/V_V_61
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_61
+create Herwig::FRModelV_V_62 /Herwig/FRModel/V_V_62
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_62
+create Herwig::FRModelV_V_63 /Herwig/FRModel/V_V_63
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_63
+create Herwig::FRModelV_V_64 /Herwig/FRModel/V_V_64
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_V_64
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_GenericHPP
+insert FRModel:ExtraVertices 0 /Herwig/FRModel/V_GenericHGG
+
+
+
+
+###################################################
+#
+#  Set up spin correlation Decayers
+#
+###################################################
+cd /Herwig/NewPhysics
+
+set TwoBodyDC:CreateDecayModes Yes
+set ThreeBodyDC:CreateDecayModes Yes
+set WeakDecayConstructor:CreateDecayModes Yes
+
+###################################################
+# Set up the model framework
+###################################################
+set /Herwig/FRModel/FRModel:ModelGenerator NewModel
+###################################################
+#
+#  Choose FR over SM
+#
+###################################################
+cd /Herwig/Generators
+
+erase DefaultStrategy:DefaultParticlesDirs[0]
+insert DefaultStrategy:DefaultParticlesDirs[0] /Herwig/FRModel/Particles
+
+set LEPGenerator:StandardModelParameters  /Herwig/FRModel/FRModel
+set LHCGenerator:StandardModelParameters  /Herwig/FRModel/FRModel

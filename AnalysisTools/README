@@ -1,0 +1,19 @@
+##### v1.0 - 08/04/16
+
+Basically there are three parts:
+
+1. The parameter space grid setup, this is in the folder called GridSetup which itself contains a few pieces:
+            a. A sub folder called GridPack, this contains the compiled UFO model, the 'good' analysis lists in the .ana files
+            b. A file called HerwigCommand that contains most of the Herwig .in file used, the process is modified here. The one that I included is for the Weak Boson runs, so I turn off resonant production and veto diagrams with external quarks, it also picks up the analysis list called 7_LEPTONIC.ana, this is then edited if for example you want to look at hadronic final states.
+  
+The script BatchSubmit.py then picks up both of these pieces, copies the gridpack to a new directory named after the parameter space point and constructs the full LHC.in file by setting the masses required and appending the Herwig command. It is then read in herwig and submitted to our UCL batch queue (would need to change to work elsewhere)
+
+The net effect is that it returns a folder named like "mY_####_mX_###" each containing the .yoda file named similarly for each point. The folder and naming structure is used downstream to determine where each point came from
+
+[As an aside I probably could have used a static "GridPack" folder in the parent directory so that I had a line like 'read ../FRModel.model' rather than copying it to each directory every time, but it wasnt too much overhead to just copy it and it worked]
+
+2. Then theres the main testing script CLTester_asymp_v5.py, this is quite messy as its doing most of the work, I tried to comment it a bit but theres a lot of unnecessary stuff and strange design choices in there! What that does is go through each parameter space point folder and read in the yoda file and do the testing. The functions to do the MC testing to extract the CLs that way are still in there as well but are turned off. It is based off the rivet-cmphistos script and still does the creation of the .dat files that I modified to produce the ratio plots shown in my slides, so there is a lot of plotting overhead that isnt needed/used really and could be trimmed a lot.
+
+Once it has sorted and decided where the sensitivity for each point is, it outputs in two formats the parameter space grids corresponding to each "pool" in a folder called ANALYSIS. The '.dat' file it creates is the human readable version with the analysis/plot info, and ".map" is a python pickle that is easy to read in so you can recover the python list
+
+3. Lastly there is MapComb_v2.py that ready in all the .map files it can find and adds them in quadrature to combine to the final combined heatmap. The plotting is a bit strangely designed as I wrote it a while ago, but it works. (Notably the grid size is hardcoded, this could be fixed easily though)
