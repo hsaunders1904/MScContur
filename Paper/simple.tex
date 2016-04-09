@@ -39,18 +39,16 @@
 \maketitle 
 
 \begin{abstract}
-Many searches for striking signatures of physics beyond the Standard Model have been performed at the 
-Large Hadron Collider, and to date no compelling evidence for such physics has emerged. 
-In addition, large number of precise and detailed
-measurements of various final states have been carried out, and the results are generally  
-described well by Standard Model calculations.
-Using, as examples, simplified models for Dark Matter and R-Parity violating supersymmetry, 
-we demonstrate that this library of existing precision measurements can be used to set limits on a wide variety of 
-beyond-the-Standard Model physics scenarios. Specifically, we set new limits on these example models using
-the inclusive jet and $W+$jet measurements made by ATLAS and CMS in the first run of the LHC 
-(maybe add some numbers here on the new limits). Using a wider array
-of measurements, including those to come from 13~TeV collisions, is a promising method for exploring 
-physics beyond the electroweak symmetry-breaking scale and looking for subtle effects of new physics.
+The Large Hadron Collider is probing physics in a new kinematic region, at energies around and above the 
+electroweak symmetry-breaing scale. Many searches for signatures of physics beyond the Standard Model have 
+been performed, and extensive measurements of various final states have also been 
+carried out. At time of writing, the results are generally in accord with Standard Model expectations, 
+notwithstanding a few currently marginal anomalies. Whether physics beyond the Standard Model is discovered 
+or not, there is a need to extract the clearest and most generic information about physics in this new energy regime,
+an imperative which will grow with integrated luminosity. The framework of so-called 'simplified models', coupled
+with the fact that model-depedence in many LHC measurements is minimal, allows strong constraints on new physics 
+models to be placed, using existing and future measurements. We demontrate the power of this approach using a competitive 
+simplified Dark Matter model. The method is highly scaleable to other models of further measurements, as they appear.
 \end{abstract}
 
 
@@ -60,13 +58,13 @@ physics beyond the electroweak symmetry-breaking scale and looking for subtle ef
 With the discovery of the Higgs boson~\cite{Aad:2012tfa,Chatrchyan:2012ufa}, 
 the first data-taking period of the experiments at the 
 Large Hadron Collider demonstrated that the understanding of electroweak symmetry-breaking within
-the Standard Model is broadly correct, and thus that the theory is potentially valid well above the
-TeV scale. Many precision measurements of jets, of vector-boson production, and other of final states, 
-have been published, reaching into this new kinematic domain. The predictions of the Standard Model are 
-generally in agreement with the data, while the many dedicated searches for physics beyond the Standard Model
+the Standard Model (SM) is broadly correct, and thus that the theory is potentially valid well above the
+TeV scale. Many precision measurements of jets, charged leptons, and other of final states, 
+have been published, reaching into this new kinematic domain. The predictions of the SM are 
+generally in agreement with the data, while the many dedicated searches for physics beyond the SM
 have excluded a wide range of possible scenarios. Nevertheless, there are many reasons to be confident that
-physics beyond the Standard Model (BSM) exists; examples include the existence of Dark Matter, the large 
-preponderance of matter over antimatter in the universe, and the existence of gravity. None of 
+physics beyond the Standard Model (BSM) exists; examples include the graiational evidence for Dark Matter, the large 
+preponderance of matter over antimatter in the universe, and the existence of gravity itself. None of 
 these can be easily accommodated within known Standard Model phenomenology. 
 
 This motivates a continued campaign to make precise measurements and calculations at higher energies and 
@@ -79,36 +77,38 @@ limits on new physics.
 
 \begin{enumerate}
 \item
-Standard Model predictions for differential and exclusive, or semi-exclusive, 
-final states are made using sophisticated calculational software, often embedded in Monte Carlo generators 
-capable of simulating full, realistic final states~\cite{Buckley:2011ms}.
-These generators now incorporate higher-order processes
+SM predictions for differential and exclusive, or semi-exclusive, final states are made using sophisticated 
+calculational software, often embedded in Monte Carlo generators capable of simulating full, realistic final 
+states~\cite{Buckley:2011ms}. These generators now incorporate higher-order processes
 matched to logarithmic parton showers and successful models of soft physics such as hadronisation and
 underlying event. They are also capable of importing new physics models into this framework, thus allowing
 rapid predictions of their impact on a wide variety of final states simultaneously. 
 In this paper we make extensive use of these capabilities within Herwig~\cite{Bahr:2008pv}.
 \item
 As many favoured BSM scenarios have been excluded, there has been a move toward 
-``simplified models'' of new physics~\cite{Alves:2011wf,Abercrombie:2015wmb}, which aim to be as generic as possible, while being
-internally consistent. The philosophy is similar to an ``effective lagrangian'' approach in which effective
-couplings are introduced to describe new physics, but is more powerful as the such simplified models also
+``simplified models'' of new physics~\cite{Alves:2011wf,Abercrombie:2015wmb}, which aim to be as generic as possible, 
+while being internally consistent. The philosophy is similar to an ``effective lagrangian'' approach in which effective
+couplings are introduced to describe new physics, but is more powerful as such simplified models also
 include new particles, and thus can remain useful up to and beyond the scale of new physics - a region 
 potentially probed by LHC measurements.
 \item
-The precision measurements from the LHC have mostly been made in a manner which minimises the model 
-dependence. That is, they are defined in terms of final-state signatures in fiducial regions well matched to the
+The precision measurements from the LHC have mostly been made in a manner which minimises their model-dependence. 
+That is, they are defined in terms of final-state signatures in fiducial regions well matched to the
 acceptance of the detector. The majority of such measurements are readily available for analysis and
 comparison in the Rivet library~\cite{Buckley:2010ar}. 
 \end{enumerate}
 
 These three developments together make it possible to efficiently 
-bring the power of a very wide range of data to bear on the search for new physics. We focus here on 
-some specific examples, which are interesting in themselves and serve to demonstrate the power of the method.
+bring the power of a very wide range of data to bear on the search for new physics. While such a generic approach is
+unlikely to compete in terms of speed and sensitivity with a search optimisied for a specific theory, the breadth
+of potential signatures and models which can be covered makes it a powerful complementary approach. Any theory seeking
+to explain a new signature or anomaly in the data may have consequences for other final states which should be checked 
+against data this way. If no BSM physics emerges, a model-dependent and systematic approach becomes mandatory.
 
-The outline of the paper is as follows. In the next section, we motivate and describe the two 
-simplified models to be considered, and their implementation via Herwig. In Section~\ref{sec:measurements}
-we introduce the measurements that we will use, and their implementation in Rivet. Section~\ref{sec:kinematics}
-discusses the differential cross sections in which the impact of these models would be 
+The outline of the paper is as follows. In the next section, we motivate and describe the 
+simplified model we consider as a first demonstration, and its implementation via Herwig. 
+In Section~\ref{sec:measurements} we introduce the measurements that we will use, and their implementation in Rivet. 
+Section~\ref{sec:kinematics} discusses the differential cross sections in which the impact of these models would be 
 most apparent. In Section~\ref{sec:limits} this impact is translated into limits on the model parameters.
 
 \section{Models}\label{sec:models}
