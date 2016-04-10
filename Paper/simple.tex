@@ -111,18 +111,64 @@ In Section~\ref{sec:measurements} we introduce the measurements that we will use
 Section~\ref{sec:kinematics} discusses the differential cross sections in which the impact of these models would be 
 most apparent. In Section~\ref{sec:limits} this impact is translated into limits on the model parameters.
 
-\section{Models}\label{sec:models}
+\section{Simplified Model}\label{sec:models}
 
+... for Dark Matter
 
-Dark Matter model:
+Describe the model and its implementation via feynrules and herwig.
+
 \cite{Kahlhoefer:2015bea}
-
-RPV SUSY
-
 
 \section{Measurements}\label{sec:measurements}
 
+To be useful in our approach, measurements must be made in as model-independent fashion as possible. 
+Cross sections should be measured in a kinematic region closely matching the detector acceptance - commonly called 
+'fiducial cross sections' - to avoid extrapolation into unmeasured regions, since such extrapolations must make 
+theoretical assumptions; usual that the SM is valid. The measurements should generally be made in terms of observable final
+state particles (e.g. leptons, photons) or objects constructed from them (e.g. hadronic jets, missing energy) 
+rather than assumed intermediate states ($W, Z, H$, top). Finally, differential measurements are most useful, as features
+in the shapes of distributions are a more sensitive test than simple event rates - especially when there are
+highly-correlated systematic uncertainties, such as those on the integrated luminosity, or the jet energy scale.
+
+One feature noted in several of these routines is the fact in a number of cases, missing transverse energy (\MET) is 
+explicity assumed to be the same as neutrino transverse energy. In fact, in a BSM study, missing energy can also 
+arise from other sources (for example, Dark Matter) and so it is important that the result is treated in such a 
+way that this sensitivity is correctly estimated. The measurements are typically corrected back to total \MET, 
+or to the assumed neutrino $p_T$, by the experimental analysis, using a simulated SM event sample. 
+This involves an extrapolation into the forward 
+region where transverse energy is unmeasured; however, unless a BSM particle enters this region, the error made is 
+negligible, so as long fiducial is is made on BSM particles counting toward \MET, such analyses can be 
+used\footnote{Of greater consquence, but easier to fix, is the fact that several rivet methods explicitly calculated \MET
+from neutrinos found in the true event record, rather than as the negative of the visible particles in the event. These 
+routines were modified in release 2.4.0 as a part of this work.}
+
+The measurements we consider fall into five loose and independent classes.
+\begin{enumerate}
+\item
+Jets: event topologies with any number of jets but no missing energy, leptons, or photons. In this category there
+are important measurements from both ATLAS and CMS, many of which have existing Rivet analyses. We make use of 
+the highest integrated-luminosity inclusive~\cite{Aad:2014vwa,Chatrchyan:2014gia} dijet~\cite{Aad:2013tea,Aad:2014pua} 
+and three-jet~\cite{Aad:2014rma} {\bf add cms 3jet here? Needs a rivet routine.} 
+measurements made in 7~TeV collisions, as well as the jet mass 
+measurement from CMS~\cite{Chatrchyan:2013vbb}.
+Unfortunately results from 8~TeV collisions are rarer, and the only one we can use currently is the four-jet 
+measurement from ATLAS~\cite{Aad:2015nda}.
+\item
+Electroweak: events with leptons, with or without missing energy or photons.
+\item
+Missing energy, possibly with jets but no leptons or photons. There are no fully-correct particle-level distributions available. However the ATLAS search for supersymmetry, with jets and missing energy~\cite{Aad:2012fqa} does have a rivet routine and can be used approximately (I hope)
+\item
+Isolated photons, with or without missing energy, but no leptons.
+\item
+Signatures specifically based on top quark or Higgs candidates. These will in principle overlap with
+the previous categories depending on decay mode, but we discuss them seperately.
+\end{enumerate}
+
 \section{Comparison to Data}\label{sec:kinematics}
+
+Because of correlations between uncertainties, both statistical and systematic, ...
+
+Explain the assumptions and statistical approach.
 
 \section{Limits}\label{sec:limits}
 
