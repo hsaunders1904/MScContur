@@ -171,11 +171,36 @@ the previous categories depending on decay mode, but we discuss them seperately.
 The choice of which measurements to include is driven mainly by the availability of particle-level differential fiducial cross sections 
 implemented in rivet routines.
 
-\section{Statistical Method}
+\section{Strategy and Statistical Method}
 
-Because of correlations between uncertainties, both statistical and systematic, ...
+The approach taken is to consider simplified BSM models in the light of existing measurements which have already been shown to agree with SM expectations.
+Thus this inherently an exercise in limit-setting rather than disovery. The assumption is that a generic, measurement-based approach such as this will not be
+competitive in terms of sensitivity, or speed of discovery, with a dediciated search for a specific BSM final-state signature. However, it will have the
+advantage of breadth of coverage, and will make a valuable contribution to physics at the energy frontier whether or not new signatures are discovered at the LHC.
+In the case of a new discovery, many models will be put forward to explain the data - as has for example already been seen\cite{PhysRevLett.116.150001} 
+after the diphoton anomaly 
+reported by ATLAS and CMS at the end of 2015 and start of 2016~\cite{ATLAS-CONF-2016-018,CMS-PAS-EXO-16-018}. 
+Checking these models for consistency with existing measurements will be vital for unravelling whatever 
+the data might be telling us. As will be shown in subsequent sections, models designed to explain on signature may have somewhat unexpected consequences 
+in different final states, some of which have already been precisely measured. If it should turn out that no BSM signatures are in the end confirmed at the LHC,
+this approach offers potentially the broadest and most generic constraints on new physics, and motivates the most precise possible model-independent measurements
+over a wide range of final states, giving the best chance of an indirect pointer to the eventual scale of new physics.
 
-Explain the assumptions and statistical approach.
+Following this approach, the question we wish to ask of any given BSM proposal is 'at what significance to existing measurements already exclude this'. 
+For all the measurements considered, comparisons to SM calculations have shown consistency between them and the data. Thus as a starting point, we take the
+data as our ``null signal'', and we superpose onto them the conttribution from the BSM scenario under consideration. The uncertainties on the data are taken to
+be the width of a Gaussian spread, and we use the asymptotic statisitcal techniques described in Cowan, Cranmer and Gross~\cite{Cowan:2010js} to derive
+a liklihood function describing the relative probabilities of the SM and the SM+BSM scenarios given each data point. Since correlations are not well treated by
+the rivet output, we select data sets to minimise their impact, as described below, and then combine the selected data to obtain an overall exclusion probability
+for a given set of BSM paramters from the array of SM measurements considered.
+
+We note that our method is best adapted to identify kinematic features (mass peaks, kinematic edges) and will be less sensitive to smooth
+deviations in normalisation. In particular, since we take the data to be identically equal to the SM expectation, we will be insentive to any cumulative 
+signal which might in principle arise as the cumulative effect of a number of statistically insiginificant deviations across a range of experimental measurements.
+No such effects are apparent when studying the model considered here, but quantifying this statement is beyond the scope of the current work, and would require 
+an extensive evaluation of the theoretical uncertainties on the SM predictions for each channel.
+
+
 
 
 \section{Comparison to Data}\label{sec:kinematics}
