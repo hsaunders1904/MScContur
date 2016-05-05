@@ -47,8 +47,8 @@ notwithstanding a few currently marginal anomalies. Whether physics beyond the S
 or not, there is a need to extract the clearest and most generic information about physics in this new energy regime,
 an imperative which will grow with integrated luminosity. The framework of so-called 'simplified models', coupled
 with the fact that model-depedence in many LHC measurements is minimal, allows strong constraints on new physics 
-models to be placed, using existing and future measurements. We demontrate the power of this approach using a competitive 
-simplified Dark Matter model. The method is highly scaleable to other models of further measurements, as they appear.
+models to be placed, using existing and future measurements. We demontrate, using a competitive 
+simplified Dark Matter model, the power of this approach. The method is highly scaleable to other models and future measurements.
 \end{abstract}
 
 
@@ -189,17 +189,6 @@ in different final states, some of which have already been precisely measured. I
 this approach offers potentially the broadest and most generic constraints on new physics, and motivates the most precise possible model-independent measurements
 over a wide range of final states, giving the best chance of an indirect pointer to the eventual scale of new physics.
 
-\subsection{Statistical Method}
-
-Following this approach, the question we wish to ask of any given BSM proposal is 'at what significance to existing measurements already exclude this'. 
-For all the measurements considered, comparisons to SM calculations have shown consistency between them and the data. Thus as a starting point, we take the
-data as our ``null signal'', and we superpose onto them the conttribution from the BSM scenario under consideration. The uncertainties on the data are taken to
-be the width of a Gaussian spread, and we use the asymptotic statistical techniques described by Cowan, Cranmer and Gross~\cite{Cowan:2010js} to derive
-a liklihood function describing the relative probabilities of the SM and the SM+BSM scenarios given each data point. Since correlations are not well treated by
-the Rivet output, we select data to minimise their impact, as described below, and then combine the selected data to obtain an overall exclusion probability
-for a given set of BSM paramters from the array of SM measurements considered.
-{\bf more detail here?}
-
 \subsection{Dynamical data selection}
 
 Starting with the measurements discussed in Section~\ref{sec:measurements}, we define a prodecure to combine exclusions limits from different measured distributions.
@@ -222,6 +211,43 @@ systematic uncertainties within a single measurement. Where a number
 of statistically-independent measurements exists {\it within} a group, their liklihoods may be combined to give a single liklihood ratio from the group.
 \item Combine the liklihood ratios of the different groups to give a single exclusion limit.
 \end{enumerate}
+
+\subsection{Statistical Method}
+
+Following this approach, the question we wish to ask of any given BSM proposal is {\it `at what significance do existing measurements already exclude this'}. 
+For all the measurements considered, comparisons to SM calculations have shown consistency between them and the data. Thus as a starting point, we take the
+data as our ``null signal'', and we superpose onto them the contribution from the BSM scenario under consideration.
+%The uncertainties on the data are taken to
+%be the width of a Gaussian spread, and we use the asymptotic statistical techniques described by Cowan, Cranmer and Gross~\cite{Cowan:2010js} to derive
+%a liklihood function describing the relative probabilities of the SM and the SM+BSM scenarios given each data point. 
+
+Taking each bin of each distribution considered as a separate statistic to be tested, a likelihood function can be constructed as follows,
+\begin{align}
+L(\mu, \vec{b}, \vec{\sigma}_{b}) = { \frac{(\mu s + b)^{n}}{n!} \exp\left(-\mu s + b\right) \times \frac{1}{\sqrt{2 \pi} \sigma_{b}} \exp\left(-\frac{(\tilde{b} - b)^{2}}{2 \sigma_{b}^{2}}\right)}
+\end{align}
+Where the following components are identified:
+\begin{itemize}
+\item A Poisson event count, noting that the measurements considered are differential cross section measurements, hence the counts are multiplied by a factor of the integrated luminosity taken from the experimental paper behind each analysis, to convert to an event count in each bin (and subsequently the additional events that the new physics would have added to the measurement made). This statistic in each tested bin then is comprised of:
+\begin{itemize}
+\item $s$, the BSM signal event count
+\item $b$, the background count, taken as the central value of the data points
+\item $n$, the total count taken as $s+b$
+\item $\mu$, the signal strength parameter modulating the strength of the signal hypothesis tested, thus $\mu=0$ corresponds to the null hypothesis and $\mu=1$ the full signal strength hypothesis
+\end{itemize}
+\item a convolution with a Gaussian encoding the error on the background count, $b$, where the following additional components are identified:
+\begin{itemize}
+\item $\tilde{b}$, a variable background count, at face value this is equal to $b$, however it is marked differently as it can be varied in order to utilise Monte Carlo methods to extract the sensitivity if desired.
+\item $\sigma_{b}$, Uncertainty in $b$ count taken from Rivet as 1 $\sigma$ error on a Gaussian (uncertainties taken as the combination of statistical and systematics uncertaintes in quadrature. Typically the systematic uncertainty dominates).
+\end{itemize}
+\end{itemize}
+
+This likelihood function is then used to construct a profile likelihood ratio. The formalism and methods followed are taken from Ref.~\cite{Cowan:2010js}, in particular the test statistic, $\tilde{q}_{\mu}$ is constructed. This enables the setting of a one-sided upper limit on the confidence in the strength parameter hypothesis, $\mu$, desirable since in the situation that the observed strength parameter exceeds the tested hypothesis, agreement with the hypothesis should not diminish. In addition this construction places a lower limit on the strength parameter, where any observed fluctuations below the null hypothesis are said to agree with the null hypothesis. In actuality the latter point will not be an important distinction, as the manner in which samples are generated and tested will only increase the event rates w.r.t the null hypothesis. 
+\\
+
+A particular result that is utilised from Ref.~\cite{Cowan:2010js} is using the so called Asimov data set to build an approximate distribution of the considered test statistic. As a cross check, the sampling distribution for the test statistic was also estimated via Monte Carlo methods for multiple individual tests of various channels, in all cases the result from Cowan et al. is observed, that there is a high level of agreement between the values obtained via the two methods, hence it can be said that the tested parameter space values fall in the asymptotic, or large sample, limit of the distributions checked~\footnote{~This is not unexpected, the construction up this point has been designed to look at smoothly falling well measured processes at energies that the LHC is designed to probe. This is however a result that should be monitored when considering different models}. Specifically, the Asimov data set is used to extract an approximation for the variance and central value of the strength parameter, $\mu$, and the results of Wilks and Wald (as outlined again in Ref.~\cite{Cowan:2010js}) are used to approximate the test statistic. Hence the $p$-value quantifying the agreement between the null background only hypothesis and the tested hypothesis can be computed. 
+\\
+
+In fact, as is convention in the particle physics community, the final measure of statistical agreement is presented in terms of what is known as the CL$_{s}$ method~\cite{Junk:1999kv,Read:2002hq}. This is simply a matter of convention, since there is exact agreement in this method between the central value of the data and the null hypothesis, the CL$_{s}$ value differs only slightly from calculating the CL of the $s+b$ hypothesis. Then, for a given distribution, CL$_{s}$ can be evaluated separately for each bin, where the bin with the largest CL$_{s}$ value (and correspondingly smallest $p_{s+b}$ value) is taken to represent the sensitivity measure utilised to evaluate each distribution, a process outlined in section~\ref{subsec:selec}. Armed then with a list of selected sensitive distributions with minimal correlations, a total combined CL$_{s}$ across all considered channels can then be constructed. This is a trivial extension of the methodology presented in this section, and is simply taken as a product of all the selected counts in a new combined likelihood function. The rest of the process is unchanged when considering the combination
 
 
 \subsection{Limitations}
