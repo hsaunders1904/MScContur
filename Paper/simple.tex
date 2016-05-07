@@ -41,8 +41,8 @@
 \begin{abstract}
 A new method for providing general consistency contraints Beyond-the-Standard-Model (BSM) theories, using 
 measurements at particle colliders, is presented. The method, `Constraints On New Theories Using Rivet' - \Contur \ - exploits
-the fact that particle-level different measurements made in fiducial regions of phase-space have a high degree of
-model-independence. These measurements can therefore be compared to BSM physics implemented in the Monte Carlo generators in a very
+the fact that particle-level differential measurements made in fiducial regions of phase-space have a high degree of
+model-independence. These measurements can therefore be compared to BSM physics implemented in Monte Carlo generators in a very
 generic way, allowing a wider array of final states to be considered than is typically the case. The \Contur approach should be seen
 as complementary to the discovery potential of direct searches, being designed to eliminate inconsistent 
 BSM proposals in a context where many (but perhaps not all) measurements are consistent with the Standard Model.
@@ -80,22 +80,22 @@ limits on new physics.
 \item
 SM predictions for differential and exclusive, or semi-exclusive, final states are made using sophisticated 
 calculational software, often embedded in Monte Carlo generators capable of simulating full, realistic final 
-states~\cite{Buckley:2011ms}. These generators now incorporate higher-order processes
-matched to logarithmic parton showers and successful models of soft physics such as hadronisation and
-underlying event. They are also capable of importing new physics models into this framework, thus allowing
-rapid predictions of their impact on a wide variety of final states simultaneously. 
+states~\cite{Buckley:2011ms}. These generators now incorporate matrix-elements for higher-order processes
+matched to logarithmic parton showers, and successful models of soft physics such as hadronisation and
+the underlying event. They are also capable of importing new physics models into this framework, thus allowing
+the rapid prediction of their impact on a wide variety of final states simultaneously. 
 In this paper we make extensive use of these capabilities within Herwig~\cite{Bahr:2008pv}.
 \item
 As many favoured BSM scenarios have been excluded, there has been a move toward 
 ``simplified models'' of new physics~\cite{Alves:2011wf,Abercrombie:2015wmb}, which aim to be as generic as possible, 
-while being internally consistent. The philosophy is similar to an ``effective lagrangian'' approach in which effective
+while being internally consistent. The philosophy is similar to an ``effective lagrangian'' approach in which effective anomalous
 couplings are introduced to describe new physics, but is more powerful as such simplified models also
 include new particles, and thus can remain useful up to and beyond the scale of new physics - a region 
 potentially probed by LHC measurements.
 \item
 The precision measurements from the LHC have mostly been made in a manner which minimises their model-dependence. 
 That is, they are defined in terms of final-state signatures in fiducial regions well matched to the
-acceptance of the detector. The majority of such measurements are readily available for analysis and
+acceptance of the detector. Many such measurements are readily available for analysis and
 comparison in the Rivet library~\cite{Buckley:2010ar}. 
 \end{enumerate}
 
@@ -138,7 +138,8 @@ way that this sensitivity is correctly estimated. The measurements are typically
 or to the assumed neutrino $p_T$, in the experimental analysis, using a simulated SM event sample which has been shown to describe
 the data well. This involves an extrapolation into the forward 
 region where transverse energy is unmeasured; however, unless a BSM particle enters this region, the error made is 
-negligible. This means that as long as fiducial acceptance cut is made on BSM particles counting toward \MET (to ensure that large contributions to \MET 
+negligible. This means that as long as fiducial acceptance cut is made on BSM particles counting toward \MET (to ensure that 
+large contributions to \MET 
 from invisible particles outside the detector acceptance are excluded) such analyses can be 
 used\footnote{Of greater consquence, but easier to fix, is the fact that several Rivet methods explicitly calculated \MET
 from neutrinos found in the true event record, rather than as the negative of the visible particles in the event. These 
@@ -166,11 +167,15 @@ However the ATLAS search for supersymmetry, with jets and missing energy~\cite{A
 Isolated photons, with or without missing energy, but no leptons. Here we make use of the inclusive~\cite{Aad:2013zba}, diphoton~\cite{Aad:2012tba} and 
 photon-plus-jet~\cite{ATLAS:2012ar} measurements, where available.
 \item
-Signatures specifically based on top quark or Higgs candidates. These will in principle overlap with
-the previous categories depending on decay mode, but we discuss them seperately.
+Signatures specifically based on top quark or Higgs candidates. Most such measurements to date have been made at the 'parton' level (that is,
+corrected using SM MC back to the top or Higgs before decay, and many of them are extrapolated to $4\pi$ phase space. Both steps increase
+the model dependence and make them unsuitable for the \Contur approach. Recently, however, fiducial, differential, particle-level measurements
+have begun to appear\cite{}. These could are potentially very powerful in excluding some models, but will in principle overlap with the previous 
+categories depending on decay mode. We leave the inclusion of such measurements for future work.
 \end{enumerate}
 
-The choice of which measurements to include is driven mainly by the availability of particle-level differential fiducial cross sections 
+The choice of which measurements are actually included at this stage is driven mainly by the availability of particle-level differential 
+fiducial cross sections 
 implemented in Rivet.
 
 \section{Method}
@@ -178,44 +183,44 @@ implemented in Rivet.
 \subsection{Strategy}
 
 The approach taken is to consider simplified BSM models in the light of existing measurements which have already been shown to agree with SM expectations.
-Thus this inherently an exercise in limit-setting rather than disovery. The assumption is that a generic, measurement-based approach such as this will not be
+Thus this is inherently an exercise in limit-setting rather than disovery. The assumption is that a generic, measurement-based approach such as this will not be
 competitive in terms of sensitivity, or speed of discovery, with a dediciated search for a specific BSM final-state signature. However, it will have the
 advantage of breadth of coverage, and will make a valuable contribution to physics at the energy frontier whether or not new signatures are discovered at the LHC.
 In the case of a new discovery, many models will be put forward to explain the data - as has for example already been seen\cite{PhysRevLett.116.150001} 
-after the diphoton anomaly 
+after the 750~GeV diphoton anomaly 
 reported by ATLAS and CMS at the end of 2015 and start of 2016~\cite{ATLAS-CONF-2016-018,CMS-PAS-EXO-16-018}. 
 Checking these models for consistency with existing measurements will be vital for unravelling whatever 
-the data might be telling us. As will be shown in subsequent sections, models designed to explain on signature may have somewhat unexpected consequences 
+the data might be telling us. As will be shown in subsequent sections, models designed to explain one signature may have somewhat unexpected consequences 
 in different final states, some of which have already been precisely measured. If it should turn out that no BSM signatures are in the end confirmed at the LHC,
-this approach offers potentially the broadest and most generic constraints on new physics, and motivates the most precise possible model-independent measurements
+\Contur offers potentially the broadest and most generic constraints on new physics, and motivates the most precise possible model-independent measurements
 over a wide range of final states, giving the best chance of an indirect pointer to the eventual scale of new physics.
 
 \subsection{Dynamical data selection}
 
 Starting with the measurements discussed in Section~\ref{sec:measurements}, we define a prodecure to combine exclusions limits from different measured distributions.
-The data used for comparison in Rivet comes in the form of histograms and do not carry information about the correlations between uncertainties - 
+The data used for comparison in Rivet come in the form of histograms, which do not carry information about the correlations between uncertainties - 
 even when in several case detailed information is made available in the experimental papers. There are highly correlated uncertainties in several measurements, 
 for example on the integrated luminosity, or the energy scale of jet measurements. In some cases these are dominant. Including correlations would be a highly 
-complex process even correlations within an individual experimental result were considered, since there are also common systematic uncertainties between different
-results, which are generally not provided by the experiments. There are also overlaps between even samples used in many different measurements, which leads to
-non-trivial correaltions in the statistical uncertainties. To attempt to avoid spuriously high exclusion rates due to multiply-counting what might be the 
+complex process, since as well as correlations within a single data-set, there are also common systematic uncertainties between different
+results, which are generally not provided by the experiments. There are also overlaps between event samples used in many different measurements, which lead to
+non-trivial correlations in the statistical uncertainties. To attempt to avoid spuriously high exclusion rates due to multiply-counting what might be the 
 same excursion against several datasets, we take the following approach:
 \begin{enumerate}
 \item Divide the data into groupings, where there is no overlap between groups in the event samples used in measurements, and hence no statistical correlation 
 between groups, but there are some overlaps within each group. These grouping are, crudely, different final states, different experiments, and different beam 
 energies.
 \item Scan within each group for the most significant deviation between BSM+SM and SM. This is done distribution-by-distribution and bin-by-bin within distributions.
-Use only the most significant deviation, and disregard the rest. Although the selection of the most significant devaiation sounds inuitively suspect, in this case it
+Use only the most significant deviation, and disregard the rest. Although the selection of the most significant deviation sounds inuitively suspect, in this case it
 is a conservative approach, since we are setting limits, and discarding the less-significant bins simply reduces sensitivity. 
 The use of a single bin from each measurement removes the dominant effect of highly correlated 
 systematic uncertainties within a single measurement. Where a number
-of statistically-independent measurements exists {\it within} a group, their liklihoods may be combined to give a single liklihood ratio from the group.
-\item Combine the liklihood ratios of the different groups to give a single exclusion limit.
+of statistically-independent measurements exists {\it within} a group, their likelihoods may be combined to give a single likelihood ratio from the group.
+\item Combine the likelihood ratios of the different groups to give a single exclusion limit.
 \end{enumerate}
 
 \subsection{Statistical Method}
 
-Following this approach, the question we wish to ask of any given BSM proposal is {\it `at what significance do existing measurements already exclude this'}. 
+The question we wish to ask of any given BSM proposal is {\it `at what significance do existing measurements already exclude this'}. 
 For all the measurements considered, comparisons to SM calculations have shown consistency between them and the data. Thus as a starting point, we take the
 data as our ``null signal'', and we superpose onto them the contribution from the BSM scenario under consideration.
 %The uncertainties on the data are taken to
@@ -242,22 +247,41 @@ Where the following components are identified:
 \end{itemize}
 \end{itemize}
 
-This likelihood function is then used to construct a profile likelihood ratio. The formalism and methods followed are taken from Ref.~\cite{Cowan:2010js}, in particular the test statistic, $\tilde{q}_{\mu}$ is constructed. This enables the setting of a one-sided upper limit on the confidence in the strength parameter hypothesis, $\mu$, desirable since in the situation that the observed strength parameter exceeds the tested hypothesis, agreement with the hypothesis should not diminish. In addition this construction places a lower limit on the strength parameter, where any observed fluctuations below the null hypothesis are said to agree with the null hypothesis. In actuality the latter point will not be an important distinction, as the manner in which samples are generated and tested will only increase the event rates w.r.t the null hypothesis. 
+This likelihood function is then used to construct a profile likelihood ratio. The formalism and methods followed are taken from 
+Ref.~\cite{Cowan:2010js}, in particular the test statistic, $\tilde{q}_{\mu}$ is constructed. This enables the setting of a one-sided upper limit on the confidence 
+in the strength parameter hypothesis, $\mu$, desirable since in the situation that the observed strength parameter exceeds the tested hypothesis, agreement with 
+the hypothesis should not diminish. In addition this construction places a lower limit on the strength parameter, where any observed fluctuations below the null 
+hypothesis are said to agree with the null hypothesis. In \Contur, the latter point will be unimportant, as the manner in which samples are 
+generated and tested will only increase the event rates w.r.t the null hypothesis. 
 \\
 
-A particular result that is utilised from Ref.~\cite{Cowan:2010js} is using the so called Asimov data set to build an approximate distribution of the considered test statistic. As a cross check, the sampling distribution for the test statistic was also estimated via Monte Carlo methods for multiple individual tests of various channels, in all cases the result from Cowan et al. is observed, that there is a high level of agreement between the values obtained via the two methods, hence it can be said that the tested parameter space values fall in the asymptotic, or large sample, limit of the distributions checked~\footnote{~This is not unexpected, the construction up this point has been designed to look at smoothly falling well measured processes at energies that the LHC is designed to probe. This is however a result that should be monitored when considering different models}. Specifically, the Asimov data set is used to extract an approximation for the variance and central value of the strength parameter, $\mu$, and the results of Wilks and Wald (as outlined again in Ref.~\cite{Cowan:2010js}) are used to approximate the test statistic. Hence the $p$-value quantifying the agreement between the null background only hypothesis and the tested hypothesis can be computed. 
+A particular result adopted from Ref.~\cite{Cowan:2010js} uses the so called Asimov data set to build an approximate distribution of the considered test statistic. 
+As a cross-check, the sampling distribution for the test statistic was also estimated via Monte Carlo methods for multiple individual tests of various channels, 
+in all cases the result from Cowan et al. is observed, that there is a high level of agreement between the values obtained via the two methods, hence it can be said
+that the tested parameter space values fall in the asymptotic, or large sample, limit of the distributions checked~\footnote{~This is not unexpected, the
+construction up to this point has been designed to look at smoothly falling well-measured processes at energies that the LHC is designed to probe. This is however a 
+result that should be monitored when considering different models}. Specifically, the Asimov data set is used to extract an approximation for the variance and central value of the strength parameter, $\mu$, and the results of Wilks~\cite{Wilks:1938dza} and Wald~\cite{Wald:1943:EWM} (again as outlined in Ref.~\cite{Cowan:2010js}) are used to approximate the test statistic. 
+Hence the $p$-value quantifying the agreement between the null (SM only) hypothesis and the tested hypothesis can be computed. 
 \\
 
-In fact, as is convention in the particle physics community, the final measure of statistical agreement is presented in terms of what is known as the CL$_{s}$ method~\cite{Junk:1999kv,Read:2002hq}. This is simply a matter of convention, since there is exact agreement in this method between the central value of the data and the null hypothesis, the CL$_{s}$ value differs only slightly from calculating the CL of the $s+b$ hypothesis. Then, for a given distribution, CL$_{s}$ can be evaluated separately for each bin, where the bin with the largest CL$_{s}$ value (and correspondingly smallest $p_{s+b}$ value) is taken to represent the sensitivity measure utilised to evaluate each distribution, a process outlined in section~\ref{subsec:selec}. Armed then with a list of selected sensitive distributions with minimal correlations, a total combined CL$_{s}$ across all considered channels can then be constructed. This is a trivial extension of the methodology presented in this section, and is simply taken as a product of all the selected counts in a new combined likelihood function. The rest of the process is unchanged when considering the combination
+In fact, as is convention in the particle physics community, the final measure of statistical agreement is presented in terms of what is known as the CL$_{s}$ 
+method~\cite{Junk:1999kv,Read:2002hq}. This is simply a matter of convention, since as there is exact agreement in this method between the central value of the 
+data and the null hypothesis, the CL$_{s}$ value differs only slightly from calculating the CL of the $s+b$ hypothesis. Then, for a given distribution, CL$_{s}$ 
+can be evaluated separately for each bin, where the bin with the largest CL$_{s}$ value (and correspondingly smallest $p_{s+b}$ value) is taken to represent the 
+sensitivity measure utilised to evaluate each distribution, a process outlined in section~\ref{subsec:selec}. Armed then with a list of selected sensitive 
+distributions with minimal correlations, a total combined CL$_{s}$ across all considered channels can then be constructed. This is a trivial extension of 
+the methodology presented in this section, and is simply taken as a product of all the selected counts in a new combined likelihood function. 
+The rest of the process is unchanged when considering the combination
 
 
 \subsection{Limitations}
 
 We note that our method is best adapted to identify kinematic features (mass peaks, kinematic edges) and will be less sensitive to smooth
-deviations in normalisation. In particular, since we take the data to be identically equal to the SM expectation, we will be insentive to any cumulative 
-signal which might in principle arise as the cumulative effect of a number of statistically insignificant deviations across a range of experimental measurements.
-No such effects are apparent when studying the model considered here, but quantifying this statement is beyond the scope of the current work, and would require 
-an extensive evaluation of the theoretical uncertainties on the SM predictions for each channel.
+deviations in normalisation. In particular, since we take the data to be identically equal to the SM expectation, we will be insentive 
+to any cumulative signal which might in principle arise as the cumulative effect of a number of statistically insignificant deviations 
+across a range of experimental measurements.
+No such effects are apparent when studying the model considered here, but quantifying this statement is beyond the scope of the current work, 
+and would require an extensive evaluation of the theoretical uncertainties on the SM predictions for each channel.
 
 
 
