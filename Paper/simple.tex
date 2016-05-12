@@ -112,13 +112,49 @@ In Section~\ref{sec:measurements} we introduce the measurements that we will use
 Section~\ref{sec:kinematics} discusses the differential cross sections in which the impact of these models would be 
 most apparent. In Section~\ref{sec:limits} this impact is translated into limits on the model parameters.
 
+
 \section{Simplified Model}\label{sec:models}
+Searches for new physics at the LHC are often interpreted in terms of simplified models. Simplified models provide a generic 
+framework for analysing experimental signatures using a small number of parameters, such as masses and 
+couplings of new fields, without reference to specific UV-complete models. Such an  approach is particularly 
+well-suited for interpreting the search for dark matter in a more model-independent way, and can be used to connect results from the LHC with dark matter 
+searches in direct detection and from cosmic rays. Many simplified models for dark matter have been proposed 
+in the past (see Ref.~\cite{Abercrombie:2015wmb} and references therein). Here, we consider a simplified model with a dark matter Majorana 
+fermion, $\psi$, which interacts with the SM model through a new vector particle, $Z'$. The couplings of the mediator $Z'$ to the dark matter $\psi$ and to the 
+SM are specified as %
+\begin{align}\label{eq:vector_mediator}
+ {\cal L} \supset  g_{\rm DM}\overline{\psi} \gamma_{\mu}\gamma_5 \psi\,Z'^{\mu} + g_{\rm SM}\sum_{q} \bar q \gamma_{\mu} q Z'^{\mu} \,,
+\end{align}
+%
+where the sum in the second term includes all SM quarks, $q \in \{u,d,c,s,t,b\}$. The simplified model specified in Eq.~(\ref{eq:vector_mediator}) has only four free parameters, two couplings and two masses: $g_{\rm DM}$, $g_{\rm SM}$, $M_\psi$, and $M_{Z'}$. The width of the mediator, $\Gamma_{Z'}$, is determined by these four parameters. 
 
-... for Dark Matter
+Following Ref.~\cite{Kahlhoefer:2015bea} we have chosen to couple the mediator to 
+dark matter and to the SM quarks through an axial-vector and vector current, respectively. An axial-vector coupling of the 
+mediator to DM leads to spin-dependent DM-nucleon interactions and thus weaker bounds from direct dark matter searches. 
+Such a coupling structure naturally arises for Majorana fermion dark matter. Having also axial-vector couplings between
+the mediator and the SM  requires UV-completions of the simplified model in which the SM Higgs has to be charged under 
+the $U(1)'$ gauge group of the vector mediator. As a consequence, there is mixing between the $Z'$ and the gauge boson of the SM, and gauge invariance 
+requires the couplings of the $Z'$ to be flavour universal. However, models where the mediator couples to leptons 
+are strongly constrained by collider searches for di-lepton resonances. For vector couplings of the $Z'$ to  SM fermions, on the other hand, 
+the SM Higgs does not carry a $U(1)'$ charge and the charges of quarks and leptons are independent. We are thus free to set the 
+$Z'$ coupling to leptons to zero to evade constraints from di-lepton searches, and consider a simplified model with a universal vector-coupling 
+to SM quarks only. 
 
-Describe the model and its implementation via feynrules and herwig.
+The parameters of the simplified model, $g_{\rm DM}$, $g_{\rm SM}$, $M_\psi$, and $M_{Z'}$, are constrained by perturbative unitarity. 
+From a partial wave analysis of the annihilation process $\overline{\psi}\psi \to Z' Z'$ one can derive the unitarity limit~\cite{Kahlhoefer:2015bea}
+\begin{equation}
+M_\psi \lesssim \sqrt{\frac{\pi}{2}} \frac{M_{Z'}}{g_{\rm DM}}\,,
+\end{equation}
+which defines the parameter space where the dark matter relic density can be reliably calculated within the simplified model. 
+Perturbative unitarity of the scattering amplitude in processes relevant to LHC dark matter searches has been studied in Ref.~\cite{Englert:2016joy}. 
+It was found that perturbative unitarity does not become a relevant constraint for the production of mediators at the LHC, unless 
+the couplings are large, $g_{\rm SM} \gtrsim {\cal O}(4\pi)$. In our analysis, we will only consider couplings which are well within the 
+perturbative regime, $g_{\rm DM}, g_{\rm SM} \lesssim {\cal O}(1)$. 
 
-\cite{Kahlhoefer:2015bea}
+\begin{itemize}
+\item ATLAS and CMS jets + MET searches
+\item Describe the model and its implementation via feynrules and herwig.
+\end{itemize}
 
 \section{Measurements}\label{sec:measurements}
 
