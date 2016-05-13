@@ -17,7 +17,7 @@
 \usepackage{lineno}
 \usepackage{multirow}
 \usepackage{hyperref}
-%\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 %\tolerance = 1000
 %\parindent 0cm
 %\parskip 2mm
@@ -27,7 +27,7 @@
 %\linenumbers
 \usepackage{array}
 
-\title{Constraining models of new physics with collider measurements of Standard Model signatures}
+\title{Constraining new physics with collider measurements of Standard Model signatures}
 
 \author{Jonathan M. Butterworth$^1$, David Grellscheid$^2$,\\ Michael Kr\"amer$^3$, David Yallup$^1$\\
 \it $^1$Department of Physics and Astronomy, University College London,\\ \it Gower St., London, WC1E 6BT, UK\\
@@ -58,7 +58,7 @@ The Large Hadron Collider (LHC) is probing physics in a new kinematic region, at
 electroweak symmetry-breaking scale. With the discovery of the Higgs boson~\cite{Aad:2012tfa,Chatrchyan:2012ufa}, 
 the first data-taking period of the LHC experiments demonstrated that the understanding of electroweak symmetry-breaking within
 the Standard Model (SM) is broadly correct, and thus that the theory is potentially valid well above the
-TeV scale. Many precision measurements of jets, charged leptons, and other of final states, 
+TeV scale. Many precision measurements of jets, charged leptons, and other final states 
 have been published, reaching into this new kinematic domain. The predictions of the SM are 
 generally in agreement with the data, while the many dedicated searches for physics beyond the SM
 have excluded a wide range of possible scenarios. Nevertheless, there are many reasons to be confident that
@@ -177,9 +177,16 @@ region where transverse energy is unmeasured; however, unless a BSM particle ent
 negligible. This means that as long as fiducial acceptance cut is made on BSM particles counting toward \MET (to ensure that 
 large contributions to \MET 
 from invisible particles outside the detector acceptance are excluded) such analyses can be 
-used\footnote{Of greater consquence, but easier to fix, is the fact that several Rivet methods explicitly calculated \MET
+used\footnote{Of greater consequence, but easier to fix, is the fact that several Rivet methods explicitly calculated \MET
 from neutrinos found in the true event record, rather than as the negative of the visible particles in the event. These 
-routines were modified as a part of this work, and are all fixed in release 2.5.X.}
+routines were modified as a part of this work, and are all fixed in release 2.5.X.}.
+
+Another feature of the measurements is that most of them, explicitly or implicitly, insist in their fiducial cross-section definition 
+that leptons and photons be 'directly' produced, that is, prior to hadronisation and coming from the primary vertex of the collision. 
+Such a selection is enforced in the experiments by a mixture of isolation and vertex requirements, but is not universally enforced
+in all rivet routines. Generally this is a small effect, but care needs to be taken that the sensitivity is not overestimated, especially
+for BSM models which enhance bottom or charm production, when semi-leptonic decays may play a role.
+This featire should be addressed in future releases of Rivet.
 
 The measurements we consider fall into five loose and independent classes.
 \begin{enumerate}
@@ -195,10 +202,11 @@ measurement from ATLAS~\cite{Aad:2015nda}.
 \item
 Electroweak: events with leptons, with or without missing energy or photons. The high-statistics $W+$jet and $Z+$jet measurements from ATLAS~\cite{Aad:2014qxa,Aad:2013ysa} 
 and CMS~\cite{Khachatryan:2014uva}, are used.
-We also use the ATLAS $ZZ$ and $W/Z+\gamma$ analyses~\cite{Aad:2012awa,Aad:2013izg}.
+We also use the ATLAS $ZZ$ and $W/Z+\gamma$ analyses~\cite{Aad:2012awa,Aad:2013izg}, the former of which includes \MET, 
+via the $Z \rightarrow \nu\bar{\nu}$ measurement.
 \item
-Missing energy, possibly with jets but no leptons or photons. There are no fully-correct particle-level distributions available. 
-However the ATLAS search for supersymmetry, with jets and missing energy~\cite{Aad:2012fqa} does have a Rivet routine and can be used approximately (I hope)
+Missing energy, possibly with jets but no leptons or photons. There are currently no fully-corrected particle-level distributions available in this category. 
+%However the ATLAS search for supersymmetry, with jets and missing energy~\cite{Aad:2012fqa} does have a Rivet routine and can be used approximately (I hope)
 \item
 Isolated photons, with or without missing energy, but no leptons. Here we make use of the inclusive~\cite{Aad:2013zba}, diphoton~\cite{Aad:2012tba} and 
 photon-plus-jet~\cite{ATLAS:2012ar} measurements, where available.
@@ -206,7 +214,7 @@ photon-plus-jet~\cite{ATLAS:2012ar} measurements, where available.
 Signatures specifically based on top quark or Higgs candidates. Most such measurements to date have been made at the 'parton' level (that is,
 corrected using SM MC back to the top or Higgs before decay, and many of them are extrapolated to $4\pi$ phase space. Both steps increase
 the model dependence and make them unsuitable for the \Contur approach. Recently, however, fiducial, differential, particle-level measurements
-have begun to appear\cite{}. These could are potentially very powerful in excluding some models, but will in principle overlap with the previous 
+have begun to appear\cite{Aad:2015hna,Khachatryan:2016gxp}. These could are potentially very powerful in excluding some models, but will in principle overlap with the previous 
 categories depending on decay mode. We leave the inclusion of such measurements for future work.
 \end{enumerate}
 
