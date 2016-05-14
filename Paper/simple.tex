@@ -101,8 +101,11 @@ comparison in the Rivet library~\cite{Buckley:2010ar}.
 
 These three developments together make it possible to efficiently 
 bring the power of a very wide range of data to bear on the search for new physics. While such a generic approach is
-unlikely to compete in terms of speed and sensitivity with a search optimisied for a specific theory, the breadth
-of potential signatures and models which can be covered makes it a powerful complementary approach. Any theory seeking
+unlikely to compete in terms of speed and sensitivity with a search optimised for a specific theory, the breadth
+of potential signatures and models which can be covered makes it a powerful complementary approach\footnote{The applicability of 
+searches can be extended to new models by accessing archived versions of the original analysis code, ideally using a standardised 
+interface such as that provided by the RECAST~\cite{Cranmer:2010hk} project.}
+Any theory seeking
 to explain a new signature or anomaly in the data may have consequences for other final states which should be checked 
 against data this way. If no BSM physics emerges, a model-dependent and systematic approach becomes mandatory.
 
@@ -205,8 +208,7 @@ and CMS~\cite{Khachatryan:2014uva}, are used.
 We also use the ATLAS $ZZ$ and $W/Z+\gamma$ analyses~\cite{Aad:2012awa,Aad:2013izg}, the former of which includes \MET, 
 via the $Z \rightarrow \nu\bar{\nu}$ measurement.
 \item
-Missing energy, possibly with jets but no leptons or photons. There are currently no fully-corrected particle-level distributions available in this category. 
-%However the ATLAS search for supersymmetry, with jets and missing energy~\cite{Aad:2012fqa} does have a Rivet routine and can be used approximately (I hope)
+Missing energy, possibly with jets but no leptons or photons. This channel could in principle provide powerful constraints, and has been used in searches (see for example~\cite{Aad:2012fqa}). Unfortunately however, there are currently no fully-corrected particle-level distributions available in this category. 
 \item
 Isolated photons, with or without missing energy, but no leptons. Here we make use of the inclusive~\cite{Aad:2013zba}, diphoton~\cite{Aad:2012tba} and 
 photon-plus-jet~\cite{ATLAS:2012ar} measurements, where available.
