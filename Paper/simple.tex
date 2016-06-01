@@ -28,6 +28,7 @@
 %\linenumbers
 \usepackage{array}
 
+
 \title{Constraining new physics with collider measurements of Standard Model signatures}
 
 \author{Jonathan M. Butterworth$^1$, David Grellscheid$^2$,\\ Michael Kr\"amer$^3$, David Yallup$^1$\\
@@ -335,56 +336,56 @@ and would require an extensive evaluation of the theoretical uncertainties on th
 
 
 \section{Comparison to Data}\label{sec:kinematics}
-
-
+%%Insert some text like the following in these captions
+%%The generated BSM process cross section is constructed as per, and represented alongside, the measured data (left) and the ratio of data plus BSM simulation to data is also presented (right).
 
 \begin{figure}[!htb]
-\begin{center}
-    \subfloat[Simulated signals for a sample of mediator masses. Interpreted as perturbations to the double differential inclusive jet cross section in the most central
-rapidity region, binned by dijet mass and rapidity corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2014pua} \label{fig:ATLASdijet}]{%
+\centering
+
       \includegraphics[width=0.45\textwidth]{images/atlasdijet/fullscale/ATLAS_dijet.pdf}
       \includegraphics[width=0.45\textwidth]{images/atlasdijet/ratio/ATLAS_dijet_ratio.pdf}
-    }
+    \caption{ Outputs from \textsc{Rivet} for a potential measurement to be included in the limit setting process. Simulated signals for a sample of mediator masses, interpreted as perturbations to the double differential inclusive jet cross section in the most central rapidity region, binned by dijet mass and rapidity corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2014pua}. The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass and mediator couplings; $m_{\textsc{dm}}=600$ GeV, $g_{q}=0.25$ and $g_{\textsc{dm}} = 1$. }
+\label{fig:ATLASdijet}
 
-    \subfloat[Simulated signals for a sample of mediator masses. Interpreted as perturbations to the double differential dijet cross section in the most central
-rapidity region, binned by leading jet $p_{T}$ and rapidity corresponding to the data as measured by CMS at 7 TeV~\cite{Chatrchyan:2014gia} \label{fig:CMSincljet}]{%
-      \includegraphics[width=0.45\textwidth]{images/cmsjet/fullrange/CMSincljet.pdf}
-      \includegraphics[width=0.45\textwidth]{images/cmsjet/ratio/CMSincljets_ratio.pdf}
-    }
-
-    \subfloat[Simulated signals for a sample of mediator masses. Interpreted as perturbations to the differential cross section of the $W+\geq2$ jet process,
- binned by the mass of the dijet pair corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2014qxa} \label{fig:ATLASzjet}]{%
-      \includegraphics[width=0.45\textwidth]{images/atlaswjet/fullrange/ATLASwjet.pdf}
-      \includegraphics[width=0.45\textwidth]{images/atlaswjet/ratio/ATLASwjet_ratio.pdf}
-    }
-
-\end{center}
 \end{figure}
 
-\begin{figure}[!htb]
-\begin{center}
-\ContinuedFloat    
-    \subfloat[Simulated signals for a sample of mediator masses. Interpreted as perturbations to the $ZZ\rightarrow ll\nu \nu$ cross section 
-corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2012awa} \label{fig:ATLASzz}]{%
+\begin{figure}
+\centering
+      
+      \includegraphics[width=0.45\textwidth]{images/cmsjet/fullrange/CMSincljet.pdf}
+      \includegraphics[width=0.45\textwidth]{images/cmsjet/ratio/CMSincljets_ratio.pdf}
+    
+\caption{Outputs from \textsc{Rivet} for a potential measurement to be included in the limit setting process. Simulated signals for a sample of mediator masses, interpreted as perturbations to the double differential dijet cross section in the most central rapidity region, binned by leading jet $p_{T}$ and rapidity corresponding to the data as measured by CMS at 7 TeV~\cite{Chatrchyan:2014gia}. The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass and mediator couplings; $m_{\textsc{dm}}=600$ GeV, $g_{q}=0.25$ and $g_{\textsc{dm}} = 1$.}
+\label{fig:CMSincljet}
+\end{figure}
+
+\begin{figure}
+\centering
+
+      \includegraphics[width=0.45\textwidth]{images/atlaswjet/fullrange/ATLASwjet.pdf}
+      \includegraphics[width=0.45\textwidth]{images/atlaswjet/ratio/ATLASwjet_ratio.pdf}
+    
+\caption{Outputs from \textsc{Rivet} for a potential measurement to be included in the limit setting process. Simulated signals for a sample of mediator masses, interpreted as perturbations to the differential cross section of the $W+\geq2$ jet process, binned by the mass of the dijet pair corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2014qxa}. The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass and mediator couplings; $m_{\textsc{dm}}=600$ GeV, $g_{q}=0.25$ and $g_{\textsc{dm}} = 1$.}
+\label{fig:ATLASwjet}
+\end{figure}
+
+\begin{figure}
+\centering
+
       \includegraphics[width=0.45\textwidth]{images/atlaszz/fullrange/ATLASzz.pdf}
-    }
-        
-    \caption{Outputs from \textsc{Rivet} for a sample of potential measurements to be included
- in the limit setting process, figure~\ref{fig:ATLASdijet} taken from the ATLAS dijet measurement, figure~\ref{fig:CMSincljet} from the CMS
-inclusive jet measurement~\cite{Chatrchyan:2014gia}, figure~\ref{fig:ATLASzjet} from the ATLAS $Z+$inclusive jet measurement~\cite{Aad:2014qxa} and 
-figure~\ref{fig:ATLASzz} from the ATLAS $ZZ$ production cross section. The generated BSM process cross section is constructed as per, and represented alongside, the measured data (left)
- and the ratio of data plus BSM simulation to data is also presented (right). The signals form a 1D parameter space scan in mediator mass for fixed dark matter
- mass and mediator couplings; $m_{\textsc{dm}}=600$ GeV, $g_{q}=0.25$ and $g_{\textsc{dm}} = 1$.}
-    \label{fig:rivetout}
-\end{center}
+
+\caption{Outputs from \textsc{Rivet} for a potential measurement to be included in the limit setting process. Simulated signals for a sample of mediator masses, Interpreted as perturbations to the $ZZ\rightarrow ll\nu \nu$ cross section 
+corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2012awa} \label{fig:ATLASzz}. The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass and mediator couplings; $m_{\textsc{dm}}=100$ GeV, $g_{q}=0.25$ and $g_{\textsc{dm}} = 1$.}
+
+\label{fig:ATLASzz}
 \end{figure}
 
 \section{Limits}\label{sec:limits}
 
 
 
-\begin{figure}[!hp]
-\begin{center}
+\begin{figure}[p]
+\centering
     \subfloat[Mass plane scan for fixed mediator couplings; $g_{q}=0.25$ and $g_{\textsc{dm}} = 1$ \label{fig:map025}]{%
       \includegraphics[width=0.75\textwidth]{images/combinedCL_gq025.pdf}
     }
@@ -392,11 +393,11 @@ figure~\ref{fig:ATLASzz} from the ATLAS $ZZ$ production cross section. The gener
     \subfloat[Mass plane scan for fixed mediator couplings; $g_{q}=0.5$ and $g_{\textsc{dm}} = 1$\label{fig:map05}]{%
       \includegraphics[width=0.75\textwidth]{images/combinedCL_gq05.pdf}
     }
-\end{center}
+
 \end{figure}
 
-\begin{figure}[!htb]
-\begin{center}
+\begin{figure}[p]
+\centering
 \ContinuedFloat
     \subfloat[Mass plane scan for fixed mediator couplings; $g_{q}=0.375$ and $g_{\textsc{dm}} = 1$\label{fig:map0375}]{%
       \includegraphics[width=0.75\textwidth]{images/combinedCL_gq0375.pdf}
@@ -408,7 +409,7 @@ figure~\ref{fig:ATLASzz} from the ATLAS $ZZ$ production cross section. The gener
     sensitive allowed grouping as outlined in section~\ref{sec:dynselec}, considering all available measurements as listed in section~\ref{sec:measurements}}
 
     \label{fig:maps}
-\end{center}
+
 \end{figure}
 
 \section{Conclusions}\label{sec:conclusions}
