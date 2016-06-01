@@ -1,0 +1,32 @@
+# BEGIN PLOT
+DrawOnly=/REF/ATLAS_2012_I1203852_MET/d01-x01-y01 /./mY_300_mX_100/mY_300_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y01
+Title=Total fiducial cross-section $\sigma_{ZZ \to 4l}$
+RatioPlotMode=datamc
+RatioPlotReference=/REF/ATLAS_2012_I1203852_MET/d01-x01-y01
+RatioPlot=1
+LogY=0
+XLabel=$\sqrt{s}$~[GeV]
+MainPlot=0
+YLabel=$\sigma_{ZZ \to 4l}$~[fb]
+Legend=1
+RatioPlotYMin=1
+# END PLOT
+
+# BEGIN HISTO1D /REF/ATLAS_2012_I1203852_MET/d01-x01-y01
+ConnectBins=0
+ErrorBars=1
+IsRef=1
+Path=/REF/ATLAS_2012_I1203852_MET/d01-x01-y01
+PolyMarker=*
+Title=Data
+# xlow	 xhigh	 val	 errminus	 errplus
+6.999500e+03	7.000500e+03	2.540000e+01	3.316625e+00	3.651027e+00
+# END HISTO1D
+
+# BEGIN HISTO1D /./mY_300_mX_100/mY_300_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y01
+Path=/./mY_300_mX_100/mY_300_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y01
+Title=0.154774
+# xlow	 xhigh	 val	 errminus	 errplus
+6.999500e+03	7.000500e+03	2.624881e+01	3.675611e+00	3.675611e+00
+# END HISTO1D
+

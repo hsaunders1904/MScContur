@@ -342,22 +342,39 @@ and would require an extensive evaluation of the theoretical uncertainties on th
 \begin{center}
     \subfloat[Simulated signals for a sample of mediator masses. Interpreted as perturbations to the double differential inclusive jet cross section in the most central
 rapidity region, binned by dijet mass and rapidity corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2014pua} \label{fig:ATLASdijet}]{%
-      \includegraphics[width=0.45\textwidth]{images/ATLAS_dijet.pdf}
-      \includegraphics[width=0.45\textwidth]{images/ATLAS_dijet_ratio.pdf}
+      \includegraphics[width=0.45\textwidth]{images/atlasdijet/fullscale/ATLAS_dijet.pdf}
+      \includegraphics[width=0.45\textwidth]{images/atlasdijet/ratio/ATLAS_dijet_ratio.pdf}
     }
 
     \subfloat[Simulated signals for a sample of mediator masses. Interpreted as perturbations to the double differential dijet cross section in the most central
-rapidity region, binned by by leading jet $p_{T}$ and rapidity corresponding to the data as measured by CMS at 7 TeV~\cite{Chatrchyan:2014gia} \label{fig:CMSincljet}]{%
-      \includegraphics[width=0.45\textwidth]{images/CMS_incl_jet.pdf}
-      \includegraphics[width=0.45\textwidth]{images/CMS_incljets_ratio.pdf}
+rapidity region, binned by leading jet $p_{T}$ and rapidity corresponding to the data as measured by CMS at 7 TeV~\cite{Chatrchyan:2014gia} \label{fig:CMSincljet}]{%
+      \includegraphics[width=0.45\textwidth]{images/cmsjet/fullrange/CMSincljet.pdf}
+      \includegraphics[width=0.45\textwidth]{images/cmsjet/ratio/CMSincljets_ratio.pdf}
     }
-    
-    \caption{Outputs from \textsc{Rivet} for a sample of two potential plots to be included
- in the limit setting process, figure~\ref{fig:ATLASdijet} taken from the ATLAS dijet measurement and figure~\ref{fig:CMSincljet} from the CMS
-inclusive jet measurement~\cite{Chatrchyan:2014gia}. The generated BSM process cross section is constructed as per, and represented alongside, the measured data (left)
+
+    \subfloat[Simulated signals for a sample of mediator masses. Interpreted as perturbations to the differential cross section of the $W+\geq2$ jet process,
+ binned by the mass of the dijet pair corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2014qxa} \label{fig:ATLASzjet}]{%
+      \includegraphics[width=0.45\textwidth]{images/atlaswjet/fullrange/ATLASwjet.pdf}
+      \includegraphics[width=0.45\textwidth]{images/atlaswjet/ratio/ATLASwjet_ratio.pdf}
+    }
+
+\end{center}
+\end{figure}
+
+\begin{figure}[!htb]
+\begin{center}
+\ContinuedFloat    
+    \subfloat[Simulated signals for a sample of mediator masses. Interpreted as perturbations to the $ZZ\rightarrow ll\nu \nu$ cross section 
+corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2012awa} \label{fig:ATLASzz}]{%
+      \includegraphics[width=0.45\textwidth]{images/atlaszz/fullrange/ATLASzz.pdf}
+    }
+        
+    \caption{Outputs from \textsc{Rivet} for a sample of potential measurements to be included
+ in the limit setting process, figure~\ref{fig:ATLASdijet} taken from the ATLAS dijet measurement, figure~\ref{fig:CMSincljet} from the CMS
+inclusive jet measurement~\cite{Chatrchyan:2014gia}, figure~\ref{fig:ATLASzjet} from the ATLAS $Z+$inclusive jet measurement~\cite{Aad:2014qxa} and 
+figure~\ref{fig:ATLASzz} from the ATLAS $ZZ$ production cross section. The generated BSM process cross section is constructed as per, and represented alongside, the measured data (left)
  and the ratio of data plus BSM simulation to data is also presented (right). The signals form a 1D parameter space scan in mediator mass for fixed dark matter
  mass and mediator couplings; $m_{\textsc{dm}}=600$ GeV, $g_{q}=0.25$ and $g_{\textsc{dm}} = 1$.}
-
     \label{fig:rivetout}
 \end{center}
 \end{figure}
@@ -399,7 +416,7 @@ inclusive jet measurement~\cite{Chatrchyan:2014gia}. The generated BSM process c
 \section*{Acknowledgments}
 
 
-\newpage
+\clearpage
 \bibliographystyle{h-physrev4}
 \bibliography{simple}
 
