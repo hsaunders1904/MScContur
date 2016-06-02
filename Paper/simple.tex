@@ -129,11 +129,11 @@ fermion, $\psi$, which interacts with the SM model through a new vector particle
 the Dark Matter $\psi$ and to the 
 SM are specified as %
 \begin{align}\label{eq:vector_mediator}
- {\cal L} \supset  \GDM\overline{\psi} \gamma_{\mu}\gamma_5 \psi\,Z'^{\mu} + g_{\rm SM}\sum_{q} \bar q \gamma_{\mu} q Z'^{\mu} \,,
+ {\cal L} \supset  \GDM\overline{\psi} \gamma_{\mu}\gamma_5 \psi\,Z'^{\mu} + \GQ\sum_{q} \bar q \gamma_{\mu} q Z'^{\mu} \,,
 \end{align}
 %
 where the sum in the second term includes all SM quarks, $q \in \{u,d,c,s,t,b\}$. The simplified model specified in Eq.~(\ref{eq:vector_mediator}) 
-has only four free parameters, two couplings and two masses: \GDM, $g_{\rm SM} \equiv \GQ, M_\psi \equiv \MDM$, and \MZP. The width of the mediator, 
+has only four free parameters, two couplings and two masses: \GDM, \GQ, $M_\psi \equiv \MDM$, and \MZP. The width of the mediator, 
 $\Gamma_{Z'}$, is determined by these four parameters. 
 
 Following Ref.~\cite{Kahlhoefer:2015bea} we have chosen to couple the mediator to 
@@ -230,7 +230,7 @@ photon-plus-jet~\cite{ATLAS:2012ar} measurements, where available.
 Signatures specifically based on top quark or Higgs candidates. Most such measurements to date have been made at the 'parton' level (that is,
 corrected using SM MC back to the top or Higgs before decay, and many of them are extrapolated to $4\pi$ phase space. Both steps increase
 the model dependence and make them unsuitable for the \Contur approach. Recently, however, fiducial, differential, particle-level measurements
-have begun to appear\cite{Aad:2015hna,Khachatryan:2016gxp}. These could are potentially very powerful in excluding some models, but will in principle 
+have begun to appear\cite{Aad:2015hna,Khachatryan:2016gxp}. These are potentially very powerful in excluding some models, but will in principle 
 overlap with the previous 
 categories depending on decay mode. We leave the inclusion of such measurements for future work.
 \end{enumerate}
@@ -354,7 +354,7 @@ and would require an extensive evaluation of the theoretical uncertainties on th
 
 To investigate the exclusion power of the SM measurements discussed in Section~\ref{sec:measurements} we scan a range in 
 plausible mediator masses (\MZP) and dark matter masses (\MDM) within the model described in Section~\ref{sec:model}, for three choices of
-the couplings. These coupling choices correspond to (i) an `optimistic' scenario $\GQ = 0.5, \GDM = 1$ - strong signals, 
+the coupling of the mediator to the SM (\GQ). These coupling choices correspond to (i) an `optimistic' scenario $\GQ = 0.5, \GDM = 1$ - strong signals, 
 close to the edge of exclusion already, (ii) a `challenging' scenario $\GQ = 0.25, \GDM = 1$ - low couplings, hard to exclude, 
 and (iii) an `intermediate' scenario $\GQ = 0.375, \GDM = 1$, between the two.
 
@@ -381,8 +381,11 @@ The sensitivity is at maximum in the middle of this range.
 \centering      
       \includegraphics[width=0.45\textwidth]{images/cmsjet/fullrange/CMSincljet.pdf}
       \includegraphics[width=0.45\textwidth]{images/cmsjet/ratio/CMSincljets_ratio.pdf}
-\caption{Outputs from \rivet for a measurement included in the limit setting process. Simulated signals for a sample of mediator masses, interpreted as perturbations to the double differential dijet cross section in the most central rapidity region, binned by leading jet \pt and rapidity corresponding to the data as measured by CMS at 7 TeV~\cite{Chatrchyan:2014gia}. The left hand plot compares the measured cross section to the model expectation, and the right hand plot shows the perturbation 
-in the ration compared to the relative uncertainty in the measurement. The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass and mediator couplings; $\MDM=600$ GeV, $\GQ=0.25$ and $\GDM = 1$.}
+\caption{Outputs from \rivet for a measurement included in the limit setting process. Simulated signals for a sample of mediator masses are shown, superimosed on 
+the double differential dijet cross section in the most central rapidity region, binned by leading jet \pt and rapidity as measured by 
+CMS at 7 TeV~\cite{Chatrchyan:2014gia}. The left hand plot compares the measured cross section to the model expectation, and the right hand plot shows the perturbation 
+in the ration compared to the relative uncertainty in the measurement. The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass 
+and mediator couplings; $\MDM=600$ GeV, $\GQ=0.25$ and $\GDM = 1$.}
 \label{fig:CMSincljet}
 \end{figure}
 
@@ -402,13 +405,13 @@ final states.
 \label{fig:ATLASwjet}
 \end{figure}
 
-Moving on to the 'Electroweak' final states discussed in Section~\ref{sec:measurements}, Figure~\ref{fig:ATLASwjet} illustrates the sensivity of vector-boson-plus-jet
+Moving on to the `Electroweak' final states discussed in Section~\ref{sec:measurements}, Figure~\ref{fig:ATLASwjet} illustrates the sensivity of vector-boson-plus-jet
 measurements to this model, in this case the dijet mass differential cross section in $W$-boson-plus-jet events. Strictly speaking, the measurement is made for
-events with a single charged lepton, \MET, and jets, interpreted as $W$+jets in the SM. In the BSM model considered here, \MET could also arise from the Dark Matter
-candidate. However, inspections shows that the sensitivity is arise from genuine $W$ bosons produced in association with the mediator - not a signature typcially
-considered in constraints on this class of model.
-
-
+events with a single charged lepton, \MET, and jets, interpreted as $W$+jets in the SM. In the BSM model considered here, \MET could in principle 
+also arise from the Dark Matter candidate. However, inspections shows that the sensitivity - which is at mediator masses below around a TeV or so - arises 
+from genuine $W$ bosons produced in association with the mediator - not a signature typically considered in constraints on this class of model. The sensitivity
+is obviously highly dependent upon the bin width chosen in the SM measurement, which is driven mainly by the dijet mass resolution, although at high masses also by
+the number of events in the data.
 
 \begin{figure}
 \centering
@@ -417,31 +420,55 @@ considered in constraints on this class of model.
 sample of mediator masses, Interpreted as perturbations to the $ZZ\rightarrow ll\nu \nu$ cross section 
 corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2012awa} \label{fig:ATLASzz}. The signals form a 1D parameter space scan in 
 mediator mass \MZP for fixed dark matter mass and mediator couplings; $\MDM=100$ GeV, $g_{q}=0.25$ and $g_{\textsc{dm}} = 1$.}
-
 \label{fig:ATLASzz}
 \end{figure}
 
+Also in the `electroweak' category are the diboson measurements. Here the most sensitive is the ATLAS $ZZ$ measurement, in particular the 7~TeV result, which includes
+a fiducial cross section measurement of $pp \rightarrow l^+l^- + \MET$. This is illustrated in Fig.~\ref{fig:ATLASzz}. 
+The production diagrams are the same as the vector-boson-plus-jets case, but in this case the 
+mediator decays to Dark Matter rather than back to quarks.
+In the absence of any particle-level measurements in the `missing energy plus jets' category of 
+Section~\ref{sec:measurements}, this measurement has the best sensitivity to Dark Matter production for this model. Obviously, measurements at 8~TeV and 13~TeV of this 
+final state, and indeed of jets+\MET, can be expected to improve the sensitivity significantly.
+
+Finally, althought they were scanned in the limit-setting process, the currently available isolated photon measurements do not contribute signficantly to the exclusion
+limits for this model.
+
+
 \section{Limits}\label{sec:limits}
 
-For $\MZP < 2\MDM$, the decay to Dark Matter is suppressed and so the sensitivity comes mainly from the jet measurements.
+The sensivities derived from multiple distribiutions such as those discussed in the previous section are combined into `heatmaps' which delineate exclusion 
+regions and contours in the parameter space of \MDM and \MZP. These are shown in Fig.~\ref{fig:maps} for the three \GQ values considered.
+Several features are discernible. 
+
+As expected, the exclusion is much weaker in the `challenging' case and quite strong in the `optimistic' scenario.
+
+For $\MZP < 2\MDM$, the decay of the mediator to Dark Matter is suppressed. This leads to the diagonal structure across the plots, 
+with the sensitivity below the diagonal, in the right portion of the map, coming mainly from the jet measurements.
+
+At low values of the \MZP, the sensivity comes mainly from the $V+$jets signatures. In the challenging and intermediate scenarios, a dip in sensitivity around 
+$\MZP \approx 700$~GeV is visible, where the sensitvity from inclusive jets and $V+$jets do not quite overlap. In the optimistic scenario, they overlap, and the whole lower
+right region of the map is excluded. In addition, the cross section $\times$ branching ratio for quarks $\rightarrow Z^\prime \rightarrow$ quarks remains large
+enough that the diagonal cutoff in sensivitivty of the jet channels at $\MZP \approx 2\MDM$ is blurred. {\bf illustrate this further with a low \GDM option?}
+
+To the top left region of the diagonal the decay of the mediator to Dark Matter is kinematically allowed, and for the chosen value of $\GDM=1$, will dominate 
+over the decay to quarks. Hence the sensivity in the inclusive jet (and $V+$jet) signatures drops. This is the region where a measurement of \MET+jets would be useful 
+(and indeed it is where the searches performed using such signatures contribute, see \cite{Kahlhoefer:2015bea}). Current sensitivity dies away at $\MZP \approx 750$~GeV 
+in the intermediate and challenginf scenarios. 
+
+
 
 \begin{figure}[p]
 \centering
-    \subfloat[Mass plane scan for fixed mediator couplings; $g_{q}=0.25$ and $g_{\textsc{dm}} = 1$ \label{fig:map025}]{%
-      \includegraphics[width=0.75\textwidth]{images/combinedCL_gq025.pdf}
-    }
-    
-    \subfloat[Mass plane scan for fixed mediator couplings; $g_{q}=0.5$ and $g_{\textsc{dm}} = 1$\label{fig:map05}]{%
-      \includegraphics[width=0.75\textwidth]{images/combinedCL_gq05.pdf}
+    \subfloat[$\GQ=0.25$ and $\GDM = 1$ \label{fig:map025}]{%
+      \includegraphics[width=0.5\textwidth]{images/combinedCL_gq025.pdf}
+    }    
+    \subfloat[$\GQ=0.5$ and $\GDM = 1$\label{fig:map05}]{%
+      \includegraphics[width=0.5\textwidth]{images/combinedCL_gq05.pdf}
     }
 
-\end{figure}
-
-\begin{figure}[p]
-\centering
-\ContinuedFloat
-    \subfloat[Mass plane scan for fixed mediator couplings; $g_{q}=0.375$ and $g_{\textsc{dm}} = 1$\label{fig:map0375}]{%
-      \includegraphics[width=0.75\textwidth]{images/combinedCL_gq0375.pdf}
+    \subfloat[$\GQ=0.375$ and $\GDM = 1$\label{fig:map0375}]{%
+      \includegraphics[width=0.5\textwidth]{images/combinedCL_gq0375.pdf}
     }
     \caption{Heatmaps displaying 2D parameter space scans in fixed mass planes corresponding to a fixed $g_{\textsc{dm}} = 1$ and variable $g_{q}$, with
     figure~\ref{fig:map025} representing $g_{q}=0.25$ and figure~\ref{fig:map05} representing $g_{q}=0.5$. The confidence level of exclusion represented 
