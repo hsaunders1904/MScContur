@@ -17,7 +17,7 @@
 \usepackage{lineno}
 \usepackage{multirow}
 \usepackage{hyperref}
-\usepackage[left=2.8cm,right=2.8cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage[left=2.8cm,right=2.8cm,top=2.5cm,bottom=3.5cm]{geometry}
 \usepackage{caption}
 %\tolerance = 1000
 %\parindent 0cm
@@ -64,7 +64,7 @@ TeV scale. Many precision measurements of jets, charged leptons, and other final
 have been published, reaching into this new kinematic domain. The predictions of the SM are 
 generally in agreement with the data, while the many dedicated searches for physics beyond the SM
 have excluded a wide range of possible scenarios. Nevertheless, there are many reasons to be confident that
-physics beyond the Standard Model (BSM) exists; examples include the graiational evidence for Dark Matter, the large 
+physics beyond the Standard Model (BSM) exists; examples include the gravitational evidence for Dark Matter, the large 
 preponderance of matter over antimatter in the universe, and the existence of gravity itself. None of 
 these can be easily accommodated within known Standard Model phenomenology. 
 
@@ -91,12 +91,12 @@ In this paper we make extensive use of these capabilities within Herwig~\cite{Ba
 As many favoured BSM scenarios have been excluded, there has been a move toward 
 ``simplified models'' of new physics~\cite{Alves:2011wf,Abercrombie:2015wmb}, which aim to be as generic as possible, 
 while being internally consistent. The philosophy is similar to an ``effective lagrangian'' approach in which effective anomalous
-couplings are introduced to describe new physics, but is more powerful as such simplified models also
+couplings are introduced to describe new physics, but is more powerful, as such simplified models also
 include new particles, and thus can remain useful up to and beyond the scale of new physics - a region 
 potentially probed by LHC measurements.
 \item
 The precision measurements from the LHC have mostly been made in a manner which minimises their model-dependence. 
-That is, they are defined in terms of final-state signatures in fiducial regions well matched to the
+That is, they are defined in terms of final-state signatures in fiducial regions well-matched to the
 acceptance of the detector. Many such measurements are readily available for analysis and
 comparison in the \rivet library~\cite{Buckley:2010ar}. 
 \end{enumerate}
@@ -109,13 +109,14 @@ searches can be extended to new models by accessing archived versions of the ori
 interface such as that provided by the RECAST~\cite{Cranmer:2010hk} project.}
 Any theory seeking
 to explain a new signature or anomaly in the data may have consequences for other final states which should be checked 
-against data this way. If no BSM physics emerges, a model-dependent and systematic approach becomes mandatory.
+against data this way. If no BSM physics emerges, a model-independent and systematic approach becomes mandatory.
 
 The outline of the paper is as follows. In the next section, we motivate and describe the 
 simplified model we consider as a first demonstration, and its implementation via Herwig. 
 In Section~\ref{sec:measurements} we introduce the measurements that we will use, and their implementation in \rivet. 
-Section~\ref{sec:kinematics} discusses the differential cross sections in which the impact of these models would be 
-most apparent. In Section~\ref{sec:limits} this impact is translated into limits on the model parameters.
+Section~\ref{sec:method} covers the core of the \Contur method, incuding the statistical approach and dynamic data selection.
+In Section~\ref{sec:kinematics} we discuss the differential cross sections in which the impact of our example model would be 
+most apparent. In Section~\ref{sec:limits} this impact is translated into limits on the model parameters, and this is followed by our conclusions.
 
 
 \section{Simplified Model}\label{sec:model}
@@ -240,6 +241,7 @@ fiducial cross sections
 implemented in \rivet.
 
 \section{Method}
+\label{sec:method}
 
 \subsection{Strategy}
 
