@@ -17,7 +17,7 @@
 \usepackage{lineno}
 \usepackage{multirow}
 \usepackage{hyperref}
-\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage[left=2.8cm,right=2.8cm,top=2.5cm,bottom=2.5cm]{geometry}
 \usepackage{caption}
 %\tolerance = 1000
 %\parindent 0cm
@@ -358,7 +358,6 @@ the coupling of the mediator to the SM (\GQ). These coupling choices correspond 
 close to the edge of exclusion already, (ii) a `challenging' scenario $\GQ = 0.25, \GDM = 1$ - low couplings, hard to exclude, 
 and (iii) an `intermediate' scenario $\GQ = 0.375, \GDM = 1$, between the two.
 
-
 \begin{figure}[!htb]
 \centering
       \includegraphics[width=0.45\textwidth]{images/atlasdijet/fullscale/ATLAS_dijet.pdf}
@@ -397,16 +396,16 @@ final states.
 
 \begin{figure}
 \centering
-
       \includegraphics[width=0.45\textwidth]{images/atlaswjet/fullrange/ATLASwjet.pdf}
       \includegraphics[width=0.45\textwidth]{images/atlaswjet/ratio/ATLASwjet_ratio.pdf}
-    
-\caption{Outputs from \rivet for a potential measurement to be included in the limit setting process. Simulated signals for a sample of mediator masses, interpreted as perturbations to the differential cross section of the $W+\geq2$ jet process, binned by the mass of the dijet pair corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2014qxa}. The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass and mediator couplings; $\MDM=600$ GeV, $\GQ=0.25$ and $\GDM = 1$.}
+\caption{Outputs from \rivet for a measurement included in the limit setting process. Simulated signals for a sample of mediator masses, superimposed on 
+the differential cross section for the $W+\geq2$ jet process, binned in the mass of the dijet pair as measured by ATLAS at 7 TeV~\cite{Aad:2014qxa}.
+The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass and mediator couplings; $\MDM=600$ GeV, $\GQ=0.25$ and $\GDM = 1$.}
 \label{fig:ATLASwjet}
 \end{figure}
 
 Moving on to the `Electroweak' final states discussed in Section~\ref{sec:measurements}, Figure~\ref{fig:ATLASwjet} illustrates the sensivity of vector-boson-plus-jet
-measurements to this model, in this case the dijet mass differential cross section in $W$-boson-plus-jet events. Strictly speaking, the measurement is made for
+($V+$jet) measurements to this model, in this case the dijet mass differential cross section in $W+$-jet events. Strictly speaking, the measurement is made for
 events with a single charged lepton, \MET, and jets, interpreted as $W$+jets in the SM. In the BSM model considered here, \MET could in principle 
 also arise from the Dark Matter candidate. However, inspections shows that the sensitivity - which is at mediator masses below around a TeV or so - arises 
 from genuine $W$ bosons produced in association with the mediator - not a signature typically considered in constraints on this class of model. The sensitivity
@@ -425,19 +424,18 @@ mediator mass \MZP for fixed dark matter mass and mediator couplings; $\MDM=100$
 
 Also in the `electroweak' category are the diboson measurements. Here the most sensitive is the ATLAS $ZZ$ measurement, in particular the 7~TeV result, which includes
 a fiducial cross section measurement of $pp \rightarrow l^+l^- + \MET$. This is illustrated in Fig.~\ref{fig:ATLASzz}. 
-The production diagrams are the same as the vector-boson-plus-jets case, but in this case the 
+The production diagrams are the same as the $V$-jets case, but in this case the 
 mediator decays to Dark Matter rather than back to quarks.
 In the absence of any particle-level measurements in the `missing energy plus jets' category of 
 Section~\ref{sec:measurements}, this measurement has the best sensitivity to Dark Matter production for this model. Obviously, measurements at 8~TeV and 13~TeV of this 
 final state, and indeed of jets+\MET, can be expected to improve the sensitivity significantly.
 
-Finally, althought they were scanned in the limit-setting process, the currently available isolated photon measurements do not contribute signficantly to the exclusion
+Finally, although they were scanned in the limit-setting process, the currently available isolated photon measurements do not contribute signficantly to the exclusion
 limits for this model.
-
 
 \section{Limits}\label{sec:limits}
 
-The sensivities derived from multiple distribiutions such as those discussed in the previous section are combined into `heatmaps' which delineate exclusion 
+The sensitivities derived from multiple distribiutions such as those discussed in the previous section are combined into `heatmaps' which delineate exclusion 
 regions and contours in the parameter space of \MDM and \MZP. These are shown in Fig.~\ref{fig:maps} for the three \GQ values considered.
 Several features are discernible. 
 
@@ -451,12 +449,10 @@ $\MZP \approx 700$~GeV is visible, where the sensitvity from inclusive jets and 
 right region of the map is excluded. In addition, the cross section $\times$ branching ratio for quarks $\rightarrow Z^\prime \rightarrow$ quarks remains large
 enough that the diagonal cutoff in sensivitivty of the jet channels at $\MZP \approx 2\MDM$ is blurred. {\bf illustrate this further with a low \GDM option?}
 
-To the top left region of the diagonal the decay of the mediator to Dark Matter is kinematically allowed, and for the chosen value of $\GDM=1$, will dominate 
+To the top left region of the diagonal the decay of the mediator to Dark Matter is kinematically allowed, and for the chosen value of $\GDM=1$ it will dominate 
 over the decay to quarks. Hence the sensivity in the inclusive jet (and $V+$jet) signatures drops. This is the region where a measurement of \MET+jets would be useful 
 (and indeed it is where the searches performed using such signatures contribute, see \cite{Kahlhoefer:2015bea}). Current sensitivity dies away at $\MZP \approx 750$~GeV 
-in the intermediate and challenginf scenarios. 
-
-
+in the intermediate and challenging scenarios. 
 
 \begin{figure}[p]
 \centering
@@ -475,15 +471,25 @@ in the intermediate and challenginf scenarios.
     corresponds to testing the full signal strength hypothesis against the null background only hypothesis, calculated as outlined in 
     section~\ref{sec:statmethod}. The combination of measurements entering into the confidence level presented here is the maximally
     sensitive allowed grouping as outlined in section~\ref{sec:dynselec}, considering all available measurements as listed in section~\ref{sec:measurements}}
-
     \label{fig:maps}
-
 \end{figure}
+
+{\bf here we should have some discussion of the theory constraints, other experiment constraints, and cosmological context. Contour plots to come from DY?}
 
 \section{Conclusions}\label{sec:conclusions}
 
-\section*{Acknowledgments}
+Using a simplified model for weakly-interacting Dark Matter coupled to the Standard Model via a heavy mediator boson, we have developed and demonstrated 
+a method to efficently scan existing particle-level measurements from the LHC, implemented in \rivet, to derive limits on new physics. 
+The \Contur method uses measurements which have already been shown to be in good agreement with the SM, and thus is purely aimed at limiting the possibilities 
+for models of new physics and hopefully narrowing the focus of experimental and theoretical effort on to the best models. It is this complementary to 
+direct and dedicated searches. The exclusion limits obtained are competitive with limits from searches to  date which have reported null results.
+One notable feature is the simultaneous coverage of a wide variety final states. This leads to enhanced stability of the sentivity as a function of model
+parameters, and also can uncover sensitivity in channel which might not otherwise be considered. For example, in our case unexpected sensitivity is seen in
+$V$+jets measurements, as well as the more commonly used dijet and \MET channels. The method is highly scaleable to new measurements as they are produced, and
+to new simplified models as they are developed.
 
+\section*{Acknowledgments}
+Josh McFayden, Les Houches, Michele Massimi... STFC... MCnet
 
 \clearpage
 \bibliographystyle{h-physrev4}
