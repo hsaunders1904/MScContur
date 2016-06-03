@@ -358,7 +358,8 @@ To investigate the exclusion power of the SM measurements discussed in Section~\
 plausible mediator masses (\MZP) and dark matter masses (\MDM) within the model described in Section~\ref{sec:model}, for three choices of
 the coupling of the mediator to the SM (\GQ). These coupling choices correspond to (i) an `optimistic' scenario $\GQ = 0.5, \GDM = 1$ - strong signals, 
 close to the edge of exclusion already, (ii) a `challenging' scenario $\GQ = 0.25, \GDM = 1$ - low couplings, hard to exclude, 
-and (iii) an `intermediate' scenario $\GQ = 0.375, \GDM = 1$, between the two.
+and (iii) an `intermediate' scenario $\GQ = 0.375, \GDM = 1$, between the two. We also consider (iv) a scenario where the coupling of DM to the mediator is
+suppressed, $\GQ = 0.375, \GDM = 0.375$.
 
 \begin{figure}[!htb]
 \centering
@@ -373,7 +374,7 @@ $\GQ=0.25$ and $\GDM = 1$.}
 \label{fig:ATLASdijet}
 \end{figure}
 
-Figure~\ref{fig:ATLASdijet} shows a comparison between the model expectations and the most sensitive distributions from the ATLAS jet measurements. The measured 
+Figure~\ref{fig:ATLASdijet} shows a comparison between the model expectations in the `challenging' scenario and the most sensitive distributions from the ATLAS jet measurements. The measured 
 dijet mass distribution is smoothly falling to higher masses, and the presence of a mediator decaying to quarks would superimpose a
 peak, not seen in the data, thus leading to an exclusion. The results are shown for fixed $\MDM = 600$~GeV and a range of mediator massses $500 < \MZP < 2000$~GeV. 
 The sensitivity is at maximum in the middle of this range.
@@ -418,14 +419,15 @@ the number of events in the data.
 \centering
       \includegraphics[width=0.45\textwidth]{images/atlaszz/fullrange/ATLASzz.pdf}
 \caption{Outputs from \rivet for a potential measurement to be included in the limit setting process. Simulated signals for a 
-sample of mediator masses, Interpreted as perturbations to the $ZZ\rightarrow ll\nu \nu$ cross section 
+sample of mediator masses, interpreted as perturbations to the $ZZ\rightarrow l^+l^- \MET$ cross section 
 corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2012awa} \label{fig:ATLASzz}. The signals form a 1D parameter space scan in 
 mediator mass \MZP for fixed dark matter mass and mediator couplings; $\MDM=100$ GeV, $g_{q}=0.25$ and $g_{\textsc{dm}} = 1$.}
 \label{fig:ATLASzz}
 \end{figure}
 
 Also in the `electroweak' category are the diboson measurements. Here the most sensitive is the ATLAS $ZZ$ measurement, in particular the 7~TeV result, which includes
-a fiducial cross section measurement of $pp \rightarrow l^+l^- + \MET$. This is illustrated in Fig.~\ref{fig:ATLASzz}. 
+a fiducial cross section measurement of $pp \rightarrow l^+l^- + \MET$, interpreted in the paper as $pp \rightarrow ZZ \rightarrow l^+l^- \nu \bar{\nu}$, but performed in a 
+sufficiently model-independent fashion that it has the same sensitivity to the $l^+l^- +$ DM channel. This is illustrated in Fig.~\ref{fig:ATLASzz}. 
 The production diagrams are the same as the $V$-jets case, but in this case the 
 mediator decays to Dark Matter rather than back to quarks.
 In the absence of any particle-level measurements in the `missing energy plus jets' category of 
@@ -443,18 +445,22 @@ Several features are discernible.
 
 As expected, the exclusion is much weaker in the `challenging' case and quite strong in the `optimistic' scenario.
 
-For $\MZP < 2\MDM$, the decay of the mediator to Dark Matter is suppressed. This leads to the diagonal structure across the plots, 
-with the sensitivity below the diagonal, in the right portion of the map, coming mainly from the jet measurements.
+For the first three scenarios, at $\MZP > 2\MDM$ the decay of the mediator to Dark Matter dominates of the decay to jets. This leads to the diagonal structure across the plots, 
+with the sensitivity below the diagonal, in the right portion of the map, coming mainly from the jet measurements. In the fourth scenario, even when the decay to
+DM is kinematically allowed, the jet signatures continue to contribute, and so the diagonal structure is less visible. 
 
-At low values of the \MZP, the sensivity comes mainly from the $V+$jets signatures. In the challenging and intermediate scenarios, a dip in sensitivity around 
+At low values of the \MZP the sensivity comes mainly from the $V+$jets signatures. In the challenging and intermediate scenarios, a dip in sensitivity around 
 $\MZP \approx 700$~GeV is visible, where the sensitvity from inclusive jets and $V+$jets do not quite overlap. In the optimistic scenario, they overlap, and the whole lower
 right region of the map is excluded. In addition, the cross section $\times$ branching ratio for quarks $\rightarrow Z^\prime \rightarrow$ quarks remains large
-enough that the diagonal cutoff in sensivitivty of the jet channels at $\MZP \approx 2\MDM$ is blurred. {\bf illustrate this further with a low \GDM option?}
+enough that the diagonal cutoff in sensivitivty of the jet channels at $\MZP \approx 2\MDM$ is blurred. 
 
-To the top left region of the diagonal the decay of the mediator to Dark Matter is kinematically allowed, and for the chosen value of $\GDM=1$ it will dominate 
-over the decay to quarks. Hence the sensivity in the inclusive jet (and $V+$jet) signatures drops. This is the region where a measurement of \MET+jets would be useful 
-(and indeed it is where the searches performed using such signatures contribute, see \cite{Kahlhoefer:2015bea}). Current sensitivity dies away at $\MZP \approx 750$~GeV 
-in the intermediate and challenging scenarios. 
+To the top left region of the diagonal the decay of the mediator to Dark Matter is kinematically allowed, and for $\GDM=1$ it will dominate 
+over the decay to quarks. Hence the sensivity in the inclusive jet (and $V+$jet) signatures drops in all scenarios except the fourth. 
+This is the region where a measurement of \MET+jets would be useful 
+(and indeed it is where the searches performed using such signatures contribute, see \cite{Kahlhoefer:2015bea}). Current sensitivity in the intermediate and challenging scenarios 
+comes from the $l^+l^- + \MET$ measurement, and dies away at $\MZP \approx 750$~GeV. In the fourth scenario, the decays to DM are relatively suppressed and 
+so the $l^+l^- + \MET$ signature makes little contribution. However, as already discussed, the exclusion from the jet measurements remains strong.
+
 
 \begin{figure}[p]
 \centering
@@ -468,17 +474,17 @@ in the intermediate and challenging scenarios.
     \subfloat[$\GQ=0.375$ and $\GDM = 1$\label{fig:map0375}]{%
       \includegraphics[width=0.5\textwidth]{images/combinedCL_gq0375.pdf}
     }
-
     \subfloat[$\GQ=0.375$ and $\GDM = 0.25$\label{fig:map0375_025}]{%                                                               
       \includegraphics[width=0.5\textwidth]{images/combinedCL_gq0375_gdm025.pdf}
     }
-
 
     \caption{Heatmaps displaying 2D parameter space scans in fixed mass planes corresponding to a fixed $g_{\textsc{dm}} = 1$ and variable $g_{q}$, with
     figure~\ref{fig:map025} representing $g_{q}=0.25$ and figure~\ref{fig:map05} representing $g_{q}=0.5$. The confidence level of exclusion represented 
     corresponds to testing the full signal strength hypothesis against the null background only hypothesis, calculated as outlined in 
     section~\ref{sec:statmethod}. The combination of measurements entering into the confidence level presented here is the maximally
-    sensitive allowed grouping as outlined in section~\ref{sec:dynselec}, considering all available measurements as listed in section~\ref{sec:measurements}}
+    sensitive allowed grouping as outlined in section~\ref{sec:dynselec}, considering all available measurements as listed in section~\ref{sec:measurements}.
+    (a) Challenging scenario, (b) Optimistic (c) Intermediate (d) DM suppressed.}
+
     \label{fig:maps}
 \end{figure}
 
@@ -491,7 +497,7 @@ a method to efficently scan existing particle-level measurements from the LHC, i
 The \Contur method uses measurements which have already been shown to be in good agreement with the SM, and thus is purely aimed at limiting the possibilities 
 for models of new physics and hopefully narrowing the focus of experimental and theoretical effort on to the best models. It is this complementary to 
 direct and dedicated searches. The exclusion limits obtained are competitive with limits from searches to  date which have reported null results.
-One notable feature is the simultaneous coverage of a wide variety final states. This leads to enhanced stability of the sentivity as a function of model
+One notable feature is the simultaneous coverage of a wide variety final states. This leads to enhanced stability of the sensitivity as a function of model
 parameters, and also can uncover sensitivity in channel which might not otherwise be considered. For example, in our case unexpected sensitivity is seen in
 $V$+jets measurements, as well as the more commonly used dijet and \MET channels. The method is highly scaleable to new measurements as they are produced, and
 to new simplified models as they are developed.
