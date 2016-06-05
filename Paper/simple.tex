@@ -4,8 +4,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{dsfont}
 \usepackage{graphicx} %loads the graphicx.sty package 
-\usepackage{epstopdf} %loads the epstopdf.sty package 
-\usepackage{slashed}
+\usepackage{epstopdf} %loads the epstopdf.sty package {slashed}
 \usepackage{color}
 
 \usepackage{graphicx,longtable,tocloft,color}
@@ -407,7 +406,7 @@ The signals form a 1D parameter space scan in mediator mass for fixed dark matte
 \label{fig:ATLASwjet}
 \end{figure}
 
-Moving on to the `Electroweak' final states discussed in Section~\ref{sec:measurements}, Figure~\ref{fig:ATLASwjet} illustrates the sensivity of vector-boson-plus-jet
+Moving on to the `Electroweak' final states discussed in Section~\ref{sec:measurements}, Figure~\ref{fig:ATLASwjet} illustrates the sensitivity of vector-boson-plus-jet
 ($V+$jet) measurements to this model, in this case the dijet mass differential cross section in $W+$-jet events. Strictly speaking, the measurement is made for
 events with a single charged lepton, \MET, and jets, interpreted as $W$+jets in the SM. In the BSM model considered here, \MET could in principle 
 also arise from the Dark Matter candidate. However, inspections shows that the sensitivity - which is at mediator masses below around a TeV or so - arises 
@@ -445,17 +444,17 @@ Several features are discernible.
 
 As expected, the exclusion is much weaker in the `challenging' case and quite strong in the `optimistic' scenario.
 
-For the first three scenarios, at $\MZP > 2\MDM$ the decay of the mediator to Dark Matter dominates of the decay to jets. This leads to the diagonal structure across the plots, 
+For the first three scenarios, at $\MZP > 2\MDM$ the decay of the mediator to Dark Matter dominates over the decay to jets. This leads to the diagonal structure across the plots, 
 with the sensitivity below the diagonal, in the right portion of the map, coming mainly from the jet measurements. In the fourth scenario, even when the decay to
 DM is kinematically allowed, the jet signatures continue to contribute, and so the diagonal structure is less visible. 
 
-At low values of the \MZP the sensivity comes mainly from the $V+$jets signatures. In the challenging and intermediate scenarios, a dip in sensitivity around 
+At low values of the \MZP the sensitivity comes mainly from the $V+$jets signatures. In the challenging and intermediate scenarios, a dip in sensitivity around 
 $\MZP \approx 700$~GeV is visible, where the sensitvity from inclusive jets and $V+$jets do not quite overlap. In the optimistic scenario, they overlap, and the whole lower
 right region of the map is excluded. In addition, the cross section $\times$ branching ratio for quarks $\rightarrow Z^\prime \rightarrow$ quarks remains large
-enough that the diagonal cutoff in sensivitivty of the jet channels at $\MZP \approx 2\MDM$ is blurred. 
+enough that the diagonal cutoff in sensitivity of the jet channels at $\MZP \approx 2\MDM$ is blurred. 
 
 To the top left region of the diagonal the decay of the mediator to Dark Matter is kinematically allowed, and for $\GDM=1$ it will dominate 
-over the decay to quarks. Hence the sensivity in the inclusive jet (and $V+$jet) signatures drops in all scenarios except the fourth. 
+over the decay to quarks. Hence the sensitivity in the inclusive jet (and $V+$jet) signatures drops in all scenarios except the fourth. 
 This is the region where a measurement of \MET+jets would be useful 
 (and indeed it is where the searches performed using such signatures contribute, see \cite{Kahlhoefer:2015bea}). Current sensitivity in the intermediate and challenging scenarios 
 comes from the $l^+l^- + \MET$ measurement, and dies away at $\MZP \approx 750$~GeV. In the fourth scenario, the decays to DM are relatively suppressed and 
@@ -488,6 +487,8 @@ so the $l^+l^- + \MET$ signature makes little contribution. However, as already 
     \label{fig:maps}
 \end{figure}
 
+The 95\% contours derived from the heatmaps of Fig.~\ref{fig:maps} are shown in Fig.~\ref{fig:cont}.
+
 \begin{figure}[p]
 \centering
     \subfloat[$\GQ=0.25$ and $\GDM = 1$ \label{fig:cont025}]{%
@@ -507,7 +508,11 @@ so the $l^+l^- + \MET$ signature makes little contribution. However, as already 
 \end{figure}
 
 
-{\bf here we should have some discussion of the theory constraints, other experiment constraints, and cosmological context. Contour plots to come from DY?}
+{\bf here we should have some discussion of the theory constraints, other experiment constraints, and cosmological context.}
+
+Note that as expected, the sensitivity from the 7~TeV dijet measurements used here is qualitatively similar, but inferior, to the exclusions obtained 
+combining the searches in 8~TeV and 13~TeV jet data - see, for example, \cite{Fairbairn:2016iuf}. This should change once measurements
+are available from these later running periods (indeed, the CMS measurement is already made~\cite{Khachatryan:2016wdh}, but is not yet available in \rivet or HepData).
 
 \section{Conclusions}\label{sec:conclusions}
 
