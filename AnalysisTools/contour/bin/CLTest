@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import rivet, yoda, sys, os
 from contour import TestingFunctions as ctr
 from contour import Utils as util
@@ -83,8 +84,8 @@ if __name__ == '__main__':
                 if ctr.LumiFinder(h)[0] == -1:
                     continue
                 #Use this switch to view individual analyses
-                if '/ATLAS_2014_I1268975' not in h:
-                    continue
+                #if '/ATLAS_2014_I1268975' not in h:
+                #    continue
                 print 'testing: ' + h
                 lumi = ctr.LumiFinder(h)[0]
                 if lumi > 0:

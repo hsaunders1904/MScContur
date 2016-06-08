@@ -3,7 +3,7 @@
 #############################################################################################
 ### Here store aditional static data we dont get from rivet, this can be improved greatly..
 global anapool, subpools
-anapool=['ATLAS_7_JETS','ATLAS_7_Zjj','ATLAS_7_Wjj_mu','CMS_7_JETS','CMS_7_Wjj','CMS_7_Zjj','ATLAS_8_JETS','ATLAS_7_Wjj_EL','ATLAS_7_GAMMA','ATLAS_7_Z_GAMMA','ATLAS_7_W_GAMMA_MU','ATLAS_7_W_GAMMA_EL','ATLAS_7_ZZ','ATLAS_7_GAMMAGAMMA']
+anapool=['ATLAS_7_JETS','ATLAS_7_Zjj','ATLAS_7_Wjj_mu','CMS_7_JETS','CMS_7_Wjj','CMS_7_Zjj','ATLAS_8_JETS','ATLAS_7_Wjj_EL','ATLAS_7_GAMMA','ATLAS_7_Z_GAMMA','ATLAS_7_W_GAMMA_MU','ATLAS_7_W_GAMMA_EL','ATLAS_7_ZZ','ATLAS_7_GAMMAGAMMA','CMS_GAMMA_JET']
 ##This is really bad, but set up an arbitrary number of subpool tags to iterate over, this should just be done on the fly for each analysis!
 subpools=['R1','R2','R3','R4']
 def LumiFinder(h):
@@ -14,6 +14,14 @@ def LumiFinder(h):
     if 'ATLAS_2014_I1325553' in h:
         lumi = 4500
         anatype=anapool[0]
+        R1=['d01-x01-y01','d01-x01-y02','d01-x01-y03','d01-x01-y04','d01-x01-y05','d01-x01-y06']
+        R2=['d02-x01-y01','d02-x01-y02','d02-x01-y03','d02-x01-y04','d02-x01-y05','d02-x01-y06']
+        for poolmember in R1:
+            if poolmember in h:
+                subpool = subpools[0]
+        for poolmember in R2:
+            if poolmember in h:
+                subpool = subpools[1]
     elif 'ATLAS_2014_I1268975' in h:
         lumi = 4500
         anatype=anapool[0]
@@ -28,6 +36,14 @@ def LumiFinder(h):
     elif 'ATLAS_2014_I1326641' in h:
         lumi = 4510
         anatype=anapool[0]
+        R1=['d01-x01-y01','d02-x01-y01','d03-x01-y01','d04-x01-y01','d05-x01-y01']
+        R2=['d06-x01-y01','d07-x01-y01','d08-x01-y01','d09-x01-y01','d10-x01-y01']
+        for poolmember in R1:
+            if poolmember in h:
+                subpool = subpools[0]
+        for poolmember in R2:
+            if poolmember in h:
+                subpool = subpools[1]
     elif 'ATLAS_2013_I1230812' in h:
         #Z+jets
         blacklist=['d02','d04','d06','d08']
@@ -64,7 +80,6 @@ def LumiFinder(h):
         for poolmember in R2:
             if poolmember in h:
                 subpool = subpools[1]
-
     elif 'ATLAS_2013_I1244522' in h:
         lumi = 37
     elif 'ATLAS_2014_I1306294' in h:
@@ -94,9 +109,21 @@ def LumiFinder(h):
         for plotkey in whitelist:
             if plotkey in h:
                 lumi = 4500
+        R1=['d13-x01-y01','d14-x01-y01','d15-x01-y01','d16-x01-y01','d17-x01-y01','d18-x01-y01','d19-x01-y01','d20-x01-y01']
+        R2=['d21-x01-y01','d22-x01-y01','d23-x01-y01','d24-x01-y01','d25-x01-y01','d26-x01-y01','d27-x01-y01','d28-x01-y01']
+        for poolmember in R1:
+            if poolmember in h:
+                subpool = subpools[0]
+        for poolmember in R2:
+            if poolmember in h:
+                subpool = subpools[1]
     elif 'ATLAS_2013_I1263495' in h:
         lumi = 4600
         anatype =anapool[8]
+        R1=['d01-x01-y01','d01-x01-y03']
+        for poolmember in R1:
+            if poolmember in h:
+                subpool = subpools[0]
     elif 'ATLAS_2013_I1217863_Z' in h:
         lumi = 4.6
         anatype= anapool[9]
@@ -132,5 +159,7 @@ def LumiFinder(h):
         for plotkey in blacklist:
             if plotkey in h:
                 lumi = -1
-
+    elif 'CMS_2014_I1266056' in h:
+        lumi = 4500
+        anatype=anapool[14]
     return lumi,anatype,subpool
