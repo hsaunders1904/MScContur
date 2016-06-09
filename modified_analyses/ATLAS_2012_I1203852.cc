@@ -8,7 +8,7 @@
 #include "Rivet/Projections/UnstableFinalState.hh"
 #include "Rivet/Projections/VetoedFinalState.hh"
 #include "Rivet/Projections/DressedLeptons.hh"
-#include "Rivet/Projections/MergedFinalState.hh"
+#include "Rivet/Projections/PromptFinalState.hh"
 #include "Rivet/Projections/MissingMomentum.hh"
 #include "Rivet/Projections/InvMassFinalState.hh"
 
@@ -109,10 +109,12 @@ namespace Rivet {
       IdentifiedFinalState Photon(fs);
       Photon.acceptIdPair(PID::PHOTON);
 
-      IdentifiedFinalState bare_EL(fs);
+      PromptFinalState pfs(Cuts::abseta < 5.0);
+
+      IdentifiedFinalState bare_EL(pfs);
       bare_EL.acceptIdPair(PID::ELECTRON);
 
-      IdentifiedFinalState bare_MU(fs);
+      IdentifiedFinalState bare_MU(pfs);
       bare_MU.acceptIdPair(PID::MUON);
 
 
