@@ -40,14 +40,14 @@
 \maketitle 
 
 \begin{abstract}
-A new method for providing general consistency contraints Beyond-the-Standard-Model (BSM) theories, using 
+A new method providing general consistency contraints for Beyond-the-Standard-Model (BSM) theories, using 
 measurements at particle colliders, is presented. The method, `Constraints On New Theories Using \rivet' - \Contur \ - exploits
 the fact that particle-level differential measurements made in fiducial regions of phase-space have a high degree of
 model-independence. These measurements can therefore be compared to BSM physics implemented in Monte Carlo generators in a very
 generic way, allowing a wider array of final states to be considered than is typically the case. The \Contur approach should be seen
 as complementary to the discovery potential of direct searches, being designed to eliminate inconsistent 
 BSM proposals in a context where many (but perhaps not all) measurements are consistent with the Standard Model.
-We demontrate, using a competitive simplified Dark Matter model, the power of this approach. 
+We demonstrate, using a competitive simplified Dark Matter model, the power of this approach. 
 The \Contur method is highly scaleable to other models and future measurements.
 \end{abstract}
 
@@ -85,7 +85,7 @@ states~\cite{Buckley:2011ms}. These generators now incorporate matrix-elements f
 matched to logarithmic parton showers, and successful models of soft physics such as hadronisation and
 the underlying event. They are also capable of importing new physics models into this framework, thus allowing
 the rapid prediction of their impact on a wide variety of final states simultaneously. 
-In this paper we make extensive use of these capabilities within Herwig~\cite{Bahr:2008pv}.
+In this paper we make extensive use of these capabilities within Herwig~\cite{Bahr:2008pv} \todo{DG: Herwig 7 cite}.
 \item
 As many favoured BSM scenarios have been excluded, there has been a move toward 
 ``simplified models'' of new physics~\cite{Alves:2011wf,Abercrombie:2015wmb}, which aim to be as generic as possible, 
@@ -104,14 +104,14 @@ These three developments together make it possible to efficiently
 bring the power of a very wide range of data to bear on the search for new physics. While such a generic approach is
 unlikely to compete in terms of speed and sensitivity with a search optimised for a specific theory, the breadth
 of potential signatures and models which can be covered makes it a powerful complementary approach\footnote{The applicability of 
-searches can be extended to new models by accessing archived versions of the original analysis code, ideally using a standardised 
+searches can be extended \textbf{todo: DG: what does that mean?} to new models by accessing archived versions of the original analysis code, ideally using a standardised 
 interface such as that provided by the RECAST~\cite{Cranmer:2010hk} project.}
 Any theory seeking
-to explain a new signature or anomaly in the data may have consequences for other final states which should be checked 
-against data this way. If no BSM physics emerges, a model-independent and systematic approach becomes mandatory.
+to explain a new signature or anomaly in the data may have consequences \todo{DG: clarify} for other final states which should be checked 
+against data this way. If no BSM physics emerges, a model-independent and systematic approach becomes mandatory.\todo{DG: clarify}
 
-The outline of the paper is as follows. In the next section, we motivate and describe the 
-simplified model we consider as a first demonstration, and its implementation via Herwig. 
+In this paper, we first motivate and describe the 
+simplified model we have chosen as an initial demonstration, and its simulation using Feynrules and Herwig. 
 In Section~\ref{sec:measurements} we introduce the measurements that we will use, and their implementation in \rivet. 
 Section~\ref{sec:method} covers the core of the \Contur method, incuding the statistical approach and dynamic data selection.
 In Section~\ref{sec:kinematics} we discuss the differential cross sections in which the impact of our example model would be 
@@ -129,7 +129,7 @@ fermion, $\psi$, which interacts with the SM model through a new vector particle
 the Dark Matter $\psi$ and to the 
 SM are specified as %
 \begin{align}\label{eq:vector_mediator}
- {\cal L} \supset  \GDM\overline{\psi} \gamma_{\mu}\gamma_5 \psi\,Z'^{\mu} + \GQ\sum_{q} \bar q \gamma_{\mu} q Z'^{\mu} \,,
+ {\cal L} \supset  \GDM\,\overline{\psi} \gamma_{\mu}\gamma_5 \psi\,Z'^{\mu} + \GQ\sum_{q} \bar q \gamma_{\mu} q \,Z'^{\mu} \,,
 \end{align}
 %
 where the sum in the second term includes all SM quarks, $q \in \{u,d,c,s,t,b\}$. The simplified model specified in Eq.~(\ref{eq:vector_mediator}) 
@@ -145,7 +145,7 @@ the $U(1)'$ gauge group of the vector mediator. As a consequence, there is mixin
 requires the couplings of the $Z'$ to be flavour universal. However, models where the mediator couples to leptons 
 are strongly constrained by collider searches for di-lepton resonances. For vector couplings of the $Z'$ to  SM fermions, on the other hand, 
 the SM Higgs does not carry a $U(1)'$ charge and the charges of quarks and leptons are independent. We are thus free to set the 
-$Z'$ coupling to leptons to zero to evade constraints from di-lepton searches, and consider a simplified model with a universal vector-coupling 
+$Z'$ lepton coupling to zero to evade constraints from di-lepton searches, and consider a simplified model with a universal vector-coupling 
 to SM quarks only. 
 
 The parameters of the simplified model, \GDM, \GQ, \MDM, and \MZP, are constrained by perturbative unitarity. 
@@ -168,46 +168,46 @@ and exclude dark matter and mediator masses of up to about 500~GeV and 1.5~TeV, 
 model re-interpretations of LHC searches as presented in, e.g.,  Refs.~\cite{Kahlhoefer:2015bea, Heisig:2015ira}. 
 
 To simulate the experimental signature for our model, we have generated events using \textsc{FeynRules}~\cite{Alloul:2013bka}... 
-{\bf MK: please complete the description of the tool chain...}
+\todo{MK: please complete the description of the tool chain}
 
 \section{Measurements}\label{sec:measurements}
 
-To be useful in our approach, measurements must be made in as model-independent fashion as possible. 
-Cross sections should be measured in a kinematic region closely matching the detector acceptance - commonly called 
-'fiducial cross sections' - to avoid extrapolation into unmeasured regions, since such extrapolations must make 
-theoretical assumptions; usual that the SM is valid. The measurements should generally be made in terms of observable final
-state particles (e.g. leptons, photons) or objects constructed from them (e.g. hadronic jets, missing energy) 
+To be useful in our approach, measurements must be made in as model-independent a fashion as possible. 
+Cross sections should be measured in a kinematic region closely matching the detector acceptance --- commonly called 
+'fiducial cross sections' --- to avoid extrapolation into unmeasured regions, since such extrapolations must always make 
+theoretical assumptions; usually that the SM is valid. The measurements should generally be made in terms of observable final
+state particles (e.g. leptons, photons) or objects constructed from them \todo{"observables" insetad of "them"?} (e.g. hadronic jets, missing energy) 
 rather than assumed intermediate states ($W, Z, H$, top). Finally, differential measurements are most useful, as features
 in the shapes of distributions are a more sensitive test than simple event rates - especially when there are
 highly-correlated systematic experimental uncertainties, such as those on the integrated luminosity, or the jet energy scale.
 
 One feature noted in several cases is that missing transverse energy (\MET) is 
-explicity assumed to be the same as neutrino transverse energy. In fact, in a BSM study, missing energy can also 
+explicity assumed to be the same as neutrino transverse energy. In BSM physics, missing energy can also 
 arise from other sources (for example, Dark Matter production!) and so it is important that the result is treated in such a 
 way that this sensitivity is correctly estimated. The measurements are typically corrected back to total \MET, 
 or to the assumed neutrino \pt, in the experimental analysis, using a simulated SM event sample which has been shown to describe
 the data well. This involves an extrapolation into the forward 
 region where transverse energy is unmeasured; however, unless a BSM particle enters this region, the error made is 
-negligible. This means that as long as fiducial acceptance cut is made on BSM particles counting toward \MET (to ensure that 
+negligible. This means that as long as a fiducial acceptance cut is made on BSM particles counting toward \MET (to ensure that 
 large contributions to \MET 
 from invisible particles outside the detector acceptance are excluded) such analyses can be 
 used\footnote{Of greater consequence, but easier to fix, is the fact that several \rivet methods explicitly calculated \MET
 from neutrinos found in the true event record, rather than as the negative of the visible particles in the event. These 
-routines were modified as a part of this work, and are all fixed in release 2.5.X.}.
+routines were modified as a part of this work, and are all fixed in release 2.5.X.}. \todo{DG: needs clearer distinction between what experimental data analyses should do / what rivet MC analyses should do}
 
 Another feature of the measurements is that most of them, explicitly or implicitly, insist in their fiducial cross-section definition 
-that leptons and photons be 'directly' produced, that is, prior to hadronisation and coming from the primary vertex of the collision. 
+that leptons and photons be 'directly' produced, that is, prior to hadronisation \todo{DG: check -ize / -ise consistency} and coming from the primary vertex of the collision. 
 Such a selection is enforced in the experiments by a mixture of isolation and vertex requirements, but is not universally enforced
 in all \rivet routines. Generally this is a small effect, but care needs to be taken that the sensitivity is not overestimated, especially
 for BSM models which enhance bottom or charm production, when semi-leptonic decays may play a role.
-This featire should be addressed in future releases of \rivet.
+This feature should be addressed in future releases of \rivet.
 
 The measurements we consider fall into five loose and independent classes.
 \begin{enumerate}
 \item
 Jets: event topologies with any number of jets but no missing energy, leptons, or photons. In this category there
 are important measurements from both ATLAS and CMS, many of which have existing \rivet analyses. We make use of 
-the highest integrated-luminosity inclusive~\cite{Aad:2014vwa,Chatrchyan:2014gia} dijet~\cite{Aad:2013tea,Aad:2014pua} 
+the highest integrated-luminosity inclusive~\cite{Aad:2014vwa,Chatrchyan:2014gia}, dijet~\cite{Aad:2013tea,Aad:2014pua} 
 and three-jet~\cite{Aad:2014rma} %{\bf add cms 3jet here? Needs a Rivet routine.} 
 measurements made in 7~TeV collisions, as well as the jet mass 
 measurement from CMS~\cite{Chatrchyan:2013vbb}.
@@ -228,7 +228,7 @@ Isolated photons, with or without missing energy, but no leptons. Here we make u
 photon-plus-jet~\cite{ATLAS:2012ar} measurements, where available.
 \item
 Signatures specifically based on top quark or Higgs candidates. Most such measurements to date have been made at the 'parton' level (that is,
-corrected using SM MC back to the top or Higgs before decay, and many of them are extrapolated to $4\pi$ phase space. Both steps increase
+corrected using SM MC back to the top or Higgs before decay), and many of them are extrapolated to $4\pi$ phase space. Both steps increase
 the model dependence and make them unsuitable for the \Contur approach. Recently, however, fiducial, differential, particle-level measurements
 have begun to appear\cite{Aad:2015hna,Khachatryan:2016gxp}. These are potentially very powerful in excluding some models, but will in principle 
 overlap with the previous 
@@ -237,7 +237,7 @@ categories depending on decay mode. We leave the inclusion of such measurements 
 
 The choice of which measurements are actually included at this stage is driven mainly by the availability of particle-level differential 
 fiducial cross sections 
-implemented in \rivet.
+implemented in \rivet. \todo{DG: motivate why we're not hand-writing analyses}
 
 \section{Method}
 \label{sec:method}
@@ -248,7 +248,7 @@ The approach taken is to consider simplified BSM models in the light of existing
 Thus this is inherently an exercise in limit-setting rather than disovery. The assumption is that a generic, measurement-based approach such as this will not be
 competitive in terms of sensitivity, or speed of discovery, with a dediciated search for a specific BSM final-state signature. However, it will have the
 advantage of breadth of coverage, and will make a valuable contribution to physics at the energy frontier whether or not new signatures are discovered at the LHC.
-In the case of a new discovery, many models will be put forward to explain the data - as has for example already been seen\cite{PhysRevLett.116.150001} 
+In the case of a new discovery, many models will be put forward to explain the data, as has for example already been seen\cite{PhysRevLett.116.150001} 
 after the 750~GeV diphoton anomaly 
 reported by ATLAS and CMS at the end of 2015 and start of 2016~\cite{ATLAS-CONF-2016-018,CMS-PAS-EXO-16-018}. 
 Checking these models for consistency with existing measurements will be vital for unravelling whatever 
@@ -260,17 +260,18 @@ over a wide range of final states, giving the best chance of an indirect pointer
 \subsection{Dynamical data selection}\label{sec:dynselec}
 \label{sec:selec}
 
-Starting with the measurements discussed in Section~\ref{sec:measurements}, we define a prodecure to combine exclusions limits from different measured distributions.
+Starting with the measurements discussed in Section~\ref{sec:measurements} \todo{DG: check list is consistent with the final runs}, 
+we define a prodecure to combine exclusion limits from different measured distributions.
 The data used for comparison in \rivet come in the form of histograms, which do not carry information about the correlations between uncertainties - 
-even when in several case detailed information is made available in the experimental papers. There are highly correlated uncertainties in several measurements, 
+even when in several cases detailed information is made available in the experimental papers. There are highly correlated uncertainties in several measurements, 
 for example on the integrated luminosity, or the energy scale of jet measurements. In some cases these are dominant. Including correlations would be a highly 
 complex process, since as well as correlations within a single data-set, there are also common systematic uncertainties between different
 results, which are generally not provided by the experiments. There are also overlaps between event samples used in many different measurements, which lead to
 non-trivial correlations in the statistical uncertainties. To attempt to avoid spuriously high exclusion rates due to multiply-counting what might be the 
 same excursion against several datasets, we take the following approach:
 \begin{enumerate}
-\item Divide the data into groupings, where there is no overlap between groups in the event samples used in measurements, and hence no statistical correlation 
-between groups, but there are some overlaps within each group. These grouping are, crudely, different final states, different experiments, and different beam 
+\item Divide the measurements into groups that have no overlap in the event samples used, and hence no statistical correlation 
+between them. These measurements are grouped by, crudely, different final states, different experiments, and different beam 
 energies.
 \item Scan within each group for the most significant deviation between BSM+SM and SM. This is done distribution-by-distribution and bin-by-bin within distributions.
 Use only the most significant deviation, and disregard the rest. Although the selection of the most significant deviation sounds inuitively suspect, in this case it
@@ -290,7 +291,7 @@ data as our ``null signal'', and we superpose onto them the contribution from th
 %be the width of a Gaussian spread, and we use the asymptotic statistical techniques described by Cowan, Cranmer and Gross~\cite{Cowan:2010js} to derive
 %a liklihood function describing the relative probabilities of the SM and the SM+BSM scenarios given each data point. 
 
-Taking each bin of each distribution considered as a separate statistic to be tested, a likelihood function can be constructed as follows,
+Taking each bin of each distribution considered as a separate statistic to be tested, a likelihood function can be constructed as follows, \todo{DG: fix as discussed, breaking into multiple steps}
 \begin{align}
 L(\mu, \vec{b}, \vec{\sigma}_{b}) = { \frac{(\mu s + b)^{n}}{n!} \exp\left(-\mu s + b\right) \times \frac{1}{\sqrt{2 \pi} \sigma_{b}} \exp\left(-\frac{(\tilde{b} - b)^{2}}{2 \sigma_{b}^{2}}\right)}
 \end{align}
@@ -328,7 +329,7 @@ that the tested parameter space values fall in the asymptotic, or large sample, 
 construction up to this point has been designed to look at smoothly falling well-measured processes at energies that the LHC is designed to probe. This is however a 
 result that should be monitored when considering different models}. Specifically, the Asimov data set is used to extract an approximation for the variance and central value of the strength parameter, $\mu$, and the results of Wilks~\cite{Wilks:1938dza} and Wald~\cite{Wald:1943:EWM} (again as outlined in Ref.~\cite{Cowan:2010js}) 
 are used to approximate the test statistic. 
-Hence the $p$-value quantifying the agreement between the null (SM only) hypothesis and the tested hypothesis can be computed. 
+Hence the $p$-value quantifying the agreement between the null (SM only) hypothesis and the tested hypothesis can be computed. \todo{DG: phrase this carefully. It's the p-value of what exactly, under what assumption? Sth like: probability of observing n events if b-only is true...}
 \\
 
 In fact, as is convention in the particle physics community, the final measure of statistical agreement is presented in terms of what is known as the CL$_{s}$ 
@@ -426,7 +427,7 @@ mediator mass \MZP for fixed dark matter mass and mediator couplings; $\MDM=100$
 
 Also in the `electroweak' category are the diboson measurements. Here the most sensitive is the ATLAS $ZZ$ measurement, in particular the 7~TeV result, which includes
 a fiducial cross section measurement of $pp \rightarrow l^+l^- + \MET$, interpreted in the paper as $pp \rightarrow ZZ \rightarrow l^+l^- \nu \bar{\nu}$, but performed in a 
-sufficiently model-independent fashion that it has the same sensitivity to the $l^+l^- +$ DM channel. This is illustrated in Fig.~\ref{fig:ATLASzz}. 
+sufficiently model-independent fashion that it has the same sensitivity to the $l^+l^- +$ DM channel. This is illustrated in Fig.~\ref{fig:ATLASzz}.
 The production diagrams are the same as the $V$-jets case, but in this case the 
 mediator decays to Dark Matter rather than back to quarks.
 In the absence of any particle-level measurements in the `missing energy plus jets' category of 
@@ -532,9 +533,9 @@ $V$+jets measurements, as well as the more commonly used dijet and \MET channels
 to new simplified models as they are developed.
 
 \section*{Acknowledgments}
-Josh McFayden, Les Houches, Michele Massimi... STFC... MCnet
+Josh McFayden, Les Houches, Michele Massimi... STFC... MCnet... Philosophy meeting in Edinburgh \todo{}
 
-\clearpage
+%\clearpage
 \bibliographystyle{h-physrev4}
 \bibliography{simple}
 
