@@ -47,7 +47,7 @@ model-independence. These measurements can therefore be compared to BSM physics 
 generic way, allowing a wider array of final states to be considered than is typically the case. The \Contur approach should be seen
 as complementary to the discovery potential of direct searches, being designed to eliminate inconsistent 
 BSM proposals in a context where many (but perhaps not all) measurements are consistent with the Standard Model.
-We demonstrate, using a competitive simplified Dark Matter model, the power of this approach. 
+We demonstrate, using a competitive simplified dark matter model, the power of this approach. 
 The \Contur method is highly scaleable to other models and future measurements.
 \end{abstract}
 
@@ -64,11 +64,11 @@ have been published, reaching into this new kinematic domain. The predictions of
 generally in agreement with the data, while the many dedicated searches for physics beyond the SM
 have excluded a wide range of possible scenarios. 
 %Nevertheless, there are many reasons to be confident that
-%physics beyond the Standard Model (BSM) exists; examples include the gravitational evidence for Dark Matter, the large 
+%physics beyond the Standard Model (BSM) exists; examples include the gravitational evidence for dark matter, the large 
 %preponderance of matter over antimatter in the universe, and the existence of gravity itself. None of 
 %these can be easily accommodated within known Standard Model phenomenology. 
 Nevertheless, there are many reasons to be confident that
-physics beyond the Standard Model (BSM) exists, including in particular the gravitational evidence for Dark Matter, which cannot be accommodated within the 
+physics beyond the Standard Model (BSM) exists, including in particular the gravitational evidence for dark matter, which cannot be accommodated within the 
 Standard Model. \textbf{MK: have removed the reference to the matter-antimatter asymmetry and to gravity, as it is not really related to BSM at the TeV scale.} 
 
 
@@ -90,7 +90,7 @@ states~\cite{Buckley:2011ms}. These generators now incorporate matrix-elements f
 matched to logarithmic parton showers, and successful models of soft physics such as hadronisation and
 the underlying event. They are also capable of importing new physics models into this framework, thus allowing
 the rapid prediction of their impact on a wide variety of final states simultaneously. 
-In this paper we make extensive use of these capabilities within Herwig~\cite{Bahr:2008pv} \todo{DG: Herwig 7 cite}.
+In this paper we make extensive use of these capabilities within Herwig~\cite{Bahr:2008pv} \todo{DG: Herwig 7 cite}.\todo{MK: should we always use special fonts like small caps for computer tools (Herwig, Feynrules, rivet etc.)?}
 \item
 As the search for many of the favoured BSM scenarios has been unsuccessful, there has been a move toward 
 ``simplified models'' of new physics~\cite{Alves:2011wf,Abercrombie:2015wmb}, which aim to be as generic as possible 
@@ -109,15 +109,16 @@ comparison in the \rivet library~\cite{Buckley:2010ar}.
 These three developments together make it possible to efficiently 
 bring the power of a very wide range of data to bear on the search for new physics. While such a generic approach is
 unlikely to compete in terms of speed and sensitivity with a search optimised for a specific theory, the breadth
-of potential signatures and models which can be covered makes it a powerful complementary approach\footnote{The applicability of 
+of potential signatures and models which can be covered makes it a powerful complementary approach.\footnote{The applicability of 
 searches can be extended \textbf{todo: DG: what does that mean?} to new models by accessing archived versions of the original analysis code, ideally using a standardised 
 interface such as that provided by the RECAST~\cite{Cranmer:2010hk} project.}
 Any theory seeking
-to explain a new signature or anomaly in the data may have consequences \todo{DG: clarify} for other final states which should be checked 
-against data this way. If no BSM physics emerges, a model-independent and systematic approach becomes mandatory.\todo{DG: clarify}
+to explain a new signature or anomaly in the data may predict a BSM signal \todo{DG: clarify} in other final states, which should be checked 
+against data this way. If, on the other hand, no BSM physics emerges, a model-independent and systematic approach becomes mandatory to exclude 
+new physics models or narrow down the corresponding model parameter space.\todo{DG: clarify}
 
 In this paper, we first motivate and describe the 
-simplified model we have chosen as an initial demonstration, and its simulation using Feynrules and Herwig. 
+simplified model we have chosen as an initial demonstration, and its simulation using Feynrules~\cite{Alloul:2013bka} and Herwig~\cite{}. \textbf{[MK: added citation here because its the first mention of Feynrules. Maybe  better mention it before and drop citation here....]}
 In Section~\ref{sec:measurements} we introduce the measurements that we will use, and their implementation in \rivet. 
 Section~\ref{sec:method} covers the core of the \Contur method, incuding the statistical approach and dynamic data selection.
 In Section~\ref{sec:kinematics} we discuss the differential cross sections in which the impact of our example model would be 
@@ -128,11 +129,11 @@ most apparent. In Section~\ref{sec:limits} this impact is translated into limits
 Searches for new physics at the LHC are often interpreted in terms of simplified models. Simplified models provide a generic 
 framework for analysing experimental signatures using a small number of parameters, such as masses and 
 couplings of new fields, without reference to specific UV-complete models. Such an  approach is particularly 
-well-suited for interpreting the search for Dark Matter in a more model-independent way, and can be used to connect results from the LHC with 
-Dark Matter searches in direct detection and from the observation of cosmic rays. Many simplified models for Dark Matter have been proposed 
+well-suited for interpreting the search for dark matter in a more model-independent way, and can be used to connect results from the LHC with 
+dark matter searches in direct detection and from the observation of cosmic rays. Many simplified models for dark matter have been proposed 
 in the past (see Ref.~\cite{Abercrombie:2015wmb} and references therein). Here, we consider a simplified model with a dark matter Majorana 
 fermion, $\psi$, which interacts with the SM model through a new vector particle, $Z^\prime$. The couplings of the mediator $Z^\prime$ to 
-the Dark Matter $\psi$ and to the 
+the dark matter $\psi$ and to the 
 SM are specified as %
 \begin{align}\label{eq:vector_mediator}
  {\cal L} \supset  \GDM\,\overline{\psi} \gamma_{\mu}\gamma_5 \psi\,Z'^{\mu} + \GQ\sum_{q} \bar q \gamma_{\mu} q \,Z'^{\mu} \,,
@@ -144,7 +145,7 @@ $\Gamma_{Z'}$, is determined by these four parameters.
 
 Following Ref.~\cite{Kahlhoefer:2015bea} we have chosen to couple the mediator to 
 dark matter and to the SM quarks through an axial-vector and vector current, respectively. An axial-vector coupling of the 
-mediator to DM leads to spin-dependent DM-nucleon interactions and thus weaker bounds from direct dark matter searches. 
+mediator to dark matter leads to spin-dependent dark matter-nucleon interactions and thus weaker bounds from direct dark matter searches. 
 Such a coupling structure naturally arises for Majorana fermion dark matter. Having also axial-vector couplings between
 the mediator and the SM  requires UV-completions of the simplified model in which the SM Higgs has to be charged under 
 the $U(1)'$ gauge group of the vector mediator. As a consequence, there is mixing between the $Z'$ and the gauge boson of the SM, and gauge invariance 
@@ -163,7 +164,7 @@ which defines the parameter space where the dark matter relic density can be rel
 Perturbative unitarity of the scattering amplitude in processes relevant to LHC dark matter searches has been studied in Ref.~\cite{Englert:2016joy}. 
 It was found that perturbative unitarity is respected in the production of mediators at the LHC, unless 
 the couplings are large, $\GQ \gtrsim {\cal O}(4\pi)$. In our analysis, we will only consider couplings which are well within the 
-perturbative regime, \GDM, $\GQ \lesssim {\cal O}(1)$, so that our predictions for DM and mediator production at the LHC 
+perturbative regime, \GDM, $\GQ \lesssim {\cal O}(1)$, so that our predictions for dark matter and mediator production at the LHC 
 are well-defined. 
 
 Dark matter has been searched for at the LHC in signatures with jets and large missing transverse momentum, see e.g.~\cite{Aaboud:2016tnv,CMS:2016tns} 
@@ -189,7 +190,7 @@ highly-correlated systematic experimental uncertainties, such as those on the in
 
 One feature noted in several cases is that missing transverse energy (\MET) is 
 explicity assumed to be the same as neutrino transverse energy. In BSM physics, missing energy can also 
-arise from other sources (for example, Dark Matter production!) and so it is important that the result is treated in such a 
+arise from other sources (for example, dark matter production!) and so it is important that the result is treated in such a 
 way that this sensitivity is correctly estimated. The measurements are typically corrected back to total \MET, 
 or to the assumed neutrino \pt, in the experimental analysis, using a simulated SM event sample which has been shown to describe
 the data well. This involves an extrapolation into the forward 
@@ -364,7 +365,7 @@ To investigate the exclusion power of the SM measurements discussed in Section~\
 plausible mediator masses (\MZP) and dark matter masses (\MDM) within the model described in Section~\ref{sec:model}, for three choices of
 the coupling of the mediator to the SM (\GQ). These coupling choices correspond to (i) an `optimistic' scenario $\GQ = 0.5, \GDM = 1$ - strong signals, 
 close to the edge of exclusion already, (ii) a `challenging' scenario $\GQ = 0.25, \GDM = 1$ - low couplings, hard to exclude, 
-and (iii) an `intermediate' scenario $\GQ = 0.375, \GDM = 1$, between the two. We also consider (iv) a scenario where the coupling of DM to the mediator is
+and (iii) an `intermediate' scenario $\GQ = 0.375, \GDM = 1$, between the two. We also consider (iv) a scenario where the coupling of dark matter to the mediator is
 suppressed, $\GQ = 0.375, \GDM = 0.375$.
 
 \begin{figure}[!htb]
@@ -416,7 +417,7 @@ The signals form a 1D parameter space scan in mediator mass for fixed dark matte
 Moving on to the `Electroweak' final states discussed in Section~\ref{sec:measurements}, Figure~\ref{fig:ATLASwjet} illustrates the sensitivity of vector-boson-plus-jet
 ($V+$jet) measurements to this model, in this case the dijet mass differential cross section in $W+$-jet events. Strictly speaking, the measurement is made for
 events with a single charged lepton, \MET, and jets, interpreted as $W$+jets in the SM. In the BSM model considered here, \MET could in principle 
-also arise from the Dark Matter candidate. However, inspections shows that the sensitivity - which is at mediator masses below around a TeV or so - arises 
+also arise from the dark matter candidate. However, inspections shows that the sensitivity - which is at mediator masses below around a TeV or so - arises 
 from genuine $W$ bosons produced in association with the mediator - not a signature typically considered in constraints on this class of model. The sensitivity
 is obviously highly dependent upon the bin width chosen in the SM measurement, which is driven mainly by the dijet mass resolution, although at high masses also by
 the number of events in the data.
@@ -433,11 +434,11 @@ mediator mass \MZP for fixed dark matter mass and mediator couplings; $\MDM=100$
 
 Also in the `electroweak' category are the diboson measurements. Here the most sensitive is the ATLAS $ZZ$ measurement, in particular the 7~TeV result, which includes
 a fiducial cross section measurement of $pp \rightarrow l^+l^- + \MET$, interpreted in the paper as $pp \rightarrow ZZ \rightarrow l^+l^- \nu \bar{\nu}$, but performed in a 
-sufficiently model-independent fashion that it has the same sensitivity to the $l^+l^- +$ DM channel. This is illustrated in Fig.~\ref{fig:ATLASzz}.
+sufficiently model-independent fashion that it has the same sensitivity to the $l^+l^- +$ dark matter channel. This is illustrated in Fig.~\ref{fig:ATLASzz}.
 The production diagrams are the same as the $V$-jets case, but in this case the 
-mediator decays to Dark Matter rather than back to quarks.
+mediator decays to dark matter rather than back to quarks.
 In the absence of any particle-level measurements in the `missing energy plus jets' category of 
-Section~\ref{sec:measurements}, this measurement has the best sensitivity to Dark Matter production for this model. Obviously, measurements at 8~TeV and 13~TeV of this 
+Section~\ref{sec:measurements}, this measurement has the best sensitivity to dark matter production for this model. Obviously, measurements at 8~TeV and 13~TeV of this 
 final state, and indeed of jets+\MET, can be expected to improve the sensitivity significantly.
 
 Finally, although they were scanned in the limit-setting process, the currently available isolated photon measurements do not contribute signficantly to the exclusion
@@ -451,7 +452,7 @@ Several features are discernible.
 
 As expected, the exclusion is much weaker in the `challenging' case and quite strong in the `optimistic' scenario.
 
-For the first three scenarios, at $\MZP > 2\MDM$ the decay of the mediator to Dark Matter dominates over the decay to jets. This leads to the diagonal structure across the plots, 
+For the first three scenarios, at $\MZP > 2\MDM$ the decay of the mediator to dark matter dominates over the decay to jets. This leads to the diagonal structure across the plots, 
 with the sensitivity below the diagonal, in the right portion of the map, coming mainly from the jet measurements. In the fourth scenario, even when the decay to
 DM is kinematically allowed, the jet signatures continue to contribute, and so the diagonal structure is less visible. 
 
@@ -460,11 +461,11 @@ $\MZP \approx 700$~GeV is visible, where the sensitvity from inclusive jets and 
 right region of the map is excluded. In addition, the cross section $\times$ branching ratio for quarks $\rightarrow Z^\prime \rightarrow$ quarks remains large
 enough that the diagonal cutoff in sensitivity of the jet channels at $\MZP \approx 2\MDM$ is blurred. 
 
-To the top left region of the diagonal the decay of the mediator to Dark Matter is kinematically allowed, and for $\GDM=1$ it will dominate 
+To the top left region of the diagonal the decay of the mediator to dark matter is kinematically allowed, and for $\GDM=1$ it will dominate 
 over the decay to quarks. Hence the sensitivity in the inclusive jet (and $V+$jet) signatures drops in all scenarios except the fourth. 
 This is the region where a measurement of \MET+jets would be useful 
 (and indeed it is where the searches performed using such signatures contribute, see \cite{Kahlhoefer:2015bea}). Current sensitivity in the intermediate and challenging scenarios 
-comes from the $l^+l^- + \MET$ measurement, and dies away at $\MZP \approx 750$~GeV. In the fourth scenario, the decays to DM are relatively suppressed and 
+comes from the $l^+l^- + \MET$ measurement, and dies away at $\MZP \approx 750$~GeV. In the fourth scenario, the decays to dark matter are relatively suppressed and 
 so the $l^+l^- + \MET$ signature makes little contribution. However, as already discussed, the exclusion from the jet measurements remains strong.
 
 
@@ -528,7 +529,7 @@ are available from these later running periods (indeed, the CMS measurement is a
 
 \section{Conclusions}\label{sec:conclusions}
 
-Using a simplified model for weakly-interacting Dark Matter coupled to the Standard Model via a heavy mediator boson, we have developed and demonstrated 
+Using a simplified model for weakly-interacting dark matter coupled to the Standard Model via a heavy mediator boson, we have developed and demonstrated 
 a method to efficently scan existing particle-level measurements from the LHC, implemented in \rivet, to derive limits on new physics. 
 The \Contur method uses measurements which have already been shown to be in good agreement with the SM, and thus is purely aimed at limiting the possibilities 
 for models of new physics and hopefully narrowing the focus of experimental and theoretical effort on to the best models. It is this complementary to 
