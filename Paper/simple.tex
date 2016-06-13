@@ -97,7 +97,7 @@ As the search for many of the favoured BSM scenarios has been unsuccessful, ther
 and which provide a framework for interpreting BSM signatures with a minimal amount of 
 new particles, interactions and model assumptions. The philosophy is similar to an ``effective lagrangian'' approach in which effective anomalous
 couplings are introduced to describe new physics, but is more powerful, as such simplified models also
-include new particles, and thus can remain useful up to and beyond the scale of new physics - a region 
+include new particles, and thus can remain useful up to and beyond the scale of new physics -- a region 
 potentially probed by LHC measurements.
 \item
 The precision measurements from the LHC have mostly been made in a manner which minimises their model-dependence. 
@@ -180,16 +180,16 @@ To simulate the experimental signature for our model, we have generated events u
 \section{Measurements}\label{sec:measurements}
 
 To be useful in our approach, measurements must be made in as model-independent a fashion as possible. 
-Cross sections should be measured in a kinematic region closely matching the detector acceptance --- commonly called 
-'fiducial cross sections' --- to avoid extrapolation into unmeasured regions, since such extrapolations must always make 
+Cross sections should be measured in a kinematic region closely matching the detector acceptance -- commonly called 
+'fiducial cross sections' -- to avoid extrapolation into unmeasured regions, since such extrapolations must always make 
 theoretical assumptions; usually that the SM is valid. The measurements should generally be made in terms of observable final
 state particles (e.g. leptons, photons) or objects constructed from such particles (e.g. hadronic jets, missing energy) 
 rather than assumed intermediate states ($W, Z, H$, top). Finally, differential measurements are most useful, as features
-in the shapes of distributions are a more sensitive test than simple event rates - especially when there are
+in the shapes of distributions are a more sensitive test than simple event rates -- especially when there are
 highly-correlated systematic experimental uncertainties, such as those on the integrated luminosity, or the jet energy scale.
 
 One feature noted in several cases is that missing transverse energy (\MET) is 
-explicity assumed to be the same as neutrino transverse energy. In BSM physics, missing energy can also 
+explicitly assumed to be the same as neutrino transverse energy. In BSM physics, missing energy can also 
 arise from other sources (for example, dark matter production!) and so it is important that the result is treated in such a 
 way that this sensitivity is correctly estimated. The measurements are typically corrected back to total \MET, 
 or to the assumed neutrino \pt, in the experimental analysis, using a simulated SM event sample which has been shown to describe
@@ -198,9 +198,9 @@ region where transverse energy is unmeasured; however, unless a BSM particle ent
 negligible. This means that as long as a fiducial acceptance cut is made on BSM particles counting toward \MET (to ensure that 
 large contributions to \MET 
 from invisible particles outside the detector acceptance are excluded) such analyses can be 
-used\footnote{Of greater consequence, but easier to fix, is the fact that several \rivet methods explicitly calculated \MET
+used.\footnote{Of greater consequence, but easier to fix, is the fact that several \rivet methods explicitly calculated \MET
 from neutrinos found in the true event record, rather than as the negative of the visible particles in the event. These 
-routines were modified as a part of this work, and are all fixed in release 2.5.X.}. \todo{DG: needs clearer distinction between what experimental data analyses should do / what rivet MC analyses should do}
+routines were modified as a part of this work, and are all fixed in release 2.5.X.} \todo{DG: needs clearer distinction between what experimental data analyses should do / what rivet MC analyses should do}
 
 Another feature of the measurements is that most of them, explicitly or implicitly, insist in their fiducial cross-section definition 
 that leptons and photons be 'directly' produced, that is, prior to hadronisation \todo{DG: check -ize / -ise consistency} and coming from the primary vertex of the collision. 
@@ -252,8 +252,8 @@ implemented in \rivet. \todo{DG: motivate why we're not hand-writing analyses}
 \subsection{Strategy}
 
 The approach taken is to consider simplified BSM models in the light of existing measurements which have already been shown to agree with SM expectations.
-Thus this is inherently an exercise in limit-setting rather than disovery. The assumption is that a generic, measurement-based approach such as this will not be
-competitive in terms of sensitivity, or speed of discovery, with a dediciated search for a specific BSM final-state signature. However, it will have the
+Thus this is inherently an exercise in limit-setting rather than discovery. The assumption is that a generic, measurement-based approach such as this will not be
+competitive in terms of sensitivity, or speed of discovery, with a dedicated search for a specific BSM final-state signature. However, it will have the
 advantage of breadth of coverage, and will make a valuable contribution to physics at the energy frontier whether or not new signatures are discovered at the LHC.
 In the case of a new discovery, many models will be put forward to explain the data, as has for example already been seen\cite{PhysRevLett.116.150001} 
 after the 750~GeV diphoton anomaly 
@@ -269,13 +269,13 @@ over a wide range of final states, giving the best chance of an indirect pointer
 
 Starting with the measurements discussed in Section~\ref{sec:measurements} \todo{DG: check list is consistent with the final runs}, 
 we define a prodecure to combine exclusion limits from different measured distributions.
-The data used for comparison in \rivet come in the form of histograms, which do not carry information about the correlations between uncertainties - 
+The data used for comparison in \rivet come in the form of histograms, which do not carry information about the correlations between uncertainties -- 
 even when in several cases detailed information is made available in the experimental papers. There are highly correlated uncertainties in several measurements, 
 for example on the integrated luminosity, or the energy scale of jet measurements. In some cases these are dominant. Including correlations would be a highly 
 complex process, since as well as correlations within a single data-set, there are also common systematic uncertainties between different
 results, which are generally not provided by the experiments. There are also overlaps between event samples used in many different measurements, which lead to
 non-trivial correlations in the statistical uncertainties. To attempt to avoid spuriously high exclusion rates due to multiply-counting what might be the 
-same excursion against several datasets, we take the following approach:
+same exclusion against several datasets, we take the following approach:
 \begin{enumerate}
 \item Divide the measurements into groups that have no overlap in the event samples used, and hence no statistical correlation 
 between them. These measurements are grouped by, crudely, different final states, different experiments, and different beam 
