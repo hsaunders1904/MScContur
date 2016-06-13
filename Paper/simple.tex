@@ -65,14 +65,13 @@ TeV scale. Many precision measurements of jets, charged leptons, and other final
 have been published, reaching into this new kinematic domain. The predictions of the SM are 
 generally in agreement with the data, while the many dedicated searches for physics beyond the SM
 have excluded a wide range of possible scenarios. 
-%Nevertheless, there are many reasons to be confident that
-%physics beyond the Standard Model (BSM) exists; examples include the gravitational evidence for dark matter, the large 
-%preponderance of matter over antimatter in the universe, and the existence of gravity itself. None of 
-%these can be easily accommodated within known Standard Model phenomenology. 
 Nevertheless, there are many reasons to be confident that
-physics beyond the Standard Model (BSM) exists, including in particular the gravitational evidence for dark matter, which cannot be accommodated within the 
-Standard Model. \textbf{MK: have removed the reference to the matter-antimatter asymmetry and to gravity, as it is not really related to BSM at the TeV scale.} 
-
+physics beyond the Standard Model (BSM) exists; examples include the gravitational evidence for dark matter, the large 
+preponderance of matter over antimatter in the universe, and the existence of gravity itself. None of 
+these can be easily accommodated within known Standard Model phenomenology. 
+%Nevertheless, there are many reasons to be confident that
+%physics beyond the Standard Model (BSM) exists, including in particular the gravitational evidence for dark matter, which cannot be accommodated within the 
+%Standard Model. \textbf{MK: have removed the reference to the matter-antimatter asymmetry and to gravity, as it is not really related to BSM at the TeV scale.} 
 
 This motivates a continued campaign to make precise measurements and calculations at higher energies and 
 luminosities, and to exploit these measurements to narrow down the class of viable models of new physics, 
@@ -92,7 +91,7 @@ states~\cite{Buckley:2011ms}. These generators now incorporate matrix-elements f
 matched to logarithmic parton showers, and successful models of soft physics such as hadronisation and
 the underlying event. They are also capable of importing new physics models into this framework, thus allowing
 the rapid prediction of their impact on a wide variety of final states simultaneously. 
-In this paper we make extensive use of these capabilities within Herwig~\cite{Bahr:2008pv} \todo{DG: Herwig 7 cite}.\todo{MK: should we always use special fonts like small caps for computer tools (Herwig, Feynrules, rivet etc.)?}
+In this paper we make extensive use of these capabilities within Herwig~\cite{Bahr:2008pv} \todo{DG: Herwig 7 cite}.\todo{MK: should we always use special fonts like small caps for computer tools (Herwig, Feynrules, rivet etc? JMB: I think each has their own convention so we should follow that?}
 \item
 As the search for many of the favoured BSM scenarios has been unsuccessful, there has been a move toward 
 ``simplified models'' of new physics~\cite{Alves:2011wf,Abercrombie:2015wmb}, which aim to be as generic as possible 
@@ -371,20 +370,20 @@ close to the edge of exclusion already, (ii) a `challenging' scenario $\GQ = 0.2
 and (iii) an `intermediate' scenario $\GQ = 0.375, \GDM = 1$, between the two. We also consider (iv) a scenario where the coupling of dark matter to the mediator is
 suppressed, $\GQ = 0.375, \GDM = 0.375$.
 
-\begin{figure}[!htb]
-\centering
-      \includegraphics[width=0.45\textwidth]{images/atlasdijet/fullscale/ATLAS_dijet.pdf}
-      \includegraphics[width=0.45\textwidth]{images/atlasdijet/ratio/ATLAS_dijet_ratio.pdf}
-    \caption{ Outputs from \rivet for a measurement included in the limit setting process. Simulated signals for a sample of mediator masses are shown, superimposed 
-on the double differential inclusive jet cross section in the most central rapidity region, binned by dijet mass and rapidity as measured by ATLAS at 
-7 TeV~\cite{Aad:2014pua}. The left hand plot compares the measured cross section to the model expectation, and the right hand plot shows the perturbation 
-in the ration compared to the relative uncertainty in the measurement. 
-The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass and mediator couplings; $\MDM=600$ GeV, 
-$\GQ=0.25$ and $\GDM = 1$.}
-\label{fig:ATLASdijet}
-\end{figure}
+%\begin{figure}[!htb]
+%\centering
+%      \includegraphics[width=0.45\textwidth]{images/atlasdijet/fullscale/ATLAS_dijet.pdf}
+%      \includegraphics[width=0.45\textwidth]{images/atlasdijet/ratio/ATLAS_dijet_ratio.pdf}
+%    \caption{ Outputs from \rivet for a measurement included in the limit setting process. Simulated signals for a sample of mediator masses are shown, superimposed 
+%on the double differential inclusive jet cross section in the most central rapidity region, binned by dijet mass and rapidity as measured by ATLAS at 
+%7 TeV~\cite{Aad:2014pua}. The left hand plot compares the measured cross section to the model expectation, and the right hand plot shows the perturbation 
+%in the ration compared to the relative uncertainty in the measurement. 
+%The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass and mediator couplings; $\MDM=600$ GeV, 
+%$\GQ=0.25$ and $\GDM = 1$.}
+%\label{fig:ATLASdijet}
+%\end{figure}
 
-\todo{MK: I prefer larger figures, see below, but leave this to you to decide.}
+\todo{MK: I prefer larger figures, see below, but leave this to you to decide. JMB: I agree and have implemented it.}
 
 \begin{figure}[!htb]
 \centering
@@ -406,8 +405,10 @@ The sensitivity is at maximum in the middle of this range.
 
 \begin{figure}
 \centering      
-      \includegraphics[width=0.45\textwidth]{images/cmsjet/fullrange/CMSincljet.pdf}
-      \includegraphics[width=0.45\textwidth]{images/cmsjet/ratio/CMSincljets_ratio.pdf}
+%      \includegraphics[width=0.45\textwidth]{images/cmsjet/fullrange/CMSincljet.pdf}
+%      \includegraphics[width=0.45\textwidth]{images/cmsjet/ratio/CMSincljets_ratio.pdf}
+      \includegraphics[width=0.9\textwidth]{images/cmsjet/fullrange/CMSincljet.pdf}
+      \includegraphics[width=0.9\textwidth]{images/cmsjet/ratio/CMSincljets_ratio.pdf}
 \caption{Outputs from \rivet for a measurement included in the limit setting process. Simulated signals for a sample of mediator masses are shown, superimosed on 
 the double differential dijet cross section in the most central rapidity region, binned by leading jet \pt and rapidity as measured by 
 CMS at 7 TeV~\cite{Chatrchyan:2014gia}. The left hand plot compares the measured cross section to the model expectation, and the right hand plot shows the perturbation 
@@ -424,8 +425,10 @@ final states.
 
 \begin{figure}
 \centering
-      \includegraphics[width=0.45\textwidth]{images/atlaswjet/fullrange/ATLASWjet.pdf}
-      \includegraphics[width=0.45\textwidth]{images/atlaswjet/ratio/ATLASwjet_ratio.pdf}
+%      \includegraphics[width=0.45\textwidth]{images/atlaswjet/fullrange/ATLASWjet.pdf}
+%      \includegraphics[width=0.45\textwidth]{images/atlaswjet/ratio/ATLASwjet_ratio.pdf}
+      \includegraphics[width=0.9\textwidth]{images/atlaswjet/fullrange/ATLASWjet.pdf}
+      \includegraphics[width=0.9\textwidth]{images/atlaswjet/ratio/ATLASwjet_ratio.pdf}
 \caption{Outputs from \rivet for a measurement included in the limit setting process. Simulated signals for a sample of mediator masses, superimposed on 
 the differential cross section for the $W+\geq2$ jet process, binned in the mass of the dijet pair as measured by ATLAS at 7 TeV~\cite{Aad:2014qxa}.
 The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass and mediator couplings; $\MDM=600$ GeV, $\GQ=0.25$ and $\GDM = 1$.}
@@ -442,7 +445,7 @@ the number of events in the data.
 
 \begin{figure}
 \centering
-      \includegraphics[width=0.45\textwidth]{images/atlaszz/fullrange/ATLASZZ.pdf}
+      \includegraphics[width=0.9\textwidth]{images/atlaszz/fullrange/ATLASZZ.pdf}
 \caption{Outputs from \rivet for a potential measurement to be included in the limit setting process. Simulated signals for a 
 sample of mediator masses, interpreted as perturbations to the $ZZ\rightarrow l^+l^- \MET$ cross section 
 corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2012awa} \label{fig:ATLASzz}. The signals form a 1D parameter space scan in 
@@ -450,11 +453,14 @@ mediator mass \MZP for fixed dark matter mass and mediator couplings; $\MDM=100$
 \label{fig:ATLASzz}
 \end{figure}
 
+
 Also in the `electroweak' category are the diboson measurements. Here the most sensitive is the ATLAS $ZZ$ measurement, in particular the 7~TeV result, which includes
 a fiducial cross section measurement of $pp \rightarrow l^+l^- + \MET$, interpreted in the paper as $pp \rightarrow ZZ \rightarrow l^+l^- \nu \bar{\nu}$, but performed in a 
-sufficiently model-independent fashion that it has the same sensitivity to the $l^+l^- +$ dark matter channel. This is illustrated in Fig.~\ref{fig:ATLASzz}.
+sufficiently model-independent fashion that it has the same sensitivity to the $l^+l^- +$ dark matter channel. This is illustrated in Fig.~\ref{fig:ATLASzz}. 
+\todo{DY: Improve the presentation of this figure}
 The production diagrams are the same as the $V$-jets case, but in this case the 
-mediator decays to dark matter rather than back to quarks. \todo{MK: maybe we should show a couple of example Feynman diagrams at some point?}
+mediator decays to dark matter rather than back to quarks. \todo{MK: maybe we should show a couple of example Feynman diagrams at some point? JMB: I think that would be very good 
+ - can someone make them? I'd say the s-channel production and decays to quarks and to DM, and the production with a gauge boson plus decay too?}
 In the absence of any particle-level measurements in the `missing energy plus jets' category of 
 Section~\ref{sec:measurements}, this measurement has the best sensitivity to dark matter production for this model. Obviously, measurements at 8~TeV and 13~TeV of this 
 final state, and indeed of jets+\MET, can be expected to improve the sensitivity significantly.
