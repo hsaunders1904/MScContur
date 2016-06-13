@@ -291,6 +291,7 @@ of statistically-independent measurements exists {\it within} a group, their lik
 
 \subsection{Statistical Method}\label{sec:statmethod}
 
+
 The question we wish to ask of any given BSM proposal is {\it `at what significance do existing measurements already exclude this'}. 
 For all the measurements considered, comparisons to SM calculations have shown consistency between them and the data. Thus as a starting point, we take the
 data as our ``null signal'', and we superpose onto them the contribution from the BSM scenario under consideration.
@@ -298,9 +299,9 @@ data as our ``null signal'', and we superpose onto them the contribution from th
 %be the width of a Gaussian spread, and we use the asymptotic statistical techniques described by Cowan, Cranmer and Gross~\cite{Cowan:2010js} to derive
 %a liklihood function describing the relative probabilities of the SM and the SM+BSM scenarios given each data point. 
 
-Taking each bin of each distribution considered as a separate statistic to be tested, a likelihood function can be constructed as follows, \todo{DG: fix as discussed, breaking into multiple steps}
+Taking each bin of each distribution considered as a separate statistic to be tested, a likelihood function for each bin can be constructed as follows, \todo{DG: fix as discussed, breaking into multiple steps}
 \begin{align}
-L(\mu, \vec{b}, \vec{\sigma}_{b}) = { \frac{(\mu s + b)^{n}}{n!} \exp\left(-\mu s + b\right) \times \frac{1}{\sqrt{2 \pi} \sigma_{b}} \exp\left(-\frac{(\tilde{b} - b)^{2}}{2 \sigma_{b}^{2}}\right)}\,,
+L(\mu, {b}, {\sigma}_{b}, \{s}) = { \frac{(\mu s + b)^{n}}{n!} \exp\big(-(\mu s + b)\big) \times \frac{1}{\sqrt{2 \pi} \sigma_{b}} \exp\left(-\frac{(m - b)^{2}}{2 \sigma_{b}^{2}}\right)} \times \frac{(s)^{k}}{k!}\exp\big(-s\big)\,,
 \end{align}
 where the following components are identified:
 \begin{itemize}
@@ -308,17 +309,16 @@ where the following components are identified:
 \begin{itemize}
 \item $s$, the BSM signal event count
 \item $b$, the background count, taken as the central value of the data points
-\item $n$, the total count taken as $s+b$
+\item $n$, the observed total count taken as $s+b$
 \item $\mu$, the signal strength parameter modulating the strength of the signal hypothesis tested, thus $\mu=0$ corresponds to the null hypothesis 
 and $\mu=1$ the full signal strength hypothesis;
 \end{itemize}
-\item a convolution with a Gaussian encoding the error on the background count, $b$, where the following additional components are identified:
+\item A convolution with a Gaussian encoding the error on the background count, $b$, where the following additional components are identified:
 \begin{itemize}
-\item $\tilde{b}$, a variable background count, at face value this is equal to $b$, however it is marked differently as it can be varied in order to use 
-Monte Carlo methods to extract the sensitivity if desired.
-\item $\sigma_{b}$, Uncertainty in $b$ count taken from \rivet as 1 $\sigma$ error on a Gaussian (uncertainties taken as the combination of statistical and 
-systematics uncertaintes in quadrature. Typically the systematic uncertainty dominates).
+\item $m$, the observed background count, the expectation value of this count, which is used to construct the test is simply the mean, $b$
+\item $\sigma_{b}$, Uncertainty in $b$ count taken from \rivet as 1 $\sigma$ error on a Gaussian (uncertainties taken as the combination of statistical and systematics uncertainties in quadrature. Typically the systematic uncertainty dominates).
 \end{itemize}
+\item An additional Poisson error describing the error on the BSM signal count, this is taken as a Monte Carlo error on the simulated count. As with the background. The additional counting parameter $k$, has an expectation value of $s$
 \end{itemize}
 
 This likelihood function is then used to construct a profile likelihood ratio. The formalism and methods followed are taken from 
@@ -421,7 +421,7 @@ final states.
 
 \begin{figure}
 \centering
-      \includegraphics[width=0.45\textwidth]{images/atlaswjet/fullrange/ATLASwjet.pdf}
+      \includegraphics[width=0.45\textwidth]{images/atlaswjet/fullrange/ATLASWjet.pdf}
       \includegraphics[width=0.45\textwidth]{images/atlaswjet/ratio/ATLASwjet_ratio.pdf}
 \caption{Outputs from \rivet for a measurement included in the limit setting process. Simulated signals for a sample of mediator masses, superimposed on 
 the differential cross section for the $W+\geq2$ jet process, binned in the mass of the dijet pair as measured by ATLAS at 7 TeV~\cite{Aad:2014qxa}.
@@ -439,7 +439,7 @@ the number of events in the data.
 
 \begin{figure}
 \centering
-      \includegraphics[width=0.45\textwidth]{images/atlaszz/fullrange/ATLASzz.pdf}
+      \includegraphics[width=0.45\textwidth]{images/atlaszz/fullrange/ATLASZZ.pdf}
 \caption{Outputs from \rivet for a potential measurement to be included in the limit setting process. Simulated signals for a 
 sample of mediator masses, interpreted as perturbations to the $ZZ\rightarrow l^+l^- \MET$ cross section 
 corresponding to the data as measured by ATLAS at 7 TeV~\cite{Aad:2012awa} \label{fig:ATLASzz}. The signals form a 1D parameter space scan in 
