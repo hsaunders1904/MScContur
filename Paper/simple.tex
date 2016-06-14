@@ -113,10 +113,10 @@ unlikely to compete in terms of speed and sensitivity with a search optimised fo
 of potential signatures and models which can be covered makes it a powerful complementary approach.\footnote{Limits from existing 
 searches can sometimes be applied to new models, for example by accessing archived versions of the original analysis code
 and detector simulation via the RECAST~\cite{Cranmer:2010hk} project.}
-Any theory seeking
+On the one hand, any theory seeking
 to explain a new signature or anomaly in the data may predict a BSM signal in other final states, which should be checked 
-against data this way. If, on the other hand, no BSM physics emerges, a model-independent and systematic approach becomes mandatory to exclude 
-new physics models or narrow down the corresponding model parameter space.\todo{JB to clarify}
+against data this way. On the other hand, if no BSM physics emerges, a model-independent and systematic approach becomes mandatory to exclude 
+new physics models or narrow down the corresponding model parameter space.
 
 In this paper, we first motivate and describe the 
 simplified model we have chosen as an initial demonstration, and its simulation using Feynrules~\cite{Alloul:2013bka} and Herwig~\cite{}. \textbf{DG sorts this out, mention tools later. MK added citation here because its the first mention of Feynrules. Maybe  better mention it before and drop citation here....]}
@@ -199,12 +199,12 @@ way that this sensitivity is correctly estimated. The measurements are typically
 or to the assumed neutrino \pt, in the experimental analysis, using a simulated SM event sample which has been shown to describe
 the data well. This involves an extrapolation into the forward 
 region where transverse energy is unmeasured; however, unless a BSM particle enters this region, the error made is 
-negligible. This means that as long as a fiducial acceptance cut is made on BSM particles counting toward \MET (to ensure that 
-large contributions to \MET 
-from invisible particles outside the detector acceptance are excluded) such analyses can be 
+negligible. This means that as long as (in the \rivet analysis) a fiducial acceptance cut is made on BSM particles 
+counting toward \MET (to ensure that large contributions to \MET 
+from invisible particles outside the detector acceptance are excluded) such measurements can be 
 used.\footnote{Of greater consequence, but easier to fix, is the fact that several \rivet methods explicitly calculated \MET
 from neutrinos found in the true event record, rather than as the negative of the visible particles in the event. These 
-routines were modified as a part of this work, and are all fixed in release 2.5.X.} \todo{JB: write clearer distinction between what experimental data analyses should do / what rivet MC analyses should do}
+routines were modified as a part of this work, and are all fixed in release 2.5.X.}
 
 Another feature of the measurements is that most of them, explicitly or implicitly, insist in their fiducial cross-section definition 
 that leptons and photons be 'directly' produced, that is, prior to hadronisation \todo{DG to check -ize / -ise consistency at the end, also small caps consistency} and coming from the primary vertex of the collision. 
@@ -223,7 +223,7 @@ and three-jet~\cite{Aad:2014rma} %{\bf add cms 3jet here? Needs a Rivet routine.
 measurements made in 7~TeV collisions, as well as the jet mass 
 measurement from CMS~\cite{Chatrchyan:2013vbb}.
 Unfortunately results from 8~TeV collisions are rarer, and the only one we can use currently is the four-jet 
-measurement from ATLAS~\cite{Aad:2015nda} \todo{DY: I haven't included 4jet 8tev in what we currently display, it had pretty much no sensitivity to the model and was a whole additional set of event generation. Cut this out?}.
+measurement from ATLAS~\cite{Aad:2015nda} \todo{DY: I haven't included 4jet 8tev in what we currently display, it had pretty much no sensitivity to the model and was a whole additional set of event generation. Cut this out? I (JMB) think since we tried it and checked, it's best to leave this wording in.}.
 \item
 Electroweak: events with leptons, with or without missing energy or photons. The high-statistics $W+$jet and $Z+$jet measurements 
 from ATLAS~\cite{Aad:2014qxa,Aad:2013ysa} 
@@ -236,7 +236,7 @@ used in searches (see for example~\cite{Aad:2012fqa}). Unfortunately however, th
 distributions available in this category. 
 \item
 Isolated photons, with or without missing energy, but no leptons. Here we make use of the inclusive~\cite{Aad:2013zba}, diphoton~\cite{Aad:2012tba} and 
-photon-plus-jet~\cite{ATLAS:2012ar} measurements \todo{DY: I am unsure on whether there is a guarantee of no statistical overlap of the photon + jet and inclusive photon, I mark as separate catagories for now but is this safe? has almost no impact either way as one is 37pb-1 so gives no stat power anyway}, where available. \todo{DY: Ref for unvalidated CMS gamma + jet we include?}
+photon-plus-jet~\cite{ATLAS:2012ar} measurements \todo{DY: I am unsure on whether there is a guarantee of no statistical overlap of the photon + jet and inclusive photon, I mark as separate catagories for now but is this safe? has almost no impact either way as one is 37pb-1 so gives no stat power anyway. JMB: there will be overlap if they are measured in the same sample.}, where available. \todo{DY: Ref for unvalidated CMS gamma + jet we include?}
 \item
 Signatures specifically based on top quark or Higgs candidates. Most such measurements to date have been made at the 'parton' level (that is,
 corrected using SM MC back to the top or Higgs before decay), and many of them are extrapolated to $4\pi$ phase space. Both steps increase
