@@ -223,11 +223,11 @@ and three-jet~\cite{Aad:2014rma} %{\bf add cms 3jet here? Needs a Rivet routine.
 measurements made in 7~TeV collisions, as well as the jet mass 
 measurement from CMS~\cite{Chatrchyan:2013vbb}.
 Unfortunately results from 8~TeV collisions are rarer, and the only one we can use currently is the four-jet 
-measurement from ATLAS~\cite{Aad:2015nda}.
+measurement from ATLAS~\cite{Aad:2015nda} \todo{DY: I haven't included 4jet 8tev in what we currently display, it had pretty much no sensitivity to the model and was a whole additional set of event generation. Cut this out?}.
 \item
 Electroweak: events with leptons, with or without missing energy or photons. The high-statistics $W+$jet and $Z+$jet measurements 
 from ATLAS~\cite{Aad:2014qxa,Aad:2013ysa} 
-and CMS~\cite{Khachatryan:2014uva}, are used.
+and CMS~\cite{Khachatryan:2014uva},\todo{DY: ref for CMS Z+jets needed} are used.
 We also use the ATLAS $ZZ$ and $W/Z+\gamma$ analyses~\cite{Aad:2012awa,Aad:2013izg}, the former of which includes \MET, 
 via the $Z \rightarrow \nu\bar{\nu}$ measurement.
 \item
@@ -236,7 +236,7 @@ used in searches (see for example~\cite{Aad:2012fqa}). Unfortunately however, th
 distributions available in this category. 
 \item
 Isolated photons, with or without missing energy, but no leptons. Here we make use of the inclusive~\cite{Aad:2013zba}, diphoton~\cite{Aad:2012tba} and 
-photon-plus-jet~\cite{ATLAS:2012ar} measurements, where available.
+photon-plus-jet~\cite{ATLAS:2012ar} measurements \todo{DY: I am unsure on whether there is a guarantee of no statistical overlap of the photon + jet and inclusive photon, I mark as separate catagories for now but is this safe? has almost no impact either way as one is 37pb-1 so gives no stat power anyway}, where available. \todo{DY: Ref for unvalidated CMS gamma + jet we include?}
 \item
 Signatures specifically based on top quark or Higgs candidates. Most such measurements to date have been made at the 'parton' level (that is,
 corrected using SM MC back to the top or Higgs before decay), and many of them are extrapolated to $4\pi$ phase space. Both steps increase
@@ -482,7 +482,7 @@ with the sensitivity above the diagonal, in the left portion of the map, coming 
 DM is kinematically allowed, the jet signatures continue to contribute, and so the diagonal structure is less visible. 
 
 At low values of the \MZP the sensitivity comes mainly from the $V+$jets signatures. In the challenging and intermediate scenarios, a dip in sensitivity around 
-$\MZP \approx 700$~GeV is visible, where the sensitvity from inclusive jets and $V+$jets do not quite overlap. In the optimistic scenario, they overlap, and the whole upper
+$\MZP \approx 700$~GeV is visible, where the sensitivity from inclusive jets and $V+$jets do not quite overlap. In the optimistic scenario, they overlap, and the whole upper
 right region of the map is excluded. In addition, the cross section $\times$ branching ratio for quarks $\rightarrow Z^\prime \rightarrow$ quarks remains large
 enough that the diagonal cutoff in sensitivity of the jet channels at $\MZP \approx 2\MDM$ is blurred. 
 
@@ -566,6 +566,54 @@ combining the searches in 8~TeV and 13~TeV jet data - see, for example, \cite{Fa
 are available from these later running periods (indeed, the CMS measurement is already made~\cite{Khachatryan:2016wdh}, but is not yet available in \rivet or HepData).
 (Looks like the $ZZ$ analyis picks off a bit of phase space for $\MDM < 250$~GeV, $\MZP < 750$~GeV which isn't covered in Fig.3 or \cite{Fairbairn:2016iuf}?)
 
+\begin{table}[p]
+\begin{center}
+\begin{tabular}{c | c | c | c | c}
+\GQ & \GDM & \MZP [GeV] & \MDM [GeV] & $\Gamma_{Z'}/\MZP$ \\
+\hline
+0.25 & 1 & 3000 & 100 & 0.0626 \\%%0.0626456666667 \\
+0.375 & 1 & 3000 & 100 & 0.0751 \\ %%0.0750796666667 \\
+0.5 & 1 & 3000 & 100 & 0.0925 \\ %%0.092487 \\
+0.375 & 0.25 & 3000 & 100 & 0.0257 \\ %% 0.0256748 
+\end{tabular}
+\caption{Table of maximal $\Gamma_{Z'}/\MZP$ occuring over the mass ranges for the four heatmaps shown in Figure~\ref{fig:maps}}\label{tab:width}
+\end{center}
+\end{table}
+
+\begin{table}[p]
+\begin{center}
+\begin{tabular}{c | p{8cm} | l}
+Rivet ID (Inspire) & Rivet description & \Contur Category \\
+\hline
+ATLAS\_2014\_I1325553 & Measurement of the inclusive jet cross-section at 7 TeV & ATLAS 7 Jets \\
+ATLAS\_2014\_I1268975 & High-mass dijet cross section & ATLAS 7 Jets \\
+ATLAS\_2014\_I1326641 & 3-jet cross section with 7 TeV data & ATLAS 7 Jets \\
+ATLAS\_2014\_I1307243 & Measurements of jet vetoes and azimuthal decorrelations in dijet events produced in pp collisions at $\sqrt{s}$ = 7 TeV using the ATLAS detector & ATLAS 7 Jets \\
+CMS\_2014\_I1298810 & Ratios of jet pT spectra, which relate to the ratios of inclusive, differential jet cross sections & CMS 7 Jets \\
+
+%%####ZJets
+ATLAS\_2013\_I1230812 & $Z$ + jets in $pp$ at 7 TeV & ATLAS 7  ZJets \\
+CMS\_2015\_I1310737 & Jet multiplicity and differential cross-sections of $Z$+jets events in $pp$ at $\sqrt{s} = 7$ TeV & CMS 7 Z Jets \\
+
+%%####WJets
+CMS\_2014\_I1303894 & Differential cross-section of $W$ bosons + jets in $pp$ collisions at $\sqrt{s}=7$ TeV & CMS 7 W Jets \\
+ATLAS\_2014\_I1319490 & W + jets & ATLAS W jets \\
+
+%%####Gamma(+jets)
+ATLAS\_2013\_I1263495 & Inclusive isolated prompt photon analysis with 2011 LHC data & ATLAS 7 Gamma \\
+ATLAS\_2012\_I1199269 & Inclusive diphoton $+ X$ events at $\sqrt{s} = 7$ TeV & ATLAS 7 gamma gamma \\
+ATLAS\_2012\_I1093738 & Isolated prompt photon + jet cross-section & ATLAS 7 Gamma Jet \\
+CMS\_2014\_I1266056 & [Unvalidated] Photon + jets triple differential cross-section & CMS 7 Gamma jet \\
+
+%%####ZZ
+ATLAS\_2012\_I1203852 & Measurement of the $ZZ(*)$ production cross-section in $pp$ collisions at 7 TeV with ATLAS & ATLAS 7 ZZ \\
+
+%%#W/Z+gamma
+ATLAS\_2013\_I1217863 & W/Z gamma production at 7 TeV & ATLAS W/Z gamma \\
+\end{tabular}
+\caption{Table of all rivet routines included in method}\label{tab:Rivet}
+\end{center}
+\end{table}
 
 \section{Conclusions}\label{sec:conclusions}
 
@@ -586,6 +634,7 @@ They also thank Josh McFayden for useful discussions, and STFC for financial sup
 
 %\clearpage
 \bibliographystyle{h-physrev4}
+%\bibliographystyle{JHEP}
 \bibliography{simple}
 
 \end{document}
