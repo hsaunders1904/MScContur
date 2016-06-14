@@ -56,7 +56,7 @@ The \Contur method is highly scaleable to other models and future measurements.
 
 \section{Introduction}
 \label{sec:intro}
-\todo{confirm MCnet preprint number on submission day at \url{http://montecarlonet.org/index.php?p=Publications/2016}}
+\todo{DG to confirm MCnet preprint number on submission day at \url{http://montecarlonet.org/index.php?p=Publications/2016}}
 The Large Hadron Collider (LHC) is probing physics in a new kinematic region, at energies around and above the 
 electroweak symmetry-breaking scale. With the discovery of the Higgs boson~\cite{Aad:2012tfa,Chatrchyan:2012ufa}, 
 the first data-taking period of the LHC experiments demonstrated that the understanding of electroweak symmetry-breaking within
@@ -91,7 +91,7 @@ states~\cite{Buckley:2011ms}. These generators now incorporate matrix-elements f
 matched to logarithmic parton showers, and successful models of soft physics such as hadronisation and
 the underlying event. They are also capable of importing new physics models into this framework, thus allowing
 the rapid prediction of their impact on a wide variety of final states simultaneously. 
-In this paper we make extensive use of these capabilities within Herwig~\cite{Bahr:2008pv} \todo{DG: Herwig 7 cite}.\todo{MK: should we always use special fonts like small caps for computer tools (Herwig, Feynrules, rivet etc? JMB: I think each has their own convention so we should follow that?}
+In this paper we make extensive use of these capabilities within Herwig~\cite{Bahr:2008pv} \todo{DG to find Herwig 7 cite}.
 \item
 As the search for many of the favoured BSM scenarios has been unsuccessful, there has been a move toward 
 ``simplified models'' of new physics~\cite{Alves:2011wf,Abercrombie:2015wmb}, which aim to be as generic as possible 
@@ -116,10 +116,10 @@ and detector simulation via the RECAST~\cite{Cranmer:2010hk} project.}
 Any theory seeking
 to explain a new signature or anomaly in the data may predict a BSM signal in other final states, which should be checked 
 against data this way. If, on the other hand, no BSM physics emerges, a model-independent and systematic approach becomes mandatory to exclude 
-new physics models or narrow down the corresponding model parameter space.\todo{DG: clarify}
+new physics models or narrow down the corresponding model parameter space.\todo{JB to clarify}
 
 In this paper, we first motivate and describe the 
-simplified model we have chosen as an initial demonstration, and its simulation using Feynrules~\cite{Alloul:2013bka} and Herwig~\cite{}. \textbf{[MK: added citation here because its the first mention of Feynrules. Maybe  better mention it before and drop citation here....]}
+simplified model we have chosen as an initial demonstration, and its simulation using Feynrules~\cite{Alloul:2013bka} and Herwig~\cite{}. \textbf{DG sorts this out, mention tools later. MK added citation here because its the first mention of Feynrules. Maybe  better mention it before and drop citation here....]}
 In Section~\ref{sec:measurements} we introduce the measurements that we will use, and their implementation in \rivet. 
 Section~\ref{sec:method} covers the core of the \Contur method, incuding the statistical approach and dynamic data selection.
 In Section~\ref{sec:kinematics} we discuss the differential cross sections in which the impact of our example model would be 
@@ -142,7 +142,7 @@ SM are specified as %
 %
 where the sum in the second term includes all SM quarks, $q \in \{u,d,c,s,t,b\}$. The simplified model specified in Eq.~(\ref{eq:vector_mediator}) 
 has only four free parameters, two couplings and two masses: \GDM, \GQ, $M_\psi \equiv \MDM$, and \MZP. The width of the mediator, 
-$\Gamma_{Z'}$, is determined by these four parameters. \todo{MK: we might have to adjust this depending on whether we show results with pr without the heavy flavor contributions.}
+$\Gamma_{Z'}$, is determined by these four parameters. \todo{ALL: we might have to adjust this depending on whether we show results with pr without the heavy flavor contributions.}
 
 Following Ref.~\cite{Kahlhoefer:2015bea} we have chosen to couple the mediator to 
 dark matter and to the SM quarks through an axial-vector and vector current, respectively. An axial-vector coupling of the 
@@ -177,9 +177,9 @@ model re-interpretations of LHC searches as presented in, e.g.,  Refs.~\cite{Kah
 mediator production and decay can place further strong constraints on the dark matter simplified model as demonstrated in Refs.~\cite{Chala:2015ama,Fairbairn:2016iuf}. 
 
 To simulate the experimental signature for our model, we have generated events using \textsc{FeynRules}~\cite{Alloul:2013bka}... 
-\todo{MK: please complete the description of the tool chain}. Higher-order QCD corrections have been calculated for this class of dark matter simplified models 
+\todo{DG will complete the description of the tool chain}. Higher-order QCD corrections have been calculated for this class of dark matter simplified models 
 with an $s$-channel vector mediator, see Refs.~\cite{Fox:2012ru,Haisch:2013ata,Backovic:2015soa,Neubert:2015fka}. However, for the purpose of this paper where we focus on introducing the \Contur approach rather than exploring 
-a particular BSM theory in great detail, we will use leading-order signal cross section predictions as provided by Herwig. \todo{MK: are the LO cross sections indeed generated by Herwig, or are we using Madgraph?} 
+a particular BSM theory in great detail, we will use leading-order signal cross section predictions as provided by Herwig. \todo{DG answers if are the LO cross sections indeed generated by Herwig, or are we using Madgraph? DG to sort out} 
 
 \section{Measurements}\label{sec:measurements}
 
@@ -204,10 +204,10 @@ large contributions to \MET
 from invisible particles outside the detector acceptance are excluded) such analyses can be 
 used.\footnote{Of greater consequence, but easier to fix, is the fact that several \rivet methods explicitly calculated \MET
 from neutrinos found in the true event record, rather than as the negative of the visible particles in the event. These 
-routines were modified as a part of this work, and are all fixed in release 2.5.X.} \todo{DG: needs clearer distinction between what experimental data analyses should do / what rivet MC analyses should do}
+routines were modified as a part of this work, and are all fixed in release 2.5.X.} \todo{JB: write clearer distinction between what experimental data analyses should do / what rivet MC analyses should do}
 
 Another feature of the measurements is that most of them, explicitly or implicitly, insist in their fiducial cross-section definition 
-that leptons and photons be 'directly' produced, that is, prior to hadronisation \todo{DG: check -ize / -ise consistency} and coming from the primary vertex of the collision. 
+that leptons and photons be 'directly' produced, that is, prior to hadronisation \todo{DG to check -ize / -ise consistency at the end, also small caps consistency} and coming from the primary vertex of the collision. 
 Such a selection is enforced in the experiments by a mixture of isolation and vertex requirements, but is not universally enforced
 in all \rivet routines. Generally this is a small effect, but care needs to be taken that the sensitivity is not overestimated, especially
 for BSM models which enhance bottom or charm production, when semi-leptonic decays may play a role.
@@ -248,7 +248,7 @@ categories depending on decay mode. We leave the inclusion of such measurements 
 
 The choice of which measurements are actually included at this stage is driven mainly by the availability of particle-level differential 
 fiducial cross sections 
-implemented in \rivet. \todo{DG: motivate why we're not hand-writing analyses}
+implemented in \rivet. %\todo{DG: DG motivate why we're not hand-writing analyses}
 
 \section{Method}
 \label{sec:method}
@@ -271,7 +271,7 @@ over a wide range of final states, giving the best chance of an indirect pointer
 \subsection{Dynamical data selection}\label{sec:dynselec}
 \label{sec:selec}
 
-Starting with the measurements discussed in Section~\ref{sec:measurements} \todo{DG: check list is consistent with the final runs; show table of rivet IDs for quick reference here}, 
+Starting with the measurements discussed in Section~\ref{sec:measurements} \todo{DY to check list is consistent with the final runs; show table of rivet IDs for quick reference here}, 
 we define a procedure to combine exclusion limits from different measured distributions.
 The data used for comparison in \rivet come in the form of histograms, which do not carry information about the correlations between uncertainties -- 
 even when in several cases detailed information is made available in the experimental papers. There are highly correlated uncertainties in several measurements, 
@@ -303,7 +303,7 @@ data as our ``null signal'', and we superpose onto them the contribution from th
 %be the width of a Gaussian spread, and we use the asymptotic statistical techniques described by Cowan, Cranmer and Gross~\cite{Cowan:2010js} to derive
 %a liklihood function describing the relative probabilities of the SM and the SM+BSM scenarios given each data point. 
 
-Taking each bin of each distribution considered as a separate statistic to be tested, a likelihood function for each bin can be constructed as follows, \todo{DG: fix as discussed, breaking into multiple steps}
+Taking each bin of each distribution considered as a separate statistic to be tested, a likelihood function for each bin can be constructed as follows, \todo{DY to fix as discussed, breaking into multiple steps}
 \begin{align}
 L(\mu, {b}, {\sigma}_{b}, {s}) = { \frac{(\mu s + b)^{n}}{n!} \exp\big(-(\mu s + b)\big) \times \frac{1}{\sqrt{2 \pi} \sigma_{b}} \exp\left(-\frac{(m - b)^{2}}{2 \sigma_{b}^{2}}\right)} \times \frac{(s)^{k}}{k!}\exp\big(-s\big)\,,
 \end{align}
@@ -339,7 +339,7 @@ that the tested parameter space values fall in the asymptotic, or large sample, 
 construction up to this point has been designed to look at smoothly falling well-measured processes at energies that the LHC is designed to probe. This is however a 
 result that should be monitored when considering different models}. Specifically, the Asimov data set is used to extract an approximation for the variance and central value of the strength parameter, $\mu$, and the results of Wilks~\cite{Wilks:1938dza} and Wald~\cite{Wald:1943:EWM} (again as outlined in Ref.~\cite{Cowan:2010js}) 
 are used to approximate the test statistic. 
-Hence the $p$-value quantifying the agreement between the null (SM only) hypothesis and the tested hypothesis can be computed. \todo{DG: phrase this carefully. It's the p-value of what exactly, under what assumption? Sth like: probability of observing n events if b-only is true...}
+Hence the $p$-value quantifying the agreement between the null (SM only) hypothesis and the tested hypothesis can be computed. \todo{DY, phrase this carefully. It's the p-value of what exactly, under what assumption? Sth like: probability of observing n events if b-only is true...}
 
 In fact, as is convention in the particle physics community, the final measure of statistical agreement is presented in terms of what is known as the CL$_{s}$ 
 method~\cite{Junk:1999kv,Read:2002hq}. This is simply a matter of convention, since as there is exact agreement in this method between the central value of the 
@@ -383,7 +383,8 @@ suppressed, $\GQ = 0.375, \GDM = 0.375$.
 %\label{fig:ATLASdijet}
 %\end{figure}
 
-\todo{MK: I prefer larger figures, see below, but leave this to you to decide. JMB: I agree and have implemented it.}
+%\todo{MK: I prefer larger figures, see below, but leave this to you to decide. JMB: I agree and have implemented it.}
+\todo{DY provide CL values for the 4 options shown, clarify rivet plot titles}
 
 \begin{figure}[!htb]
 \centering
@@ -459,7 +460,7 @@ a fiducial cross section measurement of $pp \rightarrow l^+l^- + \MET$, interpre
 sufficiently model-independent fashion that it has the same sensitivity to the $l^+l^- +$ dark matter channel. This is illustrated in Fig.~\ref{fig:ATLASzz}. 
 \todo{DY: Improve the presentation of this figure}
 The production diagrams are the same as the $V$-jets case, but in this case the 
-mediator decays to dark matter rather than back to quarks. \todo{MK: maybe we should show a couple of example Feynman diagrams at some point? JMB: I think that would be very good 
+mediator decays to dark matter rather than back to quarks. \todo{JB to sort this out... MK: maybe we should show a couple of example Feynman diagrams at some point? JMB: I think that would be very good 
  - can someone make them? I'd say the s-channel production and decays to quarks and to DM, and the production with a gauge boson plus decay too? DY: Added some that I had from my X-mas talk feel free to use or not}
 In the absence of any particle-level measurements in the `missing energy plus jets' category of 
 Section~\ref{sec:measurements}, this measurement has the best sensitivity to dark matter production for this model. Obviously, measurements at 8~TeV and 13~TeV of this 
@@ -558,7 +559,7 @@ the dark matter relic density cannot be calculated reliably~\cite{Kahlhoefer:201
 and does not provide any further restrictions on the parameter space of our model~\cite{Englert:2016joy}. The physics of dark matter is, of course, constrained by astrophysical and cosmological observations, including in particular the dark matter relic density, and direct and indirect searches for dark matter, see e.g.\ Refs.~\cite{Kahlhoefer:2015bea, Heisig:2015ira,Jacques:2016dqz} for combined analyses of collider and astrophysical constraints of simplified dark matter models with vector mediators. However, all those constraints are based on additional assumptions on the thermal history of the Universe and astrophysical properties of dark matter, and they do not affect BSM searches at the LHC. Since we have adopted the simplified dark matter model to illustrate the power of the \Contur approach for BSM searches at the LHC in general, rather than providing a detailed cosmological and astrophysical analysis of dark matter, we do not show the corresponding constraints in Fig.~\ref{fig:cont}. 
 
 
-\todo{here we should have some discussion of the theory constraints, other experiment constraints, and cosmological context.}
+\todo{MK writes some discussion of the theory constraints, other experiment constraints, and cosmological context.}
 
 Note that as expected, the sensitivity from the 7~TeV dijet measurements used here is qualitatively similar, but inferior, to the exclusions obtained 
 combining the searches in 8~TeV and 13~TeV jet data - see, for example, \cite{Fairbairn:2016iuf}. This should change once measurements
