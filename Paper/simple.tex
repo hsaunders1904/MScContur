@@ -41,7 +41,7 @@
 
 \begin{abstract}
 A new method providing general consistency contraints for Beyond-the-Standard-Model (BSM) theories, using 
-measurements at particle colliders, is presented. The method, `Constraints On New Theories Using \rivet' - \Contur \ - exploits  \todo{MK: how do you typeset hyphen: -, --, or ---? }
+measurements at particle colliders, is presented. The method, `Constraints On New Theories Using \rivet' --- \Contur \ --- exploits  \todo{MK: how do you typeset hyphen: -, --, or ---? DG: Has to be the extra long em-dash here, ---, but JB undid my fix lower down. Also should have no surrounding spaces, but more and more papers leave spaces in. Here specifically, I would use () instead or rephrase}
 the fact that particle-level differential measurements made in fiducial regions of phase-space have a high degree of
 model-independence. These measurements can therefore be compared to BSM physics implemented in Monte Carlo generators in a very
 generic way, allowing a wider array of final states to be considered than is typically the case. The \Contur approach should be seen
@@ -50,13 +50,12 @@ BSM proposals in a context where many (but perhaps not all) measurements are con
 We demonstrate, using a competitive simplified dark matter model, the power of this approach. 
 The \Contur method is highly scaleable to other models and future measurements.
 %
-\begin{flushright}IPPP-16-52, MCNET-16-nn, TTK-16-22\end{flushright}
+\begin{flushright}IPPP-16-52, \todo{MCNET-16-nn}, TTK-16-22\end{flushright}
 \end{abstract}
 
 
 \section{Introduction}
 \label{sec:intro}
-\todo{DG to confirm MCnet preprint number on submission day at \url{http://montecarlonet.org/index.php?p=Publications/2016}}
 The Large Hadron Collider (LHC) is probing physics in a new kinematic region, at energies around and above the 
 electroweak symmetry-breaking scale. With the discovery of the Higgs boson~\cite{Aad:2012tfa,Chatrchyan:2012ufa}, 
 the first data-taking period of the LHC experiments demonstrated that the understanding of electroweak symmetry-breaking within
@@ -109,8 +108,7 @@ bring the power of a very wide range of data to bear on the search for new physi
 unlikely to compete in terms of speed and sensitivity with a search optimised for a specific theory, the breadth
 of potential signatures and models which can be covered makes it a powerful complementary approach.\footnote{Limits from existing 
 searches can sometimes be applied to new models, for example by accessing archived versions of the original analysis code
-and detector simulation via the RECAST~\cite{Cranmer:2010hk} project.}\todo{MK: are footnotes referenced before or after the period: \ldots blabla.\footnote{This is important.} or 
-\ldots blabla\footnote{This is also important.}? (I think I changed some to the former, but maybe that's not what you do in English?}
+and detector simulation via the RECAST~\cite{Cranmer:2010hk} project.}\todo{MK: are footnotes referenced before or after the period? DG: has different meaning: footonote for the sentence: after. Footnote for the word: before.}
 On the one hand, any theory seeking
 to explain a new signature or anomaly in the data may predict a BSM signal in other final states, which should be checked 
 against data this way. On the other hand, if no BSM physics emerges, a model-independent and systematic approach becomes mandatory to exclude 
@@ -182,21 +180,19 @@ analysed using the selected analyses implemented in
 Higher-order QCD corrections have been calculated for this class of dark matter simplified models 
 with an $s$-channel vector mediator, see Refs.~\cite{Fox:2012ru,Haisch:2013ata,Backovic:2015soa,Neubert:2015fka}. However, for the purpose of this paper where we focus on introducing the \Contur approach rather than exploring 
 a particular BSM theory in great detail, we will use leading-order signal cross section predictions as provided by Herwig 7.
-
-The most relevant production and decay channels for the mediator are illustrated in Fig.~\ref{fig:feyndia}.\todo{MK: These could be a little smaller, but it is fine with me to leave them as is.} 
+%
+The most relevant production and decay channels for the mediator are illustrated in Fig.~\ref{fig:feyndia}.
 
 \begin{figure}[hp]
 \centering
 \subfloat[\label{fig:schannel}]{
-\includegraphics[width=0.5\textwidth]{images/feyndia/vec_dm_born.pdf}
+\includegraphics[width=0.3\textwidth]{images/feyndia/vec_dm_born.pdf}
 }
-
 \subfloat[\label{fig:plusjet}]{
-\includegraphics[width=0.5\textwidth]{images/feyndia/vec_dm_g.pdf}
+\includegraphics[width=0.3\textwidth]{images/feyndia/vec_dm_g.pdf}
 }
-
 \subfloat[\label{fig:plusV}]{
-\includegraphics[width=0.5\textwidth]{images/feyndia/vec_dm_weak.pdf}
+\includegraphics[width=0.3\textwidth]{images/feyndia/vec_dm_weak.pdf}
 }
 \caption{Relevant Feynman diagrams introduced by the simplified model at leading order. (a) $s$-channel production followed by decay to quarks or to DM, (b) associated jet production (c) associated gauge-boson production.}\label{fig:feyndia}
 \end{figure}
@@ -225,7 +221,7 @@ counting toward \MET (to ensure that large contributions to \MET
 from invisible particles outside the detector acceptance are excluded) such measurements can be 
 used.\footnote{Of greater consequence, but easier to fix, is the fact that several \rivet methods explicitly calculated \MET
 from neutrinos found in the true event record, rather than as the negative of the visible particles in the event. These 
-routines were modified as a part of this work, and are all fixed in release 2.5.X.}\todo{MK: Rivet version number not complete.}
+routines were modified as a part of this work, and are fixed in future Rivet releases.}
 
 Another feature of the measurements is that most of them, explicitly or implicitly, insist in their fiducial cross-section definition 
 that leptons and photons be 'directly' produced, that is, prior to hadronisation \todo{DG to check -ize / -ise consistency at the end, also small caps consistency} and coming from the primary vertex of the collision. 
