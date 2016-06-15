@@ -275,41 +275,56 @@ The choice of which measurements are actually included at this stage is driven m
 fiducial cross sections 
 implemented in \rivet. The current selection is summarised in Table~\ref{tab:Rivet}.
 
+%\newcommand{\breaker}{\hline}
+\newcommand{\breaker}{}
+
 \renewcommand{\arraystretch}{1.25}
+
 \begin{table}[hp]
+\footnotesize
 \begin{center}
-\begin{tabular}{c | p{8cm} | l}
-\rivet ID (Inspire) and reference & \rivet description  & \Contur Category \\
+\begin{tabular}{l  l  p{8cm} }
+ \Contur Category & \rivet / Inspire ID & \rivet description \\
 \hline
-ATLAS\_2014\_I1325553 \cite{Aad:2014vwa} & Measurement of the inclusive jet cross-section at 7 TeV & ATLAS 7 Jets \\
-ATLAS\_2014\_I1268975 \cite{Aad:2013tea} & High-mass dijet cross section & ATLAS 7 Jets \\
-ATLAS\_2014\_I1326641 \cite{Aad:2014rma} & 3-jet cross section with 7 TeV data & ATLAS 7 Jets \\
-ATLAS\_2014\_I1307243 \cite{Aad:2014pua} & Measurements of jet vetoes and azimuthal decorrelations in dijet events produced in pp collisions at $\sqrt{s}$ = 7 TeV using the ATLAS detector & ATLAS 7 Jets \\
-CMS\_2014\_I1298810 \cite{Chatrchyan:2014gia} & Ratios of jet pT spectra, which relate to the ratios of inclusive, differential jet cross sections & CMS 7 Jets \\
-ATLAS\_2015\_I1394679 \cite{Aad:2015nda}  & Multijets at 8 TeV  & ATLAS 8 Jets \\
-
+\hline
+ATLAS 7 Jets  & ATLAS\_2014\_I1325553 \cite{Aad:2014vwa} & Measurement of the inclusive jet cross-section \\
+& ATLAS\_2014\_I1268975 \cite{Aad:2013tea} & High-mass dijet cross section \\
+& ATLAS\_2014\_I1326641 \cite{Aad:2014rma} & 3-jet cross section \\
+& ATLAS\_2014\_I1307243 \cite{Aad:2014pua} & Measurements of jet vetoes and azimuthal decorrelations in dijet events \\
+\breaker
+CMS 7 Jets  & CMS\_2014\_I1298810 \cite{Chatrchyan:2014gia} & Ratios of jet pT spectra, which relate to the ratios of inclusive, differential jet cross sections \\
+\breaker
+ATLAS 8 Jets  & ATLAS\_2015\_I1394679 \cite{Aad:2015nda}  & Multijets at 8 TeV \\
 %%####ZJets
-ATLAS\_2013\_I1230812 \cite{Aad:2014qxa} & $Z$ + jets in $pp$ at 7 TeV & ATLAS 7  Z Jets \\
-CMS\_2015\_I1310737 \cite{Khachatryan:2014zya} & Jet multiplicity and differential cross-sections of $Z$+jets events in $pp$ at $\sqrt{s} = 7$ TeV & CMS 7 Z Jets \\
-
+\breaker
+ATLAS 7  Z Jets & ATLAS\_2013\_I1230812 \cite{Aad:2014qxa} & $Z$ + jets \\
+\breaker
+CMS 7 Z Jets & CMS\_2015\_I1310737 \cite{Khachatryan:2014zya} & Jet multiplicity and differential cross-sections of $Z$+jets events \\
 %%####WJets
-CMS\_2014\_I1303894 \cite{Khachatryan:2014uva} & Differential cross-section of $W$ bosons + jets in $pp$ collisions at $\sqrt{s}=7$ TeV & CMS 7 W Jets \\
-ATLAS\_2014\_I1319490 \cite{Aad:2013ysa} & W + jets & ATLAS W jets \\
-
+\breaker
+CMS 7 W Jets  & CMS\_2014\_I1303894 \cite{Khachatryan:2014uva} & Differential cross-section of $W$ bosons + jets \\
+\breaker
+ATLAS W jets & ATLAS\_2014\_I1319490 \cite{Aad:2013ysa} & $W$ + jets \\
 %%####Gamma(+jets)
-ATLAS\_2013\_I1263495 \cite{Aad:2013zba} & Inclusive isolated prompt photon analysis with 2011 LHC data & ATLAS 7 Photon Jet \\
-ATLAS\_2012\_I1093738 \cite{ATLAS:2012ar} & Isolated prompt photon + jet cross-section & ATLAS 7 Photon Jet \\
-CMS\_2014\_I1266056 \cite{Chatrchyan:2013mwa} & [Unvalidated] Photon + jets triple differential cross-section & CMS 7 Photon Jet \\
-ATLAS\_2012\_I1199269 \cite{Aad:2012tba} & Inclusive diphoton $+ X$ events at $\sqrt{s} = 7$ TeV & ATLAS 7 Diphoton \\
-
+\breaker
+ATLAS 7 Photon Jet & ATLAS\_2013\_I1263495 \cite{Aad:2013zba} & Inclusive isolated prompt photon analysis with 2011 LHC data \\
+ & ATLAS\_2012\_I1093738 \cite{ATLAS:2012ar} & Isolated prompt photon + jet cross-section \\
+\breaker
+CMS 7 Photon Jet  & CMS\_2014\_I1266056 \cite{Chatrchyan:2013mwa} & Photon + jets triple differential cross-section \\
+\breaker
+ATLAS 7 Diphoton & ATLAS\_2012\_I1199269 \cite{Aad:2012tba} & Inclusive diphoton $+ X$ events \\
 %%####ZZ
-ATLAS\_2012\_I1203852 \cite{Aad:2012awa} & Measurement of the $ZZ(*)$ production cross-section in $pp$ collisions at 7 TeV with ATLAS & ATLAS 7 ZZ \\
-
+\breaker
+ATLAS 7 ZZ  & ATLAS\_2012\_I1203852 \cite{Aad:2012awa} & Measurement of the $ZZ(*)$ production cross-section \\
 %%#W/Z+gamma
-ATLAS\_2013\_I1217863 \cite{Aad:2013izg}  & W/Z gamma production at 7 TeV & ATLAS W/Z gamma \\
+\breaker
+ATLAS W/Z gamma & ATLAS\_2013\_I1217863 \cite{Aad:2013izg}  & $W$/$Z$ gamma production \\
+\hline
+\hline
 \end{tabular}
-\caption{Table of all \rivet routines currently included in the limit-setting scan}\label{tab:Rivet}
+\caption{Table of all \rivet routines currently included in the limit-setting scan. With the one indicated exception, they are all based on 7~TeV data.}\label{tab:Rivet}
 \end{center}
+\normalsize
 \end{table}
 \renewcommand{\arraystretch}{1}
 
