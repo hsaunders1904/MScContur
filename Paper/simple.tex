@@ -238,15 +238,15 @@ The measurements we consider fall into five loose and independent classes.
 Jets: event topologies with any number of jets but no missing energy, leptons, or photons. In this category there
 are important measurements from both ATLAS and CMS, many of which have existing \rivet analyses. We make use of 
 the highest integrated-luminosity inclusive~\cite{Aad:2014vwa,Chatrchyan:2014gia}, dijet~\cite{Aad:2013tea,Aad:2014pua} 
-and three-jet~\cite{Aad:2014rma} %{\bf add cms 3jet here? Needs a Rivet routine.} 
+and three-jet~\cite{Aad:2014rma} 
 measurements made in 7~TeV collisions, as well as the jet mass 
 measurement from CMS~\cite{Chatrchyan:2013vbb}.
 Unfortunately results from 8~TeV collisions are rarer, and the only one we can use currently is the four-jet 
-measurement from ATLAS~\cite{Aad:2015nda} \todo{DY: I haven't included 4jet 8tev in what we currently display, it had pretty much no sensitivity to the model and was a whole additional set of event generation. Cut this out? I (JMB) think since we tried it and checked, it's best to leave this wording in.}.
+measurement from ATLAS~\cite{Aad:2015nda} \todo{DY: I haven't included 4jet 8tev in what we currently display, it had pretty much no sensitivity to the model and was a whole additional set of event generation. Cut this out? I (JMB) think since we tried it and checked, it's best to leave this wording in and adding it to the table.}.
 \item
 Electroweak: events with leptons, with or without missing energy or photons. The high-statistics $W+$jet and $Z+$jet measurements 
 from ATLAS~\cite{Aad:2014qxa,Aad:2013ysa} 
-and CMS~\cite{Khachatryan:2014uva},\todo{DY: ref for CMS Z+jets needed} are used.
+and CMS~\cite{Khachatryan:2014uva,Khachatryan:2014zya}, are used.
 We also use the ATLAS $ZZ$ and $W/Z+\gamma$ analyses~\cite{Aad:2012awa,Aad:2013izg}, the former of which includes \MET, 
 via the $Z \rightarrow \nu\bar{\nu}$ measurement.
 \item
@@ -255,7 +255,10 @@ used in searches (see for example~\cite{Aad:2012fqa}). Unfortunately however, th
 distributions available in this category. 
 \item
 Isolated photons, with or without missing energy, but no leptons. Here we make use of the inclusive~\cite{Aad:2013zba}, diphoton~\cite{Aad:2012tba} and 
-photon-plus-jet~\cite{ATLAS:2012ar} measurements \todo{DY: I am unsure on whether there is a guarantee of no statistical overlap of the photon + jet and inclusive photon, I mark as separate catagories for now but is this safe? has almost no impact either way as one is 37pb-1 so gives no stat power anyway. JMB: there will be overlap if they are measured in the same sample.}, where available. \todo{DY: Ref for unvalidated CMS gamma + jet we include?}
+photon-plus-jet~\cite{ATLAS:2012ar} measurements,
+%\todo{DY: I am unsure on whether there is a guarantee of no statistical overlap of the photon + jet and inclusive photon, I mark as separate catagories for now but is this safe? has almost no impact either way as one is 37pb-1 so gives no stat power anyway. JMB: there will be overlap if they are measured in the same sample.}
+where available. We also made a new \rivet routine for the CMS photon-plus jet measurement \cite{Chatrchyan:2013mwa}. 
+%\todo{DY: Ref for unvalidated CMS gamma + jet we include?}
 \item
 Signatures specifically based on top quark or Higgs candidates. Most such measurements to date have been made at the 'parton' level (that is,
 corrected using SM MC back to the top or Higgs before decay), and many of them are extrapolated to $4\pi$ phase space. Both steps increase
@@ -267,7 +270,44 @@ categories depending on decay mode. We leave the inclusion of such measurements 
 
 The choice of which measurements are actually included at this stage is driven mainly by the availability of particle-level differential 
 fiducial cross sections 
-implemented in \rivet. %\todo{DG: DG motivate why we're not hand-writing analyses}
+implemented in \rivet. The current selection is summarised in Table~\ref{tab:Rivet}.
+
+
+\begin{table}[hp]
+\begin{center}
+\begin{tabular}{c | p{8cm} | l}
+\rivet ID (Inspire) and reference & \rivet description  & \Contur Category \\
+\hline
+ATLAS\_2014\_I1325553 \cite{Aad:2014vwa} & Measurement of the inclusive jet cross-section at 7 TeV & ATLAS 7 Jets \\
+ATLAS\_2014\_I1268975 \cite{Aad:2013tea} & High-mass dijet cross section & ATLAS 7 Jets \\
+ATLAS\_2014\_I1326641 \cite{Aad:2014rma} & 3-jet cross section with 7 TeV data & ATLAS 7 Jets \\
+ATLAS\_2014\_I1307243 \cite{Aad:2014pua} & Measurements of jet vetoes and azimuthal decorrelations in dijet events produced in pp collisions at $\sqrt{s}$ = 7 TeV using the ATLAS detector & ATLAS 7 Jets \\
+CMS\_2014\_I1298810 \cite{Chatrchyan:2014gia} & Ratios of jet pT spectra, which relate to the ratios of inclusive, differential jet cross sections & CMS 7 Jets \\
+
+%%####ZJets
+ATLAS\_2013\_I1230812 \cite{Aad:2014qxa} & $Z$ + jets in $pp$ at 7 TeV & ATLAS 7  ZJets \\
+CMS\_2015\_I1310737 \cite{Khachatryan:2014zya} & Jet multiplicity and differential cross-sections of $Z$+jets events in $pp$ at $\sqrt{s} = 7$ TeV & CMS 7 Z Jets \\
+
+%%####WJets
+CMS\_2014\_I1303894 \cite{Khachatryan:2014uva} & Differential cross-section of $W$ bosons + jets in $pp$ collisions at $\sqrt{s}=7$ TeV & CMS 7 W Jets \\
+ATLAS\_2014\_I1319490 \cite{Aad:2013ysa} & W + jets & ATLAS W jets \\
+
+%%####Gamma(+jets)
+ATLAS\_2013\_I1263495 \cite{Aad:2013zba} & Inclusive isolated prompt photon analysis with 2011 LHC data & ATLAS 7 Photon Jet \\
+ATLAS\_2012\_I1093738 \cite{ATLAS:2012ar} & Isolated prompt photon + jet cross-section & ATLAS 7 Photon Jet \\
+CMS\_2014\_I1266056 \cite{Chatrchyan:2013mwa} & [Unvalidated] Photon + jets triple differential cross-section & CMS 7 Photon Jet \\
+ATLAS\_2012\_I1199269 \cite{Aad:2012tba} & Inclusive diphoton $+ X$ events at $\sqrt{s} = 7$ TeV & ATLAS 7 Diphoton \\
+
+%%####ZZ
+ATLAS\_2012\_I1203852 \cite{Aad:2012awa} & Measurement of the $ZZ(*)$ production cross-section in $pp$ collisions at 7 TeV with ATLAS & ATLAS 7 ZZ \\
+
+%%#W/Z+gamma
+ATLAS\_2013\_I1217863 \cite{Aad:2013izg}  & W/Z gamma production at 7 TeV & ATLAS W/Z gamma \\
+\end{tabular}
+\caption{Table of all \rivet routines currently included in the limit-setting scan}\label{tab:Rivet}
+\end{center}
+\end{table}
+
 
 \section{Method}
 \label{sec:method}
@@ -290,7 +330,8 @@ over a wide range of final states, giving the best chance of an indirect pointer
 \subsection{Dynamical data selection}\label{sec:dynselec}
 \label{sec:selec}
 
-Starting with the measurements discussed in Section~\ref{sec:measurements} \todo{DY to check list is consistent with the final runs; show table of rivet IDs for quick reference here}, 
+Starting with the measurements discussed in Section~\ref{sec:measurements} 
+%\todo{DY to check list is consistent with the final runs; show table of rivet IDs for quick reference here}, 
 we define a procedure to combine exclusion limits from different measured distributions.
 The data used for comparison in \rivet come in the form of histograms, which do not carry information about the correlations between uncertainties -- 
 even when in several cases detailed information is made available in the experimental papers. There are highly correlated uncertainties in several measurements, 
@@ -311,6 +352,8 @@ systematic uncertainties within a single measurement. Where a number
 of statistically-independent measurements exists {\it within} a group, their likelihoods may be combined to give a single likelihood ratio from the group.
 \item Combine the likelihood ratios of the different groups to give a single exclusion limit.
 \end{enumerate}
+
+
 
 \subsection{Statistical Method}\label{sec:statmethod}
 
@@ -576,41 +619,6 @@ combining the searches in 8~TeV and 13~TeV jet data - see, for example, \cite{Fa
 are available from these later running periods (indeed, the CMS measurement is already made~\cite{Khachatryan:2016wdh}, but is not yet available in \rivet or HepData).
 (Looks like the $ZZ$ analyis picks off a bit of phase space for $\MDM < 250$~GeV, $\MZP < 750$~GeV which isn't covered in Fig.3 or \cite{Fairbairn:2016iuf}?)
 
-
-\begin{table}[p]
-\begin{center}
-\begin{tabular}{c | p{8cm} | l}
-Rivet ID (Inspire) & Rivet description & \Contur Category \\
-\hline
-ATLAS\_2014\_I1325553 & Measurement of the inclusive jet cross-section at 7 TeV & ATLAS 7 Jets \\
-ATLAS\_2014\_I1268975 & High-mass dijet cross section & ATLAS 7 Jets \\
-ATLAS\_2014\_I1326641 & 3-jet cross section with 7 TeV data & ATLAS 7 Jets \\
-ATLAS\_2014\_I1307243 & Measurements of jet vetoes and azimuthal decorrelations in dijet events produced in pp collisions at $\sqrt{s}$ = 7 TeV using the ATLAS detector & ATLAS 7 Jets \\
-CMS\_2014\_I1298810 & Ratios of jet pT spectra, which relate to the ratios of inclusive, differential jet cross sections & CMS 7 Jets \\
-
-%%####ZJets
-ATLAS\_2013\_I1230812 & $Z$ + jets in $pp$ at 7 TeV & ATLAS 7  ZJets \\
-CMS\_2015\_I1310737 & Jet multiplicity and differential cross-sections of $Z$+jets events in $pp$ at $\sqrt{s} = 7$ TeV & CMS 7 Z Jets \\
-
-%%####WJets
-CMS\_2014\_I1303894 & Differential cross-section of $W$ bosons + jets in $pp$ collisions at $\sqrt{s}=7$ TeV & CMS 7 W Jets \\
-ATLAS\_2014\_I1319490 & W + jets & ATLAS W jets \\
-
-%%####Gamma(+jets)
-ATLAS\_2013\_I1263495 & Inclusive isolated prompt photon analysis with 2011 LHC data & ATLAS 7 Gamma \\
-ATLAS\_2012\_I1199269 & Inclusive diphoton $+ X$ events at $\sqrt{s} = 7$ TeV & ATLAS 7 gamma gamma \\
-ATLAS\_2012\_I1093738 & Isolated prompt photon + jet cross-section & ATLAS 7 Gamma Jet \\
-CMS\_2014\_I1266056 & [Unvalidated] Photon + jets triple differential cross-section & CMS 7 Gamma jet \\
-
-%%####ZZ
-ATLAS\_2012\_I1203852 & Measurement of the $ZZ(*)$ production cross-section in $pp$ collisions at 7 TeV with ATLAS & ATLAS 7 ZZ \\
-
-%%#W/Z+gamma
-ATLAS\_2013\_I1217863 & W/Z gamma production at 7 TeV & ATLAS W/Z gamma \\
-\end{tabular}
-\caption{Table of all rivet routines included in method}\label{tab:Rivet}
-\end{center}
-\end{table}
 
 \section{Conclusions}\label{sec:conclusions}
 
