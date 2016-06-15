@@ -50,7 +50,7 @@ BSM proposals in a context where many (but perhaps not all) measurements are con
 We demonstrate, using a competitive simplified dark matter model, the power of this approach. 
 The \Contur method is highly scaleable to other models and future measurements.
 %
-\begin{flushright}IPPP/16/52, MCNET-16-nn, TTK-16-22\end{flushright}
+\begin{flushright}IPPP-16-52, MCNET-16-nn, TTK-16-22\end{flushright}
 \end{abstract}
 
 
@@ -173,11 +173,10 @@ and exclude dark matter and mediator masses of up to about 500~GeV and 1.5~TeV, 
 model re-interpretations of LHC searches as presented in, e.g.,  Refs.~\cite{Kahlhoefer:2015bea, Heisig:2015ira}. Searches for dijet resonances from 
 mediator production and decay can place further strong constraints on the dark matter simplified model as demonstrated in Refs.~\cite{Chala:2015ama,Fairbairn:2016iuf}. 
 
-To simulate the experimental signature for our model, we have encoded the model Lagrangian in \textsc{FeynRules}~\cite{Alloul:2013bka}. Using its UFO interface~\cite{Degrande:2011ua},
-a BSM configuration is created for Herwig~7~\cite{Bellm:2015jjp,Bahr:2008pv}. For each parameter point in the scan grid, \todo{NNN} events were generated and analysed using the 
- \rivet library~\cite{Buckley:2010ar}. Calculation of the exclusion contours was done in Python scripts, available on the \Contur website \url{https://contur.hepforge.org/}
-
-\todo{DY please fill in version numbers of the tools}. 
+To simulate the experimental signature for our model, we have encoded the model Lagrangian in \textsc{FeynRules}~2.3.18~\cite{Alloul:2013bka}. Using its UFO interface~\cite{Degrande:2011ua},
+a BSM configuration is created for Herwig~7.0.1~\cite{Bellm:2015jjp,Bahr:2008pv}. For each parameter point in the scan grid, 30000 events were generated in Herwig and 
+analysed using the selected analyses implemented in  
+ \rivet 2.4.1~\cite{Buckley:2010ar} (see section \ref{sec:measurements}). Calculation of the exclusion contours was done in Python scripts, available on the \Contur website \url{https://contur.hepforge.org/}
 
 Higher-order QCD corrections have been calculated for this class of dark matter simplified models 
 with an $s$-channel vector mediator, see Refs.~\cite{Fox:2012ru,Haisch:2013ata,Backovic:2015soa,Neubert:2015fka}. However, for the purpose of this paper where we focus on introducing the \Contur approach rather than exploring 
