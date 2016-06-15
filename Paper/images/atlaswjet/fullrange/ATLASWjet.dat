@@ -1,7 +1,7 @@
 # BEGIN PLOT
 #XTwosidedTicks=1
 #YTwosidedTicks=1
-Title=electron channel, dressed level
+Title=ATLAS $W + \geq 2$ jet differential cross section
 LogY=1
 LegendXPos=0.1
 XLabel=$m_{12}$ [GeV]
@@ -11,7 +11,7 @@ LegendYPos=0.3
 Legend=1
 LegendOnly=/ATLAS_2014_I1319490_EL/d26-x01-y02 //home/david/Analysis/images/weak/wjet/mY_100_mX_600.yoda/ATLAS_2014_I1319490_EL/d26-x01-y02 //home/david/Analysis/images/weak/wjet/mY_300_mX_600.yoda/ATLAS_2014_I1319490_EL/d26-x01-y02 //home/david/Analysis/images/weak/wjet/mY_600_mX_600.yoda/ATLAS_2014_I1319490_EL/d26-x01-y02 //home/david/Analysis/images/weak/wjet/mY_1000_mX_600.yoda/ATLAS_2014_I1319490_EL/d26-x01-y02
 LeftMargin=1.5
-CustomLegend=$g_{q}=0.375, g_{\textsc{dm}}=1$ \\$m_{\textsc{dm}} = 600$ GeV
+CustomLegend=$g_{q}=0.375, g_{\textsc{dm}}=1$ \\$M_{\textsc{dm}} = 600$ GeV
 LegendXPos=0.6
 LegendYPos=1.0
 ErrorBars=1
@@ -64,7 +64,7 @@ LineColor=red
 LineStyle=solid
 Path=//home/david/Analysis/images/weak/wjet/mY_100_mX_600.yoda/ATLAS_2014_I1319490_EL/d26-x01-y02
 ScaledBy=0.0013718286929091518
-Title=$m_{\textsc{z}'} = 100$ GeV
+Title=$M_{\textsc{z}'} = 100$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
@@ -104,7 +104,7 @@ LineColor=blue
 LineStyle=solid
 Path=//home/david/Analysis/images/weak/wjet/mY_300_mX_600.yoda/ATLAS_2014_I1319490_EL/d26-x01-y02
 ScaledBy=0.00012701140555543508
-Title=$m_{\textsc{z}'} = 300$ GeV
+Title=$M_{\textsc{z}'} = 300$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
@@ -144,7 +144,7 @@ LineColor=green
 LineStyle=solid
 Path=//home/david/Analysis/images/weak/wjet/mY_600_mX_600.yoda/ATLAS_2014_I1319490_EL/d26-x01-y02
 ScaledBy=1.7037837817566513e-05
-Title=$m_{\textsc{z}'} = 600$ GeV
+Title=$M_{\textsc{z}'} = 600$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
@@ -184,7 +184,7 @@ LineColor=cyan
 LineStyle=solid
 Path=//home/david/Analysis/images/weak/wjet/mY_1000_mX_600.yoda/ATLAS_2014_I1319490_EL/d26-x01-y02
 ScaledBy=2.3829513883340915e-06
-Title=$m_{\textsc{z}'} = 1000$ GeV
+Title=$M_{\textsc{z}'} = 1000$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus

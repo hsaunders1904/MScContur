@@ -1,13 +1,13 @@
 # BEGIN PLOT
 LegendOnly=/ATLAS_2014_I1268975/d01-x01-y01 //home/david/Analysis/images/mY_500_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01 //home/david/Analysis/images/mY_1000_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01 //home/david/Analysis/images/mY_1500_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01 //home/david/Analysis/images/mY_2000_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
 XLabel=$m_{12} [TeV]$
-Title=Dijet double-differential cross sections ($y^{*} < 0.5$), R=0.4
+Title=ATLAS Dijet double-differential cross sections ($y^{*} < 0.5$)
 DrawOnly=/ATLAS_2014_I1268975/d01-x01-y01 //home/david/Analysis/images/mY_500_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01 //home/david/Analysis/images/mY_1000_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01 //home/david/Analysis/images/mY_1500_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01 //home/david/Analysis/images/mY_2000_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
 YLabel=$d^2\sigma/dm_{12}dy^{*}$ [pb/TeV]
 Legend=1
 FullRange=1
 XMax=2.5
-CustomLegend=$g_{q}=0.375, g_{\textsc{dm}}=1$ \\$m_{\textsc{dm}} = 600$ GeV
+CustomLegend=$g_{q}=0.375, g_{\textsc{dm}}=1$ \\$M_{\textsc{dm}} = 600$ GeV
 LegendXPos=0.6
 LegendYPos=1.0
 ErrorBars=1
@@ -53,7 +53,7 @@ LineColor=red
 LineStyle=solid
 Path=//home/david/Analysis/images/mY_500_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
 ScaledBy=0.022164687132095129
-Title=$m_{\textsc{z}'} = 500$ GeV
+Title=$M_{\textsc{z}'} = 500$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
@@ -87,7 +87,7 @@ LineColor=blue
 LineStyle=solid
 Path=//home/david/Analysis/images/mY_1000_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
 ScaledBy=0.0012017457002758286
-Title=$m_{\textsc{z}'} = 1000$ GeV
+Title=$M_{\textsc{z}'} = 1000$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
@@ -121,7 +121,7 @@ LineColor=green
 LineStyle=solid
 Path=//home/david/Analysis/images/mY_1500_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
 ScaledBy=0.00013325573454716337
-Title=$m_{\textsc{z}'} = 1500$ GeV
+Title=$M_{\textsc{z}'} = 1500$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
@@ -155,7 +155,7 @@ LineColor=cyan
 LineStyle=solid
 Path=//home/david/Analysis/images/mY_2000_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
 ScaledBy=1.8732485458664868e-05
-Title=$m_{\textsc{z}'} = 2000$ GeV
+Title=$M_{\textsc{z}'} = 2000$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus

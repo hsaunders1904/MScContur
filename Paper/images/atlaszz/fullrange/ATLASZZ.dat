@@ -1,17 +1,19 @@
 # BEGIN PLOT
 LegendOnly=/ATLAS_2012_I1203852_MET/d01-x01-y03 //home/david/Analysis/images/weak/zz/mY_300_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03 //home/david/Analysis/images/weak/zz/mY_500_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03 //home/david/Analysis/images/weak/zz/mY_1000_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03 //home/david/Analysis/images/weak/zz/mY_1500_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03
-DrawOnly=/ATLAS_2012_I1203852_MET/d01-x01-y03 //home/david/Analysis/images/weak/zz/mY_300_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03 //home/david/Analysis/images/weak/zz/mY_500_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03 //home/david/Analysis/images/weak/zz/mY_1000_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03 //home/david/Analysis/images/weak/zz/mY_1500_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03
-Title=Total fiducial cross-section $\sigma_{ZZ \to 2l2nu}$
+#DrawOnly=/ATLAS_2012_I1203852_MET/d01-x01-y03 //home/david/Analysis/images/weak/zz/mY_300_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03 //home/david/Analysis/images/weak/zz/mY_500_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03 //home/david/Analysis/images/weak/zz/mY_1000_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03 //home/david/Analysis/images/weak/zz/mY_1500_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03
+Title=ATLAS total fiducial cross-section reconstructed $ZZ \to 2l2\nu $
 RatioPlotMode=datamc
 LogY=0
-XLabel=$\sqrt{s}$~[GeV]
-YLabel=$\sigma_{ZZ \to 2l2nu}$~[fb]
+XLabel=$M_{Z'}$~[GeV]
+YLabel=$\sigma$~[fb]
 Legend=1
-CustomLegend=$g_{q}=0.375, g_{\textsc{dm}}=1$ \\$m_{\textsc{dm}} = 100$ GeV
+CustomLegend=$g_{q}=0.375, g_{\textsc{dm}}=1$ \\$M_{\textsc{dm}} = 100$ GeV
 LegendXPos=0.6
-LegendYPos=0.85
+LegendYPos=1.0
 ErrorBars=1
 ErrorBands=1
+XMin=200
+XMax=1600
 # END PLOT
 
 # BEGIN HISTO1D /ATLAS_2012_I1203852_MET/d01-x01-y03
@@ -22,7 +24,10 @@ Path=/ATLAS_2012_I1203852_MET/d01-x01-y03
 PolyMarker=*
 Title=Data
 # xlow	 xhigh	 val	 errminus	 errplus
-6.999500e+03	7.000500e+03	1.270000e+01	3.398529e+00	3.570714e+00
+0.3e+03	0.3e+03	1.270000e+01	3.398529e+00	3.570714e+00
+0.5e+03	0.5e+03	1.270000e+01	3.398529e+00	3.570714e+00
+1.0e+03	1.0e+03	1.270000e+01	3.398529e+00	3.570714e+00
+1.5e+03	1.5e+03	1.270000e+01	3.398529e+00	3.570714e+00
 # END HISTO1D
 
 # BEGIN HISTO1D //home/david/Analysis/images/weak/zz/mY_300_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03
@@ -30,54 +35,58 @@ ErrorBars=1
 IsRef=1
 LineColor=red
 LineStyle=solid
+PolyMarker=*
 Path=//home/david/Analysis/images/weak/zz/mY_300_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03
 ScaledBy=0.12696101190657927
-Title=$m_{\textsc{z}'} = 300$ GeV
+Title=$M_{\textsc{z}'} = 300$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
-6.999500e+03	7.000500e+03	1.047428e+02	3.646678e+00	3.646678e+00
+0.3e+03	0.3e+03	1.047428e+02	3.646678e+00	3.646678e+00
 # END HISTO1D
 
 # BEGIN HISTO1D //home/david/Analysis/images/weak/zz/mY_500_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03
 ErrorBars=1
 IsRef=1
 LineColor=blue
+PolyMarker=*
 LineStyle=solid
 Path=//home/david/Analysis/images/weak/zz/mY_500_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03
 ScaledBy=0.030607828886567195
-Title=$m_{\textsc{z}'} = 500$ GeV
+Title=$M_{\textsc{z}'} = 500$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
-6.999500e+03	7.000500e+03	3.801492e+01	1.078682e+00	1.078682e+00
+0.5e+03	0.5e+03	3.801492e+01	1.078682e+00	1.078682e+00
 # END HISTO1D
 
 # BEGIN HISTO1D //home/david/Analysis/images/weak/zz/mY_1000_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03
 ErrorBars=1
 IsRef=1
 LineColor=green
+PolyMarker=*
 LineStyle=solid
 Path=//home/david/Analysis/images/weak/zz/mY_1000_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03
 ScaledBy=0.0023860300493243388
-Title=$m_{\textsc{z}'} = 1000$ GeV
+Title=$M_{\textsc{z}'} = 1000$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
-6.999500e+03	7.000500e+03	3.669714e+00	9.357376e-02	9.357376e-02
+1.0e+03	1.0e+03	3.669714e+00	9.357376e-02	9.357376e-02
 # END HISTO1D
 
 # BEGIN HISTO1D //home/david/Analysis/images/weak/zz/mY_1500_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03
 ErrorBars=1
 IsRef=1
+PolyMarker=*
 LineColor=cyan
 LineStyle=solid
 Path=//home/david/Analysis/images/weak/zz/mY_1500_mX_100.yoda/ATLAS_2012_I1203852_MET/d01-x01-y03
 ScaledBy=0.00029023854096748105
-Title=$m_{\textsc{z}'} = 1500$ GeV
+Title=$M_{\textsc{z}'} = 1500$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
-6.999500e+03	7.000500e+03	4.423236e-01	1.133046e-02	1.133046e-02
+1.5e+03	1.5e+03	4.423236e-01	1.133046e-02	1.133046e-02
 # END HISTO1D
 

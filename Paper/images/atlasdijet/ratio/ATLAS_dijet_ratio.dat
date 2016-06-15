@@ -7,11 +7,15 @@ LogY=1
 XLabel=$m_{12} [TeV]$
 MainPlot=0
 YLabel=$d^2\sigma/dm_{12}dy^{*}$ [pb/TeV]
-#Legend=1
+Legend=1
 FullRange=1
 RatioPlotYMin=1
 RatioPlotYMax=1.15
 XMax=2.5
+CustomLegend=CL$_{s}$ max
+LegendXPos=0.01
+LegendAlign=l
+LegendYPos=1.0
 RatioPlotYLabel=(MC+Data)/Data
 RatioPlotErrorBandColor={[rgb]{0.8,0.8,0.8}}
 # END PLOT

@@ -1,9 +1,9 @@
 # BEGIN PLOT
 LegendOnly=/CMS_2014_I1298810/d01-x01-y01 //home/david/Analysis/images/mY_500_mX_600.yoda/CMS_2014_I1298810/d01-x01-y01 //home/david/Analysis/images/mY_1000_mX_600.yoda/CMS_2014_I1298810/d01-x01-y01 //home/david/Analysis/images/mY_1500_mX_600.yoda/CMS_2014_I1298810/d01-x01-y01 //home/david/Analysis/images/mY_2000_mX_600.yoda/CMS_2014_I1298810/d01-x01-y01
 DrawOnly=/CMS_2014_I1298810/d01-x01-y01 //home/david/Analysis/images/mY_500_mX_600.yoda/CMS_2014_I1298810/d01-x01-y01 //home/david/Analysis/images/mY_1000_mX_600.yoda/CMS_2014_I1298810/d01-x01-y01 //home/david/Analysis/images/mY_1500_mX_600.yoda/CMS_2014_I1298810/d01-x01-y01 //home/david/Analysis/images/mY_2000_mX_600.yoda/CMS_2014_I1298810/d01-x01-y01
-Title=CMS, pp, $\sqrt{s} = 7\,\text{TeV}$, anti-kT, R=0.5 ($\left|y\right| < 0.5$)
+Title=CMS inclusive jet double differential cross section ($\left|y\right| < 0.5$)
 LogY=1
-CustomLegend=$g_{q}=0.375, g_{\textsc{dm}}=1$ \\$m_{\textsc{dm}} = 600$ GeV
+CustomLegend=$g_{q}=0.375, g_{\textsc{dm}}=1$ \\$M_{\textsc{dm}} = 600$ GeV
 LegendXPos=0.5
 LegendYPos=1.0
 XLabel=$p_{T}$ (GeV)
@@ -67,7 +67,7 @@ LineStyle=solid
 Path=//home/david/Analysis/images/mY_500_mX_600.yoda/CMS_2014_I1298810/d01-x01-y01
 PolyMarker=*
 ScaledBy=0.011082343566047564
-Title=$m_{\textsc{z}'} = 500$ GeV
+Title=$M_{\textsc{z}'} = 500$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
@@ -114,7 +114,7 @@ LineStyle=solid
 Path=//home/david/Analysis/images/mY_1000_mX_600.yoda/CMS_2014_I1298810/d01-x01-y01
 PolyMarker=*
 ScaledBy=0.00060087285013791429
-Title=$m_{\textsc{z}'} = 1000$ GeV
+Title=$M_{\textsc{z}'} = 1000$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
@@ -161,7 +161,7 @@ LineStyle=solid
 Path=//home/david/Analysis/images/mY_1500_mX_600.yoda/CMS_2014_I1298810/d01-x01-y01
 PolyMarker=*
 ScaledBy=6.6627867273581683e-05
-Title=$m_{\textsc{z}'} = 1500$ GeV
+Title=$M_{\textsc{z}'} = 1500$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
@@ -208,7 +208,7 @@ LineStyle=solid
 Path=//home/david/Analysis/images/mY_2000_mX_600.yoda/CMS_2014_I1298810/d01-x01-y01
 PolyMarker=*
 ScaledBy=9.3662427293324338e-06
-Title=$m_{\textsc{z}'} = 2000$ GeV
+Title=$M_{\textsc{z}'} = 2000$ GeV
 XLabel=
 YLabel=
 # xlow	 xhigh	 val	 errminus	 errplus
