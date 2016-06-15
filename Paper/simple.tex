@@ -368,25 +368,25 @@ plausible mediator masses (\MZP) and dark matter masses (\MDM) within the model 
 the coupling of the mediator to the SM (\GQ). These coupling choices correspond to (i) an `optimistic' scenario $\GQ = 0.5, \GDM = 1$ -- strong signals, 
 close to the edge of exclusion already, (ii) a `challenging' scenario $\GQ = 0.25, \GDM = 1$ -- low couplings, hard to exclude, 
 and (iii) an `intermediate' scenario $\GQ = 0.375, \GDM = 1$, between the two. We also consider (iv) a scenario where the coupling of dark matter to the mediator is
-suppressed, $\GQ = 0.375, \GDM = 0.375$.
+suppressed, $\GQ = 0.375, \GDM = 0.375$. For all these scenarios, the calculated width of the mediator is less than 10\% of \MZP, as shown in Table~\ref{tab:width}.
 
-%\begin{figure}[!htb]
-%\centering
-%      \includegraphics[width=0.45\textwidth]{images/atlasdijet/fullscale/ATLAS_dijet.pdf}
-%      \includegraphics[width=0.45\textwidth]{images/atlasdijet/ratio/ATLAS_dijet_ratio.pdf}
-%    \caption{ Outputs from \rivet for a measurement included in the limit setting process. Simulated signals for a sample of mediator masses are shown, superimposed 
-%on the double differential inclusive jet cross section in the most central rapidity region, binned by dijet mass and rapidity as measured by ATLAS at 
-%7 TeV~\cite{Aad:2014pua}. The left hand plot compares the measured cross section to the model expectation, and the right hand plot shows the perturbation 
-%in the ration compared to the relative uncertainty in the measurement. 
-%The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass and mediator couplings; $\MDM=600$ GeV, 
-%$\GQ=0.25$ and $\GDM = 1$.}
-%\label{fig:ATLASdijet}
-%\end{figure}
+\begin{table}[hp]
+\begin{center}
+\begin{tabular}{c | c | c | c | c}
+\GQ & \GDM & \MZP [GeV] & \MDM [GeV] & $\Gamma_{Z'}/\MZP$ \\
+\hline
+0.25 & 1 & 3000 & 100 & 0.0626 \\%%0.0626456666667 \\
+0.375 & 1 & 3000 & 100 & 0.0751 \\ %%0.0750796666667 \\
+0.5 & 1 & 3000 & 100 & 0.0925 \\ %%0.092487 \\
+0.375 & 0.25 & 3000 & 100 & 0.0257 \\ %% 0.0256748 
+\end{tabular}
+\caption{Table of maximal $\Gamma_{Z'}/\MZP$ occuring over the mass ranges for the four heatmaps shown in Figure~\ref{fig:maps}}\label{tab:width}
+\end{center}
+\end{table}
 
-%\todo{MK: I prefer larger figures, see below, but leave this to you to decide. JMB: I agree and have implemented it.}
 \todo{DY provide CL values for the 4 options shown, clarify rivet plot titles}
 
-\begin{figure}[!htb]
+\begin{figure}[htb]
 \centering
       \includegraphics[width=0.9\textwidth]{images/atlasdijet/fullscale/ATLAS_dijet.pdf}\\
       \includegraphics[width=0.9\textwidth]{images/atlasdijet/ratio/ATLAS_dijet_ratio.pdf}
@@ -460,7 +460,8 @@ a fiducial cross section measurement of $pp \rightarrow l^+l^- + \MET$, interpre
 sufficiently model-independent fashion that it has the same sensitivity to the $l^+l^- +$ dark matter channel. This is illustrated in Fig.~\ref{fig:ATLASzz}. 
 \todo{DY: Improve the presentation of this figure}
 The production diagrams are the same as the $V$-jets case, but in this case the 
-mediator decays to dark matter rather than back to quarks. \todo{JB to sort this out... MK: maybe we should show a couple of example Feynman diagrams at some point? JMB: I think that would be very good 
+mediator decays to dark matter rather than back to quarks. 
+\todo{JB to sort this out... MK: maybe we should show a couple of example Feynman diagrams at some point? JMB: I think that would be very good 
  - can someone make them? I'd say the s-channel production and decays to quarks and to DM, and the production with a gauge boson plus decay too? DY: Added some that I had from my X-mas talk feel free to use or not}
 In the absence of any particle-level measurements in the `missing energy plus jets' category of 
 Section~\ref{sec:measurements}, this measurement has the best sensitivity to dark matter production for this model. Obviously, measurements at 8~TeV and 13~TeV of this 
@@ -566,19 +567,6 @@ combining the searches in 8~TeV and 13~TeV jet data - see, for example, \cite{Fa
 are available from these later running periods (indeed, the CMS measurement is already made~\cite{Khachatryan:2016wdh}, but is not yet available in \rivet or HepData).
 (Looks like the $ZZ$ analyis picks off a bit of phase space for $\MDM < 250$~GeV, $\MZP < 750$~GeV which isn't covered in Fig.3 or \cite{Fairbairn:2016iuf}?)
 
-\begin{table}[p]
-\begin{center}
-\begin{tabular}{c | c | c | c | c}
-\GQ & \GDM & \MZP [GeV] & \MDM [GeV] & $\Gamma_{Z'}/\MZP$ \\
-\hline
-0.25 & 1 & 3000 & 100 & 0.0626 \\%%0.0626456666667 \\
-0.375 & 1 & 3000 & 100 & 0.0751 \\ %%0.0750796666667 \\
-0.5 & 1 & 3000 & 100 & 0.0925 \\ %%0.092487 \\
-0.375 & 0.25 & 3000 & 100 & 0.0257 \\ %% 0.0256748 
-\end{tabular}
-\caption{Table of maximal $\Gamma_{Z'}/\MZP$ occuring over the mass ranges for the four heatmaps shown in Figure~\ref{fig:maps}}\label{tab:width}
-\end{center}
-\end{table}
 
 \begin{table}[p]
 \begin{center}
@@ -633,8 +621,8 @@ TeV-scale physics and two MCnet schools in G\"ottingen. The authors thank the or
 They also thank Josh McFayden for useful discussions, and STFC for financial support. This work was supported in part by the European Union as part of the FP7 Marie Curie Initial Training Network MCnetITN (PITN-GA-2012-315877). MK is supported by the German Research Foundation DFG through the research unit 2239 ``New physics at the LHC". 
 
 %\clearpage
-\bibliographystyle{h-physrev4}
-%\bibliographystyle{JHEP}
+%\bibliographystyle{h-physrev4}
+\bibliographystyle{JHEP}
 \bibliography{simple}
 
 \end{document}
