@@ -1,11 +1,11 @@
 
-cd /Herwig/NewPhysics
-
 ####################################
 #
 # Modify the required process here
 #
 ####################################
+
+cd /Herwig/NewPhysics
 
 insert HPConstructor:Incoming 0 /Herwig/Particles/u
 insert HPConstructor:Incoming 0 /Herwig/Particles/ubar
@@ -20,41 +20,42 @@ insert HPConstructor:Incoming 0 /Herwig/Particles/c
 insert HPConstructor:Incoming 0 /Herwig/Particles/cbar
 
 
-#insert HPConstructor:Outgoing 0 /Herwig/FRModel/Particles/Xm
+#insert HPConstructor:Outgoing 0 /Herwig/Particles/Z0
 insert HPConstructor:Outgoing 0 /Herwig/FRModel/Particles/Y1
 
-
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/u
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/ubar
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/d
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/dbar
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/g
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/s
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/sbar
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/b
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/bbar
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/c
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/cbar
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/gamma
-
 set HPConstructor:Processes SingleParticleInclusive
+
 
 #############################################################
 ## Additionally, you can use new particles as intermediates
 ## with the ResConstructor:
 #############################################################
-#insert ResConstructor:Incoming 0 /Herwig/Particles/u
-#insert ResConstructor:Incoming 0 /Herwig/Particles/ubar
-#insert ResConstructor:Incoming 0 /Herwig/Particles/d
-#insert ResConstructor:Incoming 0 /Herwig/Particles/dbar
+insert ResConstructor:Incoming 0 /Herwig/Particles/u
+insert ResConstructor:Incoming 0 /Herwig/Particles/ubar
+insert ResConstructor:Incoming 0 /Herwig/Particles/d
+insert ResConstructor:Incoming 0 /Herwig/Particles/dbar
+insert ResConstructor:Incoming 0 /Herwig/Particles/c
+insert ResConstructor:Incoming 0 /Herwig/Particles/cbar
+insert ResConstructor:Incoming 0 /Herwig/Particles/s
+insert ResConstructor:Incoming 0 /Herwig/Particles/sbar
+insert ResConstructor:Incoming 0 /Herwig/Particles/b
+insert ResConstructor:Incoming 0 /Herwig/Particles/bbar
 
-#insert ResConstructor:Intermediates 0 /Herwig/FRModel/Particles/Y1
 
-#insert ResConstructor:Outgoing 0 /Herwig/Particles/u
-#insert ResConstructor:Outgoing 0 /Herwig/Particles/ubar
-#insert ResConstructor:Outgoing 0 /Herwig/Particles/d
-#insert ResConstructor:Outgoing 0 /Herwig/Particles/dbar
-#insert ResConstructor:Outgoing 0 /Herwig/FRModel/Particles/Xm
+insert ResConstructor:Intermediates 0 /Herwig/FRModel/Particles/Y1
+
+insert ResConstructor:Outgoing 0 /Herwig/Particles/u
+insert ResConstructor:Outgoing 0 /Herwig/Particles/ubar
+insert ResConstructor:Outgoing 0 /Herwig/Particles/d
+insert ResConstructor:Outgoing 0 /Herwig/Particles/dbar
+insert ResConstructor:Outgoing 0 /Herwig/Particles/c
+insert ResConstructor:Outgoing 0 /Herwig/Particles/cbar
+insert ResConstructor:Outgoing 0 /Herwig/Particles/s
+insert ResConstructor:Outgoing 0 /Herwig/Particles/sbar
+insert ResConstructor:Outgoing 0 /Herwig/Particles/b
+insert ResConstructor:Outgoing 0 /Herwig/Particles/bbar
+insert ResConstructor:Outgoing 0 /Herwig/FRModel/Particles/Xm
+
 ###########################################################
 # Specialized 2->3 higgs constructors are also available,
 # where incoming lines don't need to be set.
@@ -98,6 +99,6 @@ create ThePEG::RivetAnalysis Rivet RivetAnalysis.so
 insert LHCGenerator:AnalysisHandlers 0 Rivet
 
 set LHCGenerator:EventHandler:LuminosityFunction:Energy 7000.0
-read 7_LEPTONIC.ana
+read 7_HAD.ana
 saverun LHC LHCGenerator
 

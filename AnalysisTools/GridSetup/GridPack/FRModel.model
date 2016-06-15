@@ -60,7 +60,7 @@ set FRModel:EW/CKM /Herwig/CKM
 set FRModel:RunningMass /Herwig/RunningMass
 
 set FRModel:gAXm 1.0
-set FRModel:gVq 0.25
+set FRModel:gVq 0.5
 set FRModel:aEWM1 127.9
 set FRModel:Gf 1.16637e-05
 set FRModel:aS 0.1184

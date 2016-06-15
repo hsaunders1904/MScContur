@@ -1,0 +1,12 @@
+####ATLAS Jets
+#
+insert Rivet:Analyses 0 ATLAS_2014_I1325553
+insert Rivet:Analyses 0 ATLAS_2014_I1268975
+insert Rivet:Analyses 0 CMS_2014_I1298810
+insert Rivet:Analyses 0 ATLAS_2014_I1326641
+
+###ATLAS MET
+insert Rivet:Analyses 0 ATLAS_2012_I1125961
+
+###ATLAS jets extra
+insert Rivet:Analyses 0 ATLAS_2014_I1307243

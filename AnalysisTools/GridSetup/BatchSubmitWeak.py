@@ -8,6 +8,7 @@ import random
 import errno
 import time
 import subprocess
+import numpy as np
 
 def mkdir_p(path):
     try:
@@ -34,15 +35,18 @@ def copytree(src, dst, symlinks=False, ignore=None):
 
 pwd = os.getcwd()
 i=0
+k=0
 
-
-for i in range(1100,2100,100):
-    for j in range(100,1050,50):
+for i in range(100,3100,100):
+    for j in range(100,2100,100):
+#    for j in range(100,2100,100):
+        i = int(i)
+        j = int(j)
         modelpath = 'mY_'+ str(i) + '_mX_' + str(j)
         copytree(pwd + '/GridPack',modelpath)
         #mkdir_p(str(modelpath))
         HerwigString = ''
-        HC=open('HerwigCommand', 'r')
+        HC=open('HerwigCommandWeak', 'r')
 
         HerwigString += 'read FRModel.model \n'
         HerwigString += 'set /Herwig/FRModel/Particles/Y1:NominalMass ' + str(i) + '.*GeV \n'
@@ -57,13 +61,25 @@ for i in range(1100,2100,100):
         #os.system('. /unix/cedar/software/sl6/Herwig-7.0.0/./bin/activate')
         #time.sleep(2)
         os.chdir(modelpath)
-        os.system('Herwig read LHC.in')
+#        os.system('export RIVET_ANALYSIS_PATH=$PWD')
+        os.system('export RIVET_ANALYSIS_PATH=$PWD; Herwig read LHC.in')
         #time.sleep(2)
 
         batch_command = ''
+#        batch_command += 'export RIVET_ANALYSIS_PATH=$PWD; '
         batch_command += '. /unix/cedar/software/sl6/Herwig-7.0.0/./bin/activate; '
+#        batch_command += 'export RIVET_ANALYSIS_PATH=$PWD; '
         batch_command += 'cd ' + pwd + '/' + modelpath +'; '
-        batch_command += 'Herwig run --seed='+str(i)+str(j)+' --tag='+str(modelpath)+' --numevents=100000 LHC.run;'
+        batch_command += 'export RIVET_ANALYSIS_PATH=$PWD; '
+        if i < 1500:
+            numEv=30000
+        else:
+            numEv=5000
+        batch_command += 'Herwig run --seed='+str(i)+str(j)+' --tag='+str(modelpath)+' --jobs=5 --numevents='+ str(numEv) +' LHC.run;'
+        
+
+
+        ##batch_command += 'Herwig run --seed='+str(i)+str(j)+' --tag='+str(modelpath)+' --jobs=5 --numevents=75000 LHC.run;'
         batch_filename = str(modelpath)+'.sh'
         batch_submit = open(batch_filename, 'w')
         batch_submit.write(batch_command)

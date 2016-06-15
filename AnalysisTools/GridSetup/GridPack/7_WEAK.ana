@@ -1,0 +1,33 @@
+#######(bjets)
+#insert Rivet:Analyses 0 ATLAS_2014_I1306294
+#insert Rivet:Analyses 0 CMS_2013_I1256943
+
+####ZJets
+insert Rivet:Analyses 0 ATLAS_2013_I1230812
+insert Rivet:Analyses 0 CMS_2015_I1310737
+#insert Rivet:Analyses 0 ATLAS_2014_I1288706 #Drell-Yan
+
+
+####WJets
+insert Rivet:Analyses 0 CMS_2014_I1303894
+#insert Rivet:Analyses 0 ATLAS_2014_I1319490
+insert Rivet:Analyses 0 ATLAS_2014_I1319490_MU
+insert Rivet:Analyses 0 ATLAS_2014_I1319490_EL
+insert Rivet:Analyses 0 CMS_2013_I1224539_WJET
+insert Rivet:Analyses 0 CMS_2013_I1224539_ZJET
+
+####Gamma+jets
+insert Rivet:Analyses 0 ATLAS_2013_I1263495
+insert Rivet:Analyses 0 ATLAS_2012_I1199269 ##Diphotons
+insert Rivet:Analyses 0 ATLAS_2012_I1093738
+insert Rivet:Analyses 0  CMS_2014_I1266056
+
+####Extras
+insert Rivet:Analyses 0 ATLAS_2011_I926145 #heavyflav
+insert Rivet:Analyses 0 ATLAS_2012_I1203852 #ZZ
+##insert Rivet:Analyses 0 ATLAS_2012_I1203852_MET #MET fix ZZ
+
+#W/Z+gamma
+insert Rivet:Analyses 0 ATLAS_2013_I1217863_W_EL
+insert Rivet:Analyses 0 ATLAS_2013_I1217863_W_MU
+insert Rivet:Analyses 0 ATLAS_2013_I1217863_Z

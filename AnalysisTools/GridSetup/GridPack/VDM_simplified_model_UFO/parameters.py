@@ -28,7 +28,7 @@ gAXm = Parameter(name = 'gAXm',
 gVq = Parameter(name = 'gVq',
                 nature = 'external',
                 type = 'real',
-                value = 0.25,
+                value = 0.5,
                 texname = 'g_{\\text{Vq}}',
                 lhablock = 'DMINPUTS',
                 lhacode = [ 2 ])

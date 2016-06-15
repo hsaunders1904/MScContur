@@ -28,7 +28,7 @@ using namespace Herwig;
 
 FRModel::FRModel()
 : ZERO_(),
-gAXm_(1.0),gVq_(0.25),aEWM1_(127.9),Gf_(1.16637e-05),aS_(0.1184),
+gAXm_(1.0),gVq_(0.5),aEWM1_(127.9),Gf_(1.16637e-05),aS_(0.1184),
 ymb_(4.7),ymt_(172),ymtau_(1.777),MZ_(91.1876),MTA_(1.777),
 MT_(172),MB_(4.7),MH_(125),MXm_(100.0),MY1_(500.0),
 WZ_(2.4952),WW_(2.085),WT_(1.50833649),WH_(0.00407),WY1_(10.0),
@@ -156,7 +156,7 @@ static ClassDocumentation<FRModel> documentation
 static Parameter<FRModel, double> interfacegVq
   ("gVq",
    "The interface for parameter gVq",
-   &FRModel::gVq_, 0.25, 0, 0,
+   &FRModel::gVq_, 0.5, 0, 0,
    false, false, Interface::nolimits);
 static Parameter<FRModel, double> interfaceaEWM1
   ("aEWM1",
