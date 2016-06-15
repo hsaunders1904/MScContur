@@ -41,7 +41,7 @@
 
 \begin{abstract}
 A new method providing general consistency contraints for Beyond-the-Standard-Model (BSM) theories, using 
-measurements at particle colliders, is presented. The method, `Constraints On New Theories Using \rivet' - \Contur \ - exploits
+measurements at particle colliders, is presented. The method, `Constraints On New Theories Using \rivet' - \Contur \ - exploits  \todo{MK: how do you typeset hyphen: -, --, or ---? }
 the fact that particle-level differential measurements made in fiducial regions of phase-space have a high degree of
 model-independence. These measurements can therefore be compared to BSM physics implemented in Monte Carlo generators in a very
 generic way, allowing a wider array of final states to be considered than is typically the case. The \Contur approach should be seen
@@ -109,7 +109,8 @@ bring the power of a very wide range of data to bear on the search for new physi
 unlikely to compete in terms of speed and sensitivity with a search optimised for a specific theory, the breadth
 of potential signatures and models which can be covered makes it a powerful complementary approach.\footnote{Limits from existing 
 searches can sometimes be applied to new models, for example by accessing archived versions of the original analysis code
-and detector simulation via the RECAST~\cite{Cranmer:2010hk} project.}
+and detector simulation via the RECAST~\cite{Cranmer:2010hk} project.}\todo{MK: are footnotes referenced before or after the period: \ldots blabla.\footnote{This is important.} or 
+\ldots blabla\footnote{This is also important.}? (I think I changed some to the former, but maybe that's not what you do in English?}
 On the one hand, any theory seeking
 to explain a new signature or anomaly in the data may predict a BSM signal in other final states, which should be checked 
 against data this way. On the other hand, if no BSM physics emerges, a model-independent and systematic approach becomes mandatory to exclude 
@@ -182,7 +183,7 @@ Higher-order QCD corrections have been calculated for this class of dark matter 
 with an $s$-channel vector mediator, see Refs.~\cite{Fox:2012ru,Haisch:2013ata,Backovic:2015soa,Neubert:2015fka}. However, for the purpose of this paper where we focus on introducing the \Contur approach rather than exploring 
 a particular BSM theory in great detail, we will use leading-order signal cross section predictions as provided by Herwig 7.
 
-The most relevant production and decay channels for the mediator are illustrated in Fig.~\ref{fig:feyndia}.
+The most relevant production and decay channels for the mediator are illustrated in Fig.~\ref{fig:feyndia}.\todo{MK: These could be a little smaller, but it is fine with me to leave them as is.} 
 
 \begin{figure}[hp]
 \centering
@@ -224,7 +225,7 @@ counting toward \MET (to ensure that large contributions to \MET
 from invisible particles outside the detector acceptance are excluded) such measurements can be 
 used.\footnote{Of greater consequence, but easier to fix, is the fact that several \rivet methods explicitly calculated \MET
 from neutrinos found in the true event record, rather than as the negative of the visible particles in the event. These 
-routines were modified as a part of this work, and are all fixed in release 2.5.X.}
+routines were modified as a part of this work, and are all fixed in release 2.5.X.}\todo{MK: Rivet version number not complete.}
 
 Another feature of the measurements is that most of them, explicitly or implicitly, insist in their fiducial cross-section definition 
 that leptons and photons be 'directly' produced, that is, prior to hadronisation \todo{DG to check -ize / -ise consistency at the end, also small caps consistency} and coming from the primary vertex of the collision. 
@@ -243,7 +244,7 @@ and three-jet~\cite{Aad:2014rma}
 measurements made in 7~TeV collisions, as well as the jet mass 
 measurement from CMS~\cite{Chatrchyan:2013vbb}.
 Unfortunately results from 8~TeV collisions are rarer, and the only one we can use currently is the four-jet 
-measurement from ATLAS~\cite{Aad:2015nda} 
+measurement from ATLAS~\cite{Aad:2015nda}.
 %\todo{DY: I haven't included 4jet 8tev in what we currently display, it had pretty much no sensitivity to the model and was a whole additional set of event generation. Cut this out? I (JMB) think since we tried it and checked, it's best to leave this wording in and adding it to the table.}.
 \item
 Electroweak: events with leptons, with or without missing energy or photons. The high-statistics $W+$jet and $Z+$jet measurements 
@@ -274,7 +275,7 @@ The choice of which measurements are actually included at this stage is driven m
 fiducial cross sections 
 implemented in \rivet. The current selection is summarised in Table~\ref{tab:Rivet}.
 
-
+\renewcommand{\arraystretch}{1.25}
 \begin{table}[hp]
 \begin{center}
 \begin{tabular}{c | p{8cm} | l}
@@ -310,7 +311,7 @@ ATLAS\_2013\_I1217863 \cite{Aad:2013izg}  & W/Z gamma production at 7 TeV & ATLA
 \caption{Table of all \rivet routines currently included in the limit-setting scan}\label{tab:Rivet}
 \end{center}
 \end{table}
-
+\renewcommand{\arraystretch}{1}
 
 \section{Method}
 \label{sec:method}
@@ -464,7 +465,7 @@ $\GQ=0.25$ and $\GDM = 1$.}
 \label{fig:ATLASdijet}
 \end{figure}
 
-Figure~\ref{fig:ATLASdijet} shows a comparison between the model expectations in the `challenging' scenario and the most sensitive distributions from the ATLAS jet measurements. The measured dijet mass distribution is smoothly falling to higher masses, and the presence of a mediator decaying to quarks 
+Figure~\ref{fig:ATLASdijet} shows a comparison between the model expectations in the `challenging' scenario and the most sensitive distributions from the ATLAS jet measurements. \todo{MK: Isn't that the intermediate scenario in the figs?}The measured dijet mass distribution is smoothly falling to higher masses, and the presence of a mediator decaying to quarks 
 (see Fig.\ref{fig:schannel} and \ref{fig:plusjet}) would superimpose a
 peak, not seen in the data, thus leading to an exclusion. The results are shown for fixed $\MDM = 600$~GeV and a range of mediator massses $500 < \MZP < 2000$~GeV. 
 The sensitivity is at maximum in the middle of this range.
@@ -524,7 +525,7 @@ mediator mass \MZP for fixed dark matter mass and mediator couplings; $\MDM=100$
 Also in the `electroweak' category are the diboson measurements. Here the most sensitive is the ATLAS $ZZ$ measurement, in particular the 7~TeV result, which includes
 a fiducial cross section measurement of $pp \rightarrow l^+l^- + \MET$, interpreted in the paper as $pp \rightarrow ZZ \rightarrow l^+l^- \nu \bar{\nu}$, but performed in a 
 sufficiently model-independent fashion that it has the same sensitivity to the $l^+l^- +$ dark matter channel. This is illustrated in Fig.~\ref{fig:ATLASzz}. 
-\todo{DY: Improve the presentation of this figure}
+\todo{DY: Improve the presentation of this figure}\todo{MK: do we really need a figure here? These are just cross section  numbers, so a table should be sufficient...}
 The production diagrams are the same as the $V$-jets case, Fig.\ref{fig:plusV}, but in this case the 
 mediator decays to dark matter rather than back to quarks. 
 In the absence of any particle-level measurements in the `missing energy plus jets' category of 
@@ -538,7 +539,7 @@ limits for this model.
 
 The sensitivities derived from multiple distributions such as those discussed in the previous section are combined into `heatmaps' which delineate exclusion 
 regions and contours in the parameter space of \MDM and \MZP. These are shown in Fig.~\ref{fig:maps} for the four \GQ and \GDM combinations considered.
-Several features are discernible. 
+Several features are discernible. \todo{MK: label in Fig.~\ref{fig:maps}: $M_{DM} \to M_{\rm DM}$.}
 
 As expected, the exclusion is much weaker in the `challenging' case and quite strong in the `optimistic' scenario.
 
@@ -548,7 +549,7 @@ DM is kinematically allowed, the jet signatures continue to contribute, and so t
 
 At low values of the \MZP the sensitivity comes mainly from the $V+$jets signatures. In the challenging and intermediate scenarios, a dip in sensitivity around 
 $\MZP \approx 700$~GeV is visible, where the sensitivity from inclusive jets and $V+$jets do not quite overlap. In the optimistic scenario, they overlap, and the whole upper
-right region of the map is excluded. In addition, the cross section $\times$ branching ratio for quarks $\rightarrow Z^\prime \rightarrow$ quarks remains large
+right \todo{MK: left region?} region of the map is excluded. In addition, the cross section $\times$ branching ratio for quarks $\rightarrow Z^\prime \rightarrow$ quarks remains large
 enough that the diagonal cutoff in sensitivity of the jet channels at $\MZP \approx 2\MDM$ is blurred. 
 
 To the bottom right region of the diagonal the decay of the mediator to dark matter is kinematically allowed, and for $\GDM=1$ it will dominate 
@@ -588,7 +589,7 @@ so the $l^+l^- + \MET$ signature makes little contribution. However, as already 
     \label{fig:maps}
 \end{figure}
 
-The 95\% contours derived from the heatmaps of Fig.~\ref{fig:maps} are shown in Fig.~\ref{fig:cont}.
+The 95\% contours derived from the heatmaps of Fig.~\ref{fig:maps} are shown in Fig.~\ref{fig:cont}.\todo{MK: caption says Fig.~\ref{fig:cont}  is still a placeholder...}
 
 \begin{figure}[hp]
 \centering
@@ -608,24 +609,19 @@ The 95\% contours derived from the heatmaps of Fig.~\ref{fig:maps} are shown in 
 \caption{Placeholder contours, 95 CL in Purple, pert unitarity excluded overlaid in blue}\label{fig:cont}
 \end{figure}
 
+Note that as expected, the sensitivity from the 7~TeV dijet measurements used here is qualitatively similar, but inferior, to the exclusions obtained 
+combining the searches in 8~TeV and 13~TeV jet data - see, for example, \cite{Fairbairn:2016iuf}. This should change once measurements
+are available from these later running periods (indeed, the CMS measurement is already made~\cite{Khachatryan:2016wdh}, but is not yet available in \rivet or HepData).
+(Looks like the $ZZ$ analyis picks off a bit of phase space for $\MDM < 250$~GeV, $\MZP < 750$~GeV which isn't covered in Fig.3 or \cite{Fairbairn:2016iuf}?) \todo{MK: this last sentence seems like an internal note....}
 
 As mentioned in section~\ref{sec:model},  the parameters of the simplified model are constrained by perturbative unitarity. 
 In the region $\MDM \gtrsim \sqrt{\pi/2}\, \MZP/g_{\rm DM}$, indicated by the blue shaded area in Fig.~\ref{fig:cont}, 
 the dark matter relic density cannot be calculated reliably~\cite{Kahlhoefer:2015bea}. Since we only consider couplings \GDM and \GQ well within the perturbative regime, perturbative unitarity is respected in the production of mediators at the LHC 
-and does not provide any further restrictions on the parameter space of our model~\cite{Englert:2016joy}. The physics of dark matter is, of course, constrained by astrophysical and cosmological observations, including in particular the dark matter relic density, and direct and indirect searches for dark matter, see e.g.\ Refs.~\cite{Kahlhoefer:2015bea, Heisig:2015ira,Jacques:2016dqz} for combined analyses of collider and astrophysical constraints of simplified dark matter models with vector mediators. However, all those constraints are based on additional assumptions on the thermal history of the Universe and astrophysical properties of dark matter, and they do not affect BSM searches at the LHC. Since we have adopted the simplified dark matter model to illustrate the power of the \Contur approach for BSM searches at the LHC in general, rather than providing a detailed cosmological and astrophysical analysis of dark matter, we do not show the corresponding constraints in Fig.~\ref{fig:cont}. 
-
-
-\todo{MK writes some discussion of the theory constraints, other experiment constraints, and cosmological context.}
-
-Note that as expected, the sensitivity from the 7~TeV dijet measurements used here is qualitatively similar, but inferior, to the exclusions obtained 
-combining the searches in 8~TeV and 13~TeV jet data - see, for example, \cite{Fairbairn:2016iuf}. This should change once measurements
-are available from these later running periods (indeed, the CMS measurement is already made~\cite{Khachatryan:2016wdh}, but is not yet available in \rivet or HepData).
-(Looks like the $ZZ$ analyis picks off a bit of phase space for $\MDM < 250$~GeV, $\MZP < 750$~GeV which isn't covered in Fig.3 or \cite{Fairbairn:2016iuf}?)
-
+and does not provide any further restrictions on the parameter space of our model~\cite{Englert:2016joy}. The physics of dark matter is, of course, constrained by astrophysical and cosmological observations, including in particular the dark matter relic density, and direct and indirect searches for dark matter, see e.g.\ Refs.~\cite{Kahlhoefer:2015bea, Heisig:2015ira,Jacques:2016dqz} for combined analyses of collider and astrophysical constraints of simplified dark matter models with vector mediators. However, all those constraints are based on additional assumptions on the thermal history of the Universe and astrophysical properties of dark matter, and they do not affect BSM searches at the LHC. Since we have adopted the simplified dark matter model to illustrate the power of the \Contur approach for BSM searches at the LHC in general, rather than providing a detailed cosmological and astrophysical analysis of dark matter, we do not show the corresponding constraints in Fig.~\ref{fig:cont}.
 
 \section{Conclusions}\label{sec:conclusions}
 
-Using a simplified model for weakly-interacting dark matter coupled to the Standard Model via a heavy mediator boson, we have developed and demonstrated 
+Using a simplified model for weakly-interacting dark matter coupled to the Standard Model via a heavy mediator vector boson, we have developed and demonstrated 
 a method to efficently scan existing particle-level measurements from the LHC, implemented in \rivet, to derive limits on new physics. 
 The \Contur method uses measurements which have already been shown to be in good agreement with the SM, and thus is purely aimed at limiting the possibilities 
 for models of new physics and hopefully narrowing the focus of experimental and theoretical effort on to the best models. It is thus complementary to 
@@ -634,6 +630,10 @@ One notable feature is the simultaneous coverage of a wide variety of final stat
 parameters, and also can uncover sensitivity in channels which might not otherwise be considered. For example, in our case unexpected sensitivity is seen in
 $V$+jets measurements, as well as the more commonly used dijet and \MET channels. The method is highly scaleable to new measurements as they are produced, and
 to new simplified models as they are developed.
+ \todo{MK: conclusions are pretty short, which is fine with me, but maybe there is something else we want to mention?}
+
+
+
 
 \section*{Acknowledgments}
 This work started at the `Interdisciplinary Workshop on ‘Models, simulations and data at LHC' in Edinburgh, and continued in the 2015 Les Houches meeting on 
