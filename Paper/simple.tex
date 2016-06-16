@@ -371,61 +371,10 @@ of statistically-independent measurements exists {\it within} a group, their lik
 
 
 The question we wish to ask of any given BSM proposal is {\it `at what significance do existing measurements already exclude this'}. 
-For all the measurements 
-
-The question we wish to ask of any given BSM proposal is {\it `at what significance do existing measurements already exclude this'}. 
 For all the measurements considered, comparisons to SM calculations have shown consistency between them and the data. Thus as a starting point, we take the
 data as our ``null signal'', and we superpose onto them the contribution from the BSM scenario under consideration.
 
 Taking each bin of each distribution considered as a separate statistic to be tested, a likelihood function for each bin can be constructed as follows, %\todo{DY to fix as discussed, breaking into multiple steps}
-\begin{align}
-L(\mu, {b}, {\sigma}_{b}, {s}) = { \frac{(\mu s + b)^{n}}{n!} \exp\big(-(\mu s + b)\big) \times \frac{1}{\sqrt{2 \pi} \sigma_{b}} \exp\left(-\frac{(m - b)^{2}}{2 \sigma_{b}^{2}}\right)} \times \frac{(s)^{k}}{k!}\exp\big(-s\big)\,,
-\end{align}
-where the following components are identified:
-\begin{itemize}
-\item A Poisson event count, noting that the measurements considered are differential cross section measurements, hence the counts are multiplied by a factor of the integrated luminosity taken from the experimental paper behind each analysis, to convert to an event count in each bin (and subsequently the additional events that the new physics would have added to the measurement made). This statistic in each tested bin then is comprised of:
-\begin{itemize}
-\item $s$, the BSM signal event count
-\item $b$, the background count, taken as the central value of the data points
-\item $n$, the observed total count taken as $s+b$
-\item $\mu$, the signal strength parameter modulating the strength of the signal hypothesis tested, thus $\mu=0$ corresponds to the null hypothesis 
-and $\mu=1$ the full signal strength hypothesis;
-\end{itemize}
-\item A convolution with a Gaussian encoding the error on the background count, $b$, where the following additional components are identified:
-\begin{itemize}
-\item $m$, the observed background count, the expectation value of this count, which is used to construct the test is simply the mean, $b$
-\item $\sigma_{b}$, Uncertainty in $b$ count taken from \rivet as 1 $\sigma$ error on a Gaussian (uncertainties taken as the combination of statistical and systematics uncertainties in quadrature. Typically the systematic uncertainty dominates).
-\end{itemize}
-\item An additional Poisson error describing the error on the BSM signal count, this is taken as a Monte Carlo error on the simulated count. As with the background. The additional counting parameter $k$, has an expectation value of $s$
-\end{itemize}
-
-This likelihood function is then used to construct a profile likelihood ratio. The formalism and methods followed are taken from 
-Ref.~\cite{Cowan:2010js}, in particular the test statistic, $\tilde{q}_{\mu}$ is constructed. This enables the setting of a one-sided upper limit on the confidence 
-in the strength parameter hypothesis, $\mu$, desirable since in the situation that the observed strength parameter exceeds the tested hypothesis, agreement with 
-the hypothesis should not diminish. In addition this construction places a lower limit on the strength parameter, where any observed fluctuations below the null 
-hypothesis are said to agree with the null hypothesis. In \Contur, the latter point will be unimportant, as the manner in which samples are 
-generated and tested will only increase the event rates with respect to the null hypothesis. 
-
-A particular result adopted from Ref.~\cite{Cowan:2010js} uses the so called Asimov data set to build an approximate distribution of the considered test statistic. 
-As a cross-check, the sampling distribution for the test statistic was also estimated via Monte Carlo methods for multiple individual tests of various channels, 
-in all cases the result from Ref.~\cite{Cowan:2010js} is observed, that there is a high level of agreement between the values obtained via the two methods. Hence it can be said
-that the tested parameter space values fall in the asymptotic, or large sample, limit of the distributions checked.\footnote{This is not unexpected, the construction up to this point has been designed to look at smoothly falling well-measured processes at energies that the LHC is designed to probe. This is however a result that should be monitored when considering different models.} Specifically, the Asimov data set is used to extract an approximation for the variance of the strength parameter, $\mu$, under the assumption of a hypothesised value for $\mu$. The results of Wilks~\cite{Wilks:1938dza} and Wald~\cite{Wald:1943:EWM} (again as outlined in Ref.~\cite{Cowan:2010js}) 
-are used to approximate the sampling distribution, the approximate distribution of the test statistic under the assumption of a signal strength hypothesis. Here then, the assumed value of $\mu$ in the hypothesis which is tested, controls the shape of the distribution of the test statistic, and consequently the size of test corresponding to the observed value of the count. The size of the test can be quoted as a $p$-value, or equivalently the confidence level which is the inverse of the size of the test. 
-
-
-In fact, as is convention in the particle physics community, the final measure of statistical agreement is presented in terms of what is known as the CL$_{s}$ 
-method~\cite{Junk:1999kv,Read:2002hq}. This is simply a matter of convention, since as there is exact agreement in this method between the central value of the 
-data and the null hypothesis, the CL$_{s}$ value differs only slightly from calculating the CL of the $s+b$ hypothesis. Then, for a given distribution, CL$_{s}$ 
-can be evaluated separately for each bin, where the bin with the largest CL$_{s}$ value (and correspondingly smallest $p_{s+b}$ value) is taken to represent the 
-sensitivity measure used to evaluate each distribution, a process outlined in section~\ref{sec:selec}. Armed then with a list of selected sensitive 
-distributions with minimal correlations, a total combined CL$_{s}$ across all considered channels can then be constructed. This is a trivial extension of 
-the methodology presented in this section, and is simply taken as a product of all the selected counts in a new combined likelihood function. 
-The rest of the process is unchanged when considering the combination. Consequently, the 95\% CL contour displayed in Figure~\ref{fig:cont} displays then the regions in parameter space where the observed counts $n_{i}$ across all the considered bins, yield a probability of less than 5\% of being compatible with the full signal strength hypothesis, and consequently the model is considered excluded by the data taken.
-
-%% quantifying the agreement between the null (SM only) hypothesis and the tested hypothesis can be computed. \todo{DY, phrase this carefully. It's the p-value of what exactly, under what assumption? Sth like: probability of observing n events if b-only is true...}considered, comparisons to SM calculations have shown consistency between them and the data. Thus as a starting point, we take the
-data as our ``null signal'', and we superpose onto them the contribution from the BSM scenario under consideration.
-
-Taking each bin of each distribution considered as a separate statistic to be tested, a likelihood function for each bin can be constructed as follows, \todo{DY to fix as discussed, breaking into multiple steps}
 \begin{align}
 L(\mu, {b}, {\sigma}_{b}, {s}) = { \frac{(\mu s + b)^{n}}{n!} \exp\big(-(\mu s + b)\big) \times \frac{1}{\sqrt{2 \pi} \sigma_{b}} \exp\left(-\frac{(m - b)^{2}}{2 \sigma_{b}^{2}}\right)} \times \frac{(s)^{k}}{k!}\exp\big(-s\big)\,,
 \end{align}
