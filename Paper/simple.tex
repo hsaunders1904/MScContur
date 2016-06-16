@@ -94,7 +94,7 @@ As the search for many of the favoured BSM scenarios has been unsuccessful, ther
 and which provide a framework for interpreting BSM signatures with a minimal amount of 
 new particles, interactions and model assumptions. The philosophy is similar to an ``effective lagrangian'' approach in which effective anomalous
 couplings are introduced to describe new physics, but is more powerful, as such simplified models also
-include new particles, and thus can remain useful up to and beyond the scale of new physics -- a region 
+include new particles, and thus can remain useful up to and beyond the scale of new physics --- a region 
 potentially probed by LHC measurements.
 \item
 The precision measurements from the LHC have mostly been made in a manner which minimises their model-dependence. 
@@ -109,7 +109,7 @@ unlikely to compete in terms of speed and sensitivity with a search optimised fo
 of potential signatures and models which can be covered makes it a powerful complementary approach.\footnote{Limits from existing 
 searches can sometimes be applied to new models, for example by accessing archived versions of the original analysis code
 and detector simulation via the RECAST~\cite{Cranmer:2010hk} project, or by independent implementations of experimental 
-searches, see, for example, Refs.~\cite{Conte:2012fm,Drees:2013wra,Kraml:2013mwa,Papucci:2014rja,Barducci:2014ila}.}\todo{MK: added references for other "recast" activities in the footnote, like Madanalysis, Checkmate etc.; anything else you are aware of?, DY: ATOM(dont think this bit is public but its the same people)/FastLim ?} On the one hand, any theory seeking
+searches, see, for example, Refs.~\cite{Conte:2012fm,Drees:2013wra,Kraml:2013mwa,Papucci:2014rja,Barducci:2014ila}.} On the one hand, any theory seeking
 to explain a new signature or anomaly in the data may predict a BSM signal in other final states, which should be checked 
 against data this way. On the other hand, if no BSM physics emerges, a model-independent and systematic approach becomes mandatory to exclude 
 new physics models or narrow down the corresponding model parameter space.
@@ -173,7 +173,7 @@ model re-interpretations of LHC searches as presented in, e.g.,  Refs.~\cite{Kah
 mediator production and decay can place further strong constraints on the dark matter simplified model as demonstrated in Refs.~\cite{Chala:2015ama,Fairbairn:2016iuf}. 
 
 To simulate the experimental signature for our model, we have encoded the model Lagrangian in \textsc{FeynRules}~2.3.18~\cite{Alloul:2013bka}. Using its UFO interface~\cite{Degrande:2011ua},
-a BSM configuration is created for Herwig~7.0.1~\cite{Bellm:2015jjp,Bahr:2008pv}. For each parameter point in the scan grid, 30000 events were generated in Herwig and 
+a BSM configuration is created for Herwig~7.0.1~\cite{Bellm:2015jjp,Bahr:2008pv}. For each parameter point in the scan grid, events were generated in Herwig and 
 analysed using the selected analyses implemented in  
  \rivet 2.4.1~\cite{Buckley:2010ar} (see section \ref{sec:measurements}). Calculation of the exclusion contours was done in Python scripts, available on the \Contur website \url{https://contur.hepforge.org/}.
 
@@ -201,17 +201,17 @@ The most relevant production and decay channels for the mediator are illustrated
 \section{Measurements}\label{sec:measurements}
 
 To be useful in our approach, measurements must be made in as model-independent a fashion as possible. 
-Cross sections should be measured in a kinematic region closely matching the detector acceptance -- commonly called 
-'fiducial cross sections' -- to avoid extrapolation into unmeasured regions, since such extrapolations must always make 
+Cross sections should be measured in a kinematic region closely matching the detector acceptance --- commonly called 
+'fiducial cross sections' --- to avoid extrapolation into unmeasured regions, since such extrapolations must always make 
 theoretical assumptions; usually that the SM is valid. The measurements should generally be made in terms of observable final
 state particles (e.g. leptons, photons) or objects constructed from such particles (e.g. hadronic jets, missing energy) 
 rather than assumed intermediate states ($W, Z, H$, top). Finally, differential measurements are most useful, as features
-in the shapes of distributions are a more sensitive test than simple event rates -- especially when there are
+in the shapes of distributions are a more sensitive test than simple event rates --- especially when there are
 highly-correlated systematic experimental uncertainties, such as those on the integrated luminosity, or the jet energy scale.
 
 One feature noted in several cases is that missing transverse energy (\MET) is 
 explicitly assumed to be the same as neutrino transverse energy. In BSM physics, missing energy can also 
-arise from other sources (for example, dark matter production!) and so it is important that the result is treated in such a 
+arise from other sources (for example, dark matter production) and so it is important that the result is treated in such a 
 way that this sensitivity is correctly estimated. The measurements are typically corrected back to total \MET, 
 or to the assumed neutrino \pt, in the experimental analysis, using a simulated SM event sample which has been shown to describe
 the data well. This involves an extrapolation into the forward 
@@ -220,15 +220,15 @@ negligible. This means that as long as (in the \rivet analysis) a fiducial accep
 counting toward \MET (to ensure that large contributions to \MET 
 from invisible particles outside the detector acceptance are excluded) such measurements can be 
 used.\footnote{Of greater consequence, but easier to fix, is the fact that several \rivet methods explicitly calculated \MET
-from neutrinos found in the true event record, rather than as the negative of the visible particles in the event. These 
-routines were modified as a part of this work, and are fixed in future Rivet releases.}
+from neutrinos found in the simulated event record, rather than as the negative of the visible particles in the event. These 
+routines were modified as a part of this work, and are fixed in future \rivet releases.}
 
 Another feature of the measurements is that most of them, explicitly or implicitly, insist in their fiducial cross-section definition 
 that leptons and photons be 'directly' produced, that is, prior to hadronisation and coming from the primary vertex of the collision. 
 Such a selection is enforced in the experiments by a mixture of isolation and vertex requirements, but is not universally enforced
 in all \rivet routines. Generally this is a small effect, but care needs to be taken that the sensitivity is not overestimated, especially
 for BSM models which enhance bottom or charm production, when semi-leptonic decays may play a role.
-This feature should be addressed in future releases of \rivet.
+This feature will be addressed in future releases of \rivet.
 
 The measurements we consider fall into five loose and independent classes.
 \begin{enumerate}
@@ -290,14 +290,14 @@ CMS 7 Jets  & CMS\_2014\_I1298810 \cite{Chatrchyan:2014gia} & Ratios of jet pT s
 ATLAS 8 Jets  & ATLAS\_2015\_I1394679 \cite{Aad:2015nda}  & Multijets at 8 TeV \\
 %%####ZJets
 \breaker
-ATLAS 7  Z Jets & ATLAS\_2013\_I1230812 \cite{Aad:2014qxa} & $Z$ + jets \\
+ATLAS 7  $Z$ Jets & ATLAS\_2013\_I1230812 \cite{Aad:2014qxa} & $Z$ + jets \\
 \breaker
-CMS 7 Z Jets & CMS\_2015\_I1310737 \cite{Khachatryan:2014zya} & Jet multiplicity and differential cross-sections of $Z$+jets events \\
+CMS 7 $Z$ Jets & CMS\_2015\_I1310737 \cite{Khachatryan:2014zya} & Jet multiplicity and differential cross-sections of $Z$+jets events \\
 %%####WJets
 \breaker
-CMS 7 W Jets  & CMS\_2014\_I1303894 \cite{Khachatryan:2014uva} & Differential cross-section of $W$ bosons + jets \\
+CMS 7 $W$ Jets  & CMS\_2014\_I1303894 \cite{Khachatryan:2014uva} & Differential cross-section of $W$ bosons + jets \\
 \breaker
-ATLAS W jets & ATLAS\_2014\_I1319490 \cite{Aad:2013ysa} & $W$ + jets \\
+ATLAS 7 $W$ jets & ATLAS\_2014\_I1319490 \cite{Aad:2013ysa} & $W$ + jets \\
 %%####Gamma(+jets)
 \breaker
 ATLAS 7 Photon Jet & ATLAS\_2013\_I1263495 \cite{Aad:2013zba} & Inclusive isolated prompt photon analysis with 2011 LHC data \\
@@ -308,10 +308,10 @@ CMS 7 Photon Jet  & CMS\_2014\_I1266056 \cite{Chatrchyan:2013mwa} & Photon + jet
 ATLAS 7 Diphoton & ATLAS\_2012\_I1199269 \cite{Aad:2012tba} & Inclusive diphoton $+ X$ events \\
 %%####ZZ
 \breaker
-ATLAS 7 ZZ  & ATLAS\_2012\_I1203852 \cite{Aad:2012awa} & Measurement of the $ZZ(*)$ production cross-section \\
+ATLAS 7 $ZZ$  & ATLAS\_2012\_I1203852 \cite{Aad:2012awa} & Measurement of the $ZZ(*)$ production cross-section \\
 %%#W/Z+gamma
 \breaker
-ATLAS W/Z gamma & ATLAS\_2013\_I1217863 \cite{Aad:2013izg}  & $W$/$Z$ gamma production \\
+ATLAS $W$/$Z$ gamma & ATLAS\_2013\_I1217863 \cite{Aad:2013izg}  & $W$/$Z$ gamma production \\
 \hline
 \hline
 \end{tabular}
@@ -344,7 +344,7 @@ over a wide range of final states, giving the best chance of an indirect pointer
 
 Starting with the measurements discussed in Section~\ref{sec:measurements} 
 we define a procedure to combine exclusion limits from different measured distributions.
-The data used for comparison in \rivet come in the form of histograms, which do not carry information about the correlations between uncertainties -- 
+The data used for comparison in \rivet come in the form of histograms, which do not carry information about the correlations between uncertainties ---
 even when in several cases detailed information is made available in the experimental papers. There are highly correlated uncertainties in several measurements, 
 for example on the integrated luminosity, or the energy scale of jet measurements. In some cases these are dominant. Including correlations would be a highly 
 complex process, since as well as correlations within a single data-set, there are also common systematic uncertainties between different
@@ -354,7 +354,7 @@ same exclusion against several datasets, we take the following approach:
 \begin{enumerate}
 \item Divide the measurements into groups that have no overlap in the event samples used, and hence no statistical correlation 
 between them. These measurements are grouped by, crudely, different final states, different experiments, and different beam 
-energies.
+energies (see Table~\ref{tab:Rivet}).
 \item Scan within each group for the most significant deviation between BSM+SM and SM. This is done distribution-by-distribution and bin-by-bin within distributions.
 Use only the most significant deviation, and disregard the rest. Although the selection of the most significant deviation sounds intuitively suspect, in this case it
 is a conservative approach, since we are setting limits, and discarding the less-significant bins simply reduces sensitivity. 
@@ -373,17 +373,17 @@ The question we wish to ask of any given BSM proposal is {\it `at what significa
 For all the measurements considered, comparisons to SM calculations have shown consistency between them and the data. Thus as a starting point, we take the
 data as our ``null signal'', and we superpose onto them the contribution from the BSM scenario under consideration.
 
-Taking each bin of each distribution considered as a separate statistic to be tested, a likelihood function for each bin can be constructed as follows, %\todo{DY to fix as discussed, breaking into multiple steps}
+Taking each bin of each distribution considered as a separate statistic to be tested, a likelihood function for each bin can be constructed as follows, 
 \begin{align}
 L(\mu, {b}, {\sigma}_{b}, {s}) = { \frac{(\mu s + b)^{n}}{n!} \exp\big(-(\mu s + b)\big) \times \frac{1}{\sqrt{2 \pi} \sigma_{b}} \exp\left(-\frac{(m - b)^{2}}{2 \sigma_{b}^{2}}\right)} \times \frac{(s)^{k}}{k!}\exp\big(-s\big)\,,
 \end{align}
-where the following components are identified:
+where the three factors are:
 \begin{itemize}
 \item A Poisson event count, noting that the measurements considered are differential cross section measurements, hence the counts are multiplied by a factor of the integrated luminosity taken from the experimental paper behind each analysis, to convert to an event count in each bin (and subsequently the additional events that the new physics would have added to the measurement made). This statistic in each tested bin then is comprised of:
 \begin{itemize}
 \item $s$, the BSM signal event count
 \item $b$, the background count, taken as the central value of the data points
-\item $n$, the observed total count taken as $s+b$
+\item $n$, the observed total count (in the absence of a separate background simulation, this is taken to be $b$)
 \item $\mu$, the signal strength parameter modulating the strength of the signal hypothesis tested, thus $\mu=0$ corresponds to the null hypothesis 
 and $\mu=1$ the full signal strength hypothesis;
 \end{itemize}
@@ -392,9 +392,11 @@ and $\mu=1$ the full signal strength hypothesis;
 \item $m$, the observed background count, the expectation value of this count, which is used to construct the test is simply the mean, $b$
 \item $\sigma_{b}$, Uncertainty in $b$ count taken from \rivet as 1 $\sigma$ error on a Gaussian (uncertainties taken as the combination of statistical and systematics uncertainties in quadrature. Typically the systematic uncertainty dominates).
 \end{itemize}
-\item An additional Poisson error describing the error on the BSM signal count, this is taken as a Monte Carlo error on the simulated count. As with the background. The additional counting parameter $k$, has an expectation value of $s$
+\item An additional Poisson term describing the error on the BSM signal count, this is taken as a Monte Carlo error on the simulated count. The additional counting parameter $k$, has an expectation value of $s$.
 \end{itemize}
-
+%
+Note that in the absence of a sepatate simulation of the background, we take $n=m=b$ and $k=s$.
+%
 This likelihood function is then used to construct a profile likelihood ratio. The formalism and methods followed are taken from 
 Ref.~\cite{Cowan:2010js}, in particular the test statistic, $\tilde{q}_{\mu}$ is constructed. This enables the setting of a one-sided upper limit on the confidence 
 in the strength parameter hypothesis, $\mu$, desirable since in the situation that the observed strength parameter exceeds the tested hypothesis, agreement with 
@@ -402,7 +404,7 @@ the hypothesis should not diminish. In addition this construction places a lower
 hypothesis are said to agree with the null hypothesis. In \Contur, the latter point will be unimportant, as the manner in which samples are 
 generated and tested will only increase the event rates with respect to the null hypothesis. 
 
-A particular result adopted from Ref.~\cite{Cowan:2010js} uses the so called Asimov data set to build an approximate distribution of the considered test statistic. 
+Motivated by the approach of Ref.~\cite{Cowan:2010js}, we use the so called Asimov data set to build an approximate distribution of the considered test statistic. 
 As a cross-check, the sampling distribution for the test statistic was also estimated via Monte Carlo methods for multiple individual tests of various channels, 
 in all cases the result from Ref.~\cite{Cowan:2010js} is observed, that there is a high level of agreement between the values obtained via the two methods. Hence it can be said
 that the tested parameter space values fall in the asymptotic, or large sample, limit of the distributions checked.\footnote{This is not unexpected, the construction up to this point has been designed to look at smoothly falling well-measured processes at energies that the LHC is designed to probe. This is however a result that should be monitored when considering different models.} Specifically, the Asimov data set is used to extract an approximation for the variance of the strength parameter, $\mu$, under the assumption of a hypothesised value for $\mu$. The results of Wilks~\cite{Wilks:1938dza} and Wald~\cite{Wald:1943:EWM} (again as outlined in Ref.~\cite{Cowan:2010js}) 
@@ -415,12 +417,8 @@ data and the null hypothesis, the CL$_{s}$ value differs only slightly from calc
 can be evaluated separately for each bin, where the bin with the largest CL$_{s}$ value (and correspondingly smallest $p_{s+b}$ value) is taken to represent the 
 sensitivity measure used to evaluate each distribution, a process outlined in section~\ref{sec:selec}. Armed then with a list of selected sensitive 
 distributions with minimal correlations, a total combined CL$_{s}$ across all considered channels can then be constructed. This is a trivial extension of 
-the methodology presented in this section, and is simply taken as a product of all the selected counts in a new combined likelihood function. 
-The rest of the process is unchanged when considering the combination. Consequently, the 95\% CL contour displayed in Figure~\ref{fig:cont} displays then the regions in parameter space where the observed counts $n_{i}$ across all the considered bins, yield a probability of less than 5\% of being compatible with the full signal strength hypothesis, and consequently the model is considered excluded by the data taken.
-
-%% quantifying the agreement between the null (SM only) hypothesis and the tested hypothesis can be computed. \todo{DY, phrase this carefully. It's the p-value of what exactly, under what assumption? Sth like: probability of observing n events if b-only is true...}
-
-
+the methodology presented here: the combination is the product of the likelihoods of all the selected counts in a new combined likelihood function. 
+The rest of the process is unchanged when considering the combination. Consequently, the 95\% CL contour displayed in Figure~\ref{fig:cont} displays  the regions in parameter space where the observed counts $n_{i}$ across all the considered bins, yield a probability of less than 5\% of being compatible with the full signal strength hypothesis, and consequently the model is considered excluded by the data taken.
 
 \subsection{Limitations}
 
@@ -436,8 +434,8 @@ and would require an extensive evaluation of the theoretical uncertainties on th
 
 To investigate the exclusion power of the SM measurements discussed in Section~\ref{sec:measurements} we scan a range in 
 plausible mediator masses (\MZP) and dark matter masses (\MDM) within the model described in Section~\ref{sec:model}, for three choices of
-the coupling of the mediator to the SM (\GQ). These coupling choices correspond to (i) an `optimistic' scenario $\GQ = 0.5, \GDM = 1$ -- strong signals, 
-close to the edge of exclusion already, (ii) a `challenging' scenario $\GQ = 0.25, \GDM = 1$ -- low couplings, hard to exclude, 
+the coupling of the mediator to the SM (\GQ). These coupling choices correspond to (i) an `optimistic' scenario $\GQ = 0.5, \GDM = 1$: strong signals, 
+close to the edge of exclusion already, (ii) a `challenging' scenario $\GQ = 0.25, \GDM = 1$: low couplings, hard to exclude, 
 and (iii) an `intermediate' scenario $\GQ = 0.375, \GDM = 1$, between the two. We also consider (iv) a scenario where the coupling of dark matter to the mediator is
 suppressed, $\GQ = 0.375, \GDM = 0.25$. For all these scenarios, the calculated width of the mediator is less than 10\% of \MZP, as shown in Table~\ref{tab:width}.
 
@@ -471,7 +469,6 @@ $\GQ=0.25$ and $\GDM = 1$. The corresponding exclusion limits are also given.}
 \end{figure}
 
 Figure~\ref{fig:ATLASdijet} shows a comparison between the model expectations in the `intermediate' scenario and the most sensitive distributions from the ATLAS jet measurements. 
-%%\todo{DY: the confidence levels are given to too high a signficiance. Show to 2SF.}
 The measured dijet mass distribution is smoothly falling to higher masses, and the presence of a mediator decaying to quarks 
 (see Fig.\ref{fig:schannel} and \ref{fig:plusjet}) would superimpose a
 peak, not seen in the data, thus leading to an exclusion. The results are shown for fixed $\MDM = 600$~GeV and a range of mediator massses $500 < \MZP < 2000$~GeV. 
@@ -513,7 +510,7 @@ Moving on to the `electroweak' final states discussed in Section~\ref{sec:measur
 ($V+$jet) measurements to this model, in this case the dijet mass differential cross section in $W+$-jet events. Strictly speaking, the measurement is made for
 events with a single charged lepton, \MET, and jets, interpreted as $W$+jets in the SM. In the BSM model considered here, \MET could in principle 
 also arise from the dark matter candidate. However, inspections shows that the sensitivity, which is at mediator masses below around a TeV or so, arises 
-from genuine $W$ bosons produced in association with the mediator -- see Fig.~\ref{fig:plusV} -- which is not a signature typically considered in 
+from genuine $W$ bosons produced in association with the mediator --- see Fig.~\ref{fig:plusV} --- which is not a signature typically considered in 
 constraints on this class of model. The sensitivity
 is obviously highly dependent upon the bin width chosen in the SM measurement, which is driven mainly by the dijet mass resolution, although at high masses also by
 the number of events in the data.
@@ -545,15 +542,15 @@ limits for this model.
 
 The sensitivities derived from multiple distributions such as those discussed in the previous section are combined into `heatmaps' which delineate exclusion 
 regions and contours in the parameter space of \MDM and \MZP. These are shown in Fig.~\ref{fig:maps} for the four \GQ and \GDM combinations considered.
-Several features are discernible. \todo{MK: label in Fig.~\ref{fig:maps}: $M_{DM} \to M_{\rm DM}$.}
+%Several features are discernible. 
 
 As expected, the exclusion is much weaker in the `challenging' case and quite strong in the `optimistic' scenario.
-
+%
 For the first three scenarios, at $\MZP > 2\MDM$ the decay of the mediator to dark matter dominates over the decay to jets. This leads to the diagonal structure across the plots, 
 with the sensitivity above the diagonal, in the left portion of the map, coming mainly from the jet measurements. In the fourth scenario, even when the decay to
 DM is kinematically allowed, the jet signatures continue to contribute, and so the diagonal structure is less visible. 
 
-At low values of the \MZP the sensitivity comes mainly from the $V+$jets signatures. In the challenging and intermediate scenarios, a dip in sensitivity around 
+At low values of \MZP the sensitivity comes mainly from the $V+$jets signatures. In the challenging and intermediate scenarios, a dip in sensitivity around 
 $\MZP \approx 700$~GeV is visible, where the sensitivity from inclusive jets and $V+$jets do not quite overlap. In the optimistic scenario, they overlap, and the whole upper
 left region of the map is excluded. In addition, the cross section $\times$ branching ratio for quarks $\rightarrow Z^\prime \rightarrow$ quarks remains large
 enough that the diagonal cutoff in sensitivity of the jet channels at $\MZP \approx 2\MDM$ is blurred. 
@@ -595,8 +592,8 @@ so the $l^+l^- + \MET$ signature makes little contribution. However, as already 
     \label{fig:maps}
 \end{figure}
 
-The 95\% contours derived from the heatmaps of Fig.~\ref{fig:maps} are shown in Fig.~\ref{fig:cont}.\todo{MK: caption says Fig.~\ref{fig:cont}  is still a placeholder...}
-
+The 95\% contours derived from the heatmaps of Fig.~\ref{fig:maps} are shown in Fig.~\ref{fig:cont}.
+%
 \begin{figure}[hp]
 \centering
     \subfloat[$\GQ=0.25$ and $\GDM = 1$ \label{fig:cont025}]{%
@@ -615,12 +612,11 @@ The 95\% contours derived from the heatmaps of Fig.~\ref{fig:maps} are shown in 
 \caption{Contours in the \MZP and \MDM plane for the considered values of \GDM and \GQ, indicating the excluded region at 95\% confidence level. The triangular shaded
 area is the region in which perturbative unitary is violated by the model.}\label{fig:cont}
 \end{figure}
-
+%
 Note that as expected, the sensitivity from the 7~TeV dijet measurements used here is qualitatively similar, but inferior, to the exclusions obtained 
-combining the searches in 8~TeV and 13~TeV jet data -- see, for example, \cite{Fairbairn:2016iuf}. This should change once measurements
+combining the searches in 8~TeV and 13~TeV jet data --- see, for example, \cite{Fairbairn:2016iuf}. This should change once measurements
 are available from these later running periods (indeed, the CMS measurement is already made~\cite{Khachatryan:2016wdh}, but is not yet available in \rivet or HepData). 
 The other channels extend the sensitivity, and this will also improve as more measurements are incorporated.
-%(Looks like the $ZZ$ analyis picks off a bit of phase space for $\MDM < 250$~GeV, $\MZP < 750$~GeV which isn't covered in Fig.3 or \cite{Fairbairn:2016iuf}?) \todo{MK: this last sentence seems like an internal note....}
 
 As mentioned in section~\ref{sec:model},  the parameters of the simplified model are constrained by perturbative unitarity. 
 In the region $\MDM \gtrsim \sqrt{\pi/2}\, \MZP/g_{\rm DM}$, indicated by the blue shaded area in Fig.~\ref{fig:cont}, 
@@ -638,7 +634,6 @@ One notable feature is the simultaneous coverage of a wide variety of final stat
 parameters, and also can uncover sensitivity in channels which might not otherwise be considered. For example, in our case unexpected sensitivity is seen in
 $V$+jets measurements, as well as the more commonly used dijet and \MET channels. The method is highly scaleable to new measurements as they are produced, and
 to new simplified models as they are developed.
- \todo{MK: conclusions are pretty short, which is fine with me, but maybe there is something else we want to mention?}
 
 
 
