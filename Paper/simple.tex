@@ -240,7 +240,6 @@ measurements made in 7~TeV collisions, as well as the jet mass
 measurement from CMS~\cite{Chatrchyan:2013vbb}.
 Unfortunately results from 8~TeV collisions are rarer, and the only one we can use currently is the four-jet 
 measurement from ATLAS~\cite{Aad:2015nda}.
-%\todo{DY: I haven't included 4jet 8tev in what we currently display, it had pretty much no sensitivity to the model and was a whole additional set of event generation. Cut this out? I (JMB) think since we tried it and checked, it's best to leave this wording in and adding it to the table.}.
 \item
 Electroweak: events with leptons, with or without missing energy or photons. The high-statistics $W+$jet and $Z+$jet measurements 
 from ATLAS~\cite{Aad:2014qxa,Aad:2013ysa} 
@@ -254,9 +253,7 @@ distributions available in this category.
 \item
 Isolated photons, with or without missing energy, but no leptons. Here we make use of the inclusive~\cite{Aad:2013zba}, diphoton~\cite{Aad:2012tba} and 
 photon-plus-jet~\cite{ATLAS:2012ar} measurements,
-%\todo{DY: I am unsure on whether there is a guarantee of no statistical overlap of the photon + jet and inclusive photon, I mark as separate catagories for now but is this safe? has almost no impact either way as one is 37pb-1 so gives no stat power anyway. JMB: there will be overlap if they are measured in the same sample.}
 where available. We also made a new \rivet routine for the CMS photon-plus jet measurement \cite{Chatrchyan:2013mwa}. 
-%\todo{DY: Ref for unvalidated CMS gamma + jet we include?}
 \item
 Signatures specifically based on top quark or Higgs candidates. Most such measurements to date have been made at the 'parton' level (that is,
 corrected using SM MC back to the top or Higgs before decay), and many of them are extrapolated to $4\pi$ phase space. Both steps increase
@@ -273,7 +270,7 @@ implemented in \rivet. The current selection is summarised in Table~\ref{tab:Riv
 %\newcommand{\breaker}{\hline}
 \newcommand{\breaker}{}
 
-\renewcommand{\arraystretch}{1.25}
+\renewcommand{\arraystretch}{1.5}
 
 \begin{table}[hp]
 \footnotesize
@@ -345,7 +342,6 @@ over a wide range of final states, giving the best chance of an indirect pointer
 \label{sec:selec}
 
 Starting with the measurements discussed in Section~\ref{sec:measurements} 
-%\todo{DY to check list is consistent with the final runs; show table of rivet IDs for quick reference here}, 
 we define a procedure to combine exclusion limits from different measured distributions.
 The data used for comparison in \rivet come in the form of histograms, which do not carry information about the correlations between uncertainties -- 
 even when in several cases detailed information is made available in the experimental papers. There are highly correlated uncertainties in several measurements, 
@@ -375,9 +371,6 @@ of statistically-independent measurements exists {\it within} a group, their lik
 The question we wish to ask of any given BSM proposal is {\it `at what significance do existing measurements already exclude this'}. 
 For all the measurements considered, comparisons to SM calculations have shown consistency between them and the data. Thus as a starting point, we take the
 data as our ``null signal'', and we superpose onto them the contribution from the BSM scenario under consideration.
-%The uncertainties on the data are taken to
-%be the width of a Gaussian spread, and we use the asymptotic statistical techniques described by Cowan, Cranmer and Gross~\cite{Cowan:2010js} to derive
-%a liklihood function describing the relative probabilities of the SM and the SM+BSM scenarios given each data point. 
 
 Taking each bin of each distribution considered as a separate statistic to be tested, a likelihood function for each bin can be constructed as follows, \todo{DY to fix as discussed, breaking into multiple steps}
 \begin{align}
@@ -446,6 +439,7 @@ close to the edge of exclusion already, (ii) a `challenging' scenario $\GQ = 0.2
 and (iii) an `intermediate' scenario $\GQ = 0.375, \GDM = 1$, between the two. We also consider (iv) a scenario where the coupling of dark matter to the mediator is
 suppressed, $\GQ = 0.375, \GDM = 0.375$. For all these scenarios, the calculated width of the mediator is less than 10\% of \MZP, as shown in Table~\ref{tab:width}.
 
+\renewcommand{\arraystretch}{1.5}
 \begin{table}[hp]
 \begin{center}
 \begin{tabular}{c | c | c | c | c}
@@ -459,8 +453,7 @@ suppressed, $\GQ = 0.375, \GDM = 0.375$. For all these scenarios, the calculated
 \caption{Table of maximal $\Gamma_{Z'}/\MZP$ occuring over the mass ranges for the four heatmaps shown in Figure~\ref{fig:maps}}\label{tab:width}
 \end{center}
 \end{table}
-
-%%\todo{DY provide CL values for the 4 options shown, clarify rivet plot titles}
+\renewcommand{\arraystretch}{1}
 
 \begin{figure}[htb]
 \centering
@@ -475,7 +468,7 @@ $\GQ=0.25$ and $\GDM = 1$.}
 \label{fig:ATLASdijet}
 \end{figure}
 
-Figure~\ref{fig:ATLASdijet} shows a comparison between the model expectations in the `challenging' scenario and the most sensitive distributions from the ATLAS jet measurements. \todo{MK: Isn't that the intermediate scenario in the figs?}The measured dijet mass distribution is smoothly falling to higher masses, and the presence of a mediator decaying to quarks 
+Figure~\ref{fig:ATLASdijet} shows a comparison between the model expectations in the `intermediate' scenario and the most sensitive distributions from the ATLAS jet measurements. The measured dijet mass distribution is smoothly falling to higher masses, and the presence of a mediator decaying to quarks 
 (see Fig.\ref{fig:schannel} and \ref{fig:plusjet}) would superimpose a
 peak, not seen in the data, thus leading to an exclusion. The results are shown for fixed $\MDM = 600$~GeV and a range of mediator massses $500 < \MZP < 2000$~GeV. 
 The sensitivity is at maximum in the middle of this range.
@@ -535,8 +528,6 @@ mediator mass \MZP for fixed dark matter mass and mediator couplings; $\MDM=100$
 Also in the `electroweak' category are the diboson measurements. Here the most sensitive is the ATLAS $ZZ$ measurement, in particular the 7~TeV result, which includes
 a fiducial cross section measurement of $pp \rightarrow l^+l^- + \MET$, interpreted in the paper as $pp \rightarrow ZZ \rightarrow l^+l^- \nu \bar{\nu}$, but performed in a 
 sufficiently model-independent fashion that it has the same sensitivity to the $l^+l^- +$ dark matter channel. This is illustrated in Fig.~\ref{fig:ATLASzz}. 
-%\todo{DY: Improve the presentation of this figure}
-\todo{MK: do we really need a figure here? These are just cross section  numbers, so a table should be sufficient...DY: put an attemp in but not sure if I even made things clearer?}
 The production diagrams are the same as the $V$-jets case, Fig.\ref{fig:plusV}, but in this case the 
 mediator decays to dark matter rather than back to quarks. 
 In the absence of any particle-level measurements in the `missing energy plus jets' category of 
