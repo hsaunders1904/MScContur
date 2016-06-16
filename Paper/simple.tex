@@ -406,11 +406,9 @@ generated and tested will only increase the event rates with respect to the null
 A particular result adopted from Ref.~\cite{Cowan:2010js} uses the so called Asimov data set to build an approximate distribution of the considered test statistic. 
 As a cross-check, the sampling distribution for the test statistic was also estimated via Monte Carlo methods for multiple individual tests of various channels, 
 in all cases the result from Ref.~\cite{Cowan:2010js} is observed, that there is a high level of agreement between the values obtained via the two methods. Hence it can be said
-that the tested parameter space values fall in the asymptotic, or large sample, limit of the distributions checked.\footnote{This is not unexpected, the
-construction up to this point has been designed to look at smoothly falling well-measured processes at energies that the LHC is designed to probe. This is however a 
-result that should be monitored when considering different models.} Specifically, the Asimov data set is used to extract an approximation for the variance and central value of the strength parameter, $\mu$, and the results of Wilks~\cite{Wilks:1938dza} and Wald~\cite{Wald:1943:EWM} (again as outlined in Ref.~\cite{Cowan:2010js}) 
-are used to approximate the test statistic. 
-Hence the $p$-value quantifying the agreement between the null (SM only) hypothesis and the tested hypothesis can be computed. \todo{DY, phrase this carefully. It's the p-value of what exactly, under what assumption? Sth like: probability of observing n events if b-only is true...}
+that the tested parameter space values fall in the asymptotic, or large sample, limit of the distributions checked.\footnote{This is not unexpected, the construction up to this point has been designed to look at smoothly falling well-measured processes at energies that the LHC is designed to probe. This is however a result that should be monitored when considering different models.} Specifically, the Asimov data set is used to extract an approximation for the variance of the strength parameter, $\mu$, under the assumption of a hypothesised value for $\mu$. The results of Wilks~\cite{Wilks:1938dza} and Wald~\cite{Wald:1943:EWM} (again as outlined in Ref.~\cite{Cowan:2010js}) 
+are used to approximate the sampling distribution, the approximate distribution of the test statistic under the assumption of a signal strength hypothesis. Here then, the assumed value of $\mu$ in the hypothesis which is tested, controls the shape of the distribution of the test statistic, and consequently the size of test corresponding to the observed value of the count. The size of the test can be quoted as a $p$-value, or equivalently the confidence level which is the inverse of the size of the test. 
+
 
 In fact, as is convention in the particle physics community, the final measure of statistical agreement is presented in terms of what is known as the CL$_{s}$ 
 method~\cite{Junk:1999kv,Read:2002hq}. This is simply a matter of convention, since as there is exact agreement in this method between the central value of the 
@@ -419,7 +417,10 @@ can be evaluated separately for each bin, where the bin with the largest CL$_{s}
 sensitivity measure used to evaluate each distribution, a process outlined in section~\ref{sec:selec}. Armed then with a list of selected sensitive 
 distributions with minimal correlations, a total combined CL$_{s}$ across all considered channels can then be constructed. This is a trivial extension of 
 the methodology presented in this section, and is simply taken as a product of all the selected counts in a new combined likelihood function. 
-The rest of the process is unchanged when considering the combination
+The rest of the process is unchanged when considering the combination. Consequently, the 95\% CL contour displayed in Figure~\ref{fig:cont} displays then the regions in parameter space where the observed counts $n_{i}$ across all the considered bins, yield a probability of less than 5\% of being compatible with the full signal strength hypothesis, and consequently the model is considered excluded by the data taken.
+
+%% quantifying the agreement between the null (SM only) hypothesis and the tested hypothesis can be computed. \todo{DY, phrase this carefully. It's the p-value of what exactly, under what assumption? Sth like: probability of observing n events if b-only is true...}
+
 
 
 \subsection{Limitations}
