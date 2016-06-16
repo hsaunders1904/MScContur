@@ -108,8 +108,7 @@ bring the power of a very wide range of data to bear on the search for new physi
 unlikely to compete in terms of speed and sensitivity with a search optimised for a specific theory, the breadth
 of potential signatures and models which can be covered makes it a powerful complementary approach.\footnote{Limits from existing 
 searches can sometimes be applied to new models, for example by accessing archived versions of the original analysis code
-and detector simulation via the RECAST~\cite{Cranmer:2010hk} project.}\todo{MK: are footnotes referenced before or after the period? DG: has different meaning: footonote for the sentence: after. Footnote for the word: before.}
-On the one hand, any theory seeking
+and detector simulation via the RECAST~\cite{Cranmer:2010hk} project.} On the one hand, any theory seeking
 to explain a new signature or anomaly in the data may predict a BSM signal in other final states, which should be checked 
 against data this way. On the other hand, if no BSM physics emerges, a model-independent and systematic approach becomes mandatory to exclude 
 new physics models or narrow down the corresponding model parameter space.
@@ -175,7 +174,7 @@ mediator production and decay can place further strong constraints on the dark m
 To simulate the experimental signature for our model, we have encoded the model Lagrangian in \textsc{FeynRules}~2.3.18~\cite{Alloul:2013bka}. Using its UFO interface~\cite{Degrande:2011ua},
 a BSM configuration is created for Herwig~7.0.1~\cite{Bellm:2015jjp,Bahr:2008pv}. For each parameter point in the scan grid, 30000 events were generated in Herwig and 
 analysed using the selected analyses implemented in  
- \rivet 2.4.1~\cite{Buckley:2010ar} (see section \ref{sec:measurements}). Calculation of the exclusion contours was done in Python scripts, available on the \Contur website \url{https://contur.hepforge.org/}
+ \rivet 2.4.1~\cite{Buckley:2010ar} (see section \ref{sec:measurements}). Calculation of the exclusion contours was done in Python scripts, available on the \Contur website \url{https://contur.hepforge.org/}.
 
 Higher-order QCD corrections have been calculated for this class of dark matter simplified models 
 with an $s$-channel vector mediator, see Refs.~\cite{Fox:2012ru,Haisch:2013ata,Backovic:2015soa,Neubert:2015fka}. However, for the purpose of this paper where we focus on introducing the \Contur approach rather than exploring 
@@ -412,9 +411,9 @@ generated and tested will only increase the event rates with respect to the null
 A particular result adopted from Ref.~\cite{Cowan:2010js} uses the so called Asimov data set to build an approximate distribution of the considered test statistic. 
 As a cross-check, the sampling distribution for the test statistic was also estimated via Monte Carlo methods for multiple individual tests of various channels, 
 in all cases the result from Ref.~\cite{Cowan:2010js} is observed, that there is a high level of agreement between the values obtained via the two methods. Hence it can be said
-that the tested parameter space values fall in the asymptotic, or large sample, limit of the distributions checked\footnote{This is not unexpected, the
+that the tested parameter space values fall in the asymptotic, or large sample, limit of the distributions checked.\footnote{This is not unexpected, the
 construction up to this point has been designed to look at smoothly falling well-measured processes at energies that the LHC is designed to probe. This is however a 
-result that should be monitored when considering different models}. Specifically, the Asimov data set is used to extract an approximation for the variance and central value of the strength parameter, $\mu$, and the results of Wilks~\cite{Wilks:1938dza} and Wald~\cite{Wald:1943:EWM} (again as outlined in Ref.~\cite{Cowan:2010js}) 
+result that should be monitored when considering different models.} Specifically, the Asimov data set is used to extract an approximation for the variance and central value of the strength parameter, $\mu$, and the results of Wilks~\cite{Wilks:1938dza} and Wald~\cite{Wald:1943:EWM} (again as outlined in Ref.~\cite{Cowan:2010js}) 
 are used to approximate the test statistic. 
 Hence the $p$-value quantifying the agreement between the null (SM only) hypothesis and the tested hypothesis can be computed. \todo{DY, phrase this carefully. It's the p-value of what exactly, under what assumption? Sth like: probability of observing n events if b-only is true...}
 
