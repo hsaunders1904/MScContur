@@ -13,7 +13,7 @@ RatioPlotYMin=1
 RatioPlotYMax=1.15
 XMax=2.5
 CustomLegend=CL$_{s}$ max
-LegendXPos=0.01
+LegendXPos=0.05
 LegendAlign=l
 LegendYPos=1.0
 RatioPlotYLabel=(MC+Data)/Data
@@ -53,7 +53,7 @@ Title=Data
 
 # BEGIN HISTO1D /./mY_500_mX_600/mY_500_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
 Path=/./mY_500_mX_600/mY_500_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
-Title=0.423149
+Title=0.42
 LineColor=red
 #FillStyle=solid
 #FillColor=red
@@ -84,7 +84,7 @@ PlotOrder=1
 
 # BEGIN HISTO1D /./mY_1000_mX_600/mY_1000_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
 Path=/./mY_1000_mX_600/mY_1000_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
-Title=0.936384
+Title=0.94
 LineColor=blue
 #FillStyle=solid
 #FillColor=blue
@@ -115,7 +115,7 @@ PlotOrder=2
 
 # BEGIN HISTO1D /./mY_1500_mX_600/mY_1500_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
 Path=/./mY_1500_mX_600/mY_1500_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
-Title=0.738067
+Title=0.74
 LineColor=green
 #FillStyle=solid
 #FillColor=green
@@ -146,7 +146,7 @@ PlotOrder=3
 
 # BEGIN HISTO1D /./mY_2000_mX_600/mY_2000_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
 Path=/./mY_2000_mX_600/mY_2000_mX_600.yoda/ATLAS_2014_I1268975/d01-x01-y01
-Title=0.42506
+Title=0.43
 LineColor=cyan
 #FillStyle=solid
 #FillColor=cyan
