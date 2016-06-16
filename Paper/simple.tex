@@ -464,14 +464,16 @@ suppressed, $\GQ = 0.375, \GDM = 0.25$. For all these scenarios, the calculated 
       \includegraphics[width=0.9\textwidth]{images/atlasdijet/ratio/ATLAS_dijet_ratio.pdf}
     \caption{ Outputs from \rivet for a measurement included in the limit setting process. Simulated signals for a sample of mediator masses are shown, superimposed 
 on the double differential inclusive jet cross section in the most central rapidity region, binned by dijet mass and rapidity as measured by ATLAS at 
-7 TeV~\cite{Aad:2014pua}. The left hand plot compares the measured cross section to the model expectation, and the right hand plot shows the perturbation 
-in the ration compared to the relative uncertainty in the measurement. 
+7 TeV~\cite{Aad:2014pua}. The upper plot compares the measured cross section to the model expectation, and the lower hand plot shows the perturbation 
+in the ration compared to the relative uncertainty in the measurement.
 The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass and mediator couplings; $\MDM=600$ GeV, 
-$\GQ=0.25$ and $\GDM = 1$.}
+$\GQ=0.25$ and $\GDM = 1$. The corresponding exclusion limits are also given.}
 \label{fig:ATLASdijet}
 \end{figure}
 
-Figure~\ref{fig:ATLASdijet} shows a comparison between the model expectations in the `intermediate' scenario and the most sensitive distributions from the ATLAS jet measurements. The measured dijet mass distribution is smoothly falling to higher masses, and the presence of a mediator decaying to quarks 
+Figure~\ref{fig:ATLASdijet} shows a comparison between the model expectations in the `intermediate' scenario and the most sensitive distributions from the ATLAS jet measurements. 
+\todo{DY: the confidence levels are given to too high a signficiance. Show to 2SF.}
+The measured dijet mass distribution is smoothly falling to higher masses, and the presence of a mediator decaying to quarks 
 (see Fig.\ref{fig:schannel} and \ref{fig:plusjet}) would superimpose a
 peak, not seen in the data, thus leading to an exclusion. The results are shown for fixed $\MDM = 600$~GeV and a range of mediator massses $500 < \MZP < 2000$~GeV. 
 The sensitivity is at maximum in the middle of this range.
@@ -484,7 +486,7 @@ The sensitivity is at maximum in the middle of this range.
       \includegraphics[width=0.9\textwidth]{images/cmsjet/ratio/CMSincljets_ratio.pdf}
 \caption{Outputs from \rivet for a measurement included in the limit setting process. Simulated signals for a sample of mediator masses are shown, superimosed on 
 the double differential dijet cross section in the most central rapidity region, binned by leading jet \pt and rapidity as measured by 
-CMS at 7 TeV~\cite{Chatrchyan:2014gia}. The left hand plot compares the measured cross section to the model expectation, and the right hand plot shows the perturbation 
+CMS at 7 TeV~\cite{Chatrchyan:2014gia}. The upper plot compares the measured cross section to the model expectation, and the lower plot shows the perturbation 
 in the ration compared to the relative uncertainty in the measurement. The signals form a 1D parameter space scan in mediator mass for fixed dark matter mass 
 and mediator couplings; $\MDM=600$ GeV, $\GQ=0.25$ and $\GDM = 1$.}
 \label{fig:CMSincljet}
@@ -545,7 +547,6 @@ limits for this model.
 The sensitivities derived from multiple distributions such as those discussed in the previous section are combined into `heatmaps' which delineate exclusion 
 regions and contours in the parameter space of \MDM and \MZP. These are shown in Fig.~\ref{fig:maps} for the four \GQ and \GDM combinations considered.
 Several features are discernible. \todo{MK: label in Fig.~\ref{fig:maps}: $M_{DM} \to M_{\rm DM}$.}
-\todo{MK: confused about the lower right panel in Fig.~\ref{fig:maps}, does not correspond to the 4th scenario defined in section 5, which has $g_q = g_{\rm DM} = 0.375$.}
 
 As expected, the exclusion is much weaker in the `challenging' case and quite strong in the `optimistic' scenario.
 
@@ -612,13 +613,15 @@ The 95\% contours derived from the heatmaps of Fig.~\ref{fig:maps} are shown in 
     \subfloat[$\GQ=0.375$ and $\GDM = 0.25$\label{fig:cont0375_025}]{%                
       \includegraphics[width=0.5\textwidth]{Analysis/lightflav/plots/contour_gq0375_gdm025.pdf}
     }
-\caption{Placeholder contours, 95 CL in Purple, pert unitarity excluded overlaid in blue}\label{fig:cont}
+\caption{Contours in the \MZP and \MDM plane for the considered values of \GDM and \GQ, indicating the excluded region at 95\% confidence level. The triangular shaded
+area is the region in which pertrubative unitary is violated by the model.}\label{fig:cont}
 \end{figure}
 
 Note that as expected, the sensitivity from the 7~TeV dijet measurements used here is qualitatively similar, but inferior, to the exclusions obtained 
 combining the searches in 8~TeV and 13~TeV jet data -- see, for example, \cite{Fairbairn:2016iuf}. This should change once measurements
-are available from these later running periods (indeed, the CMS measurement is already made~\cite{Khachatryan:2016wdh}, but is not yet available in \rivet or HepData).
-(Looks like the $ZZ$ analyis picks off a bit of phase space for $\MDM < 250$~GeV, $\MZP < 750$~GeV which isn't covered in Fig.3 or \cite{Fairbairn:2016iuf}?) \todo{MK: this last sentence seems like an internal note....}
+are available from these later running periods (indeed, the CMS measurement is already made~\cite{Khachatryan:2016wdh}, but is not yet available in \rivet or HepData). 
+The other channels extend the sensitivity, and this will also improve as more measurements are incorporated.
+%(Looks like the $ZZ$ analyis picks off a bit of phase space for $\MDM < 250$~GeV, $\MZP < 750$~GeV which isn't covered in Fig.3 or \cite{Fairbairn:2016iuf}?) \todo{MK: this last sentence seems like an internal note....}
 
 As mentioned in section~\ref{sec:model},  the parameters of the simplified model are constrained by perturbative unitarity. 
 In the region $\MDM \gtrsim \sqrt{\pi/2}\, \MZP/g_{\rm DM}$, indicated by the blue shaded area in Fig.~\ref{fig:cont}, 
