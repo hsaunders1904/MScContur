@@ -36,7 +36,7 @@ def writeOutput(output, h):
 #the 1.0 is gdm, currently hardcoded, grab from model file/ directory info eventually
 
 def pertUnit(mz):
-    return np.sqrt(np.pi/2) * (mz/1.0)
+    return np.sqrt(np.pi/2) * (mz/0.375)
 
 mkdir_p('plots')
 
@@ -135,21 +135,21 @@ for root, dirs, files in os.walk('.',topdown=False):
     my_locator_y = MaxNLocator((max(contourYaxis) / 500.0) + 1)
     minorLocator_x = MaxNLocator(len(contourXaxis) + 1)
     minorLocator_y = MaxNLocator(len(contourYaxis) + 1)
-    ax.yaxis.set_major_locator(my_locator_y)
-    ax.xaxis.set_major_locator(my_locator_x)
-    ax.xaxis.set_minor_locator(minorLocator_x)
-    ax.yaxis.set_minor_locator(minorLocator_y)
+    ax.yaxis.set_major_locator(my_locator_x)
+    ax.xaxis.set_major_locator(my_locator_y)
+    ax.xaxis.set_minor_locator(minorLocator_y)
+    ax.yaxis.set_minor_locator(minorLocator_x)
     del my_locator_x
     del my_locator_y
     del minorLocator_x
     del minorLocator_y
 
-    plt.pcolormesh(xx,yy,c.T,cmap=cmaps.magma, vmin=0, vmax=1)
-    plt.axis([x_grid_min, x_grid_max, y_grid_min, y_grid_max])
+    plt.pcolormesh(yy,xx,c.T,cmap=cmaps.magma, vmin=0, vmax=1)
+    plt.axis([y_grid_min, y_grid_max,x_grid_min, x_grid_max])
 
 ##axis labels
-    plt.xlabel(r"$M_{DM}$ [GeV]")
-    plt.ylabel(r"$M_{Z'}$ [GeV]")
+    plt.xlabel(r"$M_{Z'}$ [GeV]")
+    plt.ylabel(r"$M_{\textsc{dm}}$ [GeV]")
 
 ##suppress title
 #plt.title("ATLAS + CMS Combined all channels",y=1.01)
@@ -177,22 +177,24 @@ for root, dirs, files in os.walk('.',topdown=False):
 
 ##try and pick ticks intelligently
 
-    my_locator_x = MaxNLocator((max(contourXaxis) / 500.0)+1)
+    my_locator_x = MaxNLocator((max(contourXaxis) / 500.0))
     my_locator_y = MaxNLocator((max(contourYaxis) / 500.0)+1)
     minorLocator_x = MaxNLocator(len(contourXaxis) +1)
     minorLocator_y = MaxNLocator(len(contourYaxis) +1)
-    ax.yaxis.set_major_locator(my_locator_y)
-    ax.xaxis.set_major_locator(my_locator_x)
-    ax.xaxis.set_minor_locator(minorLocator_x)
-    ax.yaxis.set_minor_locator(minorLocator_y)
+    ax.yaxis.set_major_locator(my_locator_x)
+    ax.xaxis.set_major_locator(my_locator_y)
+    ax.xaxis.set_minor_locator(minorLocator_y)
+    ax.yaxis.set_minor_locator(minorLocator_x)
 
 
 ##set axis size, again contour axis different to heatmap axis
-    plt.axis([min(zip(*data)[1]), max(zip(*data)[1]), min(zip(*data)[0]), max(zip(*data)[0])])
+    #plt.axis([0.0, max(zip(*data)[0]),0.0, max(zip(*data)[1])])
+    plt.axis([min(zip(*data)[0]), max(zip(*data)[0]),min(zip(*data)[1]), max(zip(*data)[1])])
 
+    contourXaxis,contourYaxis=contourYaxis,contourXaxis
 
 ##draw a filled contour region for the CL excl
-    CS=plt.contourf(contourXaxis,contourYaxis,c.T,levels=[0.95,1.0],label="CL",cmap=cmaps.magma)
+    CS=plt.contourf(contourXaxis,contourYaxis,c,levels=[0.95,1.0],label="CL",cmap=cmaps.magma, alpha =0.8)
 ##and a black outline
     CS2=plt.contour(CS, colors = 'black')
 
@@ -202,8 +204,8 @@ for root, dirs, files in os.walk('.',topdown=False):
 ###plot the pert unitarity bound
     y=np.array(contourYaxis)
     x=pertUnit(y)
-    plt.plot(x,y,color='black')
-    ax.fill_between(x,y,1.,facecolor='navy',alpha=0.8)
+    plt.plot(y,x,color='navy')
+    ax.fill_between(y,x,x_grid_max,facecolor='navy',alpha=0.4)
 
 ###contour labeler
     fmt={}
@@ -218,8 +220,8 @@ for root, dirs, files in os.walk('.',topdown=False):
 #plab.clabel(CS2, inline=1, fontsize=10, manual=manual_loc)
 
 
-    plt.xlabel(r"$M_{DM}$ [GeV]")
-    plt.ylabel(r"$M_{Z'}$ [GeV]")
+    plt.xlabel(r"$M_{Z'}$ [GeV]")
+    plt.ylabel(r"$M_{\textsc{dm}}$ [GeV]")
     artists, labels = CS.legend_elements()
 
 ##potential legend info, edit here:
