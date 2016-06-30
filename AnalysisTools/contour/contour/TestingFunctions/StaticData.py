@@ -3,7 +3,7 @@
 #############################################################################################
 ### Here store aditional static data we dont get from rivet, this can be improved greatly..
 global anapool, subpools
-anapool=['ATLAS_7_JETS','ATLAS_7_Zjj','ATLAS_7_Wjj_mu','CMS_7_JETS','CMS_7_Wjj','CMS_7_Zjj','ATLAS_8_JETS','ATLAS_7_Wjj_EL','ATLAS_7_GAMMA','ATLAS_7_Z_GAMMA','ATLAS_7_W_GAMMA_MU','ATLAS_7_W_GAMMA_EL','ATLAS_7_ZZ','ATLAS_7_GAMMAGAMMA','CMS_GAMMA_JET']
+anapool=['ATLAS_7_JETS','ATLAS_7_Zjj_EL','ATLAS_7_Wjj_mu','CMS_7_JETS','CMS_7_Wjj','CMS_7_Zjj','ATLAS_8_JETS','ATLAS_7_Wjj_EL','ATLAS_7_GAMMA','ATLAS_7_Z_GAMMA','ATLAS_7_W_GAMMA_MU','ATLAS_7_W_GAMMA_EL','ATLAS_7_ZZ','ATLAS_7_GAMMAGAMMA','CMS_GAMMA_JET','ATLAS_7_Zjj_MU','ATLAS_8_Zjj','ATLAS_8_GAMMA']
 ##This is really bad, but set up an arbitrary number of subpool tags to iterate over, this should just be done on the fly for each analysis!
 subpools=['R1','R2','R3','R4']
 def LumiFinder(h):
@@ -44,7 +44,7 @@ def LumiFinder(h):
         for poolmember in R2:
             if poolmember in h:
                 subpool = subpools[1]
-    elif 'ATLAS_2013_I1230812' in h:
+    elif 'ATLAS_2013_I1230812_EL' in h:
         #Z+jets
         blacklist=['d02','d04','d06','d08']
         lumi = 4600
@@ -82,10 +82,14 @@ def LumiFinder(h):
                 subpool = subpools[1]
     elif 'ATLAS_2013_I1244522' in h:
         lumi = 37
-    elif 'ATLAS_2014_I1306294' in h:
+        anatype=anapool[8]
+    elif 'ATLAS_2014_I1306294_EL' in h:
         lumi = 4600
-    elif 'CMS_2013_I1256943' in h:
-        lumi = 5200
+        anatype=anapool[1]
+    #elif 'CMS_2013_I1256943' in h:
+        #lumi = 5200
+        ###this one is normalised in a completely stupid way, possible to undo this
+        ###CMS Z+bb
     elif 'CMS_2015_I1310737' in h:
         lumi = 4900
         anatype=anapool[5]
@@ -162,4 +166,100 @@ def LumiFinder(h):
     elif 'CMS_2014_I1266056' in h:
         lumi = 4500
         anatype=anapool[14]
+    elif 'ATLAS_2014_I1306294_MU' in h:
+        lumi = 4600
+        anatype=anapool[15]
+    elif 'ATLAS_2013_I1230812_MU' in h:
+                #Z+jets        blacklist=['d02','d04','d06','d08']
+        lumi = 4600
+        anatype=anapool[15]
+        for plotkey in blacklist:
+            if plotkey in h:
+                lumi = -1
+    elif 'CMS_2013_I1224539_WJET' in h:
+        lumi=5000
+        anatype=anapool[4]
+    elif 'CMS_2013_I1224539_ZJET' in h:
+        lumi=5000
+        anatype=anapool[5]
+    elif 'ATLAS_2014_I1279489' in h:
+        #lumi=20300
+        anatype=anapool[16]
+        whitelist=['d01-x01-y01','d01-x02-y01','d02-x01-y01','d03-x01-y01','d03-x02-y01','d04-x01-y01','d04-x02-y01','d05-x03-y01','d05-x04-y01','d05-x05-y01']
+        #whitelist=['d03-x01-y01','d03-x02-y01']
+        for plotkey in whitelist:
+            if plotkey in h:
+                lumi = 20300
+    elif 'ATLAS_2015_I1408516' in h:
+        #if 'EL' in h:
+        #    continue
+        #    subpool = subpools[0]
+
+        #    subpool = subpools[1]
+        anatype=anapool[16]
+        lumi=20300
+        #if 'MU' in h:
+        #    lumi=-1
+        #if 'd41' in h:
+        #    lumi=-1
+    elif 'ATLAS_2016_I1457605' in h:
+        anatype=anapool[17]
+        lumi=20200
+        subpool = subpools[0]
+        
     return lumi,anatype,subpool
+
+#############################################################################################
+### Special function to help with plots normalised to total xs
+def isNorm(h):
+    isNorm=False
+    normFac=1.0
+    if 'CMS_2013_I1224539' in h:
+        isNorm=True
+        normFac = 1.0/1000.0
+    if 'ATLAS_2014_I1279489' in h:
+        isNorm=True
+        #normFac = 1.
+        if 'd01' in h:
+            normFac = 5.88
+        if 'd02' in h:
+            normFac = 1.82
+        if 'd05' in h:
+            normFac = 0.066
+        if 'd03' in h:
+            normFac = 1.10
+        if 'd04' in h:
+            normFac = 0.447
+    if 'ATLAS_2015_I1408516' in h:
+        #normFac=1.0
+        _12_20 = ['d23']
+        _20_30 = ['d24']
+        _30_46 = ['d25']
+        _46_66 = ['d02','d03','d04','d14','d26']
+        _66_116 = ['d05','d06','d07','d08','d09','d10','d15','d17','d18','d19','d20','d21','d22','d27']
+        _116_150 = ['d11','d12','d13','d16','d28']
+        for plotkey in _12_20:
+            if plotkey in h:
+                normFac = 1.45
+                isNorm=True
+        for plotkey in _20_30:
+            if plotkey in h:
+                normFac = 1.03
+                isNorm=True
+        for plotkey in _30_46:
+            if plotkey in h:
+                normFac = 0.97
+                isNorm=True
+        for plotkey in _46_66:
+            if plotkey in h:
+                normFac = 14.96
+                isNorm=True
+        for plotkey in _66_116:
+            if plotkey in h:
+                normFac = 537.10
+                isNorm=True
+        for plotkey in _116_150:
+            if plotkey in h:
+                normFac = 5.59
+                isNorm=True
+    return isNorm, normFac

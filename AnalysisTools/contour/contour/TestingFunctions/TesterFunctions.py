@@ -29,26 +29,27 @@ def Var_mu_comb(b_count,s_count,db_count, ds_count):
 #add exception handling if s=/=b
   #loop over all counts
     for i in range(0, len(b_count)+len(s_count)):
-
-      # if mu_test*s_count[i]+b_count[i] == 0:
-      #     print 'g'
-      #mu mu
-        #Var_matrix_inv[0,0] += s_count[i]**2/(mu_test*s_count[i]+b_count[i])
-      #mu b_i/b_i mu
         if i < len(b_count):
+            ##Construct all the inverse covar matrix from second derivatives of Likelihood function
+            ##mu mu
             Var_matrix_inv[0,0] += s_count[i]**2/(mu_test*s_count[i]+b_count[i])
+            ##mu b
             Var_matrix_inv[i+1,0]=Var_matrix_inv[0,i+1] = s_count[i]/(mu_test*s_count[i]+b_count[i])
+            ##b b
             if db_count[i]**2 > 0.0:
                 Var_matrix_inv[i+1,i+1]=1/(mu_test*s_count[i]+b_count[i]) + 1/db_count[i]**2
             else:
                 Var_matrix_inv[i+1,i+1]=1/(mu_test*s_count[i]+b_count[i])
         if i>=(len(b_count)):
+            ##mu s
             Var_matrix_inv[i+1,0]=Var_matrix_inv[0,i+1] = (mu_test*s_count[i-len(b_count)])/(mu_test*s_count[i-len(b_count)]+b_count[i-len(b_count)])
-            if ds_count[i-len(b_count)]**2 >0.0:
-                Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_count[i-len(b_count)]+b_count[i-len(b_count)]) + 1/ds_count[i-len(b_count)]**2
+            ##s s
+            if s_count[i-len(b_count)] >0.0:
+                Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_count[i-len(b_count)]+b_count[i-len(b_count)]) + 1/s_count[i-len(b_count)]
             else:
                 Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_count[i-len(b_count)]+b_count[i-len(b_count)])
         if i < len(s_count):
+            ## b s
             Var_matrix_inv[len(b_count)+1+i,i+1] = Var_matrix_inv[i+1,len(b_count)+1+i] = mu_test/(mu_test*s_count[i]+b_count[i])
     if np.linalg.det(Var_matrix_inv) == 0:
         Var_matrix = np.zeros([(len(b_count)+1),(len(b_count)+1)])

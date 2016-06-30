@@ -113,6 +113,7 @@ for root, dirs, files in os.walk('.',topdown=False):
 
 
     for i in range(0,len(zip(*data)[1])):
+
         xcounter=0
         ycounter=0
         for xarg2 in xx[1]:

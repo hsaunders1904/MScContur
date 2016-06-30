@@ -7,7 +7,9 @@ for root, dirs, files in os.walk('.'):
         outfile=''
         for name in files:
             #filelist=''
-            if '.yoda' not in name and 'mY' not in name:
+            if '.yoda' not in name:
+                continue
+            if 'mY' not in name:
                 continue
             yodafile = os.path.join(root, name)
             filelist += " " + yodafile
