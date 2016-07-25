@@ -176,12 +176,12 @@ def LumiFinder(h):
         for plotkey in blacklist:
             if plotkey in h:
                 lumi = -1
-    elif 'CMS_2013_I1224539_WJET' in h:
-        lumi=5000
-        anatype=anapool[4]
-    elif 'CMS_2013_I1224539_ZJET' in h:
-        lumi=5000
-        anatype=anapool[5]
+   # elif 'CMS_2013_I1224539_WJET' in h:
+   #     lumi=5000
+   #     anatype=anapool[4]
+   # elif 'CMS_2013_I1224539_ZJET' in h:
+   #     lumi=5000
+   #     anatype=anapool[5]
     elif 'ATLAS_2014_I1279489' in h:
         #lumi=20300
         anatype=anapool[16]
