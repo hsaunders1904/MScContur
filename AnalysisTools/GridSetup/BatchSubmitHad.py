@@ -52,17 +52,14 @@ for i in range(100,3100,100):
         RunCard = open(str(modelpath + '/LHC.in'), 'w')
         RunCard.write(str(HerwigString))
         RunCard.close()
-        
-        subprocess.call(["source /unix/cedar/software/sl6/Herwig-7.0.0/./bin/activate"], shell=True)
-        #os.system('. /unix/cedar/software/sl6/Herwig-7.0.0/./bin/activate')
-        #time.sleep(2)
+        subprocess.call(["source /unix/cedar/software/sl6/setupEnv.sh; "], shell=True)
+        subprocess.call(["source /unix/atlas4/yallup/contur/setupContour.sh"], shell=True)
         os.chdir(modelpath)
-        os.system('Herwig read LHC.in')
-        #time.sleep(2)
-
+        subprocess.call(['Herwig read LHC.in'], shell=True)
         batch_command = ''
-        batch_command += '. /unix/cedar/software/sl6/Herwig-7.0.0/./bin/activate; '
+        batch_command += 'source /unix/cedar/software/sl6/setupEnv.sh; '
         batch_command += 'cd ' + pwd + '/' + modelpath +'; '
+        batch_command += "source /unix/atlas4/yallup/contur/setupContour.sh; "
         if i < 600:
             numEv=30000
         else:
@@ -72,7 +69,6 @@ for i in range(100,3100,100):
         batch_submit = open(batch_filename, 'w')
         batch_submit.write(batch_command)
         batch_submit.close()
-
-        os.system( "qsub -q medium " + batch_filename )
-        #os.system( "rm -rf " + batch_filename )
+        subprocess.call([ "qsub -q medium " + batch_filename],shell=True )
         os.chdir(pwd)
+

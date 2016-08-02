@@ -16,12 +16,12 @@ namespace Rivet {
   /// @author Darin Baumgartel (darinb@cern.ch)
   ///
   /// Based on Rivet analysis originally created by Anil Singh (anil@cern.ch), Lovedeep Saini (lovedeep@cern.ch)
-  class CMS_2014_I1303894 : public Analysis {
+  class CMS_2014_I1303894_HF : public Analysis {
   public:
 
     /// Constructor
-    CMS_2014_I1303894()
-      : Analysis("CMS_2014_I1303894")
+    CMS_2014_I1303894_HF()
+      : Analysis("CMS_2014_I1303894_HF")
     {   }
 
 
@@ -240,6 +240,6 @@ namespace Rivet {
   };
 
 
-  DECLARE_RIVET_PLUGIN(CMS_2014_I1303894);
+  DECLARE_RIVET_PLUGIN(CMS_2014_I1303894_HF);
 
 }

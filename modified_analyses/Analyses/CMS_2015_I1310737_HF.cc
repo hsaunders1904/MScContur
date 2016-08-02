@@ -10,12 +10,12 @@
 namespace Rivet {
 
 
-  class CMS_2015_I1310737 : public Analysis {
+  class CMS_2015_I1310737_HF : public Analysis {
   public:
 
     /// Constructor
-    CMS_2015_I1310737()
-      : Analysis("CMS_2015_I1310737")
+    CMS_2015_I1310737_HF()
+      : Analysis("CMS_2015_I1310737_HF")
     {  }
 
 
@@ -187,7 +187,7 @@ namespace Rivet {
   };
 
 
-  DECLARE_RIVET_PLUGIN(CMS_2015_I1310737);
+  DECLARE_RIVET_PLUGIN(CMS_2015_I1310737_HF);
 
 
 }

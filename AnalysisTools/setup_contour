@@ -1,5 +1,0 @@
-Add equivalent of following to bashrc/whatever setupscript, needs rivet setup
-
-export PYTHONPATH="${PYTHONPATH}:/home/david/Simple/AnalysisTools/contour"
-export PATH="${PATH}:/home/david/Simple/AnalysisTools/contour/bin/"
-export RIVET_ANALYSIS_PATH="${PATH}:/home/david/Simple/modified_analyses"

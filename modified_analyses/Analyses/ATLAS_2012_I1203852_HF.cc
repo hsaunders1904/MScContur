@@ -87,12 +87,12 @@ namespace Rivet {
 
 
   /// @name ZZ analysis
-  class ATLAS_2012_I1203852 : public Analysis {
+  class ATLAS_2012_I1203852_HF : public Analysis {
   public:
 
     /// Default constructor
-    ATLAS_2012_I1203852()
-      : Analysis("ATLAS_2012_I1203852")
+    ATLAS_2012_I1203852_HF()
+      : Analysis("ATLAS_2012_I1203852_HF")
     {    }
 
     void init() {
@@ -381,6 +381,6 @@ namespace Rivet {
 
 
   // The hook for the plugin system
-  DECLARE_RIVET_PLUGIN(ATLAS_2012_I1203852);
+  DECLARE_RIVET_PLUGIN(ATLAS_2012_I1203852_HF);
 
 }

@@ -39,7 +39,6 @@ k=0
 
 for i in range(100,3100,100):
     for j in range(100,2100,100):
-#    for j in range(100,2100,100):
         i = int(i)
         j = int(j)
         modelpath = 'mY_'+ str(i) + '_mX_' + str(j)
@@ -57,34 +56,23 @@ for i in range(100,3100,100):
         RunCard.write(str(HerwigString))
         RunCard.close()
         
-        subprocess.call(["source /unix/cedar/software/sl6/Herwig-7.0.0/./bin/activate"], shell=True)
-        #os.system('. /unix/cedar/software/sl6/Herwig-7.0.0/./bin/activate')
-        #time.sleep(2)
+        subprocess.call(["source /unix/cedar/software/sl6/setupEnv.sh; "], shell=True)
+        subprocess.call(["source /unix/atlas4/yallup/contur/setupContour.sh"], shell=True)
         os.chdir(modelpath)
-#        os.system('export RIVET_ANALYSIS_PATH=$PWD')
-        os.system('export RIVET_ANALYSIS_PATH=$PWD; Herwig read LHC.in')
-        #time.sleep(2)
-
+        subprocess.call(['Herwig read LHC.in'], shell=True)
         batch_command = ''
-#        batch_command += 'export RIVET_ANALYSIS_PATH=$PWD; '
-        batch_command += '. /unix/cedar/software/sl6/Herwig-7.0.0/./bin/activate; '
-#        batch_command += 'export RIVET_ANALYSIS_PATH=$PWD; '
+        batch_command += 'source /unix/cedar/software/sl6/setupEnv.sh; '
         batch_command += 'cd ' + pwd + '/' + modelpath +'; '
-        batch_command += 'export RIVET_ANALYSIS_PATH=$PWD; '
+        batch_command += "source /unix/atlas4/yallup/contur/setupContour.sh; "
         if i < 1500:
             numEv=30000
         else:
             numEv=5000
         batch_command += 'Herwig run --seed='+str(i)+str(j)+' --tag='+str(modelpath)+' --jobs=5 --numevents='+ str(numEv) +' LHC.run;'
-        
-
-
-        ##batch_command += 'Herwig run --seed='+str(i)+str(j)+' --tag='+str(modelpath)+' --jobs=5 --numevents=75000 LHC.run;'
         batch_filename = str(modelpath)+'.sh'
         batch_submit = open(batch_filename, 'w')
         batch_submit.write(batch_command)
         batch_submit.close()
 
-        os.system( "qsub -q medium " + batch_filename )
-        #os.system( "rm -rf " + batch_filename )
+        subprocess.call([ "qsub -q medium " + batch_filename],shell=True )
         os.chdir(pwd)

@@ -8,10 +8,10 @@
 namespace Rivet {
 
 
-  class ATLAS_2014_I1319490 : public Analysis {
+  class ATLAS_2014_I1319490_HF : public Analysis {
   public:
 
-    ATLAS_2014_I1319490(string name = "ATLAS_2014_I1319490")
+    ATLAS_2014_I1319490_HF(string name = "ATLAS_2014_I1319490_HF")
       : Analysis(name)
     {
       _mode = 0; // using electron channel for combined data by default
@@ -205,20 +205,20 @@ namespace Rivet {
   };
 
 
-  class ATLAS_2014_I1319490_EL : public ATLAS_2014_I1319490 {
+  class ATLAS_2014_I1319490_HF_EL : public ATLAS_2014_I1319490_HF {
   public:
-    ATLAS_2014_I1319490_EL()
-      : ATLAS_2014_I1319490("ATLAS_2014_I1319490_EL")
+    ATLAS_2014_I1319490_HF_EL()
+      : ATLAS_2014_I1319490_HF("ATLAS_2014_I1319490_HF_EL")
     {
       _mode = 1;
     }
   };
 
 
-  class ATLAS_2014_I1319490_MU : public ATLAS_2014_I1319490 {
+  class ATLAS_2014_I1319490_HF_MU : public ATLAS_2014_I1319490_HF {
   public:
-    ATLAS_2014_I1319490_MU()
-      : ATLAS_2014_I1319490("ATLAS_2014_I1319490_MU")
+    ATLAS_2014_I1319490_HF_MU()
+      : ATLAS_2014_I1319490_HF("ATLAS_2014_I1319490_HF_MU")
     {
       _mode = 2;
     }
@@ -226,8 +226,8 @@ namespace Rivet {
 
 
   // The hooks for the plugin system
-  DECLARE_RIVET_PLUGIN(ATLAS_2014_I1319490);
-  DECLARE_RIVET_PLUGIN(ATLAS_2014_I1319490_EL);
-  DECLARE_RIVET_PLUGIN(ATLAS_2014_I1319490_MU);
+  DECLARE_RIVET_PLUGIN(ATLAS_2014_I1319490_HF);
+  DECLARE_RIVET_PLUGIN(ATLAS_2014_I1319490_HF_EL);
+  DECLARE_RIVET_PLUGIN(ATLAS_2014_I1319490_HF_MU);
 
 }

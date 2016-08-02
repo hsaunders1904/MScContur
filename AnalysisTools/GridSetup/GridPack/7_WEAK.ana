@@ -1,18 +1,26 @@
-#######(bjets)
-#insert Rivet:Analyses 0 ATLAS_2014_I1306294
-#insert Rivet:Analyses 0 CMS_2013_I1256943
+#######(c/bjets)
+insert Rivet:Analyses 0 ATLAS_2014_I1306294 #Z+bb
+insert Rivet:Analyses 0 ATLAS_2014_I1306294_EL #Z+bb
+insert Rivet:Analyses 0 ATLAS_2014_I1306294_MU #Z+bb
+insert Rivet:Analyses 0 CMS_2013_I1256943 #Z+bb
+insert Rivet:Analyses 0 ATLAS_2013_I1219109_EL #W+b (el)
+insert Rivet:Analyses 0 ATLAS_2013_I1219109_MU #W+b (mu)
+insert Rivet:Analyses 0 ATLAS_2014_I1282447 #Wcharm
 
 ####ZJets
-insert Rivet:Analyses 0 ATLAS_2013_I1230812
-insert Rivet:Analyses 0 CMS_2015_I1310737
-#insert Rivet:Analyses 0 ATLAS_2014_I1288706 #Drell-Yan
-
+####Custom for heavy flavours
+insert Rivet:Analyses 0 ATLAS_2013_I1230812_HF
+insert Rivet:Analyses 0 ATLAS_2013_I1230812_HF_MU
+insert Rivet:Analyses 0 ATLAS_2013_I1230812_HF_EL
+insert Rivet:Analyses 0 CMS_2015_I1310737_HF
+insert Rivet:Analyses 0 ATLAS_2014_I1288706 #Drell-Yan
 
 ####WJets
-insert Rivet:Analyses 0 CMS_2014_I1303894
-#insert Rivet:Analyses 0 ATLAS_2014_I1319490
-insert Rivet:Analyses 0 ATLAS_2014_I1319490_MU
-insert Rivet:Analyses 0 ATLAS_2014_I1319490_EL
+####Custom for HF
+insert Rivet:Analyses 0 CMS_2014_I1303894_HF
+insert Rivet:Analyses 0 ATLAS_2014_I1319490_HF_MU
+insert Rivet:Analyses 0 ATLAS_2014_I1319490_HF_EL
+####
 insert Rivet:Analyses 0 CMS_2013_I1224539_WJET
 insert Rivet:Analyses 0 CMS_2013_I1224539_ZJET
 
@@ -20,12 +28,13 @@ insert Rivet:Analyses 0 CMS_2013_I1224539_ZJET
 insert Rivet:Analyses 0 ATLAS_2013_I1263495
 insert Rivet:Analyses 0 ATLAS_2012_I1199269 ##Diphotons
 insert Rivet:Analyses 0 ATLAS_2012_I1093738
-insert Rivet:Analyses 0  CMS_2014_I1266056
+insert Rivet:Analyses 0 CMS_2014_I1266056
+insert Rivet:Analyses 0 ATLAS_2013_I1244522
 
 ####Extras
 insert Rivet:Analyses 0 ATLAS_2011_I926145 #heavyflav
-insert Rivet:Analyses 0 ATLAS_2012_I1203852 #ZZ
-##insert Rivet:Analyses 0 ATLAS_2012_I1203852_MET #MET fix ZZ
+insert Rivet:Analyses 0 ATLAS_2012_I1203852_HF #ZZ
+insert Rivet:Analyses 0 ATLAS_2013_I1190187 #WW
 
 #W/Z+gamma
 insert Rivet:Analyses 0 ATLAS_2013_I1217863_W_EL

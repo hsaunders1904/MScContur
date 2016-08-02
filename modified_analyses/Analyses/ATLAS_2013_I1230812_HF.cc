@@ -10,14 +10,14 @@ namespace Rivet {
 
   /// Z + jets in pp at 7 TeV (combined channel / base class)
   /// @note This base class contains a "mode" variable for combined, e, and mu channel derived classes
-  class ATLAS_2013_I1230812 : public Analysis {
+  class ATLAS_2013_I1230812_HF : public Analysis {
   public:
 
     /// @name Constructors etc.
     //@{
 
     /// Constructor
-    ATLAS_2013_I1230812(string name="ATLAS_2013_I1230812")
+    ATLAS_2013_I1230812_HF(string name="ATLAS_2013_I1230812_HF")
       : Analysis(name)
     {
       // This class uses the combined e+mu mode
@@ -305,10 +305,10 @@ namespace Rivet {
 
 
 
-  class ATLAS_2013_I1230812_EL : public ATLAS_2013_I1230812 {
+  class ATLAS_2013_I1230812_HF_EL : public ATLAS_2013_I1230812_HF {
   public:
-    ATLAS_2013_I1230812_EL()
-      : ATLAS_2013_I1230812("ATLAS_2013_I1230812_EL")
+    ATLAS_2013_I1230812_HF_EL()
+      : ATLAS_2013_I1230812_HF("ATLAS_2013_I1230812_HF_EL")
     {
       _mode = 2;
     }
@@ -316,10 +316,10 @@ namespace Rivet {
 
 
 
-  class ATLAS_2013_I1230812_MU : public ATLAS_2013_I1230812 {
+  class ATLAS_2013_I1230812_HF_MU : public ATLAS_2013_I1230812_HF {
   public:
-    ATLAS_2013_I1230812_MU()
-      : ATLAS_2013_I1230812("ATLAS_2013_I1230812_MU")
+    ATLAS_2013_I1230812_HF_MU()
+      : ATLAS_2013_I1230812_HF("ATLAS_2013_I1230812_HF_MU")
     {
       _mode = 3;
     }
@@ -327,7 +327,7 @@ namespace Rivet {
 
 
 
-  DECLARE_RIVET_PLUGIN(ATLAS_2013_I1230812);
-  DECLARE_RIVET_PLUGIN(ATLAS_2013_I1230812_EL);
-  DECLARE_RIVET_PLUGIN(ATLAS_2013_I1230812_MU);
+  DECLARE_RIVET_PLUGIN(ATLAS_2013_I1230812_HF);
+  DECLARE_RIVET_PLUGIN(ATLAS_2013_I1230812_HF_EL);
+  DECLARE_RIVET_PLUGIN(ATLAS_2013_I1230812_HF_MU);
 }

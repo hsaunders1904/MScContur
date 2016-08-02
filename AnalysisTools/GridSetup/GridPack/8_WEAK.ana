@@ -1,0 +1,5 @@
+insert Rivet:Analyses 0 ATLAS_2016_I1457605 #8tev photons
+insert Rivet:Analyses 0 ATLAS_2015_I1408516 ##8tev z
+insert Rivet:Analyses 0 ATLAS_2015_I1408516_EL
+insert Rivet:Analyses 0 ATLAS_2015_I1408516_MU
+insert Rivet:Analyses 0 ATLAS_2014_I1279489
