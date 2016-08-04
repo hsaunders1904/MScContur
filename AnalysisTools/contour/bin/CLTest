@@ -10,10 +10,16 @@ def getHistos(filelist):
     ##Stolen from rivet-cmphistos
     refhistos = {}
     mchistos = {}
+    xsec ={}
+    Nev={}
     #for infile in filelist:
     mchistos.setdefault(filelist, {})
     analysisobjects = yoda.read(filelist)
     for path, ao in analysisobjects.iteritems():
+        if path.startswith('/_EVTCOUNT'):
+            Nev = ao
+        if path.startswith('/_XSEC'):
+            xsec = ao
             ## Conventionally don't plot data objects whose names start with an underscore
         if os.path.basename(path).startswith("_"):
             continue
@@ -23,7 +29,8 @@ def getHistos(filelist):
         else:
             if not mchistos[filelist].has_key(path):
                 mchistos[filelist][path] = ao
-    return refhistos, mchistos
+    return refhistos, mchistos, xsec, Nev
+
 
 def getRivetRefData(refhistos, anas=None):
     "Find all Rivet reference data files"
@@ -58,14 +65,11 @@ if __name__ == '__main__':
         for name in files:
             fileliststatic = []
             if '.yoda' in name and 'LHC' not in name:
-                #if "1000_mX_800" not in name:
-                #    continue
-                #else:
                 yodafile = os.path.join(root, name)
                 fileliststatic = str(yodafile)
             else:
                 continue
-            refhistos, mchistos = getHistos(fileliststatic)
+            refhistos, mchistos, xsec, Nev = getHistos(fileliststatic)
             hpaths = []
             for aos in mchistos.values():
                 for p in aos.keys():
@@ -84,8 +88,8 @@ if __name__ == '__main__':
                 if ctr.LumiFinder(h)[0] == -1:
                     continue
                 #Use this switch to view individual analyses
-                #if '/ATLAS_2014_I1268975' not in h:
-                #    continue
+                if '/ATLAS_2014_I1279489' not in h:
+                    continue
                 print 'testing: ' + h
                 lumi = ctr.LumiFinder(h)[0]
                 if lumi > 0:
@@ -104,7 +108,7 @@ if __name__ == '__main__':
                         import numpy as np
                         if mchistos[fileliststatic][h].sumW2() == 0:
                             continue
-                        normFacSig = 1.0/(mchistos[fileliststatic][h].sumW2()*1000000.0)
+                        normFacSig = (float(mchistos[fileliststatic][h].numEntries())/float(Nev.numEntries()) * float(xsec.points[0].x))
 
                     CLs=[]
                     sigCount = []
@@ -122,7 +126,8 @@ if __name__ == '__main__':
                             sigCount.append(sighisto.points[i].y*lumi*normFacSig*(sighisto.points[i].xMax-sighisto.points[i].xMin))
                             bgCount.append(refdata.points[i].y*lumi*normFacRef*(refdata.points[i].xMax-refdata.points[i].xMin))
                             bgError.append(refdata.points[i].yErrs[1]*lumi*normFacRef*(refdata.points[i].xMax-refdata.points[i].xMin))
-                            sigError.append(sighisto.points[i].yErrs[1]*lumi*normFacSig)
+                            #sigError.append(sighisto.points[i].yErrs[1]*lumi*normFacSig)
+                            sigError.append(xsec.points[0].x)
                         else:
                             sigCount.append(sighisto.points[i].y*lumi)
                             bgCount.append(refdata.points[i].y*lumi)
