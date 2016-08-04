@@ -89,9 +89,23 @@ if __name__ == '__main__':
                 print 'testing: ' + h
                 lumi = ctr.LumiFinder(h)[0]
                 if lumi > 0:
-					#make some empty arrays, not all of these are used, can definitely be optimised and cleaned up but used for de
-					#bugging for now
+
                     sighisto=yoda.core.mkScatter(mchistos[fileliststatic][h])
+
+                    ###some special logic to deal with normalisation
+                    normFacSig =0.0
+                    normFacRef=0.0
+                    if ctr.isNorm(h)[0] == True:
+                        for point in refdata.points:
+                             normFacRef += point.y
+                        for point in sighisto.points:
+                            normFacSig += point.y
+                        normFacRef = ctr.isNorm(h)[1]
+                        import numpy as np
+                        if mchistos[fileliststatic][h].sumW2() == 0:
+                            continue
+                        normFacSig = 1.0/(mchistos[fileliststatic][h].sumW2()*1000000.0)
+
                     CLs=[]
                     sigCount = []
                     bgCount = []
@@ -104,17 +118,21 @@ if __name__ == '__main__':
                         mu_test=1
                         mu_hat=0
                         varmat=0
-                        sigCount.append(sighisto.points[i].y*lumi)
-                        bgCount.append(refdata.points[i].y*lumi)
-                        bgError.append(refdata.points[i].yErrs[1]*lumi)
-                        sigError.append(sighisto.points[i].yErrs[1]*lumi)
+                        if ctr.isNorm(h)[0] == True:
+                            sigCount.append(sighisto.points[i].y*lumi*normFacSig*(sighisto.points[i].xMax-sighisto.points[i].xMin))
+                            bgCount.append(refdata.points[i].y*lumi*normFacRef*(refdata.points[i].xMax-refdata.points[i].xMin))
+                            bgError.append(refdata.points[i].yErrs[1]*lumi*normFacRef*(refdata.points[i].xMax-refdata.points[i].xMin))
+                            sigError.append(sighisto.points[i].yErrs[1]*lumi*normFacSig)
+                        else:
+                            sigCount.append(sighisto.points[i].y*lumi)
+                            bgCount.append(refdata.points[i].y*lumi)
+                            bgError.append(refdata.points[i].yErrs[1]*lumi)
+                            sigError.append(sighisto.points[i].yErrs[1]*lumi)
                         ##cater for the case where the refdata bin is empty, occurs notably in ATLAS_2014_I1307243
                         if refdata.points[i].y > 0:
                             CLs.append(ctr.confLevel([sigCount[i]],[bgCount[i]],[bgError[i]],[sigError[i]]))
                         else:
                             CLs.append(0)
-                            # Var_mu(mu_test,ML_b_hat_model(refdata.points[i].y*lumi,mu_test,refdata.points[i].y*lumi,sighisto.points[i].y*lumi,refdata.points[i].yErrs[1]*lumi),sighisto.points[i].y*lumi,refdata.points[i].yErrs[1]*lumi)[0,0]
-                            # mu_hat=ML_mu_hat(refdata.points[i].y*lumi,refdata.points[i].y*lumi,sighisto.points[i].y*lumi)
 
 
 ##All these extra count checks are to stop any plots with no count in most likely bin from being entered

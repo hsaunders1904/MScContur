@@ -1,7 +1,7 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 ##edit this to location of svn repo on your system
-export CONTURDIR=/unix/atlas4/yallup/contur
+export CONTURDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 export RIVET_DATA_PATH=$CONTURDIR/modified_analyses/refdata
 export RIVET_ANALYSIS_PATH=$CONTURDIR/modified_analyses/Analyses

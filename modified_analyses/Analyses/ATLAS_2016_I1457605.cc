@@ -97,7 +97,7 @@ namespace Rivet {
       vector<double> ptDensity;
       vector< vector<double> > ptDensities(_eta_bins_areaoffset.size()-1);
       FastJets fast_jets =applyProjection<FastJets>(event, "KtJetsD05");
-      const std::shared_ptr<fastjet::ClusterSequenceArea> clust_seq_area = fast_jets.clusterSeqArea();
+      const auto clust_seq_area = fast_jets.clusterSeqArea();
       foreach (const Jet& jet, fast_jets.jets()) {
         const double area = clust_seq_area->area(jet);
         if (area > 10e-4 && jet.abseta() < _eta_bins_areaoffset.back())
