@@ -1,11 +1,11 @@
 #######(c/bjets)
-insert Rivet:Analyses 0 ATLAS_2014_I1306294 #Z+bb
-insert Rivet:Analyses 0 ATLAS_2014_I1306294_EL #Z+bb
-insert Rivet:Analyses 0 ATLAS_2014_I1306294_MU #Z+bb
-insert Rivet:Analyses 0 CMS_2013_I1256943 #Z+bb
-insert Rivet:Analyses 0 ATLAS_2013_I1219109_EL #W+b (el)
-insert Rivet:Analyses 0 ATLAS_2013_I1219109_MU #W+b (mu)
-insert Rivet:Analyses 0 ATLAS_2014_I1282447 #Wcharm
+#insert Rivet:Analyses 0 ATLAS_2014_I1306294 #Z+bb
+#insert Rivet:Analyses 0 ATLAS_2014_I1306294_EL #Z+bb
+#insert Rivet:Analyses 0 ATLAS_2014_I1306294_MU #Z+bb
+#insert Rivet:Analyses 0 CMS_2013_I1256943 #Z+bb
+#insert Rivet:Analyses 0 ATLAS_2013_I1219109_EL #W+b (el)
+#insert Rivet:Analyses 0 ATLAS_2013_I1219109_MU #W+b (mu)
+#insert Rivet:Analyses 0 ATLAS_2014_I1282447 #Wcharm
 
 ####ZJets
 ####Custom for heavy flavours
