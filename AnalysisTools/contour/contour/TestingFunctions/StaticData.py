@@ -213,7 +213,7 @@ def LumiFinder(h):
 ### Special function to help with plots normalised to total xs
 def isNorm(h):
     isNorm=False
-    #normFac=1.0
+    normFac=1.0
     #if 'CMS_2013_I1224539' in h:
     #    isNorm=True
     #    normFac = 1.0/1000.0
