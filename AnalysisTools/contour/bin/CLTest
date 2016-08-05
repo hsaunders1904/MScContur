@@ -88,8 +88,8 @@ if __name__ == '__main__':
                 if ctr.LumiFinder(h)[0] == -1:
                     continue
                 #Use this switch to view individual analyses
-                if '/ATLAS_2014_I1279489' not in h:
-                    continue
+                #if '/ATLAS_2014_I1279489' not in h:
+                #    continue
                 print 'testing: ' + h
                 lumi = ctr.LumiFinder(h)[0]
                 if lumi > 0:
@@ -146,15 +146,16 @@ if __name__ == '__main__':
                     tempKey = ''
                     tempKey= h.split('/')[1] +'_'+ctr.LumiFinder(h)[2]
                     if tempKey not in mapPoints and bgCount[CLs.index(max(CLs))]>0.0:
-                        mapPoints[tempKey] = [float(name.strip('.yoda').split('_')[1]),float(name.strip('.yoda').split('_')[3]), float(max(CLs)) , [sigCount[CLs.index(max(CLs))]], [bgCount[CLs.index(max(CLs))]] , [bgError[CLs.index(max(CLs))]], [sigError[CLs.index(max(CLs))]]]
+                        mapPoints[tempKey] = [float(name.strip('.yoda').split('_')[1]),float(name.strip('.yoda').split('_')[3]), float(max(CLs)) , [sigCount[CLs.index(max(CLs))]], [bgCount[CLs.index(max(CLs))]] , [bgError[CLs.index(max(CLs))]], [sigError[CLs.index(max(CLs))]],str(h)]
                     elif bgCount[CLs.index(max(CLs))] > 0.0:
                         mapPoints[tempKey][3].append(sigCount[CLs.index(max(CLs))])
                         mapPoints[tempKey][4].append(bgCount[CLs.index(max(CLs))])
                         mapPoints[tempKey][5].append(bgError[CLs.index(max(CLs))])
                         mapPoints[tempKey][6].append(sigError[CLs.index(max(CLs))])
+                        mapPoints[tempKey][7]+=","+(str(h))
                 else:
                     if h not in mapPoints and bgCount[CLs.index(max(CLs))]>0.0:
-                        mapPoints[h] = [float(name.strip('.yoda').split('_')[1]),float(name.strip('.yoda').split('_')[3]), float(max(CLs)) , [sigCount[CLs.index(max(CLs))]], [bgCount[CLs.index(max(CLs))]] , [bgError[CLs.index(max(CLs))]],[sigError[CLs.index(max(CLs))]]]
+                        mapPoints[h] = [float(name.strip('.yoda').split('_')[1]),float(name.strip('.yoda').split('_')[3]), float(max(CLs)) , [sigCount[CLs.index(max(CLs))]], [bgCount[CLs.index(max(CLs))]] , [bgError[CLs.index(max(CLs))]],[sigError[CLs.index(max(CLs))]],str(h)]
             for key in mapPoints:
                 tempName = ctr.LumiFinder(key)[1]
                 mapPoints[key][2] = ctr.confLevel(mapPoints[key][3],mapPoints[key][4],mapPoints[key][5], mapPoints[key][6])
