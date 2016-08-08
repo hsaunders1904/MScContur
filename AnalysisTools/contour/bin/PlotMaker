@@ -4,7 +4,7 @@ import os, sys
 import numpy as np
 import matplotlib.pyplot as plt
 #import matplotlib as mpl
-import colormaps as cmaps
+#import colormaps as cmaps
 import pickle
 import scipy.stats as sp
 from os.path import join
@@ -36,7 +36,8 @@ def writeOutput(output, h):
 #the 1.0 is gdm, currently hardcoded, grab from model file/ directory info eventually
 
 def pertUnit(mz):
-    return np.sqrt(np.pi/2) * (mz/0.375)
+    gdm=1.0
+    return np.sqrt(np.pi/2) * (mz/gdm)
 
 mkdir_p('plots')
 
@@ -132,10 +133,10 @@ for root, dirs, files in os.walk('.',topdown=False):
 
 ##try and pick ticks intelligently
 
-    my_locator_x = MaxNLocator((max(contourXaxis) / 500.0 ) + 1)
-    my_locator_y = MaxNLocator((max(contourYaxis) / 500.0) + 1)
-    minorLocator_x = MaxNLocator(len(contourXaxis) + 1)
-    minorLocator_y = MaxNLocator(len(contourYaxis) + 1)
+    my_locator_x = MaxNLocator((int(max(contourXaxis)) / 500) + 1)
+    my_locator_y = MaxNLocator((int(max(contourYaxis)) / 500) + 1)
+    minorLocator_x = MaxNLocator(int(len(contourXaxis)) + 1)
+    minorLocator_y = MaxNLocator(int(len(contourYaxis)) + 1)
     ax.yaxis.set_major_locator(my_locator_x)
     ax.xaxis.set_major_locator(my_locator_y)
     ax.xaxis.set_minor_locator(minorLocator_y)
@@ -145,7 +146,7 @@ for root, dirs, files in os.walk('.',topdown=False):
     del minorLocator_x
     del minorLocator_y
 
-    plt.pcolormesh(yy,xx,c.T,cmap=cmaps.magma, vmin=0, vmax=1)
+    plt.pcolormesh(yy,xx,c.T,cmap=plt.cm.magma, vmin=0, vmax=1)
     plt.axis([y_grid_min, y_grid_max,x_grid_min, x_grid_max])
 
 ##axis labels
@@ -178,10 +179,10 @@ for root, dirs, files in os.walk('.',topdown=False):
 
 ##try and pick ticks intelligently
 
-    my_locator_x = MaxNLocator((max(contourXaxis) / 500.0))
-    my_locator_y = MaxNLocator((max(contourYaxis) / 500.0)+1)
-    minorLocator_x = MaxNLocator(len(contourXaxis) +1)
-    minorLocator_y = MaxNLocator(len(contourYaxis) +1)
+    my_locator_x = MaxNLocator((int(max(contourXaxis)) / 500)+1)
+    my_locator_y = MaxNLocator((int(max(contourYaxis)) / 500)+1)
+    minorLocator_x = MaxNLocator(int(len(contourXaxis)) +1)
+    minorLocator_y = MaxNLocator(int(len(contourYaxis)) +1)
     ax.yaxis.set_major_locator(my_locator_x)
     ax.xaxis.set_major_locator(my_locator_y)
     ax.xaxis.set_minor_locator(minorLocator_y)
@@ -195,7 +196,7 @@ for root, dirs, files in os.walk('.',topdown=False):
     contourXaxis,contourYaxis=contourYaxis,contourXaxis
 
 ##draw a filled contour region for the CL excl
-    CS=plt.contourf(contourXaxis,contourYaxis,c,levels=[0.95,1.0],label="CL",cmap=cmaps.magma, alpha =0.8)
+    CS=plt.contourf(contourXaxis,contourYaxis,c,levels=[0.95,1.0],label="CL",cmap=plt.cm.magma, alpha =0.8)
 ##and a black outline
     CS2=plt.contour(CS, colors = 'black')
 
@@ -258,7 +259,7 @@ fig=plt.figure(figsize=[fig_dims[0]*2,0.5])
 ax = fig.add_subplot(1,1,1)
 import matplotlib as mpl
 norm = mpl.colors.Normalize(vmin=0, vmax=1)
-cb = mpl.colorbar.ColorbarBase(ax, cmap=cmaps.magma, orientation='horizontal', norm=norm)
+cb = mpl.colorbar.ColorbarBase(ax, cmap=plt.cm.magma, orientation='horizontal', norm=norm)
 cb.set_label("CL of exclusion")
 fig.tight_layout(pad=0.1)
 plt.savefig('./plots/colorbarkey.pdf')
