@@ -36,6 +36,9 @@ pwd = os.getcwd()
 i=0
 k=0
 
+HerwigSetup="source /unix/cedar/software/sl6/setupEnv.sh"
+ConturSetup="source /unix/atlas4/yallup/contur/setupContour.sh"
+
 for i in range(100,3100,100):
     for j in range(100,2100,100):
         modelpath = 'mY_'+ str(i) + '_mX_' + str(j)
@@ -52,14 +55,15 @@ for i in range(100,3100,100):
         RunCard = open(str(modelpath + '/LHC.in'), 'w')
         RunCard.write(str(HerwigString))
         RunCard.close()
-        subprocess.call(["source /unix/cedar/software/sl6/setupEnv.sh; "], shell=True)
-        subprocess.call(["source /unix/atlas4/yallup/contur/setupContour.sh"], shell=True)
+
+        subprocess.call([HerwigSetup], shell=True)
+        subprocess.call([ConturSetup], shell=True)
         os.chdir(modelpath)
         subprocess.call(['Herwig read LHC.in'], shell=True)
         batch_command = ''
-        batch_command += 'source /unix/cedar/software/sl6/setupEnv.sh; '
+        batch_command += HerwigSetup + '; '
         batch_command += 'cd ' + pwd + '/' + modelpath +'; '
-        batch_command += "source /unix/atlas4/yallup/contur/setupContour.sh; "
+        batch_command += ConturSetup + "; "
         if i < 600:
             numEv=30000
         else:
