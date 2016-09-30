@@ -170,7 +170,8 @@ def LumiFinder(h):
         lumi = 4600
         anatype=anapool[15]
     elif 'ATLAS_2013_I1230812_MU' in h:
-                #Z+jets        blacklist=['d02','d04','d06','d08']
+                #Z+jets
+        blacklist=['d02','d04','d06','d08']
         lumi = 4600
         anatype=anapool[15]
         for plotkey in blacklist:

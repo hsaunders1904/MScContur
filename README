@@ -1,7 +1,7 @@
 v1.1
 
 source the file setupContour.sh, after setting up a rivet release
-new utility copysetup.
+new utility setupGrid
 
 
 v1.0

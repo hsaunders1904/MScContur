@@ -67,6 +67,11 @@ if __name__ == '__main__':
             if '.yoda' in name and 'LHC' not in name:
                 yodafile = os.path.join(root, name)
                 fileliststatic = str(yodafile)
+                print "Found valid yoda file"
+                print "Model point info"
+                print name.strip('.yoda').split('_')[0] + " : " + name.strip('.yoda').split('_')[1]
+                print name.strip('.yoda').split('_')[2] + " : " + name.strip('.yoda').split('_')[3]
+                              
             else:
                 continue
             refhistos, mchistos, xsec, Nev = getHistos(fileliststatic)
@@ -80,6 +85,8 @@ if __name__ == '__main__':
 
             mapPoints={}
 
+            print "\nScanning " + str(len(hpaths)) + " histos found generated for model point \n"
+
             for h in hpaths:
                 if refhistos.has_key('/REF' + h):
                     refdata = refhistos['/REF' + h]
@@ -90,7 +97,7 @@ if __name__ == '__main__':
                 #Use this switch to view individual analyses
                 #if '/ATLAS_2014_I1279489' not in h:
                 #    continue
-                print 'testing: ' + h
+                #print 'testing: ' + h
                 lumi = ctr.LumiFinder(h)[0]
                 if lumi > 0:
 
@@ -188,4 +195,4 @@ if __name__ == '__main__':
                 pickle.dump(masterDict[key], f)
 
 
-print 'end'
+print 'Run finished, analysis output to folder "ANALYSIS"'
