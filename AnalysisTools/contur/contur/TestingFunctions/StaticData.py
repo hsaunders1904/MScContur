@@ -3,7 +3,26 @@
 #############################################################################################
 ### Here store aditional static data we dont get from rivet, this can be improved greatly..
 global anapool, subpools
-anapool=['ATLAS_7_JETS','ATLAS_7_Zjj_EL','ATLAS_7_Wjj_mu','CMS_7_JETS','CMS_7_Wjj','CMS_7_Zjj','ATLAS_8_JETS','ATLAS_7_Wjj_EL','ATLAS_7_GAMMA','ATLAS_7_Z_GAMMA','ATLAS_7_W_GAMMA_MU','ATLAS_7_W_GAMMA_EL','ATLAS_7_ZZ','ATLAS_7_GAMMAGAMMA','CMS_GAMMA_JET','ATLAS_7_Zjj_MU','ATLAS_8_Zjj','ATLAS_8_GAMMA']
+anapool=[
+'ATLAS_7_JETS',       #  0          
+'ATLAS_7_Zjj_EL',     #  1          
+'ATLAS_7_Wjj_mu',     #  2          
+'CMS_7_JETS',         #  3      
+'CMS_7_Wjj',          #  4      
+'CMS_7_Zjj',          #  5      
+'ATLAS_8_JETS',       #  6          
+'ATLAS_7_Wjj_EL',     #  7          
+'ATLAS_7_GAMMA',      #  8          
+'ATLAS_7_Z_GAMMA',    #  9          
+'ATLAS_7_W_GAMMA_MU', # 10              
+'ATLAS_7_W_GAMMA_EL', # 11              
+'ATLAS_7_ZZ',         # 12      
+'ATLAS_7_GAMMAGAMMA', # 13              
+'CMS_GAMMA_JET',      # 14          
+'ATLAS_7_Zjj_MU',     # 15          
+'ATLAS_8_Zjj',        # 16      
+'ATLAS_8_GAMMA',      # 17          
+]
 ##This is really bad, but set up an arbitrary number of subpool tags to iterate over, this should just be done on the fly for each analysis!
 subpools=['R1','R2','R3','R4']
 def LumiFinder(h):
