@@ -13,7 +13,7 @@ import errno
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from PlotStyle import *
-from contour import TestingFunctions
+from contur import TestingFunctions
 #from TesterFunctions import *
 
 def mkdir_p(path):
@@ -238,8 +238,8 @@ for root, dirs, files in os.walk('.',topdown=False):
     fig.tight_layout(pad=0.1)
 #fig.savefig('figure.pdf')
 
-    plt.savefig("./plots/contour_" + root.strip('./') + ".pdf")
-    plt.savefig("./plots/contour_" + root.strip('./') + ".png")
+    plt.savefig("./plots/contur_" + root.strip('./') + ".pdf")
+    plt.savefig("./plots/contur_" + root.strip('./') + ".png")
 
     print "Plotting maps: " + root.strip('./')
 

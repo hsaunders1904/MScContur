@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import rivet, yoda, sys, os
-from contour import TestingFunctions as ctr
-from contour import Utils as util
+from contur import TestingFunctions as ctr
+from contur import Utils as util
 
 
 def getHistos(filelist):
