@@ -94,7 +94,7 @@ def LumiFinder(h):
             # strict mode should exit here
             #return INVALID
 
-    return float(lumi),unicode(pool),unicode(subpool)
+    return lumi,pool,subpool
 
 #############################################################################################
 ### Special function to help with plots normalised to total xs
