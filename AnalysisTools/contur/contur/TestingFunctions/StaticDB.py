@@ -16,6 +16,7 @@ class listdict(dict):
         return self[key]
 
 subpools = listdict()
+norms = listdict()
     
 name_pat = re.compile(r'([A-Z0-9]+_\d{4}_[IS]\d{6,8}[^/]*)/(d\d+-x\d+-y\d+)')
 
@@ -40,28 +41,41 @@ def init_dbs():
         patterns = patterns.split(',')
         blacklists[ana] = patterns
     
-    for row in c.execute('SELECT id,group_concat(pattern),subid FROM subpool GROUP BY id,subid;'):
-        ana, patterns, subid = row
-        patterns = patterns.split(',')
+    for row in c.execute('SELECT id,pattern,subid FROM subpool;'):
+        ana, pattern, subid = row
         subid = 'R%s' % (subid + 1)
-        subpools[ana].append((patterns, subid))
+        subpools[ana].append((pattern, subid))
+
+    for row in c.execute('SELECT id,pattern,norm FROM normalization;'):
+        ana, pattern, norm = row
+        norms[ana].append((pattern, norm))
     
     conn.close()
 
     global INIT
     INIT = True
+
+class InvalidPath(Exception):
+    pass
+
+def splitPath(path):
+    m = name_pat.search(path)
+
+    if not m:
+        raise InvalidPath('Parse error in "%s"' % path)
+
+    analysis = m.group(1);
+    tag = m.group(2);
+
+    return analysis, tag
+
     
 def LumiFinder(h):
 
     if not INIT:
         init_dbs()
 
-    m = name_pat.search(h)
-    if not m:
-        return INVALID
-
-    ana = m.group(1);
-    tag = m.group(2);
+    ana, tag = splitPath(h)
 
     try:
         lumi, pool = lumis[ana], pools[ana]
@@ -84,11 +98,10 @@ def LumiFinder(h):
     subpool = ''
 
     if ana in subpools:
-        for patterns, subid in subpools[ana]:
-            for p in patterns:
-                if re.search(p,tag):
-                    subpool = subid
-                    break
+        for p, subid in subpools[ana]:
+            if re.search(p,tag):
+                subpool = subid
+                break
         #else:
             # not in any subpools
             # strict mode should exit here
@@ -101,6 +114,24 @@ def LumiFinder(h):
 def isNorm(h):
     if not INIT:
         init_dbs()
+
+    ana, tag = splitPath(h)
+
+    isNorm=False
+    normFac=1.0
+
+    # remove once it's clear this is just a compatibility
+    # preservation issue
+    if 'ATLAS_2014_I1279489' in h:
+        isNorm=True
+
+    if ana in norms:
+        for p, norm in norms[ana]:
+            if re.search(p,tag):
+                isNorm = True
+                normFac = norm
+                break
+
     return isNorm, normFac
 
 

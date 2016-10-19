@@ -57,14 +57,26 @@ def main():
     for h in testnames:
         for tag in tags:
             path = '%s/%s' % (h,tag)
+
             lf_old = old.LumiFinder(path)
+            lf_new = new.LumiFinder(path)
+
+            # map to same INVALID value
             if lf_old[0] == -1:
-                # map to INVALID value
                 lf_old = new.INVALID
 
-            lf_new = new.LumiFinder(path)
             if lf_old != lf_new:
                 print path,':',lf_old,':',lf_new
+
+
+            norm_old = old.isNorm(path)
+            norm_new = new.isNorm(path)
+
+            if norm_old != norm_new:
+                print path,':',norm_old,':',norm_new
+
+
+
 
 if __name__ == '__main__':
     main()
