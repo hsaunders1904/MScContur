@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-import rivet, yoda, sys, os
 from contur import TestingFunctions as ctr
 from contur import Utils as util
-
+import rivet,yoda,sys,os
 
 def getHistos(filelist):
     """Loop over all input files. Only use the first occurrence of any REF-histogram

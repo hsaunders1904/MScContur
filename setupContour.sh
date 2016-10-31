@@ -1,11 +1,11 @@
 #!/bin/bash
 
-export CONTURDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export CONTURMODULEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-export RIVET_DATA_PATH=$CONTURDIR/modified_analyses/refdata
-export RIVET_ANALYSIS_PATH=$CONTURDIR/modified_analyses/Analyses
-export RIVET_PLOT_PATH=$CONTURDIR/modified_analyses/plotinfo
-export RIVET_INFO_PATH=$CONTURDIR/modified_analyses/anainfo
+export RIVET_DATA_PATH=$CONTURMODULEDIR/modified_analyses/refdata
+export RIVET_ANALYSIS_PATH=$CONTURMODULEDIR/modified_analyses/Analyses
+export RIVET_PLOT_PATH=$CONTURMODULEDIR/modified_analyses/plotinfo
+export RIVET_INFO_PATH=$CONTURMODULEDIR/modified_analyses/anainfo
 
-export PYTHONPATH=${PYTHONPATH}:$CONTURDIR/AnalysisTools/contour
-export PATH=${PATH}:$CONTURDIR/AnalysisTools/contour/bin/
+export PYTHONPATH=$PYTHONPATH:$CONTURMODULEDIR/AnalysisTools/contur
+export PATH=${PATH}:$CONTURMODULEDIR/AnalysisTools/contur/bin/
