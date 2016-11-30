@@ -96,7 +96,7 @@ if __name__ == '__main__':
                 #Use this switch to view individual analyses
                 #if '/ATLAS_2014_I1279489' not in h:
                 #    continue
-                #print 'testing: ' + h
+                print 'testing: ' + h
                 lumi = ctr.LumiFinder(h)[0]
                 if lumi > 0:
 
@@ -129,16 +129,16 @@ if __name__ == '__main__':
                         mu_hat=0
                         varmat=0
                         if ctr.isNorm(h)[0] == True:
-                            sigCount.append(sighisto.points[i].y*lumi*normFacSig*(sighisto.points[i].xMax-sighisto.points[i].xMin))
+                            sigCount.append(mchistos[fileliststatic][h].bins[i].sumW*lumi*normFacSig)
                             bgCount.append(refdata.points[i].y*lumi*normFacRef*(refdata.points[i].xMax-refdata.points[i].xMin))
                             bgError.append(refdata.points[i].yErrs[1]*lumi*normFacRef*(refdata.points[i].xMax-refdata.points[i].xMin))
                             #sigError.append(sighisto.points[i].yErrs[1]*lumi*normFacSig)
                             sigError.append(xsec.points[0].x)
                         else:
-                            sigCount.append(sighisto.points[i].y*lumi)
-                            bgCount.append(refdata.points[i].y*lumi)
-                            bgError.append(refdata.points[i].yErrs[1]*lumi)
-                            sigError.append(sighisto.points[i].yErrs[1]*lumi)
+                            sigCount.append(mchistos[fileliststatic][h].bins[i].sumW*lumi)
+                            bgCount.append(refdata.points[i].y*lumi*(refdata.points[i].xMax-refdata.points[i].xMin))
+                            bgError.append(refdata.points[i].yErrs[1]*lumi*(refdata.points[i].xMax-refdata.points[i].xMin))
+                            sigError.append(sighisto.points[i].yErrs[1]*lumi*(sighisto.points[i].xMax-sighisto.points[i].xMin))
                         ##cater for the case where the refdata bin is empty, occurs notably in ATLAS_2014_I1307243
                         if refdata.points[i].y > 0:
                             CLs.append(ctr.confLevel([sigCount[i]],[bgCount[i]],[bgError[i]],[sigError[i]]))
@@ -148,6 +148,8 @@ if __name__ == '__main__':
 
 ##All these extra count checks are to stop any plots with no count in most likely bin from being entered
 ##into liklihood calc, should be fixed upstream
+
+##See if any additional grouping is needed 'subpool'
                 if ctr.LumiFinder(h)[2]:
                     tempKey = ''
                     tempKey= h.split('/')[1] +'_'+ctr.LumiFinder(h)[2]
@@ -162,6 +164,7 @@ if __name__ == '__main__':
                 else:
                     if h not in mapPoints and bgCount[CLs.index(max(CLs))]>0.0:
                         mapPoints[h] = [float(name.strip('.yoda').split('_')[1]),float(name.strip('.yoda').split('_')[3]), float(max(CLs)) , [sigCount[CLs.index(max(CLs))]], [bgCount[CLs.index(max(CLs))]] , [bgError[CLs.index(max(CLs))]],[sigError[CLs.index(max(CLs))]],str(h)]
+##Scan through all points and fill each catagory, stored in masterDict, with the counts from each grouping if it is more sensitive than the previous fill
             for key in mapPoints:
                 tempName = ctr.LumiFinder(key)[1]
                 mapPoints[key][2] = ctr.confLevel(mapPoints[key][3],mapPoints[key][4],mapPoints[key][5], mapPoints[key][6])
@@ -186,6 +189,7 @@ if __name__ == '__main__':
                 #
                 # masterDict[]
     import pickle
+    ###print everything out
     for key in masterDict:
         if masterDict[key]:
             masterDict[key].sort(key=lambda x: x[0])
