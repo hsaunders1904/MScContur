@@ -1,0 +1,3 @@
+"""
+Produce a single CL value for an input set of s,b,n, etc...
+"""
