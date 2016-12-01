@@ -55,6 +55,23 @@ def covariance_matrix(s_count,b_count,db_count,mu_test,n_count,k_count):
     else:
         return np.linalg.inv(Var_matrix_inv)
 
+def chisq(s_count,b_count,db_count,mu_test,n_count,k_count):
+    i = 0
+    bPlusS = b_count[i] + s_count[i]
+    justB  = b_count[i]
+
+    chisq = (bPlusS - justB)**2 /  db_count[i]**2  # + MC err ** 2
+
+    return chisq
+
 if __name__ == "__main__":
-    mat = covariance_matrix([5.],[40.],[10],1.,[40.],[5.])
+
+    args = [[5.],[40.],[5.],1.,[40.],[5.]]
+
+    mat = covariance_matrix(*args)
     print mat
+
+    print chisq(*args)
+
+
+
