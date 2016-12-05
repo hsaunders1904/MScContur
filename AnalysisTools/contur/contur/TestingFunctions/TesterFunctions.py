@@ -131,7 +131,7 @@ def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1):
         elif q_mu > (mu_test**2)/(varMat):
             p_val=sp.halfnorm.sf( (q_mu + (mu_test**2/varMat))/(2*mu_test/(np.sqrt(varMat))) )
 
-    ratioTest = True
+    ratioTest = False
     ##use the qMu_Asimov function to construct the ratio instead, should be equivalent input to Var_mu_comb
     if ratioTest:
         p_val=sp.halfnorm.sf(np.sqrt(q_mu_a))
