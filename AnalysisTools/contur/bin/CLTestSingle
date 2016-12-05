@@ -279,7 +279,7 @@ if __name__ == '__main__':
 
                 for i in range(0, refdata.numPoints):
                     if ctr.isNorm(h)[0] == True:
-                        sighisto.points[i].y=sighisto.points[i].y*normFacSig+refdata.points[i].y
+                        sighisto.points[i].y=(sighisto.points[i].y*normFacSig+refdata.points[i].y*normFacRef)*1/normFacRef
                         sighisto.points[i].yErrs =((refdata.points[i].yErrs[1])**2 + (sighisto.points[i].yErrs[1])**2 )**0.5
                     else:
                         sighisto.points[i].y=sighisto.points[i].y+refdata.points[i].y
