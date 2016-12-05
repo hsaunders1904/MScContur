@@ -146,6 +146,9 @@ if __name__ == '__main__':
         masterDict = {}
         heatMap = {}
 
+        plotdirs = [os.path.abspath(os.path.dirname(f)) for f in infile]
+        plotparser = rivet.mkStdPlotParser(plotdirs, )
+
         for anatype in ctr.anapool:
             masterDict[anatype] = []
         # CN.anapool()
@@ -283,6 +286,7 @@ if __name__ == '__main__':
                         sighisto.points[i].yErrs =((refdata.points[i].yErrs[1])**2 + (sighisto.points[i].yErrs[1])**2 )**0.5
 
                     sighisto.title=str(max(CLs))
+                sighisto.setAnnotation('LineColor', 'red')
                 anaobjects.append(sighisto)
                 plot = Plot()
                 plot['DrawOnly'] = ' '.join(drawonly).strip()
@@ -291,6 +295,12 @@ if __name__ == '__main__':
                 plot['RatioPlotYMin'] = '1'
                 plot['LogY'] = '1'
                 plot['RatioPlot'] = '1'
+                for key, val in plotparser.getHeaders(h).iteritems():
+                    plot[key] = val
+                #if plotoptions.has_key("PLOT"):
+            #        for key_val in plotoptions["PLOT"]:
+            #            key, val = [s.strip() for s in key_val.split("=")]
+            #            plot[key] = val
                 #ratioreference = mcpath + h
                 ratioreference = '/REF'+h
                 plot['RatioPlotReference'] = ratioreference
