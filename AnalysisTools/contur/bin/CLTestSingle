@@ -145,6 +145,7 @@ if __name__ == '__main__':
         scatterpoints = {}
         masterDict = {}
         heatMap = {}
+
         for anatype in ctr.anapool:
             masterDict[anatype] = []
         # CN.anapool()
@@ -257,8 +258,8 @@ if __name__ == '__main__':
                     refdata.setAnnotation('PolyMarker', '*')
                     refdata.setAnnotation('ConnectBins', '0')
                     refdata.setAnnotation('Title', 'Data')
-                    if ctr.isNorm(h)[0] == True:
-                        refdata.setAnnotation('Scale', str(normFacRef))
+                    #if ctr.isNorm(h)[0] == True:
+                    #    refdata.setAnnotation('Scale', str(normFacRef))
                     #if opts.RATIO:
                     #    ratioreference = '/REF'+h
                     anaobjects.append(refdata)
@@ -286,7 +287,7 @@ if __name__ == '__main__':
                 plot = Plot()
                 plot['DrawOnly'] = ' '.join(drawonly).strip()
                 plot['Legend'] = '1'
-                plot['MainPlot'] = '0'
+                plot['MainPlot'] = '1'
                 plot['RatioPlotYMin'] = '1'
                 plot['LogY'] = '1'
                 plot['RatioPlot'] = '1'
