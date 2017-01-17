@@ -133,12 +133,12 @@ if __name__ == '__main__':
                             bgCount.append(refdata.points[i].y*lumi*normFacRef*(refdata.points[i].xMax-refdata.points[i].xMin))
                             bgError.append(refdata.points[i].yErrs[1]*lumi*normFacRef*(refdata.points[i].xMax-refdata.points[i].xMin))
                             #sigError.append(sighisto.points[i].yErrs[1]*lumi*normFacSig)
-                            sigError.append(xsec.points[0].x)
+                            sigError.append(mchistos[fileliststatic][h].bins[i].sumW*float(mchistos[fileliststatic][h].numEntries()))
                         else:
                             sigCount.append(mchistos[fileliststatic][h].bins[i].sumW*lumi)
                             bgCount.append(refdata.points[i].y*lumi*(refdata.points[i].xMax-refdata.points[i].xMin))
                             bgError.append(refdata.points[i].yErrs[1]*lumi*(refdata.points[i].xMax-refdata.points[i].xMin))
-                            sigError.append(sighisto.points[i].yErrs[1]*lumi*(sighisto.points[i].xMax-sighisto.points[i].xMin))
+                            sigError.append(mchistos[fileliststatic][h].bins[i].sumW*float(mchistos[fileliststatic][h].numEntries()))
                         ##cater for the case where the refdata bin is empty, occurs notably in ATLAS_2014_I1307243
                         if refdata.points[i].y > 0:
                             CLs.append(ctr.confLevel([sigCount[i]],[bgCount[i]],[bgError[i]],[sigError[i]]))
