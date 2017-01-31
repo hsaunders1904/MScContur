@@ -2,14 +2,40 @@
 
 import os, sys
 import numpy as np
-import scipy.stats as sp
+import scipy.stats as spstat
 import math
 from math import *
-
+import scipy.optimize as spopt
 
 global mu_test
 mu_test=1
 #from contur.TestingFunctions import covariance_matrix as cv
+
+def Min_function(x, n_obs, b_obs, s_obs, db, ds):
+    # defines the functional form of vector function Min_function[0] corresponds to dlnL/db
+    # Min_function[1] corresponds to dlnL/ds
+    # takes argument x=[b_hat_hat, s_hat_hat]
+    d_lnL_db = 0.0
+    d_lnL_ds = 0.0
+    if fabs((x[0] + x[1])) > 0.0:
+        d_lnL_db += n_obs / (x[0] + x[1]) - 1
+        d_lnL_ds += n_obs / (x[0] + x[1]) - 1
+    if fabs(db) >= 1e-5:
+        d_lnL_db += (b_obs - x[0]) / db**2
+    if x[1] > 0.0:
+        d_lnL_ds += ds / x[1]
+    if s_obs > 0.0:
+        d_lnL_ds -= ds/s_obs
+    return [d_lnL_db,d_lnL_ds]
+
+
+def Min_find(n_obs, b_obs, s_obs, db, ds):
+    # s_hat_hat is called x_1, b_hat_hat is x_0
+    # func_0 being the first entry in vector, corresponds to dlnL/db
+    # func_1 dlnL/ds
+    return spopt.root(Min_function, [b_obs, s_obs], args=(n_obs, b_obs, s_obs, db, ds))
+
+
 
 def ML_mu_hat(n_obs,b_in,s_in):
 #Maximum likelihood estimate for the strength parameter mu
@@ -26,7 +52,7 @@ def gauss_exp(var, mean, db):
       return (var-mean)**2./(2.*db**2)
 
 def ML_b_hat(n,mu,b_til, sig_in, db_in):
-#Maximum likelihood estimate for the background count b
+#Maximum likelihood estimate for the background count b, assuming s is not a nuisance parameter
 #form is the root of the polynomial in b derived from differentiating the log likelihood wrt b
 # A(b^2) + B(b) + C = 0
     B=-(b_til - mu*sig_in - (db_in**2))
@@ -37,34 +63,45 @@ def n_exp(mu, b_hat, s_in):
 #Expected count n, the mean of the poisson used to define event count
   return b_hat + s_in*mu
 
-def Var_mu_comb(b_count,s_count,db_count, ds_count):
+def Covar_Matrix(b_count,s_count,db_count, ds_count):
 #Construct the inverse variance matrix from expected vals of the 2nd derivatives of the Log Likelihood
     Var_matrix_inv=np.zeros([(len(b_count)+len(s_count)+1),(len(b_count)+len(s_count)+1)])
 #add exception handling if s=/=b
   #loop over all counts
     for i in range(0, len(b_count)+len(s_count)):
+        #Call function to simultaneously minimise s and b at the specified ML mu (always 0)
+        #if min not found return the input s and b
+        if i < (len(b_count)):
+            res = Min_find(b_count[i], b_count[i], s_count[i], db_count[i], ds_count[i]).x
+        else:
+            res = Min_find(b_count[i-len(b_count)], b_count[i-len(b_count)], s_count[i-len(b_count)], db_count[i-len(b_count)], ds_count[i-len(b_count)]).x
+        b_hat_hat = res[0]
+        s_hat_hat = res[1]
+
         if i < len(b_count):
             ##Construct all the inverse covar matrix from second derivatives of Likelihood function
             ##mu mu
-            Var_matrix_inv[0,0] += s_count[i]**2/(mu_test*s_count[i]+b_count[i])
+
+            Var_matrix_inv[0,0] += s_hat_hat**2/(mu_test*s_hat_hat+b_hat_hat)
             ##mu b
-            Var_matrix_inv[i+1,0]=Var_matrix_inv[0,i+1] = s_count[i]/(mu_test*s_count[i]+b_count[i])
+            Var_matrix_inv[i+1,0]=Var_matrix_inv[0,i+1] = s_hat_hat/(mu_test*s_hat_hat+b_hat_hat)
             ##b b
             if db_count[i]**2 > 0.0:
-                Var_matrix_inv[i+1,i+1]=1/(mu_test*s_count[i]+b_count[i]) + 1/db_count[i]**2
+                Var_matrix_inv[i+1,i+1]=1/(mu_test*s_hat_hat+b_hat_hat) + 1/db_count[i]**2
             else:
-                Var_matrix_inv[i+1,i+1]=1/(mu_test*s_count[i]+b_count[i])
+                Var_matrix_inv[i+1,i+1]=1/(mu_test*s_hat_hat+b_hat_hat)
         if i>=(len(b_count)):
             ##mu s
-            Var_matrix_inv[i+1,0]=Var_matrix_inv[0,i+1] = (mu_test*s_count[i-len(b_count)])/(mu_test*s_count[i-len(b_count)]+b_count[i-len(b_count)])
+            Var_matrix_inv[i+1,0]=Var_matrix_inv[0,i+1] = (mu_test*s_hat_hat)/(mu_test*s_hat_hat+b_hat_hat)
             ##s s
-            if s_count[i-len(b_count)] >0.0:
-                Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_count[i-len(b_count)]+b_count[i-len(b_count)]) + 1/s_count[i-len(b_count)]
+            if s_hat_hat >0.0:
+                Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_hat_hat+b_hat_hat) + ds_count[i-len(b_count)]/(s_hat_hat**2)
+                
             else:
-                Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_count[i-len(b_count)]+b_count[i-len(b_count)])
+                Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_hat_hat+b_hat_hat)
         if i < len(s_count):
             ## b s
-            Var_matrix_inv[len(b_count)+1+i,i+1] = Var_matrix_inv[i+1,len(b_count)+1+i] = mu_test/(mu_test*s_count[i]+b_count[i])
+            Var_matrix_inv[len(b_count)+1+i,i+1] = Var_matrix_inv[i+1,len(b_count)+1+i] = mu_test/(mu_test*s_hat_hat+b_hat_hat)
     if np.linalg.det(Var_matrix_inv) == 0:
         Var_matrix = np.zeros([(len(b_count)+1),(len(b_count)+1)])
   #Invert and return it
@@ -116,7 +153,7 @@ def qMu_Asimov(mu_test,bCount,sCount,db):
 
 
 def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1):
-    varMat= Var_mu_comb(bgCount,sigCount,bgErr, sgErr)[0,0]
+    varMat= Covar_Matrix(bgCount,sigCount,bgErr, sgErr)[0,0]
 #    varMat= cv.chisq(bgCount,sigCount,bgErr, sgErr)
     q_mu_a = qMu_Asimov(mu_test,bgCount,sigCount,bgErr)
     mu_hat = 0
@@ -127,13 +164,14 @@ def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1):
         p_val=0
         q_mu = (mu_test-mu_hat)**2/(varMat)
         if 0 < q_mu <= (mu_test**2)/(varMat):
-            p_val=sp.halfnorm.sf(np.sqrt(q_mu))
+            ##Constant factor of 2 arises due to CL_s procedure and represents 1/spstat.norm(0)
+            p_val=2.0*spstat.norm.sf(np.sqrt(q_mu))
         elif q_mu > (mu_test**2)/(varMat):
-            p_val=sp.halfnorm.sf( (q_mu + (mu_test**2/varMat))/(2*mu_test/(np.sqrt(varMat))) )
+            p_val=2.0*spstat.norm.sf( (q_mu + (mu_test**2/varMat))/(2*mu_test/(np.sqrt(varMat))) )
 
     ratioTest = False
     ##use the qMu_Asimov function to construct the ratio instead, should be equivalent input to Var_mu_comb
     if ratioTest:
-        p_val=sp.halfnorm.sf(np.sqrt(q_mu_a))
+        p_val=2.0*spstat.norm.sf(np.sqrt(q_mu_a))
 
     return float('%10.6f' % float(1-p_val))
