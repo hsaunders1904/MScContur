@@ -6,6 +6,22 @@ source /unix/cedar/software/sl6/setupEnv.sh
 #checkout code and source setup file in top level of svn
 source setupContour.sh
 
+
+-----------------------------------------
+
+# Also need to buid the modified analyses:
+
+cd
+$CONTURMODULEDIR/modified_analyses/Analyses
+rivet-buildplugin RivetMyAnalyses.so *.cc -std=c++11
+
+# and build the database of static analysis information
+
+cd $CONTURMODULEDIR/AnalysisTools/contur/contur/TestingFunctions
+make
+
+# if the make step does not work you may need to install sqlite3
+
 -----------------------------------------
 
 #Copy the grid setup to a test folder
