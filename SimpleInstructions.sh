@@ -1,3 +1,6 @@
+THIS IS NOT AN EXECUTABLE SCRIPT IT IS MEANT TO BE USED AS A README FILE.
+-------------------------------------------------------------------------
+
 #Log onto plus1 UCL > then to a PC
 source /unix/cedar/software/sl6/setupEnv.sh
 #checkout code and source setup file in top level of svn
@@ -15,7 +18,7 @@ cp -r $CONTURMODULEDIR/AnalysisTools/GridSetup/* .
 
 
 
-#HerwigCommandHad - runs inclusive generation of BSM particles
+# First Way: Snippets in HerwigCommandHad - runs inclusive generation of BSM particles
 
 #For test case we only have 1 new mediator so force generator to produce this and inclusively all LO 2->2 scatters involving the mediator
 insert HPConstructor:Outgoing 0 /Herwig/FRModel/Particles/Y1
@@ -27,7 +30,7 @@ insert ResConstructor:Intermediates 0 /Herwig/FRModel/Particles/Y1
 
 
 
-#HerwigCommandWeak - forces associated production modes of weak bosons
+#Second Way: Snippets in HerwigCommandWeak - forces associated production modes of weak bosons, and leptonic decays of those bosons
 
 #Forces decay modes of SM bosons via
 do /Herwig/Particles/Z0:SelectDecayModes Z0->e-,e+;
@@ -37,12 +40,16 @@ set /Herwig/Particles/Z0/Z0->mu-,mu+;:OnOff On
 insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/c
 insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/cbar
 
+-----------------------------------------
 
-#At End of these files theres a line like:
+#At end of both these files theres a line like:
 set LHCGenerator:EventHandler:LuminosityFunction:Energy 7000.0
 read 7_WEAK.ana
 #Which sets the CoM energy and loads the relevant rivet analyses in the .ana files
 #.ana files are in the GridPack folder copied over
+# To add a new analysis, you need to add it here, but also update the tables in
+ $CONTURMODULEDIR/AnalysisTools/contur/contur/TestingFunctions
+
 
 -----------------------------------------
 
@@ -56,7 +63,7 @@ ufo2herwig VDM_simplified_model_UFO && make
 
 -----------------------------------------
 
-#HerwigCommand snippets are for batch runs so add the three lines to the begining of your TestRun.in
+#HerwigCommand snippets are for batch runs, so you need to add the three lines to the begining of your TestRun.in
 read FRModel.model
 set /Herwig/FRModel/Particles/Y1:NominalMass 1000.*GeV
 set /Herwig/FRModel/Particles/Xm:NominalMass 600.*GeV
@@ -81,6 +88,10 @@ More details output to ANALYSIS folder
 
 #Also makes a plots directory containing all the .dat files for the analyses scanned
 
+To build the pdf files of these plots, use
+
+cd plots
+make-plots *
 
 ----------------------------------------
 
