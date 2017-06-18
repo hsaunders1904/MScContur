@@ -286,7 +286,7 @@ if __name__ == '__main__':
                         sighisto.points[i].y=sighisto.points[i].y+refdata.points[i].y
                         sighisto.points[i].yErrs =((refdata.points[i].yErrs[1])**2 + (sighisto.points[i].yErrs[1])**2 )**0.5
 
-                    sighisto.title='[%s] %s' % ( CLs.index(max(CLs)), max(CLs) )
+                    sighisto.title='[%s] %s' % ( CLs.index(max(CLs))+1, max(CLs) )
                 sighisto.setAnnotation('LineColor', 'red')
                 anaobjects.append(sighisto)
                 plot = Plot()
