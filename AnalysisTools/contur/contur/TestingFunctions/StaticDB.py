@@ -1,5 +1,6 @@
 import sqlite3 as db
 import re
+from os.path import dirname, join
 
 INIT = False
 
@@ -9,6 +10,7 @@ lumis = {}
 pools = {}
 whitelists = {}
 blacklists = {}
+pool_names = []
 
 class listdict(dict):
     def __missing__(self, key):
@@ -23,13 +25,18 @@ name_pat = re.compile(r'([A-Z0-9]+_\d{4}_[IS]\d{6,8}[^/]*)/(d\d+-x\d+-y\d+)')
 
 def init_dbs():
     
-    conn = db.connect('analyses.db')
+    dbfile = join(dirname(__path__), 'analyses.db')
+    conn = db.connect(dbfile)
     c = conn.cursor()
     
     for row in c.execute('SELECT id,lumi,pool FROM analysis;'):
         ana,lumi,pool = row
         lumis[ana] = lumi
-        pools[ana] = pool if pool else ''
+        if pool:
+            pools[ana] = pool
+            pool_names.append(pool)
+        else:
+            pools[ana] = ''
     
     for row in c.execute('SELECT id,group_concat(pattern) FROM whitelist GROUP BY id;'):
         ana, patterns = row
@@ -134,5 +141,6 @@ def isNorm(h):
 
     return isNorm, normFac
 
-
-
+# workaround for old interface
+global anapool
+anapool = pool_names
