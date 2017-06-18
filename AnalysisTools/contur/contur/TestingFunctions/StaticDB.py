@@ -10,7 +10,10 @@ lumis = {}
 pools = {}
 whitelists = {}
 blacklists = {}
-pool_names = []
+
+# workaround for old global variable
+global anapool
+anapool = set()
 
 class listdict(dict):
     def __missing__(self, key):
@@ -25,7 +28,7 @@ name_pat = re.compile(r'([A-Z0-9]+_\d{4}_[IS]\d{6,8}[^/]*)/(d\d+-x\d+-y\d+)')
 
 def init_dbs():
     
-    dbfile = join(dirname(__path__), 'analyses.db')
+    dbfile = join(dirname(__file__), 'analyses.db')
     conn = db.connect(dbfile)
     c = conn.cursor()
     
@@ -34,7 +37,7 @@ def init_dbs():
         lumis[ana] = lumi
         if pool:
             pools[ana] = pool
-            pool_names.append(pool)
+            anapool.add(pool)
         else:
             pools[ana] = ''
     
@@ -140,7 +143,3 @@ def isNorm(h):
                 break
 
     return isNorm, normFac
-
-# workaround for old interface
-global anapool
-anapool = pool_names
