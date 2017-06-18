@@ -1,17 +1,11 @@
-do /Herwig/Particles/W+:SelectDecayModes W+->nu_e,e+;
-set /Herwig/Particles/W+/W+->nu_mu,mu+;:OnOff On 
+do /Herwig/Particles/W+:SelectDecayModes W+->nu_e,e+; W+->nu_mu,mu+;
 do /Herwig/Particles/W+:PrintDecayModes
 
-do /Herwig/Particles/W-:SelectDecayModes W-->nu_ebar,e-;
-set /Herwig/Particles/W-/W-->nu_mubar,mu-;:OnOff On
+do /Herwig/Particles/W-:SelectDecayModes W-->nu_ebar,e-; W-->nu_mubar,mu-;
 do /Herwig/Particles/W-:PrintDecayModes
 
-do /Herwig/Particles/Z0:SelectDecayModes Z0->e-,e+;
-set /Herwig/Particles/Z0/Z0->mu-,mu+;:OnOff On
+do /Herwig/Particles/Z0:SelectDecayModes Z0->e-,e+; Z0->mu-,mu+;
 do /Herwig/Particles/Z0:PrintDecayModes
-
-#read FRModel.model 
-#cd /Herwig/NewPhysics
 
 ####################################
 #
@@ -33,8 +27,6 @@ insert HPConstructor:Incoming 0 /Herwig/Particles/bbar
 insert HPConstructor:Incoming 0 /Herwig/Particles/c
 insert HPConstructor:Incoming 0 /Herwig/Particles/cbar
 
-
-#insert HPConstructor:Outgoing 0 /Herwig/Particles/Z0
 insert HPConstructor:Outgoing 0 /Herwig/FRModel/Particles/Y1
 
 insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/u
@@ -48,50 +40,32 @@ insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/b
 insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/bbar
 insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/c
 insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/cbar
-#insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/gamma
-
-
 
 
 set HPConstructor:Processes SingleParticleInclusive
-##set HPConstructor:Processes Exclusive
-#set HPConstructor:ExcludedExternal 0 /Herwig/Particles/u
 
 
 #############################################################
 ## Additionally, you can use new particles as intermediates
 ## with the ResConstructor:
+## Only doing this for outgoing top. The other quarks will lead
+## to purely hadronic signals, and are done in the Hadron run.
 #############################################################
-#insert ResConstructor:Incoming 0 /Herwig/Particles/u
-#insert ResConstructor:Incoming 0 /Herwig/Particles/ubar
-#insert ResConstructor:Incoming 0 /Herwig/Particles/d
-#insert ResConstructor:Incoming 0 /Herwig/Particles/dbar
+insert ResConstructor:Incoming 0 /Herwig/Particles/u
+insert ResConstructor:Incoming 0 /Herwig/Particles/ubar
+insert ResConstructor:Incoming 0 /Herwig/Particles/d
+insert ResConstructor:Incoming 0 /Herwig/Particles/dbar
+insert ResConstructor:Incoming 0 /Herwig/Particles/s
+insert ResConstructor:Incoming 0 /Herwig/Particles/sbar
+insert ResConstructor:Incoming 0 /Herwig/Particles/c
+insert ResConstructor:Incoming 0 /Herwig/Particles/cbar
+insert ResConstructor:Incoming 0 /Herwig/Particles/b
+insert ResConstructor:Incoming 0 /Herwig/Particles/bbar
 
-#insert ResConstructor:Intermediates 0 /Herwig/FRModel/Particles/Y1
+insert ResConstructor:Intermediates 0 /Herwig/FRModel/Particles/Y1
 
-#insert ResConstructor:Outgoing 0 /Herwig/Particles/u
-#insert ResConstructor:Outgoing 0 /Herwig/Particles/ubar
-#insert ResConstructor:Outgoing 0 /Herwig/Particles/d
-#insert ResConstructor:Outgoing 0 /Herwig/Particles/dbar
-#insert ResConstructor:Outgoing 0 /Herwig/FRModel/Particles/Xm
-
-###########################################################
-# Specialized 2->3 higgs constructors are also available,
-# where incoming lines don't need to be set.
-###########################################################
-## Higgs + t tbar
-# set /Herwig/NewPhysics/QQHiggsConstructor:QuarkType Top
-# insert /Herwig/NewPhysics/QQHiggsConstructor:HiggsBoson  0 [HIGGS_NAME]
-#
-## Higgs VBF
-# insert /Herwig/NewPhysics/HiggsVBFConstructor:HiggsBoson  0 [HIGGS_NAME]
-#
-## Higgs + W/Z, with full 2->3 ME
-# set /Herwig/NewPhysics/HVConstructor:CollisionType Hadron
-# insert /Herwig/NewPhysics/HVConstructor:VectorBoson 0 /Herwig/Particles/Z0
-# insert /Herwig/NewPhysics/HVConstructor:HiggsBoson  0 [HIGGS_NAME]
-
-
+insert ResConstructor:Outgoing 0 /Herwig/Particles/t
+insert ResConstructor:Outgoing 0 /Herwig/Particles/tbar
 
 ####################################
 ####################################
