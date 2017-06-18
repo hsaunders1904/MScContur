@@ -80,6 +80,7 @@ def getHistos(filelist):
     # for infile in filelist:
     mchistos.setdefault(filelist, {})
     analysisobjects = yoda.read(filelist)
+    print len(analysisobjects), "analysisobjects in", filelist
     for path, ao in analysisobjects.iteritems():
         if path.startswith('/_EVTCOUNT'):
             Nev = ao
@@ -90,10 +91,10 @@ def getHistos(filelist):
         if os.path.basename(path).startswith("_"):
             continue
         if path.startswith('/REF/'):
-            if not refhistos.has_key(path):
+            if path not in refhistos:
                 refhistos[path] = ao
         else:
-            if not mchistos[filelist].has_key(path):
+            if path not in mchistos[filelist]:
                 mchistos[filelist][path] = ao
     return refhistos, mchistos, xsec, Nev
 
@@ -177,8 +178,11 @@ if __name__ == '__main__':
         mapPoints = {}
 
         for h in hpaths:
-            if refhistos.has_key('/REF' + h):
-                refdata = refhistos['/REF' + h]
+            try:
+                refdata = refhistos['/REF%s' % h]
+            except KeyError:
+                sys.stderr.write('Ignoring %s, no refdata found.\n'%h)
+                continue
                 # Manually store additional plot in a function called LumiFinder, if a Lumi isn't stored vs an
                 # analysis name then use that info to veto testing
             if ctr.LumiFinder(h)[0] == -1:
