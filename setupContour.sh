@@ -8,4 +8,4 @@ export RIVET_PLOT_PATH=$RIVET_PLOT_PATH:$CONTURMODULEDIR/modified_analyses/ploti
 export RIVET_INFO_PATH=$RIVET_INFO_PATH:$CONTURMODULEDIR/modified_analyses/anainfo
 
 export PYTHONPATH=$PYTHONPATH:$CONTURMODULEDIR/AnalysisTools/contur
-export PATH=${PATH}:$CONTURMODULEDIR/AnalysisTools/contur/bin/
+export PATH=${PATH}:$CONTURMODULEDIR/AnalysisTools/contur/bin
