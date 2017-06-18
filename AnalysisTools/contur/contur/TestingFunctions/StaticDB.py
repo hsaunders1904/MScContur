@@ -24,7 +24,7 @@ subpools = listdict()
 norms = listdict()
     
 name_pat = re.compile(r'([A-Z0-9]+_\d{4}_[IS]\d{6,8}[^/]*)/(d\d+-x\d+-y\d+)')
-
+subpool_pat = re.compile(r'([A-Z0-9]+_\d{4}_[IS]\d{6,8}[^/]*)_(R\d+)')
 
 def init_dbs():
     
@@ -70,22 +70,26 @@ class InvalidPath(Exception):
 
 def splitPath(path):
     m = name_pat.search(path)
-
     if not m:
-        raise InvalidPath('Parse error in "%s"' % path)
+        m1 = subpool_pat.match(path)
+        if not m1:
+            raise InvalidPath('Parse error in "%s"' % path)
+        else:
+            analysis = m1.group(1)
+            tag = ''
+            subpool = m1.group(2)
+    else:
+        analysis = m.group(1)
+        tag = m.group(2)
+        subpool = ''
+    return analysis, tag, subpool
 
-    analysis = m.group(1);
-    tag = m.group(2);
-
-    return analysis, tag
-
-    
 def LumiFinder(h):
 
     if not INIT:
         init_dbs()
 
-    ana, tag = splitPath(h)
+    ana, tag, sub = splitPath(h)
 
     try:
         lumi, pool = lumis[ana], pools[ana]
@@ -105,7 +109,7 @@ def LumiFinder(h):
             if pattern in tag:
                 return INVALID
 
-    subpool = ''
+    subpool = sub
 
     if ana in subpools:
         for p, subid in subpools[ana]:
@@ -125,7 +129,7 @@ def isNorm(h):
     if not INIT:
         init_dbs()
 
-    ana, tag = splitPath(h)
+    ana, tag, _ = splitPath(h)
 
     isNorm=False
     normFac=1.0

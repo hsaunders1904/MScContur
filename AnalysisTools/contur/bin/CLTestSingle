@@ -115,9 +115,8 @@ def getRivetRefData(refhistos, anas=None):
             analysisobjects = yoda.read(infile)
             for path, ao in analysisobjects.iteritems():
                 if path.startswith('/REF/'):
-                    if not refhistos.has_key(path):
+                    if path not in refhistos:
                         refhistos[path] = ao
-
 
 if __name__ == '__main__':
     # Command line parsing
@@ -287,7 +286,7 @@ if __name__ == '__main__':
                         sighisto.points[i].y=sighisto.points[i].y+refdata.points[i].y
                         sighisto.points[i].yErrs =((refdata.points[i].yErrs[1])**2 + (sighisto.points[i].yErrs[1])**2 )**0.5
 
-                    sighisto.title=str(max(CLs))
+                    sighisto.title='[%s] %s' % ( CLs.index(max(CLs)), max(CLs) )
                 sighisto.setAnnotation('LineColor', 'red')
                 anaobjects.append(sighisto)
                 plot = Plot()
@@ -317,46 +316,58 @@ if __name__ == '__main__':
     # into liklihood calc, should be fixed upstream
 
     # See if any additional grouping is needed 'subpool'
+            max_cl = CLs.index(max(CLs))
             if ctr.LumiFinder(h)[2]:
-                tempKey = ''
                 tempKey = h.split('/')[1] + '_' + ctr.LumiFinder(h)[2]
-                if tempKey not in mapPoints and bgCount[CLs.index(max(CLs))] > 0.0:
-                    mapPoints[tempKey] = [float(max(CLs)), [sigCount[
-                        CLs.index(max(CLs))]], [bgCount[CLs.index(max(CLs))]], [bgError[CLs.index(max(CLs))]], [sigError[CLs.index(max(CLs))]], str(h)]
-                elif bgCount[CLs.index(max(CLs))] > 0.0:
-                    mapPoints[tempKey][1].append(sigCount[CLs.index(max(CLs))])
-                    mapPoints[tempKey][2].append(bgCount[CLs.index(max(CLs))])
-                    mapPoints[tempKey][3].append(bgError[CLs.index(max(CLs))])
-                    mapPoints[tempKey][4].append(sigError[CLs.index(max(CLs))])
+                if tempKey not in mapPoints and bgCount[max_cl] > 0.0:
+                    mapPoints[tempKey] = [
+                        float(max(CLs)), 
+                        [ sigCount[max_cl] ],
+                        [ bgCount[max_cl]  ], 
+                        [ bgError[max_cl]  ], 
+                        [ sigError[max_cl] ],
+                        str(h)
+                    ]
+                elif bgCount[max_cl] > 0.0:
+                    mapPoints[tempKey][1].append(sigCount[max_cl])
+                    mapPoints[tempKey][2].append(bgCount[max_cl])
+                    mapPoints[tempKey][3].append(bgError[max_cl])
+                    mapPoints[tempKey][4].append(sigError[max_cl])
                     mapPoints[tempKey][5] += "," + (str(h))
             else:
-                if h not in mapPoints and bgCount[CLs.index(max(CLs))] > 0.0:
-                    mapPoints[h] = [float(max(CLs)), [sigCount[
-                        CLs.index(max(CLs))]], [bgCount[CLs.index(max(CLs))]], [bgError[CLs.index(max(CLs))]], [sigError[CLs.index(max(CLs))]], str(h)]
+                if h not in mapPoints and bgCount[max_cl] > 0.0:
+                    mapPoints[h] = [
+                        float(max(CLs)), 
+                        [ sigCount[max_cl] ], 
+                        [ bgCount[max_cl]  ], 
+                        [ bgError[max_cl]  ], 
+                        [ sigError[max_cl] ], 
+                        str(h)
+                    ]
     # Scan through all points and fill each catagory, stored in masterDict,
     # with the counts from each grouping if it is more sensitive than the
     # previous fill
-        for key in mapPoints:
-            tempName = ctr.LumiFinder(key)[1]
-            mapPoints[key][0] = ctr.confLevel(mapPoints[key][1], mapPoints[key][2], mapPoints[key][3],mapPoints[key][4])
+        for key, pts in mapPoints.iteritems():
+            poolname = ctr.LumiFinder(key)[1]
+            pts[0] = ctr.confLevel(pts[1], pts[2], pts[3],pts[4])
 
-            if not masterDict[tempName]:
-                masterDict[tempName].append(mapPoints[key][:])
+            if not masterDict[poolname]:
+                masterDict[poolname].append(pts[:])
             else:
                 #_overWriteFlag = False
                 #_pointExistsFlag = False
-                for listelement in masterDict[tempName]:
-                    # if mapPoints[key][0] == listelement[0] and mapPoints[key][1] == listelement[1]:
+                for listelement in masterDict[poolname]:
+                    # if pts[0] == listelement[0] and pts[1] == listelement[1]:
                     #    _pointExistsFlag = True
-                    if mapPoints[key][0] > listelement[0]:
-                        masterDict[tempName][masterDict[tempName].index(listelement)] = mapPoints[key][:]
-                            # listelement = mapPoints[key][:]
+                    if pts[0] > listelement[0]:
+                        masterDict[poolname][masterDict[poolname].index(listelement)] = pts[:]
+                            # listelement = pts[:]
                 #        _overWriteFlag = True
                 # if _overWriteFlag == False:
-                #    masterDict[tempName].append(mapPoints[key][:])
+                #    masterDict[poolname].append(pts[:])
 
-                # else if mapPoints[key][]
-                # else if mapPoints[key][2] > masterDict[tempName]
+                # else if pts[]
+                # else if pts[2] > masterDict[poolname]
                 #
                 # masterDict[]
     import pickle
