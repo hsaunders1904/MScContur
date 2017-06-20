@@ -224,15 +224,15 @@ if __name__ == '__main__':
                     mu_test = 1
                     mu_hat = 0
                     varmat = 0
+                    # print h
                     if ctr.isNorm(h)[0] == True:
                         sigCount.append(mchistos[infile][h].bins[i].sumW * lumi * normFacSig)
                         bgCount.append(refdata.points[i].y * lumi * normFacRef * (refdata.points[i].xMax - refdata.points[i].xMin))
                         bgError.append(refdata.points[i].yErrs[1] * lumi * normFacRef * (refdata.points[i].xMax - refdata.points[i].xMin))
-                        # sigError.append(sighisto.points[i].yErrs[1]*lumi*normFacSig)
-                        if mchistos[fileliststatic][h].sumW() ==0:
+                        if mchistos[infile][h].sumW() ==0:
                             sigError.append(0.0)
                         else:
-                            sigError.append(float(mchistos[fileliststatic][h].numEntries())/mchistos[fileliststatic][h].sumW())
+                            sigError.append(float(mchistos[infile][h].numEntries())/mchistos[infile][h].sumW())
                     else:
                         sigCount.append(mchistos[infile][h].bins[i].sumW * lumi)
                         bgCount.append(refdata.points[i].y * lumi * (refdata.points[i].xMax - refdata.points[i].xMin))
