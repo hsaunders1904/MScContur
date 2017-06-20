@@ -1,6 +1,7 @@
-#!/bin/bash
+mydir="$( dirname "${BASH_SOURCE[0]}" )"
 
-export CONTURMODULEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# some cd commands issue terminal instructions, so pipe them away
+export CONTURMODULEDIR="$( cd "$mydir" 2>&1 > /dev/null && echo "$PWD" )"
 
 export RIVET_DATA_PATH=$RIVET_DATA_PATH:$CONTURMODULEDIR/modified_analyses/refdata
 export RIVET_ANALYSIS_PATH=$RIVET_ANALYSIS_PATH:$CONTURMODULEDIR/modified_analyses/Analyses
