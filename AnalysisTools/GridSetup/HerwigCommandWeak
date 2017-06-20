@@ -1,3 +1,8 @@
+####################################
+# Run finals states involved W, Z, gamma (including top)
+####################################
+
+
 do /Herwig/Particles/W+:SelectDecayModes W+->nu_e,e+; W+->nu_mu,mu+;
 do /Herwig/Particles/W+:PrintDecayModes
 

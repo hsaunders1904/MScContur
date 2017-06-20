@@ -19,8 +19,6 @@ insert HPConstructor:Incoming 0 /Herwig/Particles/bbar
 insert HPConstructor:Incoming 0 /Herwig/Particles/c
 insert HPConstructor:Incoming 0 /Herwig/Particles/cbar
 
-
-#insert HPConstructor:Outgoing 0 /Herwig/Particles/Z0
 insert HPConstructor:Outgoing 0 /Herwig/FRModel/Particles/Y1
 
 set HPConstructor:Processes SingleParticleInclusive
@@ -74,33 +72,33 @@ insert ResConstructor:Outgoing 0 /Herwig/FRModel/Particles/Xm
 # insert /Herwig/NewPhysics/HVConstructor:VectorBoson 0 /Herwig/Particles/Z0
 # insert /Herwig/NewPhysics/HVConstructor:HiggsBoson  0 [HIGGS_NAME]
 
-
-
 ####################################
 ####################################
 ####################################
+read snippets/PPCollider.in
 
 # Intrinsic pT tune extrapolated to LHC energy
-set /Herwig/Shower/Evolver:IntrinsicPtGaussian 2.2*GeV
+set /Herwig/Shower/ShowerHandler:IntrinsicPtGaussian 2.2*GeV
 
 # disable default cuts if required
 # cd /Herwig/EventHandlers
 # create ThePEG::Cuts   /Herwig/Cuts/NoCuts
-# set /Herwig/EventHandlers/LHCHandler:Cuts /Herwig/Cuts/NoCuts
+# set EventHandler:Cuts /Herwig/Cuts/NoCuts
 
 # Other parameters for run
 cd /Herwig/Generators
-set LHCGenerator:NumberOfEvents 1000000
-set LHCGenerator:RandomNumberGenerator:Seed 31122001
-set LHCGenerator:DebugLevel 0
-set LHCGenerator:EventHandler:StatLevel Full
-set LHCGenerator:PrintEvent 100
-set LHCGenerator:MaxErrors 10000
+set EventGenerator:EventHandler:LuminosityFunction:Energy 8000.0
+set EventGenerator:NumberOfEvents 10000000
+set EventGenerator:RandomNumberGenerator:Seed 31122001
+set EventGenerator:DebugLevel 0
+set EventGenerator:EventHandler:StatLevel Full
+set EventGenerator:PrintEvent 100
+set EventGenerator:MaxErrors 10000
 
 create ThePEG::RivetAnalysis Rivet RivetAnalysis.so
-insert LHCGenerator:AnalysisHandlers 0 Rivet
+insert EventGenerator:AnalysisHandlers 0 Rivet
 
-set LHCGenerator:EventHandler:LuminosityFunction:Energy 8000.0
 read 8_HAD.ana
-saverun LHC LHCGenerator
+
+saverun LHC EventGenerator
 
