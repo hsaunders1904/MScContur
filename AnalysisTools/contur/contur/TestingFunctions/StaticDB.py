@@ -96,8 +96,9 @@ def LumiFinder(h):
     except KeyError:
         return INVALID
 
-
-    if ana in whitelists:
+    # tag is '' if we're looking at an R.. group
+    # but R goups should not be excluded here
+    if ana in whitelists and tag:
         for pattern in whitelists[ana]:
             if pattern in tag:
                 break
