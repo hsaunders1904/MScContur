@@ -55,7 +55,6 @@ insert ResConstructor:Intermediates 0 /Herwig/FRModel/Particles/Y1
 
 #Forces decay modes of SM bosons via
 do /Herwig/Particles/Z0:SelectDecayModes Z0->e-,e+;
-set /Herwig/Particles/Z0/Z0->mu-,mu+;:OnOff On
 
 #Generate Y1 inclusive 2->2 scatters as before but now veto outgoing coloured SM particles
 insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/c
