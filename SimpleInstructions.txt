@@ -4,7 +4,7 @@ THIS IS NOT AN EXECUTABLE SCRIPT IT IS MEANT TO BE USED AS A README FILE.
 #Log onto plus1 UCL > then to a PC
 source /unix/cedar/software/sl6/setupEnv.sh
 #checkout code and source setup file in top level of svn
-source setupContour.sh
+source setupContur.sh
 
 
 -----------------------------------------
@@ -21,6 +21,7 @@ cd $CONTURMODULEDIR/AnalysisTools/contur/contur/TestingFunctions
 make
 
 # if the make step does not work you may need to install sqlite3
+# and re-run make again
 
 -----------------------------------------
 
