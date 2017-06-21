@@ -1,12 +1,14 @@
 insert Rivet:Analyses 0 ATLAS_2016_I1457605 #inc photons
+insert Rivet:Analyses 0 ATLAS_2017_I1591327 #inc diphotons
 insert Rivet:Analyses 0 ATLAS_2015_I1408516 #DY
 insert Rivet:Analyses 0 ATLAS_2015_I1408516_EL
 insert Rivet:Analyses 0 ATLAS_2015_I1408516_MU
 insert Rivet:Analyses 0 ATLAS_2014_I1279489 #EW dijets
 insert Rivet:Analyses 0 ATLAS_2016_I1426515 #WW
-
-insert Rivet:Analyses 0 CMS_2016_I1454211 #boosted top
+insert Rivet:Analyses 0 CMS_2016_I1454211   #Boosted top
 insert Rivet:Analyses 0 ATLAS_2015_I1397637 #Boosted ttbar differential cross-section
+insert Rivet:Analyses 0 ATLAS_2015_I1394865 #4lepton lineshape
+
 
 #insert Rivet:Analyses 0 ATLAS_2016_I1467454 #HM DY
 #insert Rivet:Analyses 0 ATLAS_2016_I1467454_EL #HM DY
@@ -16,9 +18,6 @@ insert Rivet:Analyses 0 ATLAS_2015_I1397637 #Boosted ttbar differential cross-se
 #insert Rivet:Analyses 0 ATLAS_2017_I1589844_EL  #KT Splittings Z
 #insert Rivet:Analyses 0 ATLAS_2017_I1589844_MU  #KT Splittings Z
 
-#insert Rivet:Analyses 0 ATLAS_2017_I1591327 #inc diphotons
-
-#insert Rivet:Analyses 0 ATLAS_2015_I1394865 #4lepton lineshape
 
 #insert Rivet:Analyses 0 ATLAS_2015_I1345452 #ttbar differential cross-section
 
