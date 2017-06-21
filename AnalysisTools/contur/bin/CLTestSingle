@@ -184,6 +184,9 @@ if __name__ == '__main__':
                 continue
                 # Manually store additional plot in a function called LumiFinder, if a Lumi isn't stored vs an
                 # analysis name then use that info to veto testing
+            if ctr.LumiFinder(h)[0] == -1:
+                continue
+
             # Use this switch to view individual analyses
             # if '/ATLAS_2014_I1279489' not in h:
             #    continue
