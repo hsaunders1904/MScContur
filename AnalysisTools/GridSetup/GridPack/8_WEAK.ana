@@ -8,7 +8,7 @@ insert Rivet:Analyses 0 ATLAS_2016_I1426515 #WW
 insert Rivet:Analyses 0 CMS_2016_I1454211   #Boosted top
 insert Rivet:Analyses 0 ATLAS_2015_I1397637 #Boosted ttbar differential cross-section
 insert Rivet:Analyses 0 ATLAS_2015_I1394865 #4lepton lineshape
-
+insert Rivet:Analyses 0 ATLAS_2014_I1306615 #Higgs diphoton
 
 #insert Rivet:Analyses 0 ATLAS_2016_I1467454 #HM DY
 #insert Rivet:Analyses 0 ATLAS_2016_I1467454_EL #HM DY
