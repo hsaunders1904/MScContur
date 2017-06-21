@@ -185,6 +185,7 @@ if __name__ == '__main__':
                 # Manually store additional plot in a function called LumiFinder, if a Lumi isn't stored vs an
                 # analysis name then use that info to veto testing
             if ctr.LumiFinder(h)[0] == -1:
+                sys.stderr.write('Ignoring %s, no Contur info found.\n'%h)
                 continue
             # Use this switch to view individual analyses
             # if '/ATLAS_2014_I1279489' not in h:
@@ -393,5 +394,7 @@ if __name__ == '__main__':
         print "Combined CL: " + str(ctr.confLevel(sigfinal, bgfinal, bgerrfinal,sigerrfinal))
         print "Based on " +str(len(sigfinal))+ " found counting tests"
         print "\nMore details output to ANALYSIS folder"
+    else:
+        print "Contur found no analyses it understands in the file"
 
 # print 'Run finished, analysis output to folder "ANALYSIS"'
