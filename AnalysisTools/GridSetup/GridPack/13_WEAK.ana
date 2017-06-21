@@ -1,1 +1,2 @@
- insert Rivet:Analyses 0 ATLAS_2017_I1514251 # Z+jet
+ insert Rivet:Analyses 0 ATLAS_2017_I1514251_MU # Z+jet
+ insert Rivet:Analyses 0 ATLAS_2017_I1514251_EL # Z+jet
