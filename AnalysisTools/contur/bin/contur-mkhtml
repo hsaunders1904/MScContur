@@ -479,13 +479,9 @@ for analysis in analyses:
     #print anapath
     anadatfiles = glob.glob("./plots/%s*.dat" % analysis)
     for anadatfile in anadatfiles:
-        #print anadatfile
-        #print "./contur-plots/%s/%s" % (analysis, os.path.basename(anadatfile))
-        #os.rename(anadatfile,"./contur-plots/%s%s" % (analysis, os.path.basename(anadatfile)))
         shutil.copyfile(anadatfile,"./contur-plots/%s/%s" % (analysis, os.path.basename(anadatfile)))
-        print "./contur-plots/%s/*.dat" % analysis
+        #print "./contur-plots/%s/*.dat" % analysis
         anadatfiles = glob.glob("./contur-plots/%s/%s*.dat" % (analysis, analysis))
-        #print anadatfiles
     datfiles += sorted(anadatfiles)
 if datfiles:
     #mp_cmd.append("-o") 
