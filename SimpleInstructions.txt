@@ -108,10 +108,17 @@ More details output to ANALYSIS folder
 
 #Also makes a plots directory containing all the .dat files for the analyses scanned
 
-To build the pdf files of these plots, use
+To build the pdf files of these plots, run
+
+contur-mkhtml
+
+from the same directory in which you ran CLTestSingle. This will build the plots and html index
+pages in ./contur-plots
 
 cd plots
-make-plots *
+make-plots *.dat
+
+which will buildthe PDFs all in the ./plots directory.
 
 ----------------------------------------
 
