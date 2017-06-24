@@ -391,11 +391,13 @@ if __name__ == '__main__':
     # print bgerrfinal
     # print bgfinal
     if len(sigfinal)>0:
-        result = "Combined CL exclusion is %s per cent" % str(100*ctr.confLevel(sigfinal, bgfinal, bgerrfinal,sigerrfinal))
+        #result = "Combined CL exclusion for these plots is %s %%" % str(100*ctr.confLevel(sigfinal, bgfinal, bgerrfinal,sigerrfinal))
+        pccl = 100.*ctr.confLevel(sigfinal, bgfinal, bgerrfinal,sigerrfinal)
+        result = "Combined CL exclusion for these plots is %.1f %%" % pccl
         print(result)
         print "Based on " +str(len(sigfinal))+ " found counting tests"
         print "\nMore details output to ANALYSIS folder"
-        util.writeOutputLine(result,"Summary")
+        util.writeOutputLine(result,"Summary.txt")
     else:
         print "Contur found no analyses it understands in the file"
 
