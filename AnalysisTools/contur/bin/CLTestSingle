@@ -394,6 +394,7 @@ if __name__ == '__main__':
         print "Combined CL: " + str(ctr.confLevel(sigfinal, bgfinal, bgerrfinal,sigerrfinal))
         print "Based on " +str(len(sigfinal))+ " found counting tests"
         print "\nMore details output to ANALYSIS folder"
+        writeOutput2(str(ctr.confLevel(sigfinal, bgfinal, bgerrfinal,sigerrfinal)),Summary)
     else:
         print "Contur found no analyses it understands in the file"
 
