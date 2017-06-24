@@ -39,3 +39,10 @@ def writeOutput(output, h):
     for item in output:
         f.write(str(item) + "\n")
     f.close()
+
+
+def writeOutputLine(output, h):
+    mkoutdir("ANALYSIS")
+    f = open("./ANALYSIS/"+h, 'w')
+    f.write(output)
+    f.close()    

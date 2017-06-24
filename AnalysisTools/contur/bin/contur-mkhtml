@@ -56,7 +56,7 @@ parser.add_option("--pwd", dest="PATH_PWD", action="store_true", default=False,
 
 stygroup = OptionGroup(parser, "Style options")
 stygroup.add_option("-t", "--title", dest="TITLE",
-                    default="Plots from Rivet analyses", help="title to be displayed on the main web page")
+                    default="Contur Plots: Constaints On New Theories Using Rivet", help="title to be displayed on the main web page")
 stygroup.add_option("--reftitle", dest="REFTITLE",
                     default="Data", help="legend entry for reference data")
 stygroup.add_option("--no-plottitle", dest="NOPLOTTITLE", action="store_true",
