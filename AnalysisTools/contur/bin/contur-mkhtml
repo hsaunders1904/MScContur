@@ -227,8 +227,6 @@ analyses = sorted(analyses, key=anasort)
 ## a browser to view the output before all plots are made
 if not opts.DRY_RUN:
 
-    summary = open("./ANALYSIS/Summary.txt","r")
-
     style = '''<style>
       html { font-family: sans-serif; }
       img { border: 0; }
@@ -268,42 +266,42 @@ if not opts.DRY_RUN:
     else:
         index.write('<h2>%s</h2>\n\n' % opts.TITLE)
 
-    # Add the overall confidence level from these plots
-    index.write("<h3>%s</h3>\n" % summary.readline())    
 
-    index.write("<h2>In each analysis pool, these plots contributed:</h2>\n")
+    try:
+        summary = open("./ANALYSIS/Summary.txt","r")
 
-    for line in summary:
-        list = line.split(",")
-        #print len(list)
-        for name in list:
-            parts = name.split("/")
-            if len(parts) == 1:
-                # TODO would be good to add a human-readable anapool name to the DB.
-                index.write('<div style="float:none; overflow:auto; width:100%">\n')
-                index.write("<h3>Analysis Pool:"+str(parts[0])+"</h3>")
-            else:
-                obsname = str(parts[1])+"/"+str(parts[1])+"_"+str(parts[2])
-                #print obsname
-                pngfile = obsname+".png"
-                vecfile = obsname+"."+opts.VECTORFORMAT.lower()
-                srcfile = obsname+".dat"
-                #if opts.SINGLE:
-                #    pngfile = os.path.join(analysis, pngfile)
-                #    vecfile = os.path.join(analysis, vecfile)
-                #    srcfile = os.path.join(analysis, srcfile)
-                    
-                index.write('  <div style="float:left; font-size:smaller; font-weight:bold;">\n')
-                index.write('    <a href="#%s-%s">&#9875;</a><a href="%s">&#8984</a> %s:<br/>\n' %
-                            (analysis, obsname, srcfile, os.path.splitext(vecfile)[0]) )
-                index.write('    <a name="%s-%s"><a href="%s">\n' % (analysis, obsname, vecfile) )
-                index.write('      <img src="%s">\n' % pngfile )
-                index.write('    </a></a>\n')
-                index.write('  </div>\n')
+        # Add the overall confidence level from these plots
+        index.write("<h3>%s</h3>\n" % summary.readline())    
+
+        index.write("<h2>In each analysis pool, these plots contributed:</h2>\n")
+
+        for line in summary:
+            list = line.split(",")
+            for name in list:
+                parts = name.split("/")
+                if len(parts) == 1:
+                    # TODO would be good to add a human-readable anapool name to the DB.
+                    index.write('<div style="float:none; overflow:auto; width:100%">\n')
+                    index.write("<h3>Analysis Pool:"+str(parts[0])+"</h3>")
+                else:
+                    obsname = str(parts[1])+"/"+str(parts[1])+"_"+str(parts[2])
+                    pngfile = obsname+".png"
+                    vecfile = obsname+"."+opts.VECTORFORMAT.lower()
+                    srcfile = obsname+".dat"
+                    index.write('  <div style="float:left; font-size:smaller; font-weight:bold;">\n')
+                    index.write('    <a href="#%s-%s">&#9875;</a><a href="%s">&#8984</a> %s:<br/>\n' %
+                                (analysis, obsname, srcfile, os.path.splitext(vecfile)[0]) )
+                    index.write('    <a name="%s-%s"><a href="%s">\n' % (analysis, obsname, vecfile) )
+                    index.write('      <img src="%s">\n' % pngfile )
+                    index.write('    </a></a>\n')
+                    index.write('  </div>\n')
                 
-    summary.close()
+        summary.close()
 
-    index.write('</div>\n')
+        index.write('</div>\n')
+
+    except IOError, e:
+        print "No Contur summary file found: Summary info omitted"
 
     index.write("<hr/><h3>List of all the analyses which were tried:</h3>\n")    
 
