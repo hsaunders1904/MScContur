@@ -373,6 +373,8 @@ if __name__ == '__main__':
                 # masterDict[]
     import pickle
     # print everything out
+
+
     sigfinal=[]
     bgfinal=[]
     bgerrfinal=[]
@@ -387,18 +389,30 @@ if __name__ == '__main__':
             util.writeOutput(masterDict[key], key + ".dat")
             with open("./ANALYSIS/" + key + '.map', 'w') as f:
                 pickle.dump(masterDict[key], f)
-    # print sigfinal
-    # print bgerrfinal
-    # print bgfinal
+
     if len(sigfinal)>0:
-        #result = "Combined CL exclusion for these plots is %s %%" % str(100*ctr.confLevel(sigfinal, bgfinal, bgerrfinal,sigerrfinal))
+
+        sumfn = open("./ANALYSIS/Summary.txt", 'w')
         pccl = 100.*ctr.confLevel(sigfinal, bgfinal, bgerrfinal,sigerrfinal)
         result = "Combined CL exclusion for these plots is %.1f %%" % pccl
+        sumfn.write(result)
+        for anapool in masterDict:
+            if masterDict[anapool]:
+                sumfn.write("\n"+anapool)
+                sumfn.write("\n"+str(masterDict[anapool][0][5]))
+                #                bgfinal.extend(map(list,zip(*masterDict[key])[2])[0])
+                #               bgerrfinal.extend(map(list,zip(*masterDict[key])[3])[0])
+                #              sigerrfinal.extend(map(list,zip(*masterDict[key])[4])[0])
+                #             masterDict[key].sort(key=lambda x: x[0])
+                #            util.writeOutput(masterDict[key], key + ".dat")
+                                                                                            
+        sumfn.close()
         print(result)
         print "Based on " +str(len(sigfinal))+ " found counting tests"
         print "\nMore details output to ANALYSIS folder"
-        util.writeOutputLine(result,"Summary.txt")
     else:
         print "Contur found no analyses it understands in the file"
+
+
 
 # print 'Run finished, analysis output to folder "ANALYSIS"'
