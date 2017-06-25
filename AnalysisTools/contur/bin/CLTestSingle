@@ -387,6 +387,7 @@ if __name__ == '__main__':
             sigerrfinal.extend(map(list,zip(*masterDict[key])[4])[0])
             masterDict[key].sort(key=lambda x: x[0])
             util.writeOutput(masterDict[key], key + ".dat")
+            util.writeOutputLine(key,sumfn)
             with open("./ANALYSIS/" + key + '.map', 'w') as f:
                 pickle.dump(masterDict[key], f)
 
