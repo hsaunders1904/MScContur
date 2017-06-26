@@ -1,2 +1,2 @@
 insert Rivet:Analyses 0 CMS_2016_I1459051   # inclusive jet
-
+# insert Rivet:Analyses 0 CMS_2017_I1519995   # Search for new physics with dijet angular distributions in proton-proton collisions at 8 TeV - include unfolded xsec, but all normalised so can't use until we have the SM cross sections.

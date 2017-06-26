@@ -12,8 +12,15 @@ insert Rivet:Analyses 0 ATLAS_2016_I1426515 #WW
 
 insert Rivet:Analyses 0 CMS_2016_I1454211   #Boosted top
 insert Rivet:Analyses 0 ATLAS_2015_I1397637 #Boosted ttbar diff x-section
+insert Rivet:Analyses 0 CMS_2017_I1518399   #Boosted top mass
 
 insert Rivet:Analyses 0 ATLAS_2015_I1394865 #4lepton lineshape
+
+insert Rivet:Analyses 0 ATLAS_2016_I1448301 # Zg(g) cross sections at 8 TeV
+insert Rivet:Analyses 0 ATLAS_2016_I1448301_EL # Zg(g) cross sections at 8 TeV
+insert Rivet:Analyses 0 ATLAS_2016_I1448301_MU # Zg(g) cross sections at 8 TeV
+insert Rivet:Analyses 0 ATLAS_2016_I1448301_NU # Zg(g) cross sections at 8 TeV
+
 
 #  TODO
 #insert Rivet:Analyses 0 ATLAS_2016_I1467454 #HM DY
@@ -23,8 +30,5 @@ insert Rivet:Analyses 0 ATLAS_2015_I1394865 #4lepton lineshape
 #insert Rivet:Analyses 0 ATLAS_2017_I1589844_EL  #KT Splittings Z
 #insert Rivet:Analyses 0 ATLAS_2017_I1589844_MU  #KT Splittings Z
 #insert Rivet:Analyses 0 ATLAS_2015_I1345452 #ttbar differential cross-section
-#insert Rivet:Analyses 0 CMS_2017_I1518399  #boosted top mass
 #insert Rivet:Analyses 0 CMS_2016_I1473674 #normalised top differential cross sections
-
-
 

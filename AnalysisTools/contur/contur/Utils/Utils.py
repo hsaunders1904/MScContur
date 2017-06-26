@@ -41,8 +41,3 @@ def writeOutput(output, h):
     f.close()
 
 
-def writeOutputLine(output, h):
-    mkoutdir("ANALYSIS")
-    f = open("./ANALYSIS/"+h, 'w')
-    f.write(output)
-    f.close()    

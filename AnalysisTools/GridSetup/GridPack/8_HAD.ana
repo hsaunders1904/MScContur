@@ -1,1 +1,5 @@
-insert Rivet:Analyses 0 ATLAS_2015_I1394679 #four jet
+insert Rivet:Analyses 0 ATLAS_2015_I1394679 # four jet
+
+#insert Rivet:Analyses 0 CMS_2016_I1421646   # Dijet decorrelations. All normalised and the total is not reported, so can't be used until we have the SM cross section prediction too.
+
+
