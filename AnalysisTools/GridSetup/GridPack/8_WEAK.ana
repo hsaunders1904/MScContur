@@ -17,7 +17,6 @@ insert Rivet:Analyses 0 ATLAS_2016_I1426515 #WW
 insert Rivet:Analyses 0 CMS_2016_I1454211   #Boosted top
 insert Rivet:Analyses 0 ATLAS_2015_I1397637 #Boosted ttbar diff x-section
 insert Rivet:Analyses 0 CMS_2017_I1518399   #Boosted top mass
-insert Rivet:Analyses 0 ATLAS_2015_I1345452 #ttbar differential cross-section
 
 insert Rivet:Analyses 0 ATLAS_2015_I1394865 #4lepton lineshape
 
