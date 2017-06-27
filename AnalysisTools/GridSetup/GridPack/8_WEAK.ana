@@ -11,8 +11,6 @@ insert Rivet:Analyses 0 ATLAS_2016_I1467454_MU #HM DY
 
 insert Rivet:Analyses 0 ATLAS_2014_I1279489 #EW dijets
 insert Rivet:Analyses 0 ATLAS_2017_I1589844     #KT Splittings Z
-insert Rivet:Analyses 0 ATLAS_2017_I1589844_EL  #KT Splittings Z
-insert Rivet:Analyses 0 ATLAS_2017_I1589844_MU  #KT Splittings Z
 
 insert Rivet:Analyses 0 ATLAS_2016_I1426515 #WW
 
