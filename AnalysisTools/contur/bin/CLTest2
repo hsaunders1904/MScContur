@@ -1,0 +1,167 @@
+#!/usr/bin/env python
+from contur import TestingFunctions as ctr
+from contur import Utils as util
+import rivet,yoda,sys,os
+
+
+if __name__ == '__main__':
+    #need an empty dict to store our results
+    scatterpoints ={}
+    masterDict={}
+    heatMap={}
+    for anatype in ctr.anapool:
+        masterDict[anatype] =[]
+    #CN.anapool()
+    for root, dirs, files in os.walk('.'):
+        for name in files:
+            fileliststatic = []
+            if '.yoda' in name and 'LHC' not in name:
+                yodafile = os.path.join(root, name)
+                fileliststatic = str(yodafile)
+                print "Found valid yoda file"
+                print "Model point info"
+                print name.strip('.yoda').split('_')[0] + " : " + name.strip('.yoda').split('_')[1]
+                print name.strip('.yoda').split('_')[2] + " : " + name.strip('.yoda').split('_')[3]
+
+            else:
+                continue
+            refhistos, mchistos, xsec, Nev = util.getHistos(fileliststatic)
+            hpaths = []
+            for aos in mchistos.values():
+                for p in aos.keys():
+                    if p and p not in hpaths:
+                        hpaths.append(p)
+
+            getRivetRefData(refhistos)
+
+            mapPoints={}
+
+            print "\nScanning " + str(len(hpaths)) + " histos found generated for model point \n"
+
+            for h in hpaths:
+                if refhistos.has_key('/REF' + h):
+                    refdata = refhistos['/REF' + h]
+				#Manually store additional plot in a function called LumiFinder, if a Lumi isn't stored vs an
+				#analysis name then use that info to veto testing
+                if ctr.LumiFinder(h)[0] == -1:
+                    continue
+                #Use this switch to view individual analyses
+                #if '/ATLAS_2014_I1279489' not in h:
+                #    continue
+                print 'testing: ' + h
+                lumi = ctr.LumiFinder(h)[0]
+                if lumi > 0:
+
+                    sighisto=yoda.core.mkScatter(mchistos[fileliststatic][h])
+
+                    ###some special logic to deal with normalisation
+                    normFacSig =0.0
+                    normFacRef=0.0
+                    if ctr.isNorm(h)[0] == True:
+                        for point in refdata.points:
+                             normFacRef += point.y
+                        for point in sighisto.points:
+                            normFacSig += point.y
+                        normFacRef = ctr.isNorm(h)[1]
+                        import numpy as np
+                        if mchistos[fileliststatic][h].sumW2() == 0:
+                            continue
+                        normFacSig = (float(mchistos[fileliststatic][h].numEntries())/float(Nev.numEntries()) * float(xsec.points[0].x))
+
+                    CLs=[]
+                    sigCount = []
+                    bgCount = []
+                    bgError = []
+                    sigError = []
+                    #fill test results for each bin
+                    #out=np.zeros([refdata.numPoints,1])
+                    for i in range(0,refdata.numPoints):
+                        assert (refdata.numPoints == mchistos[fileliststatic][h].numBins)
+                        global mu_test
+                        mu_test=1
+                        mu_hat=0
+                        varmat=0
+                        #print mchistos[fileliststatic][h].sumW()
+                        #if mchistos[fileliststatic][h].sumW() == 0:
+                        #    continue
+                        if ctr.isNorm(h)[0] == True:
+                            sigCount.append(mchistos[fileliststatic][h].bins[i].sumW*lumi*normFacSig)
+                            bgCount.append(refdata.points[i].y*lumi*normFacRef*(refdata.points[i].xMax-refdata.points[i].xMin))
+                            bgError.append(refdata.points[i].yErrs[1]*lumi*normFacRef*(refdata.points[i].xMax-refdata.points[i].xMin))
+                            #sigError.append(sighisto.points[i].yErrs[1]*lumi*normFacSig)
+                            #Sigerror is used to store \tau, the ratio of MC Nev to "data" Nev
+                            if mchistos[fileliststatic][h].sumW() ==0:
+                                sigError.append(0.0)
+                            else:
+                                sigError.append(float(mchistos[fileliststatic][h].numEntries())/mchistos[fileliststatic][h].sumW())
+
+                        else:
+                            sigCount.append(mchistos[fileliststatic][h].bins[i].sumW*lumi)
+                            bgCount.append(refdata.points[i].y*lumi*(refdata.points[i].xMax-refdata.points[i].xMin))
+                            bgError.append(refdata.points[i].yErrs[1]*lumi*(refdata.points[i].xMax-refdata.points[i].xMin))
+                            #Sigerror is used to store \tau, the ratio of MC Nev to "data" Nev
+                            if mchistos[fileliststatic][h].sumW() ==0:
+                                sigError.append(0.0)
+                            else:
+                                sigError.append(float(mchistos[fileliststatic][h].numEntries())/mchistos[fileliststatic][h].sumW())
+                                #print float(mchistos[fileliststatic][h].numEntries())/mchistos[fileliststatic][h].sumW()
+                        ##cater for the case where the refdata bin is empty, occurs notably in ATLAS_2014_I1307243
+                        if refdata.points[i].y > 0:
+                            CLs.append(ctr.confLevel([sigCount[i]],[bgCount[i]],[bgError[i]],[sigError[i]]))
+                        else:
+                            CLs.append(0)
+
+
+##All these extra count checks are to stop any plots with no count in most likely bin from being entered
+##into liklihood calc, should be fixed upstream
+
+##See if any additional grouping is needed 'subpool'
+                if ctr.LumiFinder(h)[2]:
+                    tempKey = ''
+                    tempKey= h.split('/')[1] +'_'+ctr.LumiFinder(h)[2]
+                    if tempKey not in mapPoints and bgCount[CLs.index(max(CLs))]>0.0:
+                        mapPoints[tempKey] = [float(name.strip('.yoda').split('_')[1]),float(name.strip('.yoda').split('_')[3]), float(max(CLs)) , [sigCount[CLs.index(max(CLs))]], [bgCount[CLs.index(max(CLs))]] , [bgError[CLs.index(max(CLs))]], [sigError[CLs.index(max(CLs))]],str(h)]
+                    elif bgCount[CLs.index(max(CLs))] > 0.0:
+                        mapPoints[tempKey][3].append(sigCount[CLs.index(max(CLs))])
+                        mapPoints[tempKey][4].append(bgCount[CLs.index(max(CLs))])
+                        mapPoints[tempKey][5].append(bgError[CLs.index(max(CLs))])
+                        mapPoints[tempKey][6].append(sigError[CLs.index(max(CLs))])
+                        mapPoints[tempKey][7]+=","+(str(h))
+                else:
+                    if h not in mapPoints and bgCount[CLs.index(max(CLs))]>0.0:
+                        mapPoints[h] = [float(name.strip('.yoda').split('_')[1]),float(name.strip('.yoda').split('_')[3]), float(max(CLs)) , [sigCount[CLs.index(max(CLs))]], [bgCount[CLs.index(max(CLs))]] , [bgError[CLs.index(max(CLs))]],[sigError[CLs.index(max(CLs))]],str(h)]
+##Scan through all points and fill each catagory, stored in masterDict, with the counts from each grouping if it is more sensitive than the previous fill
+            for key in mapPoints:
+                tempName = ctr.LumiFinder(key)[1]
+                mapPoints[key][2] = ctr.confLevel(mapPoints[key][3],mapPoints[key][4],mapPoints[key][5], mapPoints[key][6])
+                if not masterDict[tempName]:
+                    masterDict[tempName].append(mapPoints[key][:])
+                else:
+                    _overWriteFlag = False
+                    _pointExistsFlag = False
+                    for listelement in masterDict[tempName]:
+                        if mapPoints[key][0] == listelement[0] and mapPoints[key][1] == listelement[1]:
+                            _pointExistsFlag = True
+                            if mapPoints[key][2] > listelement[2]:
+                                masterDict[tempName][masterDict[tempName].index(listelement)] = mapPoints[key][:]
+                                #listelement = mapPoints[key][:]
+                                _overWriteFlag=True
+                    if _overWriteFlag == False and _pointExistsFlag == False:
+                        masterDict[tempName].append(mapPoints[key][:])
+
+
+                # else if mapPoints[key][]
+                # else if mapPoints[key][2] > masterDict[tempName]
+                #
+                # masterDict[]
+    import pickle
+    ###print everything out
+    for key in masterDict:
+        if masterDict[key]:
+            masterDict[key].sort(key=lambda x: x[0])
+            util.writeOutput(masterDict[key],key + ".dat")
+            with open("./ANALYSIS/"+key+'.map', 'w') as f:
+                pickle.dump(masterDict[key], f)
+
+
+print 'Run finished, analysis output to folder "ANALYSIS"'

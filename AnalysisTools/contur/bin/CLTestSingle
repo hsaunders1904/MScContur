@@ -32,36 +32,6 @@ if not yodafiles and not opts.GRID_MODE:
     print "Error: You need to specify some YODA files to be plotted!"
     sys.exit(1)
 
-
-def writeOutput2(output, h):
-    "Choose output file name and dir"
-    if opts.HIER_OUTPUT:
-        hparts = h.strip("/").split("/", 1)
-        ana = "_".join(hparts[:-1]) if len(hparts) > 1 else "ANALYSIS"
-        outdir = os.path.join(opts.OUTDIR, ana)
-        outfile = '%s.dat' % hparts[-1].replace("/", "_")
-    else:
-        hparts = h.strip("/").split("/")
-        outdir = opts.OUTPUTDIR
-        outfile = '%s.dat' % "_".join(hparts)
-    mkoutdir(outdir)
-    outfilepath = os.path.join(outdir, outfile)
-    f = open(outfilepath, 'w')
-    f.write(output)
-    f.close()
-
-def mkoutdir(outdir):
-    "Function to make output directories"
-    if not os.path.exists(outdir):
-        try:
-            os.makedirs(outdir)
-        except:
-            msg = "Can't make output directory '%s'" % outdir
-            raise Exception(msg)
-    if not os.access(outdir, os.W_OK):
-        msg = "Can't write to output directory '%s'" % outdir
-        raise Exception(msg)
-
 class Plot(dict):
     "A tiny Plot object to help writing out the head in the .dat file"
 
@@ -69,54 +39,6 @@ class Plot(dict):
         return "# BEGIN PLOT\n" + "\n".join("%s=%s" % (k, v) for k, v in self.iteritems()) + "\n# END PLOT\n\n"
 
 
-def getHistos(filelist):
-    """Loop over all input files. Only use the first occurrence of any REF-histogram
-    and the first occurrence in each MC file for every MC-histogram."""
-    # Stolen from rivet-cmphistos
-    refhistos = {}
-    mchistos = {}
-    xsec = {}
-    Nev = {}
-    # for infile in filelist:
-    mchistos.setdefault(filelist, {})
-    analysisobjects = yoda.read(filelist)
-    print len(analysisobjects), "analysisobjects in", filelist
-    for path, ao in analysisobjects.iteritems():
-        if path.startswith('/_EVTCOUNT'):
-            Nev = ao
-        if path.startswith('/_XSEC'):
-            xsec = ao
-            # Conventionally don't plot data objects whose names start with an
-            # underscore
-        if os.path.basename(path).startswith("_"):
-            continue
-        if path.startswith('/REF/'):
-            if path not in refhistos:
-                refhistos[path] = ao
-        else:
-            if path not in mchistos[filelist]:
-                mchistos[filelist][path] = ao
-    return refhistos, mchistos, xsec, Nev
-
-
-def getRivetRefData(refhistos, anas=None):
-    "Find all Rivet reference data files"
-    rivet_data_dirs = rivet.getAnalysisRefPaths()
-    dirlist = []
-    for d in rivet_data_dirs:
-        if anas is None:
-            import glob
-            dirlist.append(glob.glob(os.path.join(d, '*.yoda')))
-        else:
-            dirlist.append([os.path.join(d, a + '.yoda') for a in anas])
-    for filelist in dirlist:
-        # TODO: delegate to getHistos?
-        for infile in filelist:
-            analysisobjects = yoda.read(infile)
-            for path, ao in analysisobjects.iteritems():
-                if path.startswith('/REF/'):
-                    if path not in refhistos:
-                        refhistos[path] = ao
 
 if __name__ == '__main__':
     # Command line parsing
@@ -129,18 +51,6 @@ if __name__ == '__main__':
 
     for infile in args:
 
-    # refhistos, mchistos = getHistos(filelist)
-    # hpaths, h2ds = [], []
-    # for aos in mchistos.values():
-    # for p in aos.keys():
-    #     if p and p not in hpaths:
-    #         hpaths.append(p)
-    #     firstaop = aos[p][sorted(aos[p].keys())[0]]
-    #     # TODO: Would be nicer to test via isHisto and dim or similar, or
-    #     # yoda.Scatter/Histo/Profile base classes
-    #     if type(firstaop) in (yoda.Histo2D, yoda.Profile2D) and p not in h2ds:
-    #         h2ds.append(p)
-
     # need an empty dict to store our results
         scatterpoints = {}
         masterDict = {}
@@ -151,28 +61,14 @@ if __name__ == '__main__':
 
         for anatype in ctr.anapool:
             masterDict[anatype] = []
-        # CN.anapool()
-        # for root, dirs, files in os.walk('.'):
-        #     for name in files:
-        #         infile = []
-        #         if '.yoda' in name and 'LHC' not in name:
-        #             yodafile = os.path.join(root, name)
-        #             infile = str(yodafile)
-        #             print "Found valid yoda file"
-        #             print "Model point info"
-        #             print name.strip('.yoda').split('_')[0] + " : " + name.strip('.yoda').split('_')[1]
-        #             print name.strip('.yoda').split('_')[2] + " : " + name.strip('.yoda').split('_')[3]
-        #
-        #         else:
-        #             continue
-        refhistos, mchistos, xsec, Nev = getHistos(infile)
+        refhistos, mchistos, xsec, Nev = util.getHistos(infile)
         hpaths = []
         for aos in mchistos.values():
             for p in aos.keys():
                 if p and p not in hpaths:
                     hpaths.append(p)
 
-        getRivetRefData(refhistos)
+        util.getRivetRefData(refhistos)
 
         mapPoints = {}
 
@@ -190,7 +86,6 @@ if __name__ == '__main__':
             # Use this switch to view individual analyses
             # if '/ATLAS_2014_I1279489' not in h:
             #    continue
-#            print 'testing: ' + h
             mcpath='/'+infile
             mchistos[infile][h].setAnnotation('Path', mcpath + h)
             lumi = ctr.LumiFinder(h)[0]
@@ -299,11 +194,6 @@ if __name__ == '__main__':
                 plot['RatioPlot'] = '1'
                 for key, val in plotparser.getHeaders(h).iteritems():
                     plot[key] = val
-                #if plotoptions.has_key("PLOT"):
-            #        for key_val in plotoptions["PLOT"]:
-            #            key, val = [s.strip() for s in key_val.split("=")]
-            #            plot[key] = val
-                #ratioreference = mcpath + h
                 ratioreference = '/REF'+h
                 plot['RatioPlotReference'] = ratioreference
                 output = ''
@@ -312,7 +202,7 @@ if __name__ == '__main__':
                 sio = StringIO()
                 yoda.writeFLAT(anaobjects, sio)
                 output += sio.getvalue()
-                writeOutput2(output, h)
+                util.writeOutput2(output, h, opts.OUTPUTDIR)
     # All these extra count checks are to stop any plots with no count in most likely bin from being entered
     # into liklihood calc, should be fixed upstream
 
@@ -355,22 +245,9 @@ if __name__ == '__main__':
             if not masterDict[poolname]:
                 masterDict[poolname].append(pts[:])
             else:
-                #_overWriteFlag = False
-                #_pointExistsFlag = False
                 for listelement in masterDict[poolname]:
-                    # if pts[0] == listelement[0] and pts[1] == listelement[1]:
-                    #    _pointExistsFlag = True
                     if pts[0] > listelement[0]:
                         masterDict[poolname][masterDict[poolname].index(listelement)] = pts[:]
-                            # listelement = pts[:]
-                #        _overWriteFlag = True
-                # if _overWriteFlag == False:
-                #    masterDict[poolname].append(pts[:])
-
-                # else if pts[]
-                # else if pts[2] > masterDict[poolname]
-                #
-                # masterDict[]
     import pickle
     # print everything out
 
@@ -400,12 +277,7 @@ if __name__ == '__main__':
             if masterDict[anapool]:
                 sumfn.write("\n"+anapool)
                 sumfn.write("\n"+str(masterDict[anapool][0][5]))
-                #                bgfinal.extend(map(list,zip(*masterDict[key])[2])[0])
-                #               bgerrfinal.extend(map(list,zip(*masterDict[key])[3])[0])
-                #              sigerrfinal.extend(map(list,zip(*masterDict[key])[4])[0])
-                #             masterDict[key].sort(key=lambda x: x[0])
-                #            util.writeOutput(masterDict[key], key + ".dat")
-                                                                                            
+                                                                                             
         sumfn.close()
         print(result)
         print "Based on " +str(len(sigfinal))+ " found counting tests"
