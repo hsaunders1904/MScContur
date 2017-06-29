@@ -89,7 +89,11 @@ def LumiFinder(h):
     if not INIT:
         init_dbs()
 
-    ana, tag, sub = splitPath(h)
+    try:
+        ana, tag, sub = splitPath(h)
+    except InvalidPath:
+        return INVALID
+
 
     try:
         lumi, pool = lumis[ana], pools[ana]
