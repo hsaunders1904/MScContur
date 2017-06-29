@@ -2,7 +2,7 @@ THIS IS NOT AN EXECUTABLE SCRIPT IT IS MEANT TO BE USED AS A README FILE.
 -------------------------------------------------------------------------
 
 #Log onto plus1 UCL > then to a PC
-source /unix/cedar/software/sl6/setupEnv.sh
+source /unix/cedar/software/sl6/Herwig-7.1.0/setupEnv.sh
 #checkout code and source setup file in top level of svn
 source setupContur.sh
 

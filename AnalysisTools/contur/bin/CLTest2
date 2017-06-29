@@ -5,21 +5,23 @@ import rivet,yoda,sys,os
 
 
 if __name__ == '__main__':
-    #need an empty dict to store our results
+    #Need an empty dict to store our results
     scatterpoints ={}
     masterDict={}
     heatMap={}
     for anatype in ctr.anapool:
         masterDict[anatype] =[]
-    #CN.anapool()
+
     for root, dirs, files in os.walk('.'):
         for name in files:
             fileliststatic = []
+            # all yoda files are valid unless their name contains the string LHC.
             if '.yoda' in name and 'LHC' not in name:
                 yodafile = os.path.join(root, name)
                 fileliststatic = str(yodafile)
                 print "Found valid yoda file"
                 print "Model point info"
+                # Files produced by the batch scan have two model parameters encoded in their name.
                 print name.strip('.yoda').split('_')[0] + " : " + name.strip('.yoda').split('_')[1]
                 print name.strip('.yoda').split('_')[2] + " : " + name.strip('.yoda').split('_')[3]
 
@@ -32,7 +34,7 @@ if __name__ == '__main__':
                     if p and p not in hpaths:
                         hpaths.append(p)
 
-            getRivetRefData(refhistos)
+            utils.getRivetRefData(refhistos)
 
             mapPoints={}
 
