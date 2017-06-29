@@ -73,6 +73,7 @@ def splitPath(path):
     if not m:
         m1 = subpool_pat.match(path)
         if not m1:
+            print 'Path not found or understood for "%s"' % path
             raise InvalidPath('Parse error in "%s"' % path)
         else:
             analysis = m1.group(1)
