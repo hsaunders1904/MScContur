@@ -1,0 +1,187 @@
+#! /usr/bin/env python
+
+"""\
+%prog [-o out1] [-t template1.txt -t ...] PARAM1:low1:high1 PARAM2:low2:high2:'exp(x)'
+or
+%prog [-o out1] [-t template1.txt -t ...] myparamfile
+
+Sample a parameter space, creating a set of parameter files and optionally
+substituting into script templates, with either flat sampling (default) or
+sampling in a transformed space.
+
+Parameter ranges (and bias functions) can either be given inline on the command line,
+with the name, low..high range, and optional bias function separated by colons (:),
+or in a parameter range file with one parameter per line and whitespace separation of
+the name, low, high, and bias terms.
+
+TODO:
+ * copy the file mode (esp. executable) from the template to each instantiation
+"""
+
+import optparse
+import shutil
+op = optparse.OptionParser(usage=__doc__)
+op.add_option("-n", dest="NUMPOINTS", metavar="NUM", type=int, default=100, help="number of samples to generate [default=%default]")
+op.add_option("-t", dest="TEMPLATES", metavar="FILE", action="append", default=[], help="specify a template file to be populated for each sample point. Can be given multiple times. Strings in curly braces are instantiated.")
+op.add_option("-o", "--outdir", dest="OUTDIR", metavar="DIR", default="scan", help="specify the output directory name (default: %default)")
+op.add_option("-O", "--outmode", dest="OUTMODE", metavar="MODE", default="hier", help="specify the output structuring mode: either 'hier' (default) or 'flat' to respectively use run subdirs or not or 'table' to create one text file with a table like structure")
+op.add_option("-p", "--pfile", dest="PARAMSFILE", metavar="FILE", default="params.dat", help="specify params file base name to be populated for each sample point")
+op.add_option("-P", "--no-pfile", dest="PARAMSFILE", action="store_const", const=None, help="do not write a params file for each sample point")
+op.add_option("-s", "--seed", dest="SEED", metavar="VAL", default=None, help="specify a random seed for the sampler (default: use system time)")
+op.add_option("--veto", dest="VETOFN", metavar="FILE", default=None, help="specify a file from which to read the definition of a Python sample point-vetoing function, prof_sample_veto(paramsdict). Return True means 'veto point'")
+op.add_option("-v", "--debug", dest="DEBUG", action="store_true", default=False, help="turn on some debug messages")
+op.add_option("-q", "--quiet", dest="QUIET", action="store_true", default=False, help="turn off messages")
+op.add_option("-g", "--grid",dest="GRIDPACK", metavar="DIR", default=[], help="provide additional gridpack")
+              
+opts, args = op.parse_args()
+assert opts.OUTMODE in ("hier", "flat", "table")
+
+import os
+
+def copytree(src, dst, symlinks=False, ignore=None):
+    if not os.path.exists(dst):
+        os.makedirs(dst)
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            copytree(s, d, symlinks, ignore)
+        else:
+            if not os.path.exists(d) or os.stat(s).st_mtime - os.stat(d).st_mtime > 1:
+                shutil.copy2(s, d)
+
+def mkrunstr(num):
+    return "{run:04d}".format(run=num)
+
+def mkoutname(fname, run, prefix="", suffix=""):
+    if type(run) is int:
+        run = mkrunstr(run)
+    if opts.OUTMODE == "hier":
+        name = os.path.join(run, fname)
+    elif opts.OUTMODE == "flat":
+        fname = os.path.basename(fname)
+        base, ext = os.path.splitext(fname)
+        name = prefix + base + "-" + run + suffix + ext
+        print "Name:", name
+    elif opts.OUTMODE == "table":
+        name=fname
+    return os.path.join(opts.OUTDIR, name)
+
+def mkdir(path):
+    d = os.path.dirname(path) #< if path is to a dir, make sure to terminate with a /
+    if not os.path.exists(d):
+        os.makedirs(d)
+
+
+## Populate dict of script templates
+TEMPLATES = {}
+for t in opts.TEMPLATES:
+    tname = os.path.basename(t)
+    with open(tname, "r") as f:
+        TEMPLATES[tname] = f.read()
+
+## Initialise random number generator
+import random
+if opts.SEED:
+    random.seed(opts.SEED)
+
+## Populate param samplers dictionary
+from professor2 import Sampler
+try:
+    from collections import OrderedDict
+except:
+    from ordereddict import OrderedDict
+samplers = OrderedDict()
+for a in args:
+    if ":" in a: #< treat as an inline param definition
+        argparts = a.split(":")
+        # TODO: enforce arg format correctness
+        name = argparts[0]
+        sampler = Sampler(*argparts[1:])
+        samplers[name] = sampler
+    else: #< treat as a param range filename
+        with open(a, "r") as prf:
+            for line in prf:
+                line = line.split("#")[0].strip() #< strip comments and whitespace
+                if line:
+                    parts = line.split()
+                    name = parts[0]
+                    if "PROFGRID" in parts[1:]:
+                        import professor2 as prof
+                        samplers[name] = prof.scangrid([name, opts.NUMPOINTS, float(parts[-3]), float(parts[-2])])
+                    else:
+                        sampler = Sampler(*parts[1:])
+                        samplers[name] = sampler
+
+## Load a point veto function if supplied by the user
+if opts.VETOFN:
+    execfile(opts.VETOFN)
+    assert "prof_sample_veto" in dir()
+    opts.VETOFN = prof_sample_veto
+
+# Head for table like write out
+if opts.PARAMSFILE and opts.OUTMODE=="table":
+    f_table = open(opts.OUTDIR, "w")
+    head = "#"
+    for name, s in samplers.iteritems():
+        head += " %s"%name
+    head += "\n"
+    f_table.write(head)
+
+## Do random param sampling and template instantiation
+for n in xrange(opts.NUMPOINTS):
+    npad = mkrunstr(n)
+
+    ## Populate params dictionary
+    while True:
+        params = OrderedDict()
+        ## Sample a point
+        for name, s in samplers.iteritems():
+            try:
+                params[name] = s()
+            except:
+                params[name] =s.next()[0][1]
+        ## Allow a user function to veto the point
+        if opts.VETOFN and opts.VETOFN(params):
+            continue #< try sampling again
+        break #< successful sample: proceed
+
+    ## Write params file if not disabled (by specifying a null filename)
+    if opts.PARAMSFILE and not opts.OUTMODE=="table":
+        pname = mkoutname(opts.PARAMSFILE, npad)
+        mkdir(pname)
+        with open(pname, "w") as pf:
+            for k, v in params.iteritems():
+                pf.write("{name} {val:e}\n".format(name=k, val=v))
+
+    # Table like writeout
+    elif opts.PARAMSFILE and opts.OUTMODE=="table":
+        line = ""
+        for k, v in params.iteritems():
+            line+="%.18f "%v
+        line+="\n"
+        f_table.write(line)
+
+    ## Instantiate template(s)
+    params["N"] = npad #< Add the run number *after* writing out the params file
+    for tbasename, tmpl in TEMPLATES.iteritems():
+        txt = tmpl.format(**params)
+        tname = mkoutname(tbasename, npad)
+        mkdir(tname)
+        with open(tname, "w") as tf:
+            tf.write(txt)
+
+    if opts.GRIDPACK:
+        cname = mkoutname(".", npad)
+        for file in os.listdir(opts.GRIDPACK):
+            fname=os.path.join(opts.GRIDPACK,file)
+            if os.path.isfile(fname):
+                shutil.copy(fname, cname)
+#        cname = mkoutname(".", npad)
+ #       shutil.copy(os.path.join(opts.GRIDPACK, "*"), cname)
+
+# Close file for table like write-out
+if opts.PARAMSFILE and opts.OUTMODE=="table":
+    f_table.close()
+
+#if opts.
