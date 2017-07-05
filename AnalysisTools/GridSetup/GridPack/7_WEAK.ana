@@ -17,8 +17,8 @@ insert Rivet:Analyses 0 ATLAS_2015_I1345452 #ttbar differential cross-section
 insert Rivet:Analyses 0 ATLAS_2014_I1288706       # Drell-Yan
 
 insert Rivet:Analyses 0 CMS_2014_I1303894_HF      # W + jets
-insert Rivet:Analyses 0 ATLAS_2014_I1319490_HF_MU # W + jets
-insert Rivet:Analyses 0 ATLAS_2014_I1319490_HF_EL # W + jets
+insert Rivet:Analyses 0 ATLAS_2014_I1319490_MU # W + jets
+insert Rivet:Analyses 0 ATLAS_2014_I1319490_EL # W + jets
 
 insert Rivet:Analyses 0 ATLAS_2013_I1217863_W_EL  #W/Z+gamma
 insert Rivet:Analyses 0 ATLAS_2013_I1217863_W_MU  #W/Z+gamma
