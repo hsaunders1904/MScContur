@@ -4,9 +4,8 @@ insert Rivet:Analyses 0 ATLAS_2012_I1093738 # photons
 insert Rivet:Analyses 0 CMS_2014_I1266056   # photons
 insert Rivet:Analyses 0 ATLAS_2013_I1244522 # photons
 
-insert Rivet:Analyses 0 ATLAS_2013_I1230812_HF    # Z + jets
-insert Rivet:Analyses 0 ATLAS_2013_I1230812_HF_MU # Z + jets
-insert Rivet:Analyses 0 ATLAS_2013_I1230812_HF_EL # Z + jets
+insert Rivet:Analyses 0 ATLAS_2013_I1230812_MU # Z + jets
+insert Rivet:Analyses 0 ATLAS_2013_I1230812_EL # Z + jets
 insert Rivet:Analyses 0 CMS_2015_I1310737_HF      # Z + jets
 
 

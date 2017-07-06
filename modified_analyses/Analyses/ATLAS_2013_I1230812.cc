@@ -10,14 +10,14 @@ namespace Rivet {
 
   /// Z + jets in pp at 7 TeV (combined channel / base class)
   /// @note This base class contains a "mode" variable for combined, e, and mu channel derived classes
-  class ATLAS_2013_I1230812_HF : public Analysis {
+  class ATLAS_2013_I1230812 : public Analysis {
   public:
 
     /// @name Constructors etc.
     //@{
 
     /// Constructor
-    ATLAS_2013_I1230812_HF(string name="ATLAS_2013_I1230812_HF")
+    ATLAS_2013_I1230812(string name="ATLAS_2013_I1230812")
       : Analysis(name)
     {
       // This class uses the combined e+mu mode
@@ -29,22 +29,24 @@ namespace Rivet {
 
     /// Book histograms and initialise projections before the run
     void init() {
+      MSG_INFO("Modified analysis for Contur: Prompt leptons only.");
       // Determine the e/mu decay channels used
       /// @todo Note that Zs are accepted with any rapidity: the cuts are on the e/mu: is this correct?
-	    Cut pt20 = Cuts::pT >= 20.0*GeV;
+      Cut pt20 = Cuts::pT >= 20.0*GeV;
       if (_mode == 1) {
-        // Combined @TODO Why only PID::ELECTRON?
-        ZFinder zfinder(PromptFinalState(Cuts::abseta < 2.5), pt20, PID::ELECTRON, 66*GeV, 116*GeV);
-        addProjection(zfinder, "zfinder");
+        // Combined
+	Cut eta_comb = Cuts::abseta < 2.5;
+	ZFinder zfinder(PromptFinalState(eta_comb), pt20, PID::ELECTRON, 66*GeV, 116*GeV);
+        declare(zfinder, "zfinder");
       } else if (_mode == 2) {
         // Electron
-	      Cut eta_e = Cuts::abseta < 1.37 || Cuts::absetaIn(1.52, 2.47);
+	    Cut eta_e = Cuts::abseta < 1.37 || Cuts::absetaIn(1.52, 2.47);
         ZFinder zfinder(PromptFinalState(eta_e), pt20, PID::ELECTRON, 66*GeV, 116*GeV);
-        addProjection(zfinder, "zfinder");
+        declare(zfinder, "zfinder");
       } else if (_mode == 3) {
         // Muon
         ZFinder zfinder(PromptFinalState(Cuts::abseta < 2.4), pt20, PID::MUON, 66*GeV, 116*GeV);
-        addProjection(zfinder, "zfinder");
+        declare(zfinder, "zfinder");
       } else {
         MSG_ERROR("Unknown decay channel mode!!!");
       }
@@ -54,7 +56,7 @@ namespace Rivet {
       had_fs.addVetoOnThisFinalState(getProjection<ZFinder>("zfinder"));
       FastJets jets(had_fs, FastJets::ANTIKT, 0.4);
       jets.useInvisibles(true);
-      addProjection(jets, "jets");
+      declare(jets, "jets");
 
       _h_njet_incl              = bookHisto1D(  1, 1, _mode);
       _h_njet_incl_ratio        = bookScatter2D(2, 1, _mode, true);
@@ -90,7 +92,7 @@ namespace Rivet {
     /// Perform the per-event analysis
     void analyze(const Event& event) {
 
-      const ZFinder& zfinder = applyProjection<ZFinder>(event, "zfinder");
+      const ZFinder& zfinder = apply<ZFinder>(event, "zfinder");
       if (zfinder.constituents().size()!=2) vetoEvent;
 
       FourMomentum z = zfinder.bosons()[0].momentum();
@@ -100,7 +102,7 @@ namespace Rivet {
 
       Jets jets;
       /// @todo Replace with a Cut passed to jetsByPt
-      foreach(const Jet& jet, applyProjection<FastJets>(event, "jets").jetsByPt(30*GeV)) {
+      foreach(const Jet& jet, apply<FastJets>(event, "jets").jetsByPt(30*GeV)) {
         FourMomentum jmom = jet.momentum();
         if (jmom.absrap() < 4.4 && deltaR(lp, jmom) > 0.5  && deltaR(lm, jmom) > 0.5) {
           jets.push_back(jet);
@@ -305,10 +307,10 @@ namespace Rivet {
 
 
 
-  class ATLAS_2013_I1230812_HF_EL : public ATLAS_2013_I1230812_HF {
+  class ATLAS_2013_I1230812_EL : public ATLAS_2013_I1230812 {
   public:
-    ATLAS_2013_I1230812_HF_EL()
-      : ATLAS_2013_I1230812_HF("ATLAS_2013_I1230812_HF_EL")
+    ATLAS_2013_I1230812_EL()
+      : ATLAS_2013_I1230812("ATLAS_2013_I1230812_EL")
     {
       _mode = 2;
     }
@@ -316,10 +318,10 @@ namespace Rivet {
 
 
 
-  class ATLAS_2013_I1230812_HF_MU : public ATLAS_2013_I1230812_HF {
+  class ATLAS_2013_I1230812_MU : public ATLAS_2013_I1230812 {
   public:
-    ATLAS_2013_I1230812_HF_MU()
-      : ATLAS_2013_I1230812_HF("ATLAS_2013_I1230812_HF_MU")
+    ATLAS_2013_I1230812_MU()
+      : ATLAS_2013_I1230812("ATLAS_2013_I1230812_MU")
     {
       _mode = 3;
     }
@@ -327,7 +329,7 @@ namespace Rivet {
 
 
 
-  DECLARE_RIVET_PLUGIN(ATLAS_2013_I1230812_HF);
-  DECLARE_RIVET_PLUGIN(ATLAS_2013_I1230812_HF_EL);
-  DECLARE_RIVET_PLUGIN(ATLAS_2013_I1230812_HF_MU);
+  DECLARE_RIVET_PLUGIN(ATLAS_2013_I1230812);
+  DECLARE_RIVET_PLUGIN(ATLAS_2013_I1230812_EL);
+  DECLARE_RIVET_PLUGIN(ATLAS_2013_I1230812_MU);
 }
