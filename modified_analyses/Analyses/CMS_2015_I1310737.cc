@@ -1,43 +1,44 @@
+// -*- C++ -*-
 #include "Rivet/Analysis.hh"
 #include "Rivet/Projections/FastJets.hh"
+#include "Rivet/Projections/PromptFinalState.hh"
 #include "Rivet/Projections/ChargedFinalState.hh"
 #include "Rivet/Projections/InvMassFinalState.hh"
 #include "Rivet/Projections/VisibleFinalState.hh"
 #include "Rivet/Projections/VetoedFinalState.hh"
-#include "Rivet/Projections/PromptFinalState.hh"
 #include "Rivet/Projections/ZFinder.hh"
 
 namespace Rivet {
 
 
-  class CMS_2015_I1310737_HF : public Analysis {
+  class CMS_2015_I1310737 : public Analysis {
   public:
 
     /// Constructor
-    CMS_2015_I1310737_HF()
-      : Analysis("CMS_2015_I1310737_HF")
-    {  }
+    DEFAULT_RIVET_ANALYSIS_CTOR(CMS_2015_I1310737);
 
 
     /// Book histograms and initialise projections before the run
     void init() {
 
       FinalState fs; ///< @todo No cuts?
-      PromptFinalState pfs(fs);
       VisibleFinalState visfs(fs);
+      PromptFinalState pfs(fs);
+
+      MSG_INFO("Modified analysis for Contur: Prompt leptons only.");
 
       ZFinder zeeFinder(pfs, Cuts::abseta < 2.4 && Cuts::pT > 20*GeV, PID::ELECTRON, 71.0*GeV, 111.0*GeV);
-      addProjection(zeeFinder, "ZeeFinder");
+      declare(zeeFinder, "ZeeFinder");
 
       ZFinder zmumuFinder(pfs, Cuts::abseta < 2.4 && Cuts::pT > 20*GeV, PID::MUON, 71.0*GeV, 111.0*GeV);
-      addProjection(zmumuFinder, "ZmumuFinder");
+      declare(zmumuFinder, "ZmumuFinder");
 
       VetoedFinalState jetConstits(visfs);
       jetConstits.addVetoOnThisFinalState(zeeFinder);
       jetConstits.addVetoOnThisFinalState(zmumuFinder);
 
       FastJets akt05Jets(jetConstits, FastJets::ANTIKT, 0.5);
-      addProjection(akt05Jets, "AntiKt05Jets");
+      declare(akt05Jets, "AntiKt05Jets");
 
 
       _h_excmult_jets_tot = bookHisto1D(1, 1, 1);
@@ -60,8 +61,8 @@ namespace Rivet {
     /// Perform the per-event analysis
     void analyze(const Event& event) {;
 
-      const ZFinder& zeeFS = applyProjection<ZFinder>(event, "ZeeFinder");
-      const ZFinder& zmumuFS = applyProjection<ZFinder>(event, "ZmumuFinder");
+      const ZFinder& zeeFS = apply<ZFinder>(event, "ZeeFinder");
+      const ZFinder& zmumuFS = apply<ZFinder>(event, "ZmumuFinder");
 
       const Particles& zees = zeeFS.bosons();
       const Particles& zmumus = zmumuFS.bosons();
@@ -77,7 +78,7 @@ namespace Rivet {
 
       // Cluster jets
       // NB. Veto has already been applied on leptons and photons used for dressing
-      const FastJets& fj = applyProjection<FastJets>(event, "AntiKt05Jets");
+      const FastJets& fj = apply<FastJets>(event, "AntiKt05Jets");
       const Jets& jets = fj.jetsByPt(Cuts::abseta < 2.4 && Cuts::pT > 30*GeV);
 
       // Perform lepton-jet overlap and HT calculation
@@ -187,7 +188,7 @@ namespace Rivet {
   };
 
 
-  DECLARE_RIVET_PLUGIN(CMS_2015_I1310737_HF);
+  DECLARE_RIVET_PLUGIN(CMS_2015_I1310737);
 
 
 }
