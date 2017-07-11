@@ -57,8 +57,8 @@ if __name__ == '__main__':
         heatMap = {}
 
         plotdirs = [os.path.abspath(os.path.dirname(f)) for f in infile]
-        plotparser = rivet.mkStdPlotParser(plotdirs, )
-
+        #plotparser = rivet.mkStdPlotParser(plotdirs, )
+        plotparser = util.mkStdPlotParser(plotdirs, )
         for anatype in ctr.anapool:
             masterDict[anatype] = []
         refhistos, mchistos, xsec, Nev = util.getHistos(infile)
@@ -120,7 +120,6 @@ if __name__ == '__main__':
                     mu_test = 1
                     mu_hat = 0
                     varmat = 0
-                    # print h
                     if ctr.isNorm(h)[0] == True:
                         sigCount.append(mchistos[infile][h].bins[i].sumW * lumi * normFacSig)
                         bgCount.append(refdata.points[i].y * lumi * normFacRef * (refdata.points[i].xMax - refdata.points[i].xMin))
@@ -164,7 +163,7 @@ if __name__ == '__main__':
                     #    ratioreference = '/REF'+h
                     anaobjects.append(refdata)
                     drawonly.append('/REF' + h)
-
+                    
                 drawonly.append(mcpath + h)
                 #if opts.RATIO and ratioreference is None:
                 #    ratioreference = mcpath + h
