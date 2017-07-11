@@ -25,7 +25,7 @@ insert Rivet:Analyses 0 ATLAS_2013_I1217863_Z     #W/Z+gamma
 
 insert Rivet:Analyses 0 ATLAS_2011_I926145 #E and MU cross sections
 
-insert Rivet:Analyses 0 ATLAS_2012_I1203852_HF #ZZ
+insert Rivet:Analyses 0 ATLAS_2012_I1203852 #ZZ
 
 # insert Rivet:Analyses 0 ATLAS_2013_I1190187 #WW (not in db)
 

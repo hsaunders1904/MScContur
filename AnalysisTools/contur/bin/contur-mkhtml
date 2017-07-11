@@ -439,7 +439,7 @@ datfiles = []
 # Copy the dat files from the plots directory into the contur-plot output directory
 for analysis in analyses:
     anapath = os.path.join(opts.OUTPUTDIR, analysis)
-    anadatfiles = glob.glob("./plots/%s*.dat" % analysis)
+    anadatfiles = glob.glob("./plots/%s_d*.dat" % analysis)
     for anadatfile in anadatfiles:
         shutil.copyfile(anadatfile,"./contur-plots/%s/%s" % (analysis, os.path.basename(anadatfile)))
         anadatfiles = glob.glob("./contur-plots/%s/%s*.dat" % (analysis, analysis))
