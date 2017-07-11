@@ -2,6 +2,7 @@
 # Mathematica version: 9.0 for Mac OS X x86 (64-bit) (January 24, 2013)
 # Date: Fri 13 Nov 2015 10:16:13
 
+# Modified to give generic spin 1/2 DM the correct PDGID
 
 from __future__ import division
 from object_library import all_particles, Particle
@@ -385,7 +386,7 @@ G__plus__ = Particle(pdg_code = 251,
 
 G__minus__ = G__plus__.anti()
 
-Xm = Particle(pdg_code = 18,
+Xm = Particle(pdg_code = 52,
               name = 'Xm',
               antiname = 'Xm',
               spin = 2,
