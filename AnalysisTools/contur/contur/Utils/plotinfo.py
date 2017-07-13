@@ -131,9 +131,8 @@ class PlotParser(object):
                             #print value
                         except Exception as e:
                             #print e
-                              value = oldval #< roll back escapes if it goes wrong
-  #                    ret[section][prop] = texpand(value) #< expand TeX shorthands
-                              ret[section][prop] = value 
+                            value = oldval #< roll back escapes if it goes wrong
+                    ret[section][prop] = texpand(value) #< expand TeX shorthands
             elif section in ['SPECIAL']:
                 ret[section] += line
         f.close()
