@@ -65,7 +65,10 @@ def n_exp(mu, b_hat, s_in):
 
 def Covar_Matrix(b_count,s_count,db_count, ds_count):
 #Construct the inverse variance matrix from expected vals of the 2nd derivatives of the Log Likelihood
+
+    # start with a matrix full of zeros
     Var_matrix_inv=np.zeros([(len(b_count)+len(s_count)+1),(len(b_count)+len(s_count)+1)])
+
 #add exception handling if s=/=b
   #loop over all counts
     for i in range(0, len(b_count)+len(s_count)):
@@ -102,11 +105,18 @@ def Covar_Matrix(b_count,s_count,db_count, ds_count):
         if i < len(s_count):
             ## b s
             Var_matrix_inv[len(b_count)+1+i,i+1] = Var_matrix_inv[i+1,len(b_count)+1+i] = mu_test/(mu_test*s_hat_hat+b_hat_hat)
+            
+#    print 'inv matrix '+str(Var_matrix_inv[0,0])
+#    print 'det '+str(np.linalg.det(Var_matrix_inv))
+
     if np.linalg.det(Var_matrix_inv) == 0:
         Var_matrix = np.zeros([(len(b_count)+1),(len(b_count)+1)])
   #Invert and return it
     else:
         Var_matrix = np.linalg.inv(Var_matrix_inv)
+
+#    print 'matrix '+str(Var_matrix[0,0])
+
     return Var_matrix
 
 
@@ -157,7 +167,7 @@ def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1):
 #    varMat= cv.chisq(bgCount,sigCount,bgErr, sgErr)
     q_mu_a = qMu_Asimov(mu_test,bgCount,sigCount,bgErr)
     mu_hat = 0
-    if varMat ==0:
+    if varMat <=0:
         return 0
     else:
         q_mu=0
@@ -174,4 +184,7 @@ def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1):
     if ratioTest:
         p_val=2.0*spstat.norm.sf(np.sqrt(q_mu_a))
 
+#    print 'p_val '+str(p_val) 
+#    print 'q_mu '+str(q_mu)
+#    print 'varMat ' + str(varMat)
     return float('%10.6f' % float(1-p_val))

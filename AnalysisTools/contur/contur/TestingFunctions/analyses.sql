@@ -52,6 +52,9 @@ CREATE TABLE analysis (
     PRIMARY KEY(id),
     FOREIGN KEY(pool) REFERENCES analysis_pool(pool)
 );
+-- Note, the LUMI value given here should be in units which match the normalisation
+-- of the cross section plots. Most in pb, some in fb.
+
 -- Superseded/deprecated analyses
 INSERT INTO analysis VALUES('ATLAS_2012_I1083318',36.0,NULL);
 INSERT INTO analysis VALUES('ATLAS_2011_I945498',36.0,NULL);
@@ -91,6 +94,7 @@ INSERT INTO analysis VALUES('CMS_2014_I1303894',5000.0,'CMS_7_Wjj');
 INSERT INTO analysis VALUES('ATLAS_2014_I1319490_MU',4600.0,'ATLAS_7_Wjj_MU');
 INSERT INTO analysis VALUES('ATLAS_2014_I1319490_EL',4600.0,'ATLAS_7_Wjj_EL');
 
+-- NB these analyses produce plots in fb-1 
 INSERT INTO analysis VALUES('ATLAS_2013_I1217863_Z',4.6,'ATLAS_7_Z_GAMMA');
 INSERT INTO analysis VALUES('ATLAS_2013_I1217863_W_MU',4.6,'ATLAS_7_W_GAMMA_MU');
 INSERT INTO analysis VALUES('ATLAS_2013_I1217863_W_EL',4.6,'ATLAS_7_W_GAMMA_EL');
