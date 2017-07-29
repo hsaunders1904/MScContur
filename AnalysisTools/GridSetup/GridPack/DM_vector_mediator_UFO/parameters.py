@@ -28,7 +28,7 @@ gYXm = Parameter(name = 'gYXm',
 gYq = Parameter(name = 'gYq',
                 nature = 'external',
                 type = 'real',
-                value = 0.5,
+                value = 0.25,
                 texname = 'g_{\\text{Yq}}',
                 lhablock = 'DMINPUTS',
                 lhacode = [ 2 ])
