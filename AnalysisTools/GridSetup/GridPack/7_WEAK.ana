@@ -8,7 +8,6 @@ insert Rivet:Analyses 0 ATLAS_2013_I1230812_MU # Z + jets
 insert Rivet:Analyses 0 ATLAS_2013_I1230812_EL # Z + jets
 insert Rivet:Analyses 0 CMS_2015_I1310737      # Z + jets
 
-
 # need to check for heavy flavour/prompt final state mods?
 
 insert Rivet:Analyses 0 ATLAS_2015_I1345452 #ttbar differential cross-section
