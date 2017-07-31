@@ -143,8 +143,6 @@ def isNorm(h):
     if ana in norms:
         for p, norm in norms[ana]:
             if re.search(p,tag):
-                print 'normalised histo '
-                print h, norm
                 isNorm = True
                 normFac = norm
                 break
