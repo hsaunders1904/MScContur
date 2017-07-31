@@ -140,11 +140,6 @@ def isNorm(h):
     isNorm=False
     normFac=1.0
 
-    # remove once it's clear this is just a compatibility
-    # preservation issue
-    if 'ATLAS_2014_I1279489' in h:
-        isNorm=True
-
     if ana in norms:
         for p, norm in norms[ana]:
             if re.search(p,tag):
