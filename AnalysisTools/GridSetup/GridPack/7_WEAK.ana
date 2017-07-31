@@ -26,11 +26,12 @@ insert Rivet:Analyses 0 ATLAS_2011_I926145 #E and MU cross sections
 
 insert Rivet:Analyses 0 ATLAS_2012_I1203852 #ZZ
 
-# insert Rivet:Analyses 0 ATLAS_2013_I1190187 #WW (not in db)
+# Jet mass studies - cross sections estimaited from stat errors
+insert Rivet:Analyses 0 CMS_2013_I1224539_WJET
+insert Rivet:Analyses 0 CMS_2013_I1224539_ZJET
 
-# Jet mass studies - to be checked (Alex S project)
-#insert Rivet:Analyses 0 CMS_2013_I1224539_WJET
-#insert Rivet:Analyses 0 CMS_2013_I1224539_ZJET
+
+# insert Rivet:Analyses 0 ATLAS_2013_I1190187 #WW (not in db)
 
 #######(c/bjets) none of these are in the db yet.
 #insert Rivet:Analyses 0 CMS_2013_I1256943 #Z+bb
