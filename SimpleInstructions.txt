@@ -13,7 +13,9 @@ source setupContur.sh
 
 cd
 $CONTURMODULEDIR/modified_analyses/Analyses
-rivet-buildplugin RivetMyAnalyses.so *.cc -std=c++11
+chmod +x buildrivet  # only need to do this once after checkout from svn.
+./buildrivet.sh
+
 
 # and build the database of static analysis information
 
