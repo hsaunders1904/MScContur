@@ -161,30 +161,52 @@ def qMu_Asimov(mu_test,bCount,sCount,db):
             result += -2.*(bCount[i]*log(N_exp_b_hat_hat/N_exp_b_hat) + N_exp_b_hat - N_exp_b_hat_hat + gauss_exp(bCount[i],b_hat,db[i]) - gauss_exp(bCount[i],b_hat_hat,db[i]))
     return result
 
+def chisquare(bgCount, sigCount, n_obs, bgErr, mu_test):
+    chis= 0.0
+    for i in range(0,len(bgCount)):
+        chis+=((float(mu_test*sigCount[i]+bgCount[i]-n_obs[i]))**2.0)/(float(bgErr[i])**2.0)
+    from scipy.stats import chi2 as chi2
+    #return chi2.sf( chis, len(bgCount))
+    return chis
 
-def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1):
-    varMat= Covar_Matrix(bgCount,sigCount,bgErr, sgErr)[0,0]
-#    varMat= cv.chisq(bgCount,sigCount,bgErr, sgErr)
-    q_mu_a = qMu_Asimov(mu_test,bgCount,sigCount,bgErr)
-    mu_hat = 0
-    if varMat <=0:
-        return 0
-    else:
-        q_mu=0
-        p_val=0
-        q_mu = (mu_test-mu_hat)**2/(varMat)
-        if 0 < q_mu <= (mu_test**2)/(varMat):
-            ##Constant factor of 2 arises due to CL_s procedure and represents 1/spstat.norm(0)
-            p_val=2.0*spstat.norm.sf(np.sqrt(q_mu))
-        elif q_mu > (mu_test**2)/(varMat):
-            p_val=2.0*spstat.norm.sf( (q_mu + (mu_test**2/varMat))/(2*mu_test/(np.sqrt(varMat))) )
 
-    ratioTest = False
+def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1, test='LL'):
+
+    p_val=1.0
+
+    if test=='LL':
+        varMat= Covar_Matrix(bgCount,sigCount,bgErr, sgErr)[0,0]
+    #    varMat= cv.chisq(bgCount,sigCount,bgErr, sgErr)
+    #    q_mu_a = qMu_Asimov(mu_test,bgCount,sigCount,bgErr)
+        mu_hat = 0
+        if varMat <=0:
+            return 0
+        else:
+            q_mu=0
+            p_val=0
+            q_mu = (mu_test-mu_hat)**2/(varMat)
+            if 0 < q_mu <= (mu_test**2)/(varMat):
+                ##Constant factor of 2 arises due to CL_s procedure and represents 1/spstat.norm(0)
+                p_val=2.0*spstat.norm.sf(np.sqrt(q_mu))
+            elif q_mu > (mu_test**2)/(varMat):
+                p_val=2.0*spstat.norm.sf( (q_mu + (mu_test**2/varMat))/(2*mu_test/(np.sqrt(varMat))) )
+
+    if test=='CS':
+    #chisquare function above takes argument (bgCount, sigCount, n_obs, bgErr), here we are assuming n_obs == bgCount
+        chisq_p_sb = spstat.norm.sf(np.sqrt(chisquare( bgCount,sigCount,bgCount,bgErr, 1)))
+    #Explicitly find p_b rather than just use two, no cost to evaluate a norm.sf of 0!
+        chisq_p_b = 1-spstat.norm.sf(np.sqrt(chisquare( bgCount,sigCount,bgCount,bgErr, 0)))
+    #return this value 'cls' to get the confidence interval using a simple chi square fit
+        p_val=chisq_p_sb/(1-chisq_p_b)
+
+    from scipy.stats import chi2 as chi2
+    #print chi2.sf(0,1)
     ##use the qMu_Asimov function to construct the ratio instead, should be equivalent input to Var_mu_comb
-    if ratioTest:
-        p_val=2.0*spstat.norm.sf(np.sqrt(q_mu_a))
+    #if ratioTest:
+    #    p_val=2.0*spstat.norm.sf(np.sqrt(q_mu_a))
 
-#    print 'p_val '+str(p_val) 
+
+#    print 'p_val '+str(p_val)
 #    print 'q_mu '+str(q_mu)
 #    print 'varMat ' + str(varMat)
     return float('%10.6f' % float(1-p_val))
