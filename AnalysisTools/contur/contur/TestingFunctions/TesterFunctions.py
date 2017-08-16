@@ -183,7 +183,12 @@ def chisquare(bgCount, sigCount, n_obs, bgErr, mu_test):
 
 def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1, test='LL'):
 
-
+    # 'test' argument decides what statistical test will be used.
+    # 'LL' means the CLs likelihood is used (as in contur paper)
+    # 'LLA' as LL, but use the qMu_Asimov function to construct the ratio instead, should be equivalent to LL
+    # (TODO: add another one here to use the MC method instead of asymptotic/Asimov?)
+    # 'CS' means the Chi2 good-of-fit is used (Gaussian error assumption)
+ 
     p_val=1.0
 
     # What is passed to this function as bgCount is actually n_obs (bad naming inherited from older code)
@@ -195,7 +200,6 @@ def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1, test='LL'):
     # TODO: this function expects floats, not lists.
     # mu_hat = ML_mu_hat(n_obs,bgCount,sigCount)
     mu_hat = 0
-
 
     if test=='LL':
 
@@ -210,8 +214,6 @@ def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1, test='LL'):
 # Work out b_hat_hat and s_hat_hat here in this function, using mu_hat as an additional argument to these functions,
 # we need to call this covar matrix twice at the tested mu values, but b_hat_hat and s_hat_hat should be the same in both cases
 
-    #    q_mu_a = qMu_Asimov(mu_test,bgCount,sigCount,bgErr)
-
         mu_hat = 0
         if varMat <=0:
             return 0
@@ -222,15 +224,15 @@ def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1, test='LL'):
             if 0 < q_mu <= (mu_test**2)/(varMat):
                 ##Constant factor of 2 arises due to CL_s procedure and represents 1/spstat.norm(0)
 # Here rather than a factor of 2, the p_val in the null hypothesis needs to be worked out,
-#this 2 arises since CLs = 1-( p_(s+b)/1-p_b)
-#1/(1-p_b) = 1/ (1-0.5) = 2
+# this 2 arises since CLs = 1-( p_(s+b)/1-p_b)
+# 1/(1-p_b) = 1/ (1-0.5) = 2
 # To evaluate this properly, the procedure above needs to be run again, but under the null hypothesis, i.e where mu_test is 0
 
                 p_val=2.0*spstat.norm.sf(np.sqrt(q_mu))
             elif q_mu > (mu_test**2)/(varMat):
                 p_val=2.0*spstat.norm.sf( (q_mu + (mu_test**2/varMat))/(2*mu_test/(np.sqrt(varMat))) )
 
-    if test=='CS':
+    elif test=='CS':
     #chisquare function above takes argument (bgCount, sigCount, n_obs, bgErr), here we are assuming n_obs == bgCount
         chisq_p_sb = spstat.norm.sf(np.sqrt(chisquare( bgCount,sigCount,bgCount,bgErr, 1)))
     #Explicitly find p_b rather than just use two, no cost to evaluate a norm.sf of 0!
@@ -238,14 +240,20 @@ def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1, test='LL'):
     #return this value 'cls' to get the confidence interval using a simple chi square fit
         p_val=chisq_p_sb/(1-chisq_p_b)
 
-    from scipy.stats import chi2 as chi2
-    #print chi2.sf(0,1)
-    ##use the qMu_Asimov function to construct the ratio instead, should be equivalent input to Var_mu_comb
-    #if ratioTest:
-    #    p_val=2.0*spstat.norm.sf(np.sqrt(q_mu_a))
+    elif test=='LLA':
 
+        from scipy.stats import chi2 as chi2
+
+        q_mu_a = qMu_Asimov(mu_test,bgCount,sigCount,bgErr)
+        p_val=2.0*spstat.norm.sf(np.sqrt(q_mu_a))
+
+    else:
+        print 'Unrecognised test type ' // test
 
 #    print 'p_val '+str(p_val)
 #    print 'q_mu '+str(q_mu)
 #    print 'varMat ' + str(varMat)
+
+
+
     return float('%10.6f' % float(1-p_val))
