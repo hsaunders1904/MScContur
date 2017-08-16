@@ -9,12 +9,16 @@ import scipy.optimize as spopt
 
 global mu_test
 mu_test=1
-#from contur.TestingFunctions import covariance_matrix as cv
 
 def Min_function(x, n_obs, b_obs, s_obs, db, ds):
     # defines the functional form of vector function Min_function[0] corresponds to dlnL/db
     # Min_function[1] corresponds to dlnL/ds
     # takes argument x=[b_hat_hat, s_hat_hat]
+
+    #Here mu_hat is passed and included into the functional form of the first derivatives, it's set to 1 in the current assumption
+    #so doesn't appear
+    # the if statement form of this is just to prevent any term blowing up if the denominator is near 0
+
     d_lnL_db = 0.0
     d_lnL_ds = 0.0
     if fabs((x[0] + x[1])) > 0.0:
@@ -30,6 +34,7 @@ def Min_function(x, n_obs, b_obs, s_obs, db, ds):
 
 
 def Min_find(n_obs, b_obs, s_obs, db, ds):
+    #Min find just runs the root finding on the Min_function so just needs to pass through the arguments
     # s_hat_hat is called x_1, b_hat_hat is x_0
     # func_0 being the first entry in vector, corresponds to dlnL/db
     # func_1 dlnL/ds
@@ -74,6 +79,12 @@ def Covar_Matrix(b_count,s_count,db_count, ds_count):
     for i in range(0, len(b_count)+len(s_count)):
         #Call function to simultaneously minimise s and b at the specified ML mu (always 0)
         #if min not found return the input s and b
+
+        #Major restructing here, these min_finds can be factored out to the main conf level function as we only need to work these out once
+        #The big change in the code needed here is to sort out the form of the second derivatives, which are all correct in the paper
+        # I used a cancellation of n and mu.s+b here which was fine before but as we separate these two counts, the form of these needs 
+        #to be updated to reflect as in the paper
+
         if i < (len(b_count)):
             res = Min_find(b_count[i], b_count[i], s_count[i], db_count[i], ds_count[i]).x
         else:
@@ -172,12 +183,35 @@ def chisquare(bgCount, sigCount, n_obs, bgErr, mu_test):
 
 def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1, test='LL'):
 
+
     p_val=1.0
 
+    # What is passed to this function as bgCount is actually n_obs (bad naming inherited from older code)
+    # bgCount should actually be looked up from data, probably via sql database to yoda file containing SM MC simulation
+    # naming should be shuffled in function argument here, but continuing as if that has been done already
+    n_obs = bgCount
+
+    # We need to know most likely mu, aka mu_hat. In current assumption (data=SM) this is known to be 0
+    # TODO: this function expects floats, not lists.
+    # mu_hat = ML_mu_hat(n_obs,bgCount,sigCount)
+    mu_hat = 0
+
+
     if test=='LL':
+
+        # When we call the varMatrix, this needs to be passed an additional argument n_obs
+        # currently uses mu_test which is hard coded to 1
+        # This function should be called twice, once at mu_test=1 and once at mu_test=0
+
         varMat= Covar_Matrix(bgCount,sigCount,bgErr, sgErr)[0,0]
-    #    varMat= cv.chisq(bgCount,sigCount,bgErr, sgErr)
+
+# NOTE: I believe the biggest restructing needed is to take the min_find out of this Covar_matrix, if I have things correct in my head then
+# recipe is as follows:
+# Work out b_hat_hat and s_hat_hat here in this function, using mu_hat as an additional argument to these functions,
+# we need to call this covar matrix twice at the tested mu values, but b_hat_hat and s_hat_hat should be the same in both cases
+
     #    q_mu_a = qMu_Asimov(mu_test,bgCount,sigCount,bgErr)
+
         mu_hat = 0
         if varMat <=0:
             return 0
@@ -187,6 +221,11 @@ def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1, test='LL'):
             q_mu = (mu_test-mu_hat)**2/(varMat)
             if 0 < q_mu <= (mu_test**2)/(varMat):
                 ##Constant factor of 2 arises due to CL_s procedure and represents 1/spstat.norm(0)
+# Here rather than a factor of 2, the p_val in the null hypothesis needs to be worked out,
+#this 2 arises since CLs = 1-( p_(s+b)/1-p_b)
+#1/(1-p_b) = 1/ (1-0.5) = 2
+# To evaluate this properly, the procedure above needs to be run again, but under the null hypothesis, i.e where mu_test is 0
+
                 p_val=2.0*spstat.norm.sf(np.sqrt(q_mu))
             elif q_mu > (mu_test**2)/(varMat):
                 p_val=2.0*spstat.norm.sf( (q_mu + (mu_test**2/varMat))/(2*mu_test/(np.sqrt(varMat))) )
