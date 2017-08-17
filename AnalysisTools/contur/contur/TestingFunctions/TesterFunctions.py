@@ -172,16 +172,18 @@ def qMu_Asimov(mu_test,bCount,sCount,db):
             result += -2.*(bCount[i]*log(N_exp_b_hat_hat/N_exp_b_hat) + N_exp_b_hat - N_exp_b_hat_hat + gauss_exp(bCount[i],b_hat,db[i]) - gauss_exp(bCount[i],b_hat_hat,db[i]))
     return result
 
-def chisquare(bgCount, sigCount, n_obs, bgErr, mu_test):
+def chisquare(background, signal, measurement, error, mu_test):
+    # returns the Chi2 based on comparing the data (measurement) to a possible signal (sigCount - scaled by a mu_test. Could be zero.)
+    # and a background prediction (bgCounts - could be identical to n_obs) and a total uncertainty (error).
+    # Each argument is a list of values, the returned chi2 is the result of comparing them all.
     chis= 0.0
-    for i in range(0,len(bgCount)):
-        chis+=((float(mu_test*sigCount[i]+bgCount[i]-n_obs[i]))**2.0)/(float(bgErr[i])**2.0)
+    for i in range(0,len(background)):
+        chis+=((float(mu_test*signal[i]+background[i]-measurement[i]))**2.0)/(float(error[i])**2.0)
     from scipy.stats import chi2 as chi2
-    #return chi2.sf( chis, len(bgCount))
     return chis
 
 
-def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1, test='LL'):
+def confLevel(sigCount, bgCount, bgErr, sgErr, mu_test=1, test='LL'):
 
     # 'test' argument decides what statistical test will be used.
     # 'LL' means the CLs likelihood is used (as in contur paper)
@@ -207,7 +209,7 @@ def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1, test='LL'):
         # currently uses mu_test which is hard coded to 1
         # This function should be called twice, once at mu_test=1 and once at mu_test=0
 
-        varMat= Covar_Matrix(bgCount,sigCount,bgErr, sgErr)[0,0]
+        varMat= Covar_Matrix(bgCount,sigCount,bgErr,sgErr)[0,0]
 
 # NOTE: I believe the biggest restructing needed is to take the min_find out of this Covar_matrix, if I have things correct in my head then
 # recipe is as follows:
@@ -232,14 +234,6 @@ def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1, test='LL'):
             elif q_mu > (mu_test**2)/(varMat):
                 p_val=2.0*spstat.norm.sf( (q_mu + (mu_test**2/varMat))/(2*mu_test/(np.sqrt(varMat))) )
 
-    elif test=='CS':
-    #chisquare function above takes argument (bgCount, sigCount, n_obs, bgErr), here we are assuming n_obs == bgCount
-        chisq_p_sb = spstat.norm.sf(np.sqrt(chisquare( bgCount,sigCount,bgCount,bgErr, 1)))
-    #Explicitly find p_b rather than just use two, no cost to evaluate a norm.sf of 0!
-        chisq_p_b = 1-spstat.norm.sf(np.sqrt(chisquare( bgCount,sigCount,bgCount,bgErr, 0)))
-    #return this value 'cls' to get the confidence interval using a simple chi square fit
-        p_val=chisq_p_sb/(1-chisq_p_b)
-
     elif test=='LLA':
 
         from scipy.stats import chi2 as chi2
@@ -247,13 +241,41 @@ def confLevel(sigCount, bgCount, bgErr, sgErr,mu_test=1, test='LL'):
         q_mu_a = qMu_Asimov(mu_test,bgCount,sigCount,bgErr)
         p_val=2.0*spstat.norm.sf(np.sqrt(q_mu_a))
 
+    elif test=='CS':
+
+         #print 'using the Chi2 test on cross section plots'
+
+        # chisquare function above takes argument (background, signal, measurement, total_uncertainty)
+        # Here we are assuming measurement = background, and the measurement error dominates.
+        chisq_p_sb = spstat.norm.sf(np.sqrt(chisquare( bgCount,sigCount,bgCount,bgErr, 1)))
+
+        #Explicitly find p_b rather than just use two, no cost to evaluate a norm.sf of 0!
+        chisq_p_b = 1-spstat.norm.sf(np.sqrt(chisquare( bgCount,sigCount,bgCount,bgErr, 0)))
+        #return this value 'cls' to get the confidence interval using a simple chi square fit
+        p_val=chisq_p_sb/(1-chisq_p_b)
+
+         #print 'Chi2 sb, b, p_val', chisq_p_sb, chisq_p_b, p_val
+
+    elif test=='CSR':
+
+         #print 'using the Chi2 test on ratio plots'
+
+        # chisquare function above takes argument (background, signal, measurement, total_uncertainty)
+        # TODO: fix this for ratios. 
+        chisq_p_sb = spstat.norm.sf(np.sqrt(chisquare( bgCount,sigCount,bgCount,bgErr, 1)))
+
+        #Explicitly find p_b rather than just use two, no cost to evaluate a norm.sf of 0!
+        chisq_p_b = 1-spstat.norm.sf(np.sqrt(chisquare( bgCount,sigCount,bgCount,bgErr, 0)))
+        #return this value 'cls' to get the confidence interval using a simple chi square fit
+        p_val=chisq_p_sb/(1-chisq_p_b)
+
+         #print 'Chi2 sb, b, p_val', chisq_p_sb, chisq_p_b, p_val
+
     else:
-        print 'Unrecognised test type ' // test
+        print 'Unrecognised test type ', test
+        
 
-#    print 'p_val '+str(p_val)
-#    print 'q_mu '+str(q_mu)
-#    print 'varMat ' + str(varMat)
-
-
-
+    
+     #print 'returning', float('%10.6f' % float(1-p_val))
+    
     return float('%10.6f' % float(1-p_val))
