@@ -50,66 +50,19 @@ if __name__ == '__main__':
                 #    continue
                 print 'testing: ' + h
                 lumi = ctr.LumiFinder(h)[0]
-                if lumi > 0:
+                if lumi <=0:
+                    continue
 
-                    sighisto=yoda.core.mkScatter(mchistos[fileliststatic][h])
+                # TODO import some code here for2D scatters.
+                has1D = True
+                mc1D = mchistos[fileliststatic][h]
+                sighisto=yoda.core.mkScatter(mchistos[fileliststatic][h])
 
-                    ###some special logic to deal with normalisation
-                    normFacSig =0.0
-                    normFacRef=0.0
-                    if ctr.isNorm(h)[0] == True:
-                        for point in refdata.points:
-                             normFacRef += point.y
-                        for point in sighisto.points:
-                            normFacSig += point.y
-                        normFacRef = ctr.isNorm(h)[1]
-                        import numpy as np
-                        if mchistos[fileliststatic][h].sumW2() == 0:
-                            continue
-                        normFacSig = (float(mchistos[fileliststatic][h].numEntries())/float(Nev.numEntries()) * float(xsec.points[0].x))
-
-                    CLs=[]
-                    sigCount = []
-                    bgCount = []
-                    bgError = []
-                    sigError = []
-                    #fill test results for each bin
-                    #out=np.zeros([refdata.numPoints,1])
-                    for i in range(0,refdata.numPoints):
-                        assert (refdata.numPoints == mchistos[fileliststatic][h].numBins)
-                        global mu_test
-                        mu_test=1
-                        mu_hat=0
-                        varmat=0
-                        #print mchistos[fileliststatic][h].sumW()
-                        #if mchistos[fileliststatic][h].sumW() == 0:
-                        #    continue
-                        if ctr.isNorm(h)[0] == True:
-                            sigCount.append(mchistos[fileliststatic][h].bins[i].sumW*lumi*normFacSig)
-                            bgCount.append(refdata.points[i].y*lumi*normFacRef*(refdata.points[i].xMax-refdata.points[i].xMin))
-                            bgError.append(refdata.points[i].yErrs[1]*lumi*normFacRef*(refdata.points[i].xMax-refdata.points[i].xMin))
-                            #sigError.append(sighisto.points[i].yErrs[1]*lumi*normFacSig)
-                            #Sigerror is used to store \tau, the ratio of MC Nev to "data" Nev
-                            if mchistos[fileliststatic][h].sumW() ==0:
-                                sigError.append(0.0)
-                            else:
-                                sigError.append(float(mchistos[fileliststatic][h].numEntries())/mchistos[fileliststatic][h].sumW())
-
-                        else:
-                            sigCount.append(mchistos[fileliststatic][h].bins[i].sumW*lumi)
-                            bgCount.append(refdata.points[i].y*lumi*(refdata.points[i].xMax-refdata.points[i].xMin))
-                            bgError.append(refdata.points[i].yErrs[1]*lumi*(refdata.points[i].xMax-refdata.points[i].xMin))
-                            #Sigerror is used to store \tau, the ratio of MC Nev to "data" Nev
-                            if mchistos[fileliststatic][h].sumW() ==0:
-                                sigError.append(0.0)
-                            else:
-                                sigError.append(float(mchistos[fileliststatic][h].numEntries())/mchistos[fileliststatic][h].sumW())
-                                #print float(mchistos[fileliststatic][h].numEntries())/mchistos[fileliststatic][h].sumW()
-                        ##cater for the case where the refdata bin is empty, occurs notably in ATLAS_2014_I1307243
-                        if refdata.points[i].y > 0:
-                            CLs.append(ctr.confLevel([sigCount[i]],[bgCount[i]],[bgError[i]],[sigError[i]]))
-                        else:
-                            CLs.append(0)
+                # fill test results for each bin for this histogram
+                bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef = util.fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec)
+                
+                if (len(CLs)==0):
+                    continue
 
 
 ##All these extra count checks are to stop any plots with no count in most likely bin from being entered
@@ -149,11 +102,6 @@ if __name__ == '__main__':
                     if _overWriteFlag == False and _pointExistsFlag == False:
                         masterDict[tempName].append(mapPoints[key][:])
 
-
-                # else if mapPoints[key][]
-                # else if mapPoints[key][2] > masterDict[tempName]
-                #
-                # masterDict[]
     import pickle
     ###print everything out
     for key in masterDict:
