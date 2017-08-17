@@ -3,34 +3,6 @@ from contur import TestingFunctions as ctr
 from contur import Utils as util
 import rivet,yoda,sys,os
 
-def getHistos(filelist):
-    """Loop over all input files. Only use the first occurrence of any REF-histogram
-    and the first occurrence in each MC file for every MC-histogram."""
-    ##Stolen from rivet-cmphistos
-    refhistos = {}
-    mchistos = {}
-    xsec ={}
-    Nev={}
-    #for infile in filelist:
-    mchistos.setdefault(filelist, {})
-    analysisobjects = yoda.read(filelist)
-    for path, ao in analysisobjects.iteritems():
-        if path.startswith('/_EVTCOUNT'):
-            Nev = ao
-        if path.startswith('/_XSEC'):
-            xsec = ao
-            ## Conventionally don't plot data objects whose names start with an underscore
-        if os.path.basename(path).startswith("_"):
-            continue
-        if path.startswith('/REF/'):
-            if not refhistos.has_key(path):
-                refhistos[path] = ao
-        else:
-            if not mchistos[filelist].has_key(path):
-                mchistos[filelist][path] = ao
-    return refhistos, mchistos, xsec, Nev
-
-
 def getRivetRefData(refhistos, anas=None):
     "Find all Rivet reference data files"
     rivet_data_dirs = rivet.getAnalysisRefPaths()
@@ -73,7 +45,7 @@ if __name__ == '__main__':
 
             else:
                 continue
-            refhistos, mchistos, xsec, Nev = getHistos(fileliststatic)
+            refhistos, mchistos, xsec, Nev = util.getHistos(fileliststatic)
             hpaths = []
             for aos in mchistos.values():
                 for p in aos.keys():
