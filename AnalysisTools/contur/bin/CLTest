@@ -3,26 +3,6 @@ from contur import TestingFunctions as ctr
 from contur import Utils as util
 import rivet,yoda,sys,os
 
-def getRivetRefData(refhistos, anas=None):
-    "Find all Rivet reference data files"
-    rivet_data_dirs = rivet.getAnalysisRefPaths()
-    dirlist = []
-    for d in rivet_data_dirs:
-        if anas is None:
-            import glob
-            dirlist.append(glob.glob(os.path.join(d, '*.yoda')))
-        else:
-            dirlist.append([os.path.join(d, a+'.yoda') for a in anas])
-    for filelist in dirlist:
-        # TODO: delegate to getHistos?
-        for infile in filelist:
-            analysisobjects = yoda.read(infile)
-            for path, ao in analysisobjects.iteritems():
-                if path.startswith('/REF/'):
-                    if not refhistos.has_key(path):
-                        refhistos[path] = ao
-
-
 
 if __name__ == '__main__':
     #need an empty dict to store our results
@@ -52,7 +32,7 @@ if __name__ == '__main__':
                     if p and p not in hpaths:
                         hpaths.append(p)
 
-            getRivetRefData(refhistos)
+            util.getRivetRefData(refhistos)
 
             mapPoints={}
 
