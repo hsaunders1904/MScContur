@@ -31,68 +31,53 @@ make
 
 -----------------------------------------
 
-# Create a test folder
-mkdir ~/foobar
-cd ~/foobar
-
-#Copy the grid setup to the test folder
-cp -r $CONTURMODULEDIR/AnalysisTools/GridSetup/* .
+# Copy the run area to a test folder.
+cp -r $CONTURMODULEDIR/AnalysisTools/GridSetup mytestfolder
 
 -----------------------------------------
 
-#2 ways of running, specific to the simple DM model but can be modified
+# In the standard run area we have two simplified models installed as default. 
 
+DM_vector_mediator_UFO is the model used in the first contur paper.
+DM_vector_mediator_HF_UFO is the same model but with Z' coupling to all generations of quark.
 
+# The next instructions are specific to running Herwig with one of these models, a recommended 
+# first step. If you are running a different model or generator, you'll have to modify your
+# actions here; for a single run, once you have the yoda file from rivet, the procedure should be the same again
 
+# For convenience, we have two ways of running, specific to the simple DM model but can be modified
+# Example Herwig .in files are provided in the model directories; see the comments in there.
 
-# First Way: Snippets in HerwigCommandHad - runs inclusive generation of BSM particles
-
-#For test case we only have 1 new mediator so force generator to produce this and inclusively all LO 2->2 scatters involving the mediator
-insert HPConstructor:Outgoing 0 /Herwig/FRModel/Particles/Y1
-set HPConstructor:Processes SingleParticleInclusive
-
-#Also add resonant S channel 2->2 scatter involving mediator via
-insert ResConstructor:Intermediates 0 /Herwig/FRModel/Particles/Y1
-#with some other bits to specify the desired interactions in the resonant mode
-
-
-
-#Second Way: Snippets in HerwigCommandWeak - forces associated production modes of weak bosons, and leptonic decays of those bosons
-
-#Forces decay modes of SM bosons via
-do /Herwig/Particles/Z0:SelectDecayModes Z0->e-,e+;
-
-#Generate Y1 inclusive 2->2 scatters as before but now veto outgoing coloured SM particles
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/c
-insert HPConstructor:ExcludedExternal 0 /Herwig/Particles/cbar
+# First Way: (see for example .in files with HAD in the name)   - runs inclusive generation of BSM particles.
+# Second Way: (see for example .in files with WEAK in the name) - forces associated production modes of weak bosons, 
+#                                                                 and leptonic decays of those bosons.
 
 -----------------------------------------
 
-#At end of both these files theres a line like:
+# At end of these .in files theres a line like:
 set LHCGenerator:EventHandler:LuminosityFunction:Energy 7000.0
 read 7_WEAK.ana
-#Which sets the CoM energy and loads the relevant rivet analyses in the .ana files
-#.ana files are in the GridPack folder copied over
-# To add a new analysis, you need to add it here, but also update the tables in
- $CONTURMODULEDIR/AnalysisTools/contur/contur/TestingFunctions
 
+# This sets the CoM energy, and loads the relevant rivet analyses in the .ana files
+# The .ana files are in the GridPack folder copied over.
+# To add a new analysis, you need to add it to your .ana file, but also update the tables in
+# $CONTURMODULEDIR/AnalysisTools/contur/contur/TestingFunctions
+# making sure you provide the necessary info about the lumi, the class of final state, and so on.
 
 -----------------------------------------
 
 
-#Do a single test run
+# To make a run on a single set of analyses, single beam energy, single model point
+# ---------------------------------------------------------------------------------
+
 cd GridPack
-cp ../HerwigCommandHad TestRun.in
-#Herwig utility to read the UFO model folder and build it
+# Get one of the example Herwig .in files
+cp DM_vector_mediator_HF_UFO/hf-1000-600-7_WEAK.in TestRun.in
 
-ufo2herwig VDM_simplified_model_UFO && make
+# Bulld the FRModel.model file for Herwig
+ufo2herwig DM_vector_mediator_HF_UFO && make
 
 -----------------------------------------
-
-#HerwigCommand snippets are for batch runs, so you need to add the three lines to the begining of your TestRun.in
-read FRModel.model
-set /Herwig/FRModel/Particles/Y1:NominalMass 1000.*GeV
-set /Herwig/FRModel/Particles/Xm:NominalMass 600.*GeV
 
 #Build the Herwig runcard
 Herwig read TestRun.in
@@ -101,7 +86,6 @@ Herwig read TestRun.in
 Herwig run LHC.run -N 2000
 
 -----------------------------------------
-
 
 #Run the single test script on the output yoda
 CLTestSingle LHC.yoda
@@ -112,7 +96,7 @@ Based on 11 found counting tests
 
 More details output to ANALYSIS folder
 
-#Also makes a plots directory containing all the .dat files for the analyses scanned
+# Also makes a plots directory containing all the .dat files for the analyses scanned
 
 To build the pdf files of these plots, run
 
@@ -121,14 +105,9 @@ contur-mkhtml
 from the same directory in which you ran CLTestSingle. This will build the plots and html index
 pages in ./contur-plots
 
-cd plots
-make-plots *.dat
-
-which will buildthe PDFs all in the ./plots directory.
-
 ----------------------------------------
 
-#Todo a batch run to make a grid,
+# Todo a batch run to make a grid,
 cd ..
 #Back to the base directory copied over
 
