@@ -57,8 +57,8 @@ if __name__ == '__main__':
         heatMap = {}
 
         plotdirs = [os.path.abspath(os.path.dirname(f)) for f in infile]
-        plotparser = rivet.mkStdPlotParser(plotdirs, )
-        #plotparser = util.mkStdPlotParser(plotdirs, )
+        #plotparser = rivet.mkStdPlotParser(plotdirs, )
+        plotparser = util.mkStdPlotParser(plotdirs, )
         for anatype in ctr.anapool:
             masterDict[anatype] = []
         refhistos, mchistos, xsec, Nev = util.getHistos(infile)
@@ -164,7 +164,8 @@ if __name__ == '__main__':
             plot['LogY'] = '1'
             plot['RatioPlot'] = '1'
             for key, val in plotparser.getHeaders(h).iteritems():
-                plot[key] = val
+                # Get any updated attributes from plotinfo files
+                 plot[key] = val
             ratioreference = '/REF'+h
             plot['RatioPlotReference'] = ratioreference
             output = ''
