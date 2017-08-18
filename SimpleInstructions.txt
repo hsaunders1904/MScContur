@@ -9,7 +9,7 @@ source setupContur.sh
 
 -----------------------------------------
 
-# Also need to buid the modified analyses:
+# Also need to build the modified analyses:
 
 cd
 $CONTURMODULEDIR/modified_analyses/Analyses
@@ -24,6 +24,10 @@ make
 
 # if the make step does not work you may need to install sqlite3
 # and re-run make again
+# Note also that if you run CLTest/CLTestSingle before making the DB, sqlite will
+# create an empty analysis.db file which you will probably then have to remove 
+# in order for make to build the correct one properly.
+
 
 -----------------------------------------
 
