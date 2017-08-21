@@ -37,9 +37,8 @@ pwd = os.getcwd()
 i=0
 k=0
 
-HerwigSetup="source /unix/cedar/software/sl6/setupEnv.sh"
-ConturSetup="source /unix/atlas4/yallup/contur/setupContour.sh"
-
+HerwigSetup="source /unix/cedar/software/sl6/Herwig-7.1.0/setupEnv.sh"
+ConturSetup="source /home/jmb/svn-managed/contur/setupContur.sh"
 
 for i in range(100,3100,100):
     for j in range(100,2100,100):
