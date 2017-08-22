@@ -64,7 +64,6 @@ if __name__ == '__main__':
                 if (len(CLs)==0):
                     continue
 
-
 ##All these extra count checks are to stop any plots with no count in most likely bin from being entered
 ##into liklihood calc, should be fixed upstream
 

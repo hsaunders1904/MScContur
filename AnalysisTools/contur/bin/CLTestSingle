@@ -61,7 +61,13 @@ if __name__ == '__main__':
         plotparser = util.mkStdPlotParser(plotdirs, )
         for anatype in ctr.anapool:
             masterDict[anatype] = []
+        # get reference histograms,
+        #     mchistos = mc plots, 
+        #     xsec     = generated xsec and its uncertainty,    
+        #     Nev      = sum of weights, sum of squared weight, number of events
+        # 
         refhistos, mchistos, xsec, Nev = util.getHistos(infile)
+
         hpaths = []
         for aos in mchistos.values():
             for p in aos.keys():
@@ -103,11 +109,8 @@ if __name__ == '__main__':
                 mchistos[infile][h].setAnnotation('Path', mcpath + h) 
                 sighisto = mchistos[infile][h]
                 
-
-            # print refdata,h,lumi,has1D,mc1D,sighisto
             # fill test results for each bin for this histogram
             bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef = util.fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec)
-
             if (len(CLs)==0):
                 continue
 
@@ -134,13 +137,6 @@ if __name__ == '__main__':
                 drawonly.append('/REF' + h)
                     
             drawonly.append(mcpath + h)
-            #if opts.RATIO and ratioreference is None:
-            #    ratioreference = mcpath + h
-
-
-            # if opts.RATIO and len(drawonly) > 1:
-            #     plot['RatioPlot'] = '1'
-            #     plot['RatioPlotReference'] = ratioreference
 
             for i in range(0, refdata.numPoints):
                 if ctr.isNorm(h)[0] == True:
