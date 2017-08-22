@@ -49,7 +49,11 @@ def writeOutput2(output, h, outdir):
 def getHistos(filelist):
     """Loop over all input files. Only use the first occurrence of any REF-histogram
     and the first occurrence in each MC file for every MC-histogram."""
-    # Stolen from rivet-cmphistos
+    # return reference histograms,
+    #        mchistos = mc plots, 
+    #        xsec     = generated xsec and its uncertainty,    
+    #        Nev      = sum of weights, sum of squared weight, number of events
+    # (derived from rivet-cmphistos)
     refhistos = {}
     mchistos = {}
     xsec = {}
@@ -104,6 +108,18 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
 # exclusion, and the normalisation factors (if required). 
 # It big and messy, needs work, but is at least factored out here
 # so the same code can be used in CLTest and CLTestSingle
+#
+# Input
+# -----
+# refdata -- reference data plot with measured values
+# h       -- name of plot being considered
+# lumi    -- luminosity used in the measurement
+# has1D   -- flag to say whether there is a 1D histogram present (sometimes there may be only 2D scatters)
+# mc1D    -- the 1D histogram for the signal (if has1D)
+# sighisto - the signal scatter plot (2D) 
+# Nev     -- for the signal: sumW, sumW2, number of events
+# xsec    -- for the signal: xsec, uncertainties
+#
 
     CLs = []
     bgCount = []
@@ -113,28 +129,40 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
     measCount = []
     measError = []
 
-    # some special logic to deal with normalisation
-    normFacSig = 0.0
-    normFacRef = 0.0
-    if ctr.isNorm(h)[0] == True:
+    # Scale factor to apply to the BSM points 
+    normFacSig = 1.0
+    # Scale factor to apply to the measured points (reference histogram)
+    normFacRef = 1.0
+    
+    normalised, factor, scaleMC = ctr.isNorm(h)
+
+    if normalised:
+        # Set up the normalisation values. 
         
         if has1D == False:
             print 'Found a normalised 2D scatter. Makes no sense. Ignoring it.',h
             return bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef
-
-        for point in refdata.points:
-            normFacRef += point.y
-        for point in sighisto.points:
-            normFacSig += point.y
-        normFacRef = ctr.isNorm(h)[1]
-        import numpy as np
-        if mc1D.sumW2() == 0:
-            print 'Sum of weights is zero:',h
+        
+        if mc1D.sumW2() <= 0:
+            print 'Sum of weights <= zero:',h
             return bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef
 
-        normFacSig = (float(mc1D.numEntries()) / float(Nev.numEntries()) * float(xsec.points[0].x))
-                
+        # number to scale the background data by during combination with signal.
+        # If rivet has generated area-normalised plots, this will typically be the integrated cross section in the plot.
+        # However, it can also be a simple scale factor to take into account e.g. branching ratio corrections in W/Z measurements
+        normFacRef = factor
+        
+        import numpy as np
+        
+        # number to scale the signal by during combination with background
+        # if rivet generated normalised histograms, signal is normalised by its cross section 
+        # (generated xsec * fraction appearing in histo)
+        if (scaleMC == 1):
+            normFacSig = (float(mc1D.numEntries()) / float(Nev.numEntries()) * float(xsec.points[0].x))
+            
     if has1D:
+        # do a check on the generated luminosity
+        
         if (mc1D.sumW()>0):
             mclumi = float(mc1D.numEntries())/mc1D.sumW()
             if (lumi/mclumi>2.0):
@@ -146,11 +174,14 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
                 # 3) so n_Gen/sumW = n_Gen/xsec = L_gen = mclumi
                 print 'Warning! Effective MC lumi %.2f is substantially less than data lumi %.2f for %s' % (mclumi, lumi, h)
                 print '--> consider generating more events.'
+                
+
+# Loop over the data points.
                     
     for i in range(0, refdata.numPoints):
         # Sigerror is used to store \tau, the ratio of MC Nev to "data" Nev
         # TODO check! (JMB) - looks to me like it stores the generated luminosity, not the ratio.
-        if ctr.isNorm(h)[0] == True:
+        if has1D:
             test = 'LL'
             sigCount.append(mc1D.bins[i].sumW * lumi * normFacSig)
             bgCount.append(refdata.points[i].y * lumi * normFacRef * (refdata.points[i].xMax - refdata.points[i].xMin))
@@ -158,37 +189,25 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
             if mc1D.sumW() ==0:
                 sigError.append(0.0)
             else:
-                # TODO: shouldn't this be adjusted for normalised histos?
-                sigError.append(float(mc1D.numEntries())/mc1D.sumW())
+                # TODO: should this be adjusted for normalised histos?
+                sigError.append(float(mclumi))
+ 
         else:
-            if has1D:
-                # Using CLs log-likeihood method, as in Contur paper. 
-                test = 'LL'
-                # error on signal will be estimated from event count, using poisson stats
-                sigCount.append(mc1D.bins[i].sumW * lumi)
-                bgCount.append(refdata.points[i].y * lumi * (refdata.points[i].xMax - refdata.points[i].xMin))
-                bgError.append(refdata.points[i].yErrs[1] * lumi * (refdata.points[i].xMax - refdata.points[i].xMin))
-                if mc1D.sumW() ==0:
-                    sigError.append(0.0)
-                else:
-                    sigError.append(mclumi)
-                                        
-            else:
-                # Using Chi2 test on two 2D plots. 
-                # One is assumed to be the result of the measurement (measCount, measErr)
-                # One is assumed to be the background-only scenario  (bgCount, bgErr)
-                # One is assumed to be the signal+background scenario (sigCount, sigErr)
-                # Currently only the ATLAS MET+JET measurement is done this way.
-                test = 'CSR'
-                print 'values:', i, sighisto.points[i].y, refdata.points[i].y, refdata.points[i].yErrs[1] 
-                sigCount.append(sighisto.points[i].y)
-                bgCount.append(refdata.points[i].y)
-                bgError.append(refdata.points[i].yErrs[1])
+            # Using Chi2 test on two 2D plots. 
+            # One is assumed to be the result of the measurement (measCount, measErr)
+            # One is assumed to be the background-only scenario  (bgCount, bgErr)
+            # One is assumed to be the signal+background scenario (sigCount, sigErr)
+            # Currently only the ATLAS MET+JET measurement is done this way.
+            test = 'CSR'
+            print 'values:', i, sighisto.points[i].y, refdata.points[i].y, refdata.points[i].yErrs[1] 
+            sigCount.append(sighisto.points[i].y)
+            bgCount.append(refdata.points[i].y)
+            bgError.append(refdata.points[i].yErrs[1])
                 
-                # TODO: at the moment, the 'CS' option is used for comparing ratio plots with and without BSM. The vast majority of the
-                # uncertainty is correlated and comes from the background, so we are ignoring the (uncorrelated) signal
-                # uncertainty here.
-                sigError.append(0.0)
+            # TODO: at the moment, the 'CS' option is used for comparing ratio plots with and without BSM. The vast majority of the
+            # uncertainty is correlated and comes from the background, so we are ignoring the (uncorrelated) signal
+            # uncertainty here.
+            sigError.append(0.0)
                 
         # cater for the case where the refdata bin is empty,
         # occurs notably in ATLAS_2014_I1307243
@@ -197,5 +216,6 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
         else:
             print 'Warning! Ref data bin '+str(i)+" empty in "+h
             CLs.append(0)
+
                     
     return bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef

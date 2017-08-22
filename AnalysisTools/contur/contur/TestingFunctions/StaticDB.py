@@ -139,12 +139,14 @@ def isNorm(h):
 
     isNorm=False
     normFac=1.0
+    scaleMC=0
 
     if ana in norms:
         for p, norm in norms[ana]:
             if re.search(p,tag):
                 isNorm = True
                 normFac = norm
+                scaleMC = scaleMC
                 break
 
-    return isNorm, normFac
+    return isNorm, normFac, scaleMC
