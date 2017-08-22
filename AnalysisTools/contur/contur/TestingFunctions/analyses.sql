@@ -87,8 +87,9 @@ INSERT INTO analysis VALUES('ATLAS_2013_I1230812_MU',4600.0,'ATLAS_7_Zjj_MU');
 INSERT INTO analysis VALUES('ATLAS_2014_I1306294_EL',4600.0,'ATLAS_7_Zjj_EL');
 INSERT INTO analysis VALUES('ATLAS_2014_I1306294_MU',4600.0,'ATLAS_7_Zjj_MU');
 INSERT INTO analysis VALUES('CMS_2015_I1310737',4900.0,'CMS_7_Zjj');
+
 INSERT INTO analysis VALUES('ATLAS_2015_I1345452',4600.0,'ATLAS_7_Wjj');
-INSERT INTO analysis VALUES('CMS_2014_I1303894',5000.0,'CMS_7_Wjj');
+
 
 
 -- 7 TeV Low mass DY
@@ -100,6 +101,8 @@ INSERT INTO analysis VALUES('CMS_2013_I1224539_ZJET',5000.0,'CMS_7_Zjj');
 -- 7 TeV W+jets. Note, these are presented as W cross sections, not including BR.
 INSERT INTO analysis VALUES('ATLAS_2014_I1319490_MU',4600.0,'ATLAS_7_Wjj_MU');
 INSERT INTO analysis VALUES('ATLAS_2014_I1319490_EL',4600.0,'ATLAS_7_Wjj_EL');
+INSERT INTO analysis VALUES('CMS_2014_I1303894',5000.0,'CMS_7_Wjj');
+
 
 -- in fb-1 
 INSERT INTO analysis VALUES('ATLAS_2013_I1217863_Z',4.6,'ATLAS_7_Z_GAMMA');
@@ -300,9 +303,11 @@ CREATE TABLE normalization (
     UNIQUE(id,pattern),
     FOREIGN KEY(id) REFERENCES analysis(id)
 );
--- this is BR to a single charged lepton
+-- this is BR to a single charged lepton, needed when the xsec is report as a W 
+-- and the generator reports the final state.
 INSERT INTO normalization VALUES('ATLAS_2014_I1319490_MU','d',0.108059,0);
 INSERT INTO normalization VALUES('ATLAS_2014_I1319490_EL','d',0.108059,0);
+INSERT INTO normalization VALUES('CMS_2014_I1303894','d',0.108059,0);
 
 -- these are the integrated cross section of the plot, in pb
 INSERT INTO normalization VALUES('ATLAS_2014_I1279489','d01',5.88,1);
