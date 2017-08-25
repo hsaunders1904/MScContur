@@ -22,6 +22,7 @@ class listdict(dict):
 
 subpools = listdict()
 norms = listdict()
+smc = listdict()
     
 name_pat = re.compile(r'([A-Z0-9]+_\d{4}_[IS]\d{6,8}[^/]*)/(d\d+-x\d+-y\d+)')
 subpool_pat = re.compile(r'([A-Z0-9]+_\d{4}_[IS]\d{6,8}[^/]*)_(R\d+)')
@@ -56,9 +57,10 @@ def init_dbs():
         subid = 'R%s' % (subid + 1)
         subpools[ana].append((pattern, subid))
 
-    for row in c.execute('SELECT id,pattern,norm FROM normalization;'):
-        ana, pattern, norm = row
+    for row in c.execute('SELECT id,pattern,norm,scalemc FROM normalization;'):
+        ana, pattern, norm, scalemc = row
         norms[ana].append((pattern, norm))
+        smc[ana].append((pattern, scalemc))
     
     conn.close()
 
@@ -139,14 +141,18 @@ def isNorm(h):
 
     isNorm=False
     normFac=1.0
-    scaleMC=0
+    scale_MC=0
 
     if ana in norms:
         for p, norm in norms[ana]:
             if re.search(p,tag):
                 isNorm = True
                 normFac = norm
-                scaleMC = scaleMC
                 break
 
-    return isNorm, normFac, scaleMC
+        for p, scalemc in smc[ana]:
+            if re.search(p,tag):
+                scale_MC = scalemc
+                break
+
+    return isNorm, normFac, scale_MC
