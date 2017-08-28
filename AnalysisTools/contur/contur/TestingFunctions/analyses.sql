@@ -305,9 +305,9 @@ CREATE TABLE normalization (
 );
 -- this is BR to a single charged lepton, needed when the xsec is report as a W 
 -- and the generator reports the final state.
-INSERT INTO normalization VALUES('ATLAS_2014_I1319490_MU','d',0.108059,0);
-INSERT INTO normalization VALUES('ATLAS_2014_I1319490_EL','d',0.108059,0);
-INSERT INTO normalization VALUES('CMS_2014_I1303894','d',0.108059,0);
+-- INSERT INTO normalization VALUES('ATLAS_2014_I1319490_MU','d',0.108059,0);
+-- INSERT INTO normalization VALUES('ATLAS_2014_I1319490_EL','d',0.108059,0);
+-- INSERT INTO normalization VALUES('CMS_2014_I1303894','d',0.108059,0);
 
 -- these are the integrated cross section of the plot, in pb
 INSERT INTO normalization VALUES('ATLAS_2014_I1279489','d01',5.88,1);
