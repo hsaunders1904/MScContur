@@ -8,10 +8,6 @@ insert Rivet:Analyses 0 ATLAS_2013_I1230812_MU # Z + jets
 insert Rivet:Analyses 0 ATLAS_2013_I1230812_EL # Z + jets
 insert Rivet:Analyses 0 CMS_2015_I1310737      # Z + jets
 
-# need to check for heavy flavour/prompt final state mods?
-
-insert Rivet:Analyses 0 ATLAS_2015_I1345452 #ttbar differential cross-section
-
 insert Rivet:Analyses 0 ATLAS_2014_I1288706       # Drell-Yan
 
 insert Rivet:Analyses 0 CMS_2014_I1303894      # W + jets
@@ -30,15 +26,18 @@ insert Rivet:Analyses 0 ATLAS_2012_I1203852 #ZZ
 insert Rivet:Analyses 0 CMS_2013_I1224539_WJET
 insert Rivet:Analyses 0 CMS_2013_I1224539_ZJET
 
+# need to check for heavy flavour/prompt final state mods?
+insert Rivet:Analyses 0 ATLAS_2015_I1345452 #ttbar differential cross-section
 
-# insert Rivet:Analyses 0 ATLAS_2013_I1190187 #WW (not in db)
+insert Rivet:Analyses 0 ATLAS_2013_I1190187 #WW
 
-#######(c/bjets) none of these are in the db yet.
-#insert Rivet:Analyses 0 CMS_2013_I1256943 #Z+bb
-#insert Rivet:Analyses 0 ATLAS_2013_I1219109_EL #W+b (el)
-#insert Rivet:Analyses 0 ATLAS_2013_I1219109_MU #W+b (mu)
-#insert Rivet:Analyses 0 ATLAS_2014_I1282447 #Wcharm
+# (c/bjets) 
+insert Rivet:Analyses 0 ATLAS_2014_I1306294_EL # Z+bb
+insert Rivet:Analyses 0 ATLAS_2014_I1306294_MU # Z+bb
+insert Rivet:Analyses 0 CMS_2013_I1256943 #Z+bb
+insert Rivet:Analyses 0 ATLAS_2013_I1219109_EL #W+b (el)
+insert Rivet:Analyses 0 ATLAS_2013_I1219109_MU #W+b (mu)
+insert Rivet:Analyses 0 ATLAS_2014_I1282447 #Wcharm
 
-#insert Rivet:Analyses 0 ATLAS_2014_I1306294    # Z+bb
-#insert Rivet:Analyses 0 ATLAS_2014_I1306294_EL # Z+bb
-#insert Rivet:Analyses 0 ATLAS_2014_I1306294_MU # Z+bb
+
+
