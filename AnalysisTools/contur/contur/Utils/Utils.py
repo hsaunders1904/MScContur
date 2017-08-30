@@ -143,10 +143,6 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
             print 'Found a normalised 2D scatter. Makes no sense. Ignoring it.',h
             return bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef
         
-        if mc1D.sumW2() <= 0:
-            print 'Sum of weights <= zero:',h
-            return bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef
-
         # number to scale the background data by during combination with signal.
         # If rivet has generated area-normalised plots, this will typically be the integrated cross section in the plot.
         # However, it can also be a simple scale factor to take into account e.g. branching ratio corrections in W/Z measurements
@@ -154,10 +150,14 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
         
         import numpy as np
         
+        print h, scaleMC
+
         # number to scale the signal by during combination with background
         # if rivet generated normalised histograms, signal is normalised by its cross section 
         # (generated xsec * fraction appearing in histo)
-        if (scaleMC == 1):
+        if (scaleMC == 1 & Nev.numEntries()>0):
+            print "scaling MC for", h
+             #print mc1D.numEntries(), Nev.numEntries(), xsec.points[0].x
             normFacSig = (float(mc1D.numEntries()) / float(Nev.numEntries()) * float(xsec.points[0].x))
             
     if has1D:
@@ -174,7 +174,9 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
                 # 3) so n_Gen/sumW = n_Gen/xsec = L_gen = mclumi
                 print 'Warning! Effective MC lumi %.2f is substantially less than data lumi %.2f for %s' % (mclumi, lumi, h)
                 print '--> consider generating more events.'
-                
+        else:
+            print h, ' has zero MC entries'
+            mclumi = 0
 
 # Loop over the data points.
                     
@@ -214,7 +216,7 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
         if refdata.points[i].y > 0:
             CLs.append(ctr.confLevel([sigCount[i]], [bgCount[i]], [bgError[i]], [sigError[i]], 1, test))
         else:
-            print 'Warning! Ref data bin '+str(i)+" empty in "+h
+             #print 'Warning! Ref data bin '+str(i)+" empty in "+h
             CLs.append(0)
 
                     
