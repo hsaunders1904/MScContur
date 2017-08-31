@@ -150,7 +150,7 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
         
         import numpy as np
         
-        print h, scaleMC
+         #print h, scaleMC
 
         # number to scale the signal by during combination with background
         # if rivet generated normalised histograms, signal is normalised by its cross section 
