@@ -112,7 +112,9 @@ if __name__ == '__main__':
             # fill test results for each bin for this histogram
             bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef = util.fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec)
             if (len(CLs)==0):
-                continue
+                CLs.append(0)
+
+             #print h, normFacSig, normFacRef
 
             anaobjects = []
 
@@ -148,8 +150,8 @@ if __name__ == '__main__':
                 # if there was no 1D plot, assume we had an already-made ratio (ATLAS MET)
 
 
-                # write the bin number of the most significant bin, and the bin number for the plot legend
-                sighisto.title='[%s] %s' % ( CLs.index(max(CLs))+1, max(CLs) )
+            # write the bin number of the most significant bin, and the bin number for the plot legend
+            sighisto.title='[%s] %s' % ( CLs.index(max(CLs))+1, max(CLs) )
             sighisto.setAnnotation('LineColor', 'red')
             anaobjects.append(sighisto)
             plot = Plot()
