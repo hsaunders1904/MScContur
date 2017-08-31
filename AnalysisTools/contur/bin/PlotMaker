@@ -10,7 +10,7 @@ import scipy.stats as sp
 from os.path import join
 import errno
 
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from contur.Plotting import *
 from contur import TestingFunctions as ctr
