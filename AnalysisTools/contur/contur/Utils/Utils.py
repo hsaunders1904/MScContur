@@ -155,7 +155,7 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
         # number to scale the signal by during combination with background
         # if rivet generated normalised histograms, signal is normalised by its cross section 
         # (generated xsec * fraction appearing in histo)
-        if (scaleMC == 1 & Nev.numEntries()>0):
+        if (scaleMC == 1 and Nev.numEntries()>0):
             print "scaling MC for", h
              #print mc1D.numEntries(), Nev.numEntries(), xsec.points[0].x
             normFacSig = (float(mc1D.numEntries()) / float(Nev.numEntries()) * float(xsec.points[0].x))
