@@ -75,8 +75,9 @@ def splitPath(path):
     if not m:
         m1 = subpool_pat.match(path)
         if not m1:
-            print 'Path not found or understood for "%s"' % path
-            raise InvalidPath('Parse error in "%s"' % path)
+            return INVALID
+            #print 'Path not found or understood for "%s"' % path
+            #raise InvalidPath('Parse error in "%s"' % path)
         else:
             analysis = m1.group(1)
             tag = ''
@@ -86,6 +87,34 @@ def splitPath(path):
         tag = m.group(2)
         subpool = ''
     return analysis, tag, subpool
+
+def validHisto(h):
+    """Tests a histo path to see if it is a valid contur histogram"""
+    if not INIT:
+        init_dbs()
+    try:
+        ana,tag,sub = splitPath(h)
+    except InvalidPath:
+        return INVALID
+
+    if ana in lumis:
+        if ana not in whitelists:
+            if ana not in blacklists:
+                return True
+            elif ana in blacklists:
+                for pattern in blacklists[ana]:
+                    if pattern in tag:
+                        return False
+                    else:
+                        return True
+        elif ana in whitelists:
+            for pattern in whitelists[ana]:
+                if pattern in tag:
+                    return True
+                else:
+                    return False
+    else:
+        return False
 
 def LumiFinder(h):
 
