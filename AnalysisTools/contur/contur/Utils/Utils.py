@@ -164,7 +164,10 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
         # do a check on the generated luminosity
         
         if (mc1D.sumW()>0):
-            mclumi = float(mc1D.numEntries())/mc1D.sumW()
+            
+            mclumi = float(mc1D.numEntries())/(mc1D.sumW()*normFacSig)
+             #print mc1D.numEntries(), mc1D.sumW(), normFacSig, mclumi
+
             if (lumi/mclumi>2.0):
                 # Note, this is usually in pb-1, but sometimes in fb-1.
                 # Also, some analyses have factor of 2 because they are averaged over e and mu channels
@@ -191,7 +194,6 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
             if mc1D.sumW() ==0:
                 sigError.append(0.0)
             else:
-                # TODO: should this be adjusted for normalised histos?
                 sigError.append(float(mclumi))
  
         else:
