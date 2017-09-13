@@ -94,8 +94,8 @@ INSERT INTO analysis VALUES('ATLAS_2015_I1345452',4600.0,'ATLAS_7_Wjj');
 INSERT INTO analysis VALUES('ATLAS_2014_I1288706',1600.0,'ATLAS_7_LMDY');
 
 -- 7 TeV single jet masses
-INSERT INTO analysis VALUES('CMS_2013_I1224539_WJET',5000.0,'CMS_7_Wjj');
-INSERT INTO analysis VALUES('CMS_2013_I1224539_ZJET',5000.0,'CMS_7_Zjj');
+INSERT INTO analysis VALUES('CMS_2013_I1224539_WJET',5.0,'CMS_7_Wjj');
+INSERT INTO analysis VALUES('CMS_2013_I1224539_ZJET',5.0,'CMS_7_Zjj');
 
 -- 7 TeV W+jets. 
 INSERT INTO analysis VALUES('ATLAS_2014_I1319490_MU',4600.0,'ATLAS_7_Wjj_MU');
@@ -239,8 +239,9 @@ INSERT INTO blacklist VALUES('ATLAS_2017_I1514251_MU','d01-x02-y02');
 INSERT INTO blacklist VALUES('ATLAS_2017_I1514251_EL','d01-x02-y03');
 INSERT INTO blacklist VALUES('ATLAS_2017_I1514251_MU','d01-x02-y03');
 INSERT INTO blacklist VALUES('CMS_2017_I1518399','d02');
-INSERT INTO blacklist VALUES('ATLAS_2017_I1598613','d01-x04-y01');
-
+-- have to veto all these at the moment because contur doesn't know
+-- how to handle weight differential xsecs presented as a 2D scatter.
+INSERT INTO blacklist VALUES('ATLAS_2017_I1598613_BB','d01');
 
 -- INSERT INTO blacklist VALUES('ATLAS_2017_I1609448','d01-x01-y01');
 -- INSERT INTO blacklist VALUES('ATLAS_2017_I1609448','d02-x01-y01');
