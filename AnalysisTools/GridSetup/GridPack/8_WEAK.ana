@@ -2,10 +2,8 @@ insert Rivet:Analyses 0 ATLAS_2016_I1457605 #inc photons
 insert Rivet:Analyses 0 ATLAS_2017_I1591327 #inc diphotons
 insert Rivet:Analyses 0 ATLAS_2014_I1306615 #Higgs diphoton
 
-insert Rivet:Analyses 0 ATLAS_2015_I1408516    #LM DY
 insert Rivet:Analyses 0 ATLAS_2015_I1408516_EL #LM DY
 insert Rivet:Analyses 0 ATLAS_2015_I1408516_MU #LM DY
-insert Rivet:Analyses 0 ATLAS_2016_I1467454    #HM DY
 insert Rivet:Analyses 0 ATLAS_2016_I1467454_EL #HM DY
 insert Rivet:Analyses 0 ATLAS_2016_I1467454_MU #HM DY
 
@@ -20,7 +18,6 @@ insert Rivet:Analyses 0 CMS_2017_I1518399   #Boosted top mass
 
 insert Rivet:Analyses 0 ATLAS_2015_I1394865 #4lepton lineshape
 
-insert Rivet:Analyses 0 ATLAS_2016_I1448301 # Zg(g) cross sections at 8 TeV
 insert Rivet:Analyses 0 ATLAS_2016_I1448301_EL # Zg(g) cross sections at 8 TeV
 insert Rivet:Analyses 0 ATLAS_2016_I1448301_MU # Zg(g) cross sections at 8 TeV
 insert Rivet:Analyses 0 ATLAS_2016_I1448301_NU # Zg(g) cross sections at 8 TeV
