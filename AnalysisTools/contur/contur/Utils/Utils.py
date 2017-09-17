@@ -194,7 +194,7 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
             if mc1D.sumW() ==0:
                 sigError.append(0.0)
             else:
-                sigError.append(float(mclumi))
+                sigError.append(float(mclumi)*normFacSig)
  
         else:
             # Using Chi2 test on two 2D plots. 
