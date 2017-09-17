@@ -56,10 +56,16 @@ if __name__ == '__main__':
                 # TODO import some code here for2D scatters.
                 has1D = True
                 mc1D = mchistos[fileliststatic][h]
+
+                # don't consider histo where the stats are so low the approximation don't work
+                if mc1D.numEntries()<5:
+                    continue
+
                 sighisto=yoda.core.mkScatter(mchistos[fileliststatic][h])
 
                 # fill test results for each bin for this histogram
                 bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef = util.fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec)
+
                 
                 if (len(CLs)==0):
                     continue
