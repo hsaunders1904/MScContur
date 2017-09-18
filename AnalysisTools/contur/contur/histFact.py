@@ -11,11 +11,17 @@ class conturFact(object):
     def __init__(self):
         self.masterDict = {}
         self.testVar = 1
+        self.conturPoints=[]
 
 
-    def addPoint(self, conturPoint, name):
+    def addPoint(self, conturPoint):
+        """Add all valid contur points to be sorted from an input file"""
         # self.masterDict.update({name, conturPoint})
-        self.masterDict[name] = conturPoint
+        #self.masterDict[name] = conturPoint
+        if conturPoint.__class__ != conturPoint:
+            raise AssertionError("Must be adding a conturPoint")
+        self.conturPoints.append(conturPoint)
+
 
     def __str__(self):
         return self.testVar
@@ -83,7 +89,10 @@ class histFact(object):
         """Check type of input aos
         """
         if self.signal.type == 'Histo1D' or self.signal.type == 'Profile1D':
-            self.mcLumi = float(self.signal.numEntries()) / float(self.signal.sumW())
+            if self.signal.sumW()==0.0:
+                self.mcLumi=0.0
+            else:
+                self.mcLumi = float(self.signal.numEntries()) / float(self.signal.sumW())
             if self.isScaled:
                 # if the Data is scaled, work out the signal scaling from number of events and generator xs
                 try:
@@ -187,31 +196,97 @@ class histFact(object):
             return False
         for i in range(0, len(self.signal.points)):
             ctrPt = conturPoint()
-            ctrPt.s.append( self.signal.points[i].y )
-            ctrPt.bg.append(self.background.points[i].y)
-            ctrPt.bgErr.append(self.background.points[i].yErrs[1])
-            ctrPt.nobs.append(self.ref.points[i].y)
+            ctrPt.s =  self.signal.points[i].y
+            ctrPt.bg = self.background.points[i].y
+            ctrPt.bgErr =self.background.points[i].yErrs[1]
+            ctrPt.nObs =self.ref.points[i].y
             # TODO check how we work mcLumi out
-            ctrPt.sErr.append(self.mcLumi)
+            ctrPt.sErr = self.mcLumi
             ctrPt.calcCLs()
+            ctrPt.tags=self.signal.path
+            ctrPt.pools=self.pool
+            ctrPt.subpools=self.subpool
             self.conturPoints.append(ctrPt)
 
 
-class conturPoint(dict):
-    """
-    Defines a contur point, wrapper class for python dict to initialize necessary values and offer function call to update CLs
-    """
+# class conturPoint(dict):
+#     """
+#     Defines a contur point, wrapper class for python dict to initialize necessary values and offer function call to update CLs
+#     """
+#
+#     members = ["s", "sErr", "bg", "bgErr", "nobs"]
+#     #CLs=0.0
+#
+#     def __init__(self):
+#         dict.__init__(self)
+#         #this is not quite write but initialize the dictionary with the default entries needed as empty lists
+#
+#         for m in self.members:
+#             self.__setattr__(m,[])
+#         self.CLs=0.0
+#         #self.update(dict)
+#         testVar=2
+#
+#     def calcCLs(self):
+#         """Public function to recalculate CL of this contur point"""
+#         #check points is well formed (equal arg lengths)
+#         if not self.__checkConsistency():
+#             self.CLs=0.0
+#         else:
+#             self.CLs = ctr.confLevel(self.s, self.bg, self.bgErr, self.sErr)
+#
+#
+#     def __checkConsistency(self):
+#         """Internal function to check if the point is well formed
+#         Errors if unequal arg length and returns False if point is empty"""
+#
+#         ref = len(self[self.members[0]])
+#         for m in self.members:
+#             if len(self[m]) !=ref:
+#                 raise AssertionError("Unequal lengths of arguments in conturpoint")
+#
+#         #If point is empty let it be known
+#         if ref == 0:
+#             return False
+#         else:
+#             return True
+#
+#     def __getattr__(self, name):
+#         if name in self:
+#             return self[name]
+#         else:
+#             raise AttributeError("No such attribute: " + name)
+#
+#     def __setattr__(self, name, item):
+#         self[name] = item
+#
+#     def __delattr__(self, name):
+#         if name in self:
+#             del self[name]
+#         else:
+#             raise AttributeError("No such attribute: " + name)
+#
+#     def addPoint(self,point):
+#         if point.__class__ != conturPoint:
+#             raise AssertionError("Must be a conturPoint to add to conturPoint")
+#         for k,v in point.iteritems():
+#             self[k].extend(v)
 
+#from collections import defaultdict
+
+class conturPoint(object):
     members = ["s", "sErr", "bg", "bgErr", "nobs"]
-
     def __init__(self):
-        #dict.__init__(self)
-        #this is not quite write but initialize the dictionary with the default entries needed as empty lists
-
+        #self.counts = dict.fromkeys(self.members,[])
+        #self.counts=defaultdict(self.members)
+        self.counts={}
         for m in self.members:
-            self.__setattr__(m,[])
+            self.counts[m]=[]
         self.CLs=0.0
-        #self.update(dict)
+        self._tags=[]
+        self._pools=[]
+        self._subpool=[]
+
 
     def calcCLs(self):
         """Public function to recalculate CL of this contur point"""
@@ -225,40 +300,89 @@ class conturPoint(dict):
     def __checkConsistency(self):
         """Internal function to check if the point is well formed
         Errors if unequal arg length and returns False if point is empty"""
-
-        ref = len(self[self.members[0]])
-        for m in self.members:
-            if len(self[m]) !=ref:
+        ref = len(self.counts[self.counts.keys()[0]])
+        for k,v in self.counts.iteritems():
+            if len(v) !=ref:
                 raise AssertionError("Unequal lengths of arguments in conturpoint")
-
-        #If point is empty let it be known
         if ref == 0:
             return False
         else:
             return True
 
-    def __getattr__(self, name):
-        if name in self:
-            return self[name]
-        else:
-            raise AttributeError("No such attribute: " + name)
+    def addPoint(self,point):
+        if point.__class__ != conturPoint:
+            raise AssertionError("Must be a conturPoint to add to conturPoint")
+        for k,v in point.counts.iteritems():
+            self.counts[k].extend(v)
+        self._tags.extend(point.tags)
 
-    def __setattr__(self, name, item):
-        self[name] = item
 
-    def __delattr__(self, name):
-        if name in self:
-            del self[name]
-        else:
-            raise AttributeError("No such attribute: " + name)
+    @property
+    def s(self):
+        """Signal count"""
+        return self.counts["s"]
+    @s.setter
+    def s(self,value):
+        self.counts["s"].append(value)
+
+    @property
+    def sErr(self):
+        return self.counts["sErr"]
+    @sErr.setter
+    def sErr(self, value):
+        self.counts["sErr"].append(value)
+
+    @property
+    def bg(self):
+        return self.counts["bg"]
+    @bg.setter
+    def bg(self, value):
+        self.counts["bg"].append(value)
+
+    @property
+    def bgErr(self):
+        return self.counts["bgErr"]
+    @bgErr.setter
+    def bgErr(self, value):
+        self.counts["bgErr"].append(value)
+
+    @property
+    def nObs(self):
+        return self.counts["nobs"]
+    @nObs.setter
+    def nObs(self, value):
+        self.counts["nobs"].append(value)
+
+    @property
+    def tags(self):
+        return self._tags
+    @tags.setter
+    def tags(self,value):
+        self._tags.append(value)
+
+    @property
+    def pools(self):
+        return self._pools
+    @pools.setter
+    def pools(self,value):
+        self._pools.append(value)
+
+    @property
+    def subpools(self):
+        return self._subpool
+    @subpools.setter
+    def subpools(self,value):
+        self._subpool.append(value)
+
 
     def __repr__(self):
-        return repr(self.__dict__)
+        return repr(self.counts)
 
 
 for root, dirs, files in os.walk('.'):
     for name in files:
         fileliststatic = []
+        conturFactory=conturFact()
         if '.yoda' in name and 'LHC' not in name:
             yodafile = os.path.join(root, name)
             fileliststatic = str(yodafile)
@@ -269,6 +393,7 @@ for root, dirs, files in os.walk('.'):
                 for p in aos.keys():
                     if p and p not in hpaths:
                         hpaths.append(p)
+
             for k, v in mchistos.iteritems():
                 for k2, v2 in v.iteritems():
                     if v2.type=="Scatter2D":
@@ -286,6 +411,9 @@ for root, dirs, files in os.walk('.'):
                         print histo.lumi
                         for p in histo.conturPoints:
                             print p.CLs
+                        max_cl=[item.CLs for item in histo.conturPoints].index(max([item.CLs for item in histo.conturPoints]))
+                        conturFactory.addPoint(histo.conturPoints[max_cl])
+                        #    z=histo.conturPoints[0].addPoint(histo.conturPoints[2])
                         #m.addPoint(histo.conturPoints)
-
+            print "done"
                         # contour=conturPoint(histo)
