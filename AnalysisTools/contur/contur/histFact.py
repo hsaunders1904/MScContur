@@ -1,12 +1,17 @@
 import os
 import yoda
+import re
 import rivet
 from contur import TestingFunctions as ctr
 import contur.Utils as util
 
+ANALYSIS=re.compile(r'([A-Z0-9]+_\d{4}_[IS]\d{6,8}[^/]*)')
+
 
 class conturFact(object):
-    """Parent class to initialise a contur analysis, stores results at each point and handles I/O"""
+    """Parent class to initialise a contur analysis, stores results at each point and handles I/O
+    #TODO Add a model point info that can be set to group all added conturPoints  by parameter space point
+    additionally, this will be needed to do grid runs"""
 
     def __init__(self):
         self.masterDict = {}
@@ -14,14 +19,36 @@ class conturFact(object):
         self.conturPoints=[]
 
 
-    def addPoint(self, conturPoint):
+    def addPoint(self, ctPt):
         """Add all valid contur points to be sorted from an input file"""
         # self.masterDict.update({name, conturPoint})
         #self.masterDict[name] = conturPoint
-        if conturPoint.__class__ != conturPoint:
+        if ctPt.__class__ != conturPoint:
             raise AssertionError("Must be adding a conturPoint")
-        self.conturPoints.append(conturPoint)
+        self.conturPoints.append(ctPt)
 
+    def sortPoints(self):
+        """Function call to sort conturPoints"""
+        pools=[]
+        [pools.append(x) for x in [item.pools for item in self.conturPoints] if x not in pools]
+        for p in pools:
+            anas=[]
+            [anas.append(x) for x in [ANALYSIS.search(item.tags).group() for item in self.conturPoints] if item.pools == p and x not in anas]
+            for a in anas:
+                subpools = []
+                [subpools.append(x) for x in [item.subpools for item in self.conturPoints] if item.pools == p and a in item.tags and x not in subpools ]
+                if subpools:
+                    result={}
+                    for sp in subpools:
+                        result[sp]=conturPoint()
+                    for x in result:
+                        [result[x].addPoint(y) for y in self.conturPoints if y.subpools == x and a in y.tags ]
+                    print 'break'
+                for item in self.conturPoints:
+                    item.subpools
+            print subpools
+
+        print "break"
 
     def __str__(self):
         return self.testVar
@@ -283,9 +310,9 @@ class conturPoint(object):
         for m in self.members:
             self.counts[m]=[]
         self.CLs=0.0
-        self._tags=[]
-        self._pools=[]
-        self._subpool=[]
+        self._tags=''
+        self._pools=''
+        self._subpool=''
 
 
     def calcCLs(self):
@@ -314,7 +341,7 @@ class conturPoint(object):
             raise AssertionError("Must be a conturPoint to add to conturPoint")
         for k,v in point.counts.iteritems():
             self.counts[k].extend(v)
-        self._tags.extend(point.tags)
+        #self._tags.extend(point.tags)
 
 
     @property
@@ -358,21 +385,21 @@ class conturPoint(object):
         return self._tags
     @tags.setter
     def tags(self,value):
-        self._tags.append(value)
+        self._tags=value
 
     @property
     def pools(self):
         return self._pools
     @pools.setter
     def pools(self,value):
-        self._pools.append(value)
+        self._pools=value
 
     @property
     def subpools(self):
         return self._subpool
     @subpools.setter
     def subpools(self,value):
-        self._subpool.append(value)
+        self._subpool=value
 
 
     def __repr__(self):
@@ -415,5 +442,6 @@ for root, dirs, files in os.walk('.'):
                         conturFactory.addPoint(histo.conturPoints[max_cl])
                         #    z=histo.conturPoints[0].addPoint(histo.conturPoints[2])
                         #m.addPoint(histo.conturPoints)
+            conturFactory.sortPoints()
             print "done"
                         # contour=conturPoint(histo)
