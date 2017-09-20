@@ -48,7 +48,7 @@ for i in range(10,100,10):
         copytree(pwd + '/GridPack',modelpath)
         #mkdir_p(str(modelpath))
         HerwigString = ''
-        HC=open('nscpo_7_WEAK.in', 'r')
+        HC=open('nscpo_8.in', 'r')
 
         HerwigString += 'read FRModel.model \n'
         HerwigString += 'set /Herwig/FRModel/Particles/phiNP:NominalMass ' +str(i) + '.*GeV \n'
