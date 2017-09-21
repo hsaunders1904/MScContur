@@ -166,17 +166,19 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
         if (mc1D.sumW()>0):
             
             mclumi = float(mc1D.numEntries())/(mc1D.sumW()*normFacSig)
-             #print mc1D.numEntries(), mc1D.sumW(), normFacSig, mclumi
-
+            #mclumi = float(Nev.numEntries()) / float(xsec.points[0].x)
+            #print mc1D.numEntries(), mc1D.sumW(), normFacSig, mclumi
+            #print h,' mclumi=',mclumi
             if (lumi/mclumi>2.0):
                 # Note, this is usually in pb-1, but sometimes in fb-1.
-                # Also, some analyses have factor of 2 because they are averaged over e and mu channels
+                # Also, some analyses have factors of 2 because they are averaged over e and mu channels
+                # There can also be bin-width effects (e.g. in 3D cross sections)
                 # How this works:
-                # 1) Rivet scales the histos by xsec-per-event
+                # 1) Rivet scales the histos by xsec-per-event (sometimes with bin width effects too)
                 # 2) sumW = n_Gen * xsec-per-event = xsec
                 # 3) so n_Gen/sumW = n_Gen/xsec = L_gen = mclumi
-                print 'Warning! Effective MC lumi %.2f is substantially less than data lumi %.2f for %s' % (mclumi, lumi, h)
-                print '--> consider generating more events.'
+                print 'Warning! Effective MC lumi %.2f appears substantially less than data lumi %.2f for %s' % (mclumi, lumi, h)
+                print 'This may be a bin width effect, but if not, consider generating more events.'
         else:
             print h, ' has zero MC entries'
             mclumi = 0
@@ -185,7 +187,8 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
                     
     for i in range(0, refdata.numPoints):
         # Sigerror is used to store \tau, the ratio of MC Nev to "data" Nev
-        # TODO check! (JMB) - looks to me like it stores the generated luminosity, not the ratio.
+        # TODO check! (JMB) - looks to me like it stores the generated luminosity without scale factor 
+        # (ie num entries/sumweights), not the ratio.
         if has1D:
             test = 'LL'
             sigCount.append(mc1D.bins[i].sumW * lumi * normFacSig)
