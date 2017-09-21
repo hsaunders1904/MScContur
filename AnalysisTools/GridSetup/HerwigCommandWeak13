@@ -3,6 +3,9 @@
 ####################################
 
 
+set /Herwig/FRModel/FRModel:gYXm 1.0
+set /Herwig/FRModel/FRModel:gYq  0.5
+
 do /Herwig/Particles/W+:SelectDecayModes W+->nu_e,e+; W+->nu_mu,mu+;
 do /Herwig/Particles/W+:PrintDecayModes
 

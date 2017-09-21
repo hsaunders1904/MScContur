@@ -1,9 +1,14 @@
 
+set /Herwig/FRModel/FRModel:gYXm 1.0
+set /Herwig/FRModel/FRModel:gYq  0.5
+
+
 ####################################
 #
 # Modify the required process here
 #
 ####################################
+
 
 cd /Herwig/NewPhysics
 
