@@ -1,120 +1,53 @@
 #!/usr/bin/env python
-from contur import TestingFunctions as ctr
-from contur import Utils as util
-import rivet,yoda,sys,os
 
+import CL
+import os
+from optparse import OptionParser
 
-if __name__ == '__main__':
-    #need an empty dict to store our results
-    scatterpoints ={}
-    masterDict={}
-    heatMap={}
-    for anatype in ctr.anapool:
-        masterDict[anatype] =[]
-    #CN.anapool()
-    for root, dirs, files in os.walk('.'):
-        for name in files:
-            fileliststatic = []
-            if '.yoda' in name and 'LHC' not in name:
-                yodafile = os.path.join(root, name)
-                fileliststatic = str(yodafile)
-                print "Found valid yoda file"
-                print "Model point info"
-                print name.strip('.yoda').split('_')[0] + " : " + name.strip('.yoda').split('_')[1]
-                print name.strip('.yoda').split('_')[2] + " : " + name.strip('.yoda').split('_')[3]
+## this does appear to work
+parser = OptionParser(usage = __doc__)
+parser.add_option("-o", "--outputdir", dest = "OUTPUTDIR",
+  default = "plots", help = "Specify output directory for output plots.")
 
-            else:
+## this doesn't work - getting over written somewhere
+parser.add_option("-a", "--analysisdir", dest = "ANALYSISDIR",
+  default = "ANALYSIS", help = "Output directory for analysis cards.")
+
+# Command line parsing
+opts, _ = parser.parse_args()
+
+# This initialise the dict that we will add tovfor each cell in the grid
+masterDict = CL.init_dict()
+
+# this loops through each.yoda file and calls the analysis function from CL.py
+for root, dirs, files in os.walk('.'):
+    for name in files:
+        fileliststatic = []
+        if '.yoda' in name and 'LHC' not in name and 'plot' not in name:
+            yodafile = os.path.join(root, name)
+            fileliststatic = str(yodafile)
+
+            try:
+                # TODO use regex instead
+                splitname = name.strip('.yoda').split('_')
+                x = splitname[1]
+                y = splitname[3]
+                _, _ = int(x), int(y) # check we have integers
+            except (IndexError, ValueError):
+                print 'Yoda file does not appear to have the correct naming style', name
                 continue
-            refhistos, mchistos, xsec, Nev = util.getHistos(fileliststatic)
-            hpaths = []
-            for aos in mchistos.values():
-                for p in aos.keys():
-                    if p and p not in hpaths:
-                        hpaths.append(p)
 
-            util.getRivetRefData(refhistos)
+            print "Found valid yoda file", yodafile.strip('./')
+            print "Model point info ", x, y
 
-            mapPoints={}
+            # Perform analysis
+            mapPoints = CL.contur_analysis(yodafile, opts, True, x, y)
+            masterDict = CL.grid_add_to_dict(masterDict, mapPoints)
 
-            print "\nScanning " + str(len(hpaths)) + " histos found generated for model point \n"
+        else:
+            continue
 
-            for h in hpaths:
-                if refhistos.has_key('/REF' + h):
-                    refdata = refhistos['/REF' + h]
-				#Manually store additional plot in a function called LumiFinder, if a Lumi isn't stored vs an
-				#analysis name then use that info to veto testing
-                if ctr.LumiFinder(h)[0] == -1:
-                    continue
-                #Use this switch to view individual analyses
-                #if '/ATLAS_2014_I1279489' not in h:
-                #    continue
-                print 'testing: ' + h
-                lumi = ctr.LumiFinder(h)[0]
-                if lumi <=0:
-                    continue
+# Write out the grid results
+CL.output_grid(masterDict, opts)
 
-                # TODO import some code here for2D scatters.
-                has1D = True
-                mc1D = mchistos[fileliststatic][h]
-
-                # don't consider histo where the stats are so low the approximation don't work
-                if mc1D.numEntries()<5:
-                    continue
-
-                sighisto=yoda.core.mkScatter(mchistos[fileliststatic][h])
-
-                # fill test results for each bin for this histogram
-                bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef = util.fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec)
-
-                
-                if (len(CLs)==0):
-                    continue
-
-##All these extra count checks are to stop any plots with no count in most likely bin from being entered
-##into liklihood calc, should be fixed upstream
-
-##See if any additional grouping is needed 'subpool'
-                if ctr.LumiFinder(h)[2]:
-                    tempKey = ''
-                    tempKey= h.split('/')[1] +'_'+ctr.LumiFinder(h)[2]
-                    if tempKey not in mapPoints and bgCount[CLs.index(max(CLs))]>0.0:
-                        mapPoints[tempKey] = [float(name.strip('.yoda').split('_')[1]),float(name.strip('.yoda').split('_')[3]), float(max(CLs)) , [sigCount[CLs.index(max(CLs))]], [bgCount[CLs.index(max(CLs))]] , [bgError[CLs.index(max(CLs))]], [sigError[CLs.index(max(CLs))]],str(h)]
-                    elif bgCount[CLs.index(max(CLs))] > 0.0:
-                        mapPoints[tempKey][3].append(sigCount[CLs.index(max(CLs))])
-                        mapPoints[tempKey][4].append(bgCount[CLs.index(max(CLs))])
-                        mapPoints[tempKey][5].append(bgError[CLs.index(max(CLs))])
-                        mapPoints[tempKey][6].append(sigError[CLs.index(max(CLs))])
-                        mapPoints[tempKey][7]+=","+(str(h))
-                else:
-                    if h not in mapPoints and bgCount[CLs.index(max(CLs))]>0.0:
-                        mapPoints[h] = [float(name.strip('.yoda').split('_')[1]),float(name.strip('.yoda').split('_')[3]), float(max(CLs)) , [sigCount[CLs.index(max(CLs))]], [bgCount[CLs.index(max(CLs))]] , [bgError[CLs.index(max(CLs))]],[sigError[CLs.index(max(CLs))]],str(h)]
-##Scan through all points and fill each catagory, stored in masterDict, with the counts from each grouping if it is more sensitive than the previous fill
-            for key in mapPoints:
-                tempName = ctr.LumiFinder(key)[1]
-                mapPoints[key][2] = ctr.confLevel(mapPoints[key][3],mapPoints[key][4],mapPoints[key][5], mapPoints[key][6])
-                if not masterDict[tempName]:
-                    masterDict[tempName].append(mapPoints[key][:])
-                else:
-                    _overWriteFlag = False
-                    _pointExistsFlag = False
-                    for listelement in masterDict[tempName]:
-                        if mapPoints[key][0] == listelement[0] and mapPoints[key][1] == listelement[1]:
-                            _pointExistsFlag = True
-                            if mapPoints[key][2] > listelement[2]:
-                                masterDict[tempName][masterDict[tempName].index(listelement)] = mapPoints[key][:]
-                                #listelement = mapPoints[key][:]
-                                _overWriteFlag=True
-                    if _overWriteFlag == False and _pointExistsFlag == False:
-                        masterDict[tempName].append(mapPoints[key][:])
-
-    import pickle
-    ###print everything out
-    for key in masterDict:
-        if masterDict[key]:
-            masterDict[key].sort(key=lambda x: x[0])
-            util.writeOutput(masterDict[key],key + ".dat")
-            with open("./ANALYSIS/"+key+'.map', 'w') as f:
-                pickle.dump(masterDict[key], f)
-
-
-print 'Run finished, analysis output to folder "ANALYSIS"'
+print "Run finished, analysis output to ", opts.ANALYSISDIR, " folder"
