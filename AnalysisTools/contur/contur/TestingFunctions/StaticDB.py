@@ -105,14 +105,16 @@ def validHisto(h):
                 for pattern in blacklists[ana]:
                     if pattern in tag:
                         return False
-                    else:
-                        return True
+                    #else:
+                    #    return True
+                return True
         elif ana in whitelists:
             for pattern in whitelists[ana]:
                 if pattern in tag:
                     return True
-                else:
-                    return False
+                #else:
+                #    return False
+            return False
     else:
         return False
 

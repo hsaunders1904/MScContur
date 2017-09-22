@@ -11,13 +11,17 @@ ANALYSIS=re.compile(r'([A-Z0-9]+_\d{4}_[IS]\d{6,8}[^/]*)')
 class conturFact(object):
     """Parent class to initialise a contur analysis, stores results at each point and handles I/O
     #TODO Add a model point info that can be set to group all added conturPoints  by parameter space point
-    additionally, this will be needed to do grid runs"""
+    additionally, this will be needed to do grid runs
+
+    The sortedPoints and ctPt variables would then be inside dictionaries with a key for each parameter space
+    point
+    """
 
     def __init__(self):
         self.masterDict = {}
-        self.testVar = 1
         self.conturPoints=[]
-
+        self._sortedPoints=[]
+        self._ctPt=conturPoint()
 
     def addPoint(self, ctPt):
         """Add all valid contur points to be sorted from an input file"""
@@ -33,25 +37,44 @@ class conturFact(object):
         [pools.append(x) for x in [item.pools for item in self.conturPoints] if x not in pools]
         for p in pools:
             anas=[]
-            [anas.append(x) for x in [ANALYSIS.search(item.tags).group() for item in self.conturPoints] if item.pools == p and x not in anas]
+            [anas.append(x) for x in [ANALYSIS.search(item.tags).group() for item in self.conturPoints if item.tags and item.pools == p] if x not in anas]
             for a in anas:
                 subpools = []
-                [subpools.append(x) for x in [item.subpools for item in self.conturPoints] if item.pools == p and a in item.tags and x not in subpools ]
+                [subpools.append(x) for x in [item.subpools for item in self.conturPoints if item.pools == p and a in item.tags ] if x not in subpools ]
                 if subpools:
                     result={}
                     for sp in subpools:
                         result[sp]=conturPoint()
-                    for x in result:
-                        [result[x].addPoint(y) for y in self.conturPoints if y.subpools == x and a in y.tags ]
-                    print 'break'
-                for item in self.conturPoints:
-                    item.subpools
-            print subpools
+                    for k,v in result.iteritems():
+                        #remove the point if it ends up in a group
+                        [result[k].addPoint(y) for y in self.conturPoints if y.subpools == k and a in y.tags ]
+                        v.calcCLs()
+                        v.pools=p
+                        v.tags=a
+                    #add the max subpool back into the list of points with the pool tag set but no subpool
+                    [self.conturPoints.append(v) for k,v in result.iteritems()] # if v.CLs == max([z.CLs for z in result.values()])
 
-        print "break"
+        for p in pools:
+            [self._sortedPoints.append(item) for item in self.conturPoints if item.CLs == max([x.CLs for x in self.conturPoints if x.pools==p]) and item.pools == p and item.pools not in [x.pools for x in self._sortedPoints]]
+        #once all the points are sorted and the representative of each pool is put into _sortedPoints, work out the final exclusion
+        self.buildFinal()
 
-    def __str__(self):
-        return self.testVar
+
+    def buildFinal(self):
+        """Function to build the final contur point out of the safe combination of all input points"""
+        for x in self._sortedPoints:
+            self._ctPt.addPoint(x)
+        self._ctPt.calcCLs()
+
+    @property
+    def sortedPoints(self):
+        return self._sortedPoints
+    @property
+    def conturPoint(self):
+        return self._ctPt
+
+    def __repr__(self):
+        return repr(self._ctPt)
 
 #
 # class masterDict(conturFact):
@@ -187,31 +210,31 @@ class histFact(object):
             return False
 
         for i in range(0, len(self.signal.points)):
-            self.signal.points[i].y = self.signal.points[i].y * self.scaleFactorSig * (
+            self.signal.points[i].y = self.signal.points[i].y * self.lumi * self.scaleFactorSig * (
                 self.signal.points[i].xMax - self.signal.points[i].xMin)
             self.signal.points[i].yErrs = (
-                self.signal.points[i].yErrs[0] * self.scaleFactorSig * (
+                self.signal.points[i].yErrs[0] * self.lumi * self.scaleFactorSig * (
                 self.signal.points[i].xMax - self.signal.points[i].xMin),
-                self.signal.points[i].yErrs[1] * self.scaleFactorSig * (
+                self.signal.points[i].yErrs[1] * self.lumi * self.scaleFactorSig * (
                 self.signal.points[i].xMax - self.signal.points[i].xMin)
             )
         for i in range(0, len(self.ref.points)):
-            self.ref.points[i].y = self.ref.points[i].y * self.scaleFactorData * (
+            self.ref.points[i].y = self.ref.points[i].y * self.lumi * self.scaleFactorData * (
                 self.ref.points[i].xMax - self.ref.points[i].xMin)
             self.ref.points[i].yErrs = (
-                self.ref.points[i].yErrs[0] * self.scaleFactorData * (
+                self.ref.points[i].yErrs[0] * self.lumi * self.scaleFactorData * (
                     self.ref.points[i].xMax - self.ref.points[i].xMin),
-                self.ref.points[i].yErrs[1] * self.scaleFactorData * (
+                self.ref.points[i].yErrs[1] * self.lumi * self.scaleFactorData * (
                     self.ref.points[i].xMax - self.ref.points[i].xMin)
             )
         for i in range(0, len(self.background.points)):
             # background should have a separate scalefactor later
-            self.background.points[i].y = self.background.points[i].y * self.scaleFactorData * (
+            self.background.points[i].y = self.background.points[i].y * self.lumi * self.scaleFactorData * (
                 self.background.points[i].xMax - self.background.points[i].xMin)
             self.background.points[i].yErrs = (
-                self.background.points[i].yErrs[0] * self.scaleFactorData * (
+                self.background.points[i].yErrs[0] * self.lumi * self.scaleFactorData * (
                     self.background.points[i].xMax - self.background.points[i].xMin),
-                self.background.points[i].yErrs[1] * self.scaleFactorData * (
+                self.background.points[i].yErrs[1] * self.lumi * self.scaleFactorData * (
                     self.background.points[i].xMax - self.background.points[i].xMin)
             )
 
@@ -223,7 +246,10 @@ class histFact(object):
             return False
         for i in range(0, len(self.signal.points)):
             ctrPt = conturPoint()
-            ctrPt.s =  self.signal.points[i].y
+            #need this as empty s is returning CL=1, this should be fixed in the limit setting functions
+            if self.signal.points[i].y == 0.0:
+                continue
+            ctrPt.s = self.signal.points[i].y
             ctrPt.bg = self.background.points[i].y
             ctrPt.bgErr =self.background.points[i].yErrs[1]
             ctrPt.nObs =self.ref.points[i].y
@@ -235,71 +261,6 @@ class histFact(object):
             ctrPt.subpools=self.subpool
             self.conturPoints.append(ctrPt)
 
-
-# class conturPoint(dict):
-#     """
-#     Defines a contur point, wrapper class for python dict to initialize necessary values and offer function call to update CLs
-#     """
-#
-#     members = ["s", "sErr", "bg", "bgErr", "nobs"]
-#     #CLs=0.0
-#
-#     def __init__(self):
-#         dict.__init__(self)
-#         #this is not quite write but initialize the dictionary with the default entries needed as empty lists
-#
-#         for m in self.members:
-#             self.__setattr__(m,[])
-#         self.CLs=0.0
-#         #self.update(dict)
-#         testVar=2
-#
-#     def calcCLs(self):
-#         """Public function to recalculate CL of this contur point"""
-#         #check points is well formed (equal arg lengths)
-#         if not self.__checkConsistency():
-#             self.CLs=0.0
-#         else:
-#             self.CLs = ctr.confLevel(self.s, self.bg, self.bgErr, self.sErr)
-#
-#
-#     def __checkConsistency(self):
-#         """Internal function to check if the point is well formed
-#         Errors if unequal arg length and returns False if point is empty"""
-#
-#         ref = len(self[self.members[0]])
-#         for m in self.members:
-#             if len(self[m]) !=ref:
-#                 raise AssertionError("Unequal lengths of arguments in conturpoint")
-#
-#         #If point is empty let it be known
-#         if ref == 0:
-#             return False
-#         else:
-#             return True
-#
-#     def __getattr__(self, name):
-#         if name in self:
-#             return self[name]
-#         else:
-#             raise AttributeError("No such attribute: " + name)
-#
-#     def __setattr__(self, name, item):
-#         self[name] = item
-#
-#     def __delattr__(self, name):
-#         if name in self:
-#             del self[name]
-#         else:
-#             raise AttributeError("No such attribute: " + name)
-#
-#     def addPoint(self,point):
-#         if point.__class__ != conturPoint:
-#             raise AssertionError("Must be a conturPoint to add to conturPoint")
-#         for k,v in point.iteritems():
-#             self[k].extend(v)
-
-#from collections import defaultdict
 
 class conturPoint(object):
     members = ["s", "sErr", "bg", "bgErr", "nobs"]
@@ -406,42 +367,48 @@ class conturPoint(object):
         return repr(self.counts)
 
 
-for root, dirs, files in os.walk('.'):
-    for name in files:
-        fileliststatic = []
-        conturFactory=conturFact()
-        if '.yoda' in name and 'LHC' not in name:
-            yodafile = os.path.join(root, name)
-            fileliststatic = str(yodafile)
-            refhistos, mchistos, xsec, Nev = util.getHistos(fileliststatic)
-            hpaths = []
-            m = conturFact()
-            for aos in mchistos.values():
-                for p in aos.keys():
-                    if p and p not in hpaths:
-                        hpaths.append(p)
-
-            for k, v in mchistos.iteritems():
-                for k2, v2 in v.iteritems():
-                    if v2.type=="Scatter2D":
-                        continue
-                    if "count" in k2:
-                        continue
-                    try:
-                        y=ctr.validHisto(v2.path)
-                    except:
-                        y=False
-                        pass
-
-                    if y:
-                        histo = histFact(v2, xsec, Nev)
-                        print histo.lumi
-                        for p in histo.conturPoints:
-                            print p.CLs
-                        max_cl=[item.CLs for item in histo.conturPoints].index(max([item.CLs for item in histo.conturPoints]))
-                        conturFactory.addPoint(histo.conturPoints[max_cl])
-                        #    z=histo.conturPoints[0].addPoint(histo.conturPoints[2])
-                        #m.addPoint(histo.conturPoints)
-            conturFactory.sortPoints()
-            print "done"
+#The below is for testing, comment out for now but delete soon.
+# for root, dirs, files in os.walk('.'):
+#     for name in files:
+#         fileliststatic = []
+#         conturFactory=conturFact()
+#         if '.yoda' in name and 'LHC' not in name:
+#             yodafile = os.path.join(root, name)
+#             fileliststatic = str(yodafile)
+#             refhistos, mchistos, xsec, Nev = util.getHistos(fileliststatic)
+#             hpaths = []
+#             m = conturFact()
+#             for aos in mchistos.values():
+#                 for p in aos.keys():
+#                     if p and p not in hpaths:
+#                         hpaths.append(p)
+#
+#             for k, v in mchistos.iteritems():
+#                 for k2, v2 in v.iteritems():
+#                     #if v2.type=="Scatter2D":
+#                     #    continue
+#                     #if k2!="/ATLAS_2014_I1307243/d27-x01-y01":
+#                     #    continue
+#
+#                     if "count" in k2:
+#                         continue
+#                     try:
+#                         y=ctr.validHisto(v2.path)
+#                     except:
+#                         y=False
+#                         pass
+#
+#                     if y:
+#                         histo = histFact(v2, xsec, Nev)
+#                         print histo.lumi
+#                         for p in histo.conturPoints:
+#                             print p.CLs
+#                         if histo.conturPoints:
+#                             max_cl=[item.CLs for item in histo.conturPoints].index(max([item.CLs for item in histo.conturPoints]))
+#                             conturFactory.addPoint(histo.conturPoints[max_cl])
+#                         #    z=histo.conturPoints[0].addPoint(histo.conturPoints[2])
+#                         #m.addPoint(histo.conturPoints)
+#             conturFactory.sortPoints()
+#             x=conturFactory._sortedPoints
+#             print "done"
                         # contour=conturPoint(histo)

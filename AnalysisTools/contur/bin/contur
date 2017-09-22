@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+
+from contur import Factories as ct
+# this is just used to check if a histo is a valid contur histo, this should be factored into histFact and taken out
+from contur import TestingFunctions as tf
+
+from optparse import OptionParser
+import contur.Utils as util
+import sys, os
+
+# TODO Fix the options so they work! Add option for grid mode etc.
+parser = OptionParser(usage=__doc__)
+parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
+                  default="plots", help="Specify output directory for output plots.")
+parser.add_option("-a", "--analysisdir", dest="ANALYSISDIR",
+                  default="ANALYSIS", help="Output directory for analysis cards.")
+
+# Command line parsing
+opts, yodafiles = parser.parse_args()
+
+if __name__ == "__main__":
+    # Initialise a conturFactory
+    contur = ct.conturFact()
+    # conturFactory should take entire yoda files/ list of yoda file as initialization argument but for now loop over aos in yodafile
+    for infile in yodafiles:
+        refhistos, mchistos, xsec, Nev = util.getHistos(infile)
+
+        # again this looping belongs inside conturFact
+
+        for k, v in mchistos.iteritems():
+            for k2, v2 in v.iteritems():
+
+                # this is just used to check if a histo is a valid contur histo, this should be factored into histFact and taken out as a check here
+
+                if tf.validHisto(v2.path):
+
+                    # Currently histfact looks up the ref data every time, this should be factored into conturfact
+                    # Conturfact should also hold xsec and Nev eventually
+
+                    histo = ct.histFact(v2, xsec, Nev)
+
+                    # sometimes the list of conturPoints made by hist fact is empty (no signal in any bin), this exception should be properly handled inside histFact
+
+                    if histo.conturPoints:
+
+                        # find the representative (i.e. highest cl bin from each histo) and push it into the factory
+
+                        max_cl = [item.CLs for item in histo.conturPoints].index(max([item.CLs for item in histo.conturPoints]))
+                        contur.addPoint(histo.conturPoints[max_cl])
+
+        # once we have every point from a given aos, call the function to sort this
+        # eventually conturFact should know which model point each yoda is from, then multiple yodas covering different pools can be pushed in at the same time
+        # and eventually construct a point for each parameter space point, for now assume a single input yoda to test
+
+        contur.sortPoints()
+        print contur.conturPoint
+        print contur.conturPoint.CLs
