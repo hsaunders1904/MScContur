@@ -48,7 +48,7 @@ if __name__ == "__main__":
                         max_cl = [item.CLs for item in histo.conturPoints].index(max([item.CLs for item in histo.conturPoints]))
                         contur.addPoint(histo.conturPoints[max_cl])
 
-        # once we have every point from a given aos, call the function to sort this
+        # once we have every point from a given yoda, call the function to sort this
         # eventually conturFact should know which model point each yoda is from, then multiple yodas covering different pools can be pushed in at the same time
         # and eventually construct a point for each parameter space point, for now assume a single input yoda to test
 

@@ -4,9 +4,34 @@ import re
 import rivet
 from contur import TestingFunctions as ctr
 import contur.Utils as util
+import pandas as pd
+
 
 ANALYSIS=re.compile(r'([A-Z0-9]+_\d{4}_[IS]\d{6,8}[^/]*)')
 
+REFLOAD=False
+refObj={}
+def init_ref():
+    """Function to load all reference data into memory
+    Here reference data can be either experimental data or theoretical prediction"""
+    refFiles=[]
+    #refObj = {}
+    print "Gathering all reference Data"
+    rivet_data_dirs = rivet.getAnalysisRefPaths()
+    for dirs in rivet_data_dirs:
+        import glob
+        refFiles.append(glob.glob(os.path.join(dirs, '*.yoda')))
+    for fileList in refFiles:
+        for f in fileList:
+            aos = yoda.read(f)
+            for path, ao in aos.iteritems():
+                if path.startswith('/REF/'):
+                    refObj[path] = ao
+                if path.startswith('/THY/'):
+                    #TODO provide this information in the first place!
+                    refObj[path] = ao
+    global REFLOAD
+    REFLOAD = True
 
 class conturFact(object):
     """Parent class to initialise a contur analysis, stores results at each point and handles I/O
@@ -161,18 +186,11 @@ class histFact(object):
 
     def __getData(self):
         """Looks up ref data"""
-        refFiles = []
-        rivet_data_dirs = rivet.getAnalysisRefPaths()
-        for dirs in rivet_data_dirs:
-            import glob
-            refFiles.append(glob.glob(os.path.join(dirs, '*.yoda')))
-        for fileList in refFiles:
-            for f in fileList:
-                aos = yoda.read(f)
-                for path, ao in aos.iteritems():
-                    if path.startswith('/REF/'):
-                        if self.signal.path in path:
-                            self.ref = ao
+        if not REFLOAD:
+            init_ref()
+        for path,ao in refObj.iteritems():
+            if self.signal.path in path:
+                self.ref = ao
 
     def __getMC(self):
         """Lookup for any stored SM MC background calculation
@@ -208,7 +226,7 @@ class histFact(object):
         """
         if self.signal.type != "Scatter2D":
             return False
-
+# for sig,ref,bg in zip(..,..,..):
         for i in range(0, len(self.signal.points)):
             self.signal.points[i].y = self.signal.points[i].y * self.lumi * self.scaleFactorSig * (
                 self.signal.points[i].xMax - self.signal.points[i].xMin)
@@ -262,7 +280,25 @@ class histFact(object):
             self.conturPoints.append(ctrPt)
 
 
+class conturBucket(object):
+    """ A conturBucket is a collection of conturPoints that forms a combined test
+
+    """
+    members = ["s", "sErr", "bg", "bgErr", "nobs", "nobsErr","CLs","tags","pool","subpool"]
+    def __init__(self):
+        self.bucket=pd.DataFrame(columns=self.members)
+        print "break"
+    #def addPoint(self):
+    #    self.bucket
+
+#test=conturBucket()
+
+
 class conturPoint(object):
+    """ A conturPoint is a container for the counts that an observable forms
+    histFactory creates a series of conturPoints from any well formed conturPoints
+    """
+
     members = ["s", "sErr", "bg", "bgErr", "nobs"]
     def __init__(self):
         #self.counts = dict.fromkeys(self.members,[])
