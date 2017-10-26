@@ -46,7 +46,7 @@ for root, dirs, files in os.walk('.',topdown=False):
     #for dirs
     for filename in files:
 		#walk and look for .map files
-        if '.map' in filename and 'svn' not in filename:
+        if '.map' in filename and 'svn' not in filename and '.hg' not in filename:
             filename = join(root,filename)
             with open(filename,'r+b') as f:
                 maps[filename.strip(".map")] = pickle.load(f)

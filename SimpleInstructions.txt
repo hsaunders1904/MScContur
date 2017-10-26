@@ -3,7 +3,7 @@ THIS IS NOT AN EXECUTABLE SCRIPT IT IS MEANT TO BE USED AS A README FILE.
 
 #Log onto plus1 UCL > then to a PC
 source /unix/cedar/software/sl6/Herwig-7.1.0/setupEnv.sh
-#checkout code and source setup file in top level of svn
+#checkout code and source setup file in top level of the repo
 source setupContur.sh
 
 
@@ -13,7 +13,7 @@ source setupContur.sh
 
 cd
 $CONTURMODULEDIR/modified_analyses/Analyses
-chmod +x buildrivet  # only need to do this once after checkout from svn.
+chmod +x buildrivet  # only need to do this once after checkout from repo.
 ./buildrivet.sh
 
 
