@@ -66,7 +66,7 @@ class conturFact(object):
             for a in anas:
                 subpools = []
                 [subpools.append(x) for x in [item.subpools for item in self.conturPoints if item.pools == p and a in item.tags ] if x not in subpools ]
-                if subpools:
+                if subpools[0]:
                     result={}
                     for sp in subpools:
                         result[sp]=conturPoint()
@@ -101,14 +101,6 @@ class conturFact(object):
     def __repr__(self):
         return repr(self._ctPt)
 
-#
-# class masterDict(conturFact):
-#     """Dictionary to hold contur points"""
-#     def __init__(self):
-#         self.dict={}
-#     @classmethod
-#     def addPoint(self):
-#         self.dict = 1
 
 
 class histFact(object):
@@ -116,19 +108,6 @@ class histFact(object):
     Take a yoda analysis object and structure a contur ready object
     This acts as a wrapper class for the underlying analysis object
     """
-
-    #
-    # background = False
-    # scaleFactorSig=1
-    # scaleFactorData=1
-    # conturPoints = []
-    # mcLumi = 0.0
-    # lumi = 1.0
-    # isScaled = False
-    # ref = False
-    # background = False
-    # stack = yoda.Scatter2D
-
 
     def __init__(self, anaObj, xSec, nEv):
         # Construct with an input yoda aos and a scatter1D for the cross section and nEv
@@ -146,19 +125,21 @@ class histFact(object):
         self.scaleFactorSig = 1
         self.conturPoints = []
         self.mcLumi = 0.0
+        self.scaleMC = 1.0
 
         # Call the internal functions on initialization
         # to fill the above members with what we want, these should all be private
         self.__getData()
-        if self.__has1D():
-            self.signal = yoda.mkScatter(self.signal)
         self.__getAux()
         self.__getMC()
         self.__getisScaled()
+        if self.__has1D():
+            self.signal = yoda.mkScatter(self.signal)
         # build stack for plotting
         # self.__buildStack()
-        self.__doScale()
-        self.__fillPoints()
+        if self.ref:
+            self.__doScale()
+            self.__fillPoints()
 
     def __has1D(self):
         """Check type of input aos
@@ -172,7 +153,8 @@ class histFact(object):
                 # if the Data is scaled, work out the signal scaling from number of events and generator xs
                 try:
                     self.scaleFactorSig = (
-                        float(self.signal.numEntries()) / float(self.nev.numEntries()) * float(self.xsec.x))
+                        float(self.signal.numEntries()) / float(self.nev.numEntries()) * float(self.xsec.points[0].x))
+
                 except:
                     print "missing info for scalefactor calc"
             return True
@@ -182,7 +164,7 @@ class histFact(object):
     def __getisScaled(self):
         """Check if the data to compare to is normalized
         """
-        self.isScaled, self.scaleFactorData, scaleMC = ctr.isNorm(self.signal.path)
+        self.isScaled, self.scaleFactorData, self.scaleMC = ctr.isNorm(self.signal.path)
 
     def __getData(self):
         """Looks up ref data"""
@@ -192,6 +174,7 @@ class histFact(object):
             if self.signal.path in path:
                 self.ref = ao
 
+
     def __getMC(self):
         """Lookup for any stored SM MC background calculation
         Currently doesn't exist so just return the refdata
@@ -199,7 +182,7 @@ class histFact(object):
         try:
             self.background = self.ref.clone()
         except:
-            print "no ref for histo"
+            print "No reference data found for histo: " + self.signal.path
 
     def __getAux(self):
         """Sets member variables from static lookup tables
@@ -256,8 +239,6 @@ class histFact(object):
                     self.background.points[i].xMax - self.background.points[i].xMin)
             )
 
-            # def buildcontourPoint(self):
-
     def __fillPoints(self):
         """For now we just fill a conturPoint for each bin, if systematic correlations exist this can be improved"""
         if self.signal.type != "Scatter2D":
@@ -291,7 +272,6 @@ class conturBucket(object):
     #def addPoint(self):
     #    self.bucket
 
-#test=conturBucket()
 
 
 class conturPoint(object):
@@ -402,49 +382,3 @@ class conturPoint(object):
     def __repr__(self):
         return repr(self.counts)
 
-
-#The below is for testing, comment out for now but delete soon.
-# for root, dirs, files in os.walk('.'):
-#     for name in files:
-#         fileliststatic = []
-#         conturFactory=conturFact()
-#         if '.yoda' in name and 'LHC' not in name:
-#             yodafile = os.path.join(root, name)
-#             fileliststatic = str(yodafile)
-#             refhistos, mchistos, xsec, Nev = util.getHistos(fileliststatic)
-#             hpaths = []
-#             m = conturFact()
-#             for aos in mchistos.values():
-#                 for p in aos.keys():
-#                     if p and p not in hpaths:
-#                         hpaths.append(p)
-#
-#             for k, v in mchistos.iteritems():
-#                 for k2, v2 in v.iteritems():
-#                     #if v2.type=="Scatter2D":
-#                     #    continue
-#                     #if k2!="/ATLAS_2014_I1307243/d27-x01-y01":
-#                     #    continue
-#
-#                     if "count" in k2:
-#                         continue
-#                     try:
-#                         y=ctr.validHisto(v2.path)
-#                     except:
-#                         y=False
-#                         pass
-#
-#                     if y:
-#                         histo = histFact(v2, xsec, Nev)
-#                         print histo.lumi
-#                         for p in histo.conturPoints:
-#                             print p.CLs
-#                         if histo.conturPoints:
-#                             max_cl=[item.CLs for item in histo.conturPoints].index(max([item.CLs for item in histo.conturPoints]))
-#                             conturFactory.addPoint(histo.conturPoints[max_cl])
-#                         #    z=histo.conturPoints[0].addPoint(histo.conturPoints[2])
-#                         #m.addPoint(histo.conturPoints)
-#             conturFactory.sortPoints()
-#             x=conturFactory._sortedPoints
-#             print "done"
-                        # contour=conturPoint(histo)
