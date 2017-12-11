@@ -3,6 +3,11 @@ import yoda
 import rivet
 from contur import TestingFunctions as ctr
 
+def writeBanner():
+    """Write Ascii banner"""
+    print "Running Contur v1.0 Release \n"
+    print "Mail to developers: contur (at) projects.hepforge.org \n"
+
 def mkoutdir(outdir):
     "Function to make output directories"
     if not os.path.exists(outdir):

@@ -116,7 +116,7 @@ class histFact(object):
         self.nev = nEv
 
         # Initialize the members we always want to access
-        self.background = False
+        self._background = False
         self.ref = False
         self.stack = yoda.Scatter2D
         self.lumi = 1
@@ -140,6 +140,10 @@ class histFact(object):
         if self.ref:
             self.__doScale()
             self.__fillPoints()
+
+    @property
+    def _background(self):
+        return self._background
 
     def __has1D(self):
         """Check type of input aos
@@ -180,7 +184,7 @@ class histFact(object):
         Currently doesn't exist so just return the refdata
         """
         try:
-            self.background = self.ref.clone()
+            self._background = self.ref.clone()
         except:
             print "No reference data found for histo: " + self.signal.path
 
@@ -195,13 +199,13 @@ class histFact(object):
         """
         if self.signal.type != "Scatter2D":
             return False
-        elif not self.background:
+        elif not self._background:
             return False
         else:
             self.stack = self.signal.clone()
-            assert self.stack.numPoints == self.background.numPoints
+            assert self.stack.numPoints == self._background.numPoints
             for i in range(0, len(self.stack.points)):
-                self.stack.points[i].y = self.stack.points[i].y + self.background.points[i].y
+                self.stack.points[i].y = self.stack.points[i].y + self._background.points[i].y
 
     def __doScale(self):
         """Do the normalisation of the main attributes
@@ -228,15 +232,15 @@ class histFact(object):
                 self.ref.points[i].yErrs[1] * self.lumi * self.scaleFactorData * (
                     self.ref.points[i].xMax - self.ref.points[i].xMin)
             )
-        for i in range(0, len(self.background.points)):
+        for i in range(0, len(self._background.points)):
             # background should have a separate scalefactor later
-            self.background.points[i].y = self.background.points[i].y * self.lumi * self.scaleFactorData * (
-                self.background.points[i].xMax - self.background.points[i].xMin)
-            self.background.points[i].yErrs = (
-                self.background.points[i].yErrs[0] * self.lumi * self.scaleFactorData * (
-                    self.background.points[i].xMax - self.background.points[i].xMin),
-                self.background.points[i].yErrs[1] * self.lumi * self.scaleFactorData * (
-                    self.background.points[i].xMax - self.background.points[i].xMin)
+            self._background.points[i].y = self._background.points[i].y * self.lumi * self.scaleFactorData * (
+                self._background.points[i].xMax - self._background.points[i].xMin)
+            self._background.points[i].yErrs = (
+                self._background.points[i].yErrs[0] * self.lumi * self.scaleFactorData * (
+                    self._background.points[i].xMax - self._background.points[i].xMin),
+                self._background.points[i].yErrs[1] * self.lumi * self.scaleFactorData * (
+                    self._background.points[i].xMax - self._background.points[i].xMin)
             )
 
     def __fillPoints(self):
@@ -249,8 +253,8 @@ class histFact(object):
             if self.signal.points[i].y == 0.0:
                 continue
             ctrPt.s = self.signal.points[i].y
-            ctrPt.bg = self.background.points[i].y
-            ctrPt.bgErr =self.background.points[i].yErrs[1]
+            ctrPt.bg = self._background.points[i].y
+            ctrPt.bgErr =self._background.points[i].yErrs[1]
             ctrPt.nObs =self.ref.points[i].y
             # TODO check how we work mcLumi out
             ctrPt.sErr = self.mcLumi
