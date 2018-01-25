@@ -136,7 +136,7 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
             # if there was no 1D plot, assume we had an already-made ratio (ATLAS MET)
 
         # write the bin number of the most significant bin, and the bin number for the plot legend
-        sighisto.title='[%s] %s' % ( CLs.index(max(CLs))+1, max(CLs) )
+        sighisto.title='[%s] %5.2f' % ( CLs.index(max(CLs))+1, max(CLs) )
         sighisto.setAnnotation('LineColor', 'red')
         anaobjects.append(sighisto)
         plot = Plot()
