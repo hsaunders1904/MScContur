@@ -244,6 +244,14 @@ INSERT INTO blacklist VALUES('ATLAS_2017_I1514251_MU','d01-x02-y02');
 INSERT INTO blacklist VALUES('ATLAS_2017_I1514251_EL','d01-x02-y03');
 INSERT INTO blacklist VALUES('ATLAS_2017_I1514251_MU','d01-x02-y03');
 INSERT INTO blacklist VALUES('CMS_2017_I1518399','d02');
+INSERT INTO blacklist VALUES('CMS_2016_I1491953','d36');
+INSERT INTO blacklist VALUES('CMS_2016_I1491953','d37');
+INSERT INTO blacklist VALUES('CMS_2016_I1491953','d38');
+INSERT INTO blacklist VALUES('CMS_2016_I1491953','d39');
+
+
+
+
 -- have to veto all these at the moment because contur doesn't know
 -- how to handle weight differential xsecs presented as a 2D scatter.
 INSERT INTO blacklist VALUES('ATLAS_2017_I1598613_BB','d01');
