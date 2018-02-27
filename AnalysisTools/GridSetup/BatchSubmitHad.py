@@ -36,8 +36,10 @@ pwd = os.getcwd()
 i=0
 k=0
 
+# You should check these are executing the correct scripts. Especially the setupContur script
+# should probably be one in your own area.
 HerwigSetup="source /unix/cedar/software/sl6/Herwig-7.1.0/setupEnv.sh"
-ConturSetup="source /home/jmb/svn-managed/contur/setupContur.sh"
+ConturSetup="source $HOME/contur/setupContur.sh"
 
 for i in range(100,3100,100):
     for j in range(100,2100,100):
