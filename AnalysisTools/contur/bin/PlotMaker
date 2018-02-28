@@ -153,6 +153,9 @@ for root, dirs, files in os.walk('.',topdown=False):
     plt.xlabel(r"$M_{Z'}$ [GeV]")
     plt.ylabel(r"$M_{\textsc{dm}}$ [GeV]")
 
+#    plt.xlabel(r"$M_{\phi}$ [GeV]")
+#    plt.ylabel(r"$\Lambda$ [GeV]")
+
 ##suppress title
 #plt.title("ATLAS + CMS Combined all channels",y=1.01)
 
@@ -221,6 +224,8 @@ for root, dirs, files in os.walk('.',topdown=False):
 #txt = plab.text(700,1100,'95\% CL',backgroundcolor='white')
 #plab.clabel(CS2, inline=1, fontsize=10, manual=manual_loc)
 
+#    plt.xlabel(r"$M_{\phi}$ [GeV]")
+#    plt.ylabel(r"$\Lambda$ [GeV]")
 
     plt.xlabel(r"$M_{Z'}$ [GeV]")
     plt.ylabel(r"$M_{\textsc{dm}}$ [GeV]")

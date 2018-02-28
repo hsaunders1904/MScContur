@@ -210,6 +210,8 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
             # One is assumed to be the background-only scenario  (bgCount, bgErr)
             # One is assumed to be the signal+background scenario (sigCount, sigErr)
             # Currently only the ATLAS MET+JET measurement is done this way.
+            print 'Why are we here?' 
+            print refdata
             test = 'CSR'
             print 'values:', i, sighisto.points[i].y, refdata.points[i].y, refdata.points[i].yErrs[1] 
             sigCount.append(sighisto.points[i].y)
