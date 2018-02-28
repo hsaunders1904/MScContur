@@ -1,7 +1,6 @@
 insert Rivet:Analyses 0 ATLAS_2015_I1394679 # four jet
 insert Rivet:Analyses 0 ATLAS_2017_I1598613 # b hadron (muon final state)
-insert Rivet:Analyses 0 CMS_2017_I1499471  # b jets
-
+insert Rivet:Analyses 0 CMS_2016_I1487277  # jets
 
 
 # insert Rivet:Analyses 0 ATLAS_2017_I1598613_BB # b hadron (hadron final state. can't use at present, see analysis db.

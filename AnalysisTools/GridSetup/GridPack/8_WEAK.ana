@@ -27,6 +27,9 @@ insert Rivet:Analyses 0 ATLAS_2016_I1448301_NU # Zg(g) cross sections at 8 TeV
 
 insert Rivet:Analyses 0 CMS_2017_I1467451 # H to WW
 
+insert Rivet:Analyses 0 CMS_2017_I1499471  # Z+b jets
+
+
 #  Need the SM prediction before we can use this.
 #insert Rivet:Analyses 0 CMS_2016_I1473674 #normalised top differential cross sections
 
