@@ -20,6 +20,8 @@ insert Rivet:Analyses 0 CMS_2017_I1518399   #Boosted top mass
 insert Rivet:Analyses 0 CMS_2016_I1491953   #W+jets
 
 insert Rivet:Analyses 0 ATLAS_2015_I1394865 #4lepton lineshape
+insert Rivet:Analyses 0 ATLAS_2014_I1310835 #4lepton higgs
+
 
 insert Rivet:Analyses 0 ATLAS_2016_I1448301_EL # Zg(g) cross sections at 8 TeV
 insert Rivet:Analyses 0 ATLAS_2016_I1448301_MU # Zg(g) cross sections at 8 TeV
