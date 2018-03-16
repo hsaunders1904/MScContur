@@ -69,6 +69,7 @@ namespace Rivet
             
             for (const Particle& cand : jet.particles()) {
               if (cand == lepCand) continue;
+	      if (cand.pid() != PID::PHOTON) continue;
               lepton.addPhoton(cand, true);
             }
             allClusteredLeptons.push_back(lepton);
