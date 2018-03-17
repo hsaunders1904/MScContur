@@ -277,13 +277,18 @@ if not opts.DRY_RUN:
 
         for line in summary:
             list = line.split(",")
+            if list[0][0] == "{":
+                # This is a line containing extra info which we don't yet use.
+                continue
             for name in list:
                 parts = name.split("/")
                 if len(parts) == 1:
+                    # This is a line identifying the analysis pool
                     # TODO would be good to add a human-readable anapool name to the DB.
                     index.write('<div style="float:none; overflow:auto; width:100%">\n')
                     index.write("<h3>Analysis Pool:"+str(parts[0])+"</h3>")
                 else:
+                    # This is a line identifying histograms
                     obsname = str(parts[1])+"/"+str(parts[1])+"_"+str(parts[2])
                     pngfile = obsname+".png"
                     vecfile = obsname+"."+opts.VECTORFORMAT.lower()
@@ -355,6 +360,8 @@ if not opts.DRY_RUN:
         index.write('<p>%s</p>\n' % " &#124; ".join(reflist))
 
         if description:
+            #print inspireid
+            #print description
             index.write('<p style="font-size:smaller;">%s</p>\n' % description)
 
         anapath = os.path.join(opts.OUTPUTDIR, analysis)

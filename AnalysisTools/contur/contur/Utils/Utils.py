@@ -1,6 +1,7 @@
 import os
 import yoda
 import rivet
+import plotinfo
 from contur import TestingFunctions as ctr
 
 def writeBanner():
@@ -233,3 +234,58 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
 
                     
     return bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef
+
+
+def writeHistoDat(outdir, histo):
+    """Write a .dat file for the histogram in the output directory, for later display."""
+
+    anaobjects = []
+    drawonly = []
+
+    ## Check if we have reference data for the histogram
+    ratioreference = None
+    if histo.ref:
+        refdata = histo.background
+        sigback = histo.stack
+        h = sigback.path
+
+        refdata.setAnnotation('ErrorBars', '1')
+        refdata.setAnnotation('PolyMarker', '*')
+        refdata.setAnnotation('ConnectBins', '0')
+        refdata.setAnnotation('Title', 'Data')
+        
+        anaobjects.append(refdata)
+        drawonly.append('/REF' + str(h))
+
+        drawonly.append(h)
+
+        # write the bin number of the most significant bin, and the bin number for the plot legend
+        sigback.title='[%s] %5.2f' % ( histo.maxcl, histo.conturPoints[histo.maxcl].CLs )
+        sigback.setAnnotation('LineColor', 'red')
+        anaobjects.append(sigback)
+        plot = plotinfo.Plot()
+        plot['DrawOnly'] = ' '.join(drawonly).strip()
+        plot['Legend'] = '1'
+        plot['MainPlot'] = '1'
+        plot['RatioPlotYMin'] = '1'
+        plot['LogY'] = '1'
+        plot['RatioPlot'] = '1'
+        
+        ratioreference = '/REF'+h
+        plot['RatioPlotReference'] = ratioreference
+        output = ''
+        output += str(plot)
+        from cStringIO import StringIO
+        sio = StringIO()
+        yoda.writeFLAT(anaobjects, sio)
+        output += sio.getvalue()
+        
+        hparts = h.strip("/").split("/")
+        
+        outfile = '%s.dat' % "_".join(hparts)
+        mkoutdir(outdir)
+        outfilepath = os.path.join(outdir, outfile)
+        f = open(outfilepath, 'w')
+        f.write(output)
+        f.close()
+

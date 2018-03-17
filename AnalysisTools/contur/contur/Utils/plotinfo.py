@@ -224,3 +224,10 @@ def mkStdPlotParser(dirs=None, addfiles=[]):
     seen = set()
     dirs = [d for d in dirs if d not in seen and not seen.add(d)]
     return PlotParser(dirs, addfiles)
+
+
+class Plot(dict):
+    ''' A tiny Plot object to help writing out the head in the .dat file '''
+
+    def __repr__(self):
+        return "# BEGIN PLOT\n" + "\n".join("%s=%s" % (k, v) for k, v in self.iteritems()) + "\n# END PLOT\n\n"

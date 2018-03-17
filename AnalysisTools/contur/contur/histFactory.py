@@ -61,6 +61,8 @@ class histFactory(object):
         self._conturPoints = []
         self._mcLumi = 0.0
         self._scaleMC = 1.0
+        self._maxcl = -1
+        self._maxbin = -1
 
         # Call the internal functions on initialization
         # to fill the above members with what we want, these should all be private
@@ -70,11 +72,12 @@ class histFactory(object):
         self.__getisScaled()
         if self.__has1D():
             self.signal = yoda.mkScatter(self.signal)
-        # build stack for plotting
-        # self.__buildStack()
         if self._ref:
             self.__doScale()
             self.__fillPoints()
+        # build stack for plotting
+        self.__buildStack()
+
 
     def __has1D(self):
         """Check type of input aos
@@ -182,11 +185,13 @@ class histFactory(object):
         """
         if self.signal.type != "Scatter2D":
             return False
+        # counter to track the maximum discrepant point
+        clmax = 0.0
         for i in range(0, len(self.signal.points)):
-            ctrPt = conturPoint()
             # need this as empty s is returning CL=1, this should be fixed in the limit setting functions
             if self.signal.points[i].y == 0.0:
                 continue
+            ctrPt = conturPoint()
             ctrPt.s = self.signal.points[i].y
             ctrPt.bg = self._background.points[i].y
             ctrPt.bgErr = self._background.points[i].yErrs[1]
@@ -194,10 +199,26 @@ class histFactory(object):
             # TODO check how we work mcLumi out
             ctrPt.sErr = self._mcLumi
             ctrPt.calcCLs()
+
+                
             ctrPt.tags = self.signal.path
             ctrPt.pools = self.pool
             ctrPt.subpools = self.subpool
             self._conturPoints.append(ctrPt)
+            if ctrPt.CLs > clmax:
+                clmax = ctrPt.CLs
+                self._maxcl = len(self._conturPoints)-1
+                self._maxbin = i+1
+
+    @property
+    def maxcl(self):
+        """The index of the most discrepant point for this plot"""
+        return self._maxcl
+
+    @property
+    def maxbin(self):
+        """The bin number of the most discrepant point for this plot"""
+        return self._maxbin
 
     @property
     def background(self):

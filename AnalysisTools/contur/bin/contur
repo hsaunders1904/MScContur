@@ -16,6 +16,10 @@ parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
                   default="plots", help="Specify output directory for output plots.")
 parser.add_option("-a", "--analysisdir", dest="ANALYSISDIR",
                   default="ANALYSIS", help="Output directory for analysis cards.")
+parser.add_option("-s", "--single",
+                  action="store_false", dest="batchmode", default=True,
+                  help="single run more - more output")
+
 
 # Command line parsing
 opts, yodafiles = parser.parse_args()
@@ -37,7 +41,8 @@ def write_output(conturFactory):
     print result
     sumfn.close()
     for x in conturFactory.sortedPoints:
-        util.writeOutput(x.__repr__(), x.pools + ".dat")
+#   don't think anyone cares about these dat files for a single run, especially if we have the pickle dump? 
+#        util.writeOutput(x.__repr__(), x.pools + ".dat")
         with open(opts.ANALYSISDIR + "/" + x.pools + '.map', 'w') as f:
             pickle.dump(x, f)
     with open(opts.ANALYSISDIR + "/combined.map", 'w') as f:
@@ -72,17 +77,22 @@ if __name__ == "__main__":
 
                     if histo.conturPoints:
 
-                        # find the representative (i.e. highest cl bin from each histo) and push it into the factory
+                        # add the representative (i.e. highest cl bin from each histo) and push it into the factory
+                        contur.addPoint(histo.conturPoints[histo.maxcl])
 
-                        max_cl = [item.CLs for item in histo.conturPoints].index(max([item.CLs for item in histo.conturPoints]))
-                        contur.addPoint(histo.conturPoints[max_cl])
+                        # at this point, if we want to see the histogram, we need to write its .dat file.
+                        if not opts.batchmode:
+                            util.writeHistoDat(opts.OUTPUTDIR, histo)
 
         # once we have every point from a given yoda, call the function to sort this
         # eventually conturFact should know which model point each yoda is from, then multiple yodas covering different pools can be pushed in at the same time
         # and eventually construct a point for each parameter space point, for now assume a single input yoda to test
 
         contur.sortPoints()
-        #print contur.conturPoint
-#        print contur.conturPoint.CLs
-        write_output(contur)
+#
+        if not opts.batchmode:
+            # need to also write out the plots/*.dat files here if contur-mkhtml is going to work
+            write_output(contur)
+        else:
+            print contur.conturPoint.CLs
 
