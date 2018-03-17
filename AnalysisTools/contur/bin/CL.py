@@ -6,11 +6,6 @@ import sys
 import os
 import pickle
 
-class Plot(dict):
-    ''' A tiny Plot object to help writing out the head in the .dat file '''
-
-    def __repr__(self):
-        return "# BEGIN PLOT\n" + "\n".join("%s=%s" % (k, v) for k, v in self.iteritems()) + "\n# END PLOT\n\n"
 
 def init_dict():
     ''' Initialises the master dictionary using the analysis pool '''
@@ -139,7 +134,7 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
         sighisto.title='[%s] %5.2f' % ( CLs.index(max(CLs))+1, max(CLs) )
         sighisto.setAnnotation('LineColor', 'red')
         anaobjects.append(sighisto)
-        plot = Plot()
+        plot = util.Plot()
         plot['DrawOnly'] = ' '.join(drawonly).strip()
         plot['Legend'] = '1'
         plot['MainPlot'] = '1'
