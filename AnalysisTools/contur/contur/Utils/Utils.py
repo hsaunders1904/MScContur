@@ -260,7 +260,7 @@ def writeHistoDat(outdir, histo):
         drawonly.append(h)
 
         # write the bin number of the most significant bin, and the bin number for the plot legend
-        sigback.title='[%s] %5.2f' % ( histo.maxcl, histo.conturPoints[histo.maxcl].CLs )
+        sigback.title='[%s] %5.2f' % ( histo.maxbin, histo.conturPoints[histo.maxcl].CLs )
         sigback.setAnnotation('LineColor', 'red')
         anaobjects.append(sigback)
         plot = plotinfo.Plot()
