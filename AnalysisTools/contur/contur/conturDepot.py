@@ -43,11 +43,17 @@ class conturDepot(object):
                     for sp in subpools:
                         result[sp]=conturPoint()
                     for k,v in result.iteritems():
-                        #remove the point if it ends up in a group
-                        [result[k].addPoint(y) for y in self.conturPoints if y.subpools == k and a in y.tags ]
+                        #Remove the point if it ends up in a group
+                        # Tags need to store which histo contribute to this point.
+                        for y in self.conturPoints:
+                             if y.subpools == k and a in y.tags:
+                                 result[k].addPoint(y)  
+                                 if len(result[k].tags) > 0:
+                                     result[k].tags += ","
+                                 result[k].tags += y.tags
                         v.calcCLs()
                         v.pools=p
-                        v.tags=a
+                        v.tags=result[k].tags
                     #add the max subpool back into the list of points with the pool tag set but no subpool
                     [self.conturPoints.append(v) for k,v in result.iteritems()] # if v.CLs == max([z.CLs for z in result.values()])
 
