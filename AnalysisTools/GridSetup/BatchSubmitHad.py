@@ -38,7 +38,7 @@ k=0
 
 # You should check these are executing the correct scripts. Especially the setupContur script
 # should probably be one in your own area.
-HerwigSetup="source /unix/cedar/software/sl6/Herwig-7.1.0/setupEnv.sh"
+HerwigSetup="source /unix/cedar/software/sl6/Herwig-Release-fix/setupEnv.sh"
 ConturSetup="source $HOME/contur/setupContur.sh"
 
 for i in range(100,3100,100):
