@@ -147,6 +147,9 @@ class histFactory(object):
 
             for i in range(0, len(self._stack.points)):
                 self._stack.points[i].y = self._stack.points[i].y*self._scaleFactorSig/self._scaleFactorData + self._background.points[i].y
+                self._stack.points[i].yErrs = (
+                    self._stack.points[i].yErrs[0]*self._scaleFactorSig/self._scaleFactorData + self._background.points[i].yErrs[0], 
+                    self._stack.points[i].yErrs[1]*self._scaleFactorSig/self._scaleFactorData + self._background.points[i].yErrs[1])
 
     def __doScale(self):
         """Perform the normalisation of the signal, reference and background data
@@ -168,6 +171,7 @@ class histFactory(object):
                 self.signal.points[i].yErrs[0] * self._lumi * self._scaleFactorSig * binWidth, 
                 self.signal.points[i].yErrs[1] * self._lumi * self._scaleFactorSig * binWidth
                 )
+
         for i in range(0, len(self._ref.points)):
             binWidth = self._ref.points[i].xMax - self._ref.points[i].xMin
             self._ref.points[i].y = self._ref.points[i].y * self._lumi * self._scaleFactorData * binWidth                
