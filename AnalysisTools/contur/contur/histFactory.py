@@ -54,6 +54,7 @@ class histFactory(object):
         self._background = False
         self._ref = False
         self._stack = yoda.Scatter2D
+        self._refplot = yoda.Scatter2D
         self._lumi = 1
         self._isScaled = False
         self._scaleFactorData = 1
@@ -72,11 +73,15 @@ class histFactory(object):
         self.__getisScaled()
         if self.__has1D():
             self.signal = yoda.mkScatter(self.signal)
+
+        # build stack for plotting
+        self.__buildStack()
+
         if self._ref:
             self.__doScale()
             self.__fillPoints()
-        # build stack for plotting
-        self.__buildStack()
+
+
 
 
     def __has1D(self):
@@ -111,6 +116,7 @@ class histFactory(object):
         for path, ao in refObj.iteritems():
             if self.signal.path in path:
                 self._ref = ao
+                self._refplot = ao.clone()
 
     def __getMC(self):
         """Lookup for any stored SM MC background calculation
@@ -130,6 +136,7 @@ class histFactory(object):
     def __buildStack(self):
         """Build the signal/background stack for plotting
         """
+
         if self.signal.type != "Scatter2D":
             return False
         elif not self._background:
@@ -137,45 +144,45 @@ class histFactory(object):
         else:
             self._stack = self.signal.clone()
             assert self._stack.numPoints == self._background.numPoints
+
             for i in range(0, len(self._stack.points)):
-                self._stack.points[i].y = self._stack.points[i].y + self._background.points[i].y
+                self._stack.points[i].y = self._stack.points[i].y*self._scaleFactorSig/self._scaleFactorData + self._background.points[i].y
 
     def __doScale(self):
         """Perform the normalisation of the signal, reference and background data
 
         Scales signal
         """
+
         if self.signal.type != "Scatter2D":
             return False
         # for sig,ref,bg in zip(..,..,..):
+
+        # @TODO is there any reason why we can't do all this in the same loop? Surely the
+        # number of points, binwidths etc have to be the same?
+
         for i in range(0, len(self.signal.points)):
-            self.signal.points[i].y = self.signal.points[i].y * self._lumi * self._scaleFactorSig * (
-                self.signal.points[i].xMax - self.signal.points[i].xMin)
+            binWidth = self.signal.points[i].xMax - self.signal.points[i].xMin
+            self.signal.points[i].y = self.signal.points[i].y * self._lumi * self._scaleFactorSig * binWidth
             self.signal.points[i].yErrs = (
-                self.signal.points[i].yErrs[0] * self._lumi * self._scaleFactorSig * (
-                    self.signal.points[i].xMax - self.signal.points[i].xMin),
-                self.signal.points[i].yErrs[1] * self._lumi * self._scaleFactorSig * (
-                    self.signal.points[i].xMax - self.signal.points[i].xMin)
-            )
+                self.signal.points[i].yErrs[0] * self._lumi * self._scaleFactorSig * binWidth, 
+                self.signal.points[i].yErrs[1] * self._lumi * self._scaleFactorSig * binWidth
+                )
         for i in range(0, len(self._ref.points)):
-            self._ref.points[i].y = self._ref.points[i].y * self._lumi * self._scaleFactorData * (
-                self._ref.points[i].xMax - self._ref.points[i].xMin)
+            binWidth = self._ref.points[i].xMax - self._ref.points[i].xMin
+            self._ref.points[i].y = self._ref.points[i].y * self._lumi * self._scaleFactorData * binWidth                
             self._ref.points[i].yErrs = (
-                self._ref.points[i].yErrs[0] * self._lumi * self._scaleFactorData * (
-                    self._ref.points[i].xMax - self._ref.points[i].xMin),
-                self._ref.points[i].yErrs[1] * self._lumi * self._scaleFactorData * (
-                    self._ref.points[i].xMax - self._ref.points[i].xMin)
-            )
+                self._ref.points[i].yErrs[0] * self._lumi * self._scaleFactorData * binWidth,
+                self._ref.points[i].yErrs[1] * self._lumi * self._scaleFactorData * binWidth
+                )
         for i in range(0, len(self._background.points)):
             # background should have a separate scalefactor later
-            self._background.points[i].y = self._background.points[i].y * self._lumi * self._scaleFactorData * (
-                self._background.points[i].xMax - self._background.points[i].xMin)
+            binWidth = self._background.points[i].xMax - self._background.points[i].xMin
+            self._background.points[i].y = self._background.points[i].y * self._lumi * self._scaleFactorData * binWidth                
             self._background.points[i].yErrs = (
-                self._background.points[i].yErrs[0] * self._lumi * self._scaleFactorData * (
-                    self._background.points[i].xMax - self._background.points[i].xMin),
-                self._background.points[i].yErrs[1] * self._lumi * self._scaleFactorData * (
-                    self._background.points[i].xMax - self._background.points[i].xMin)
-            )
+                self._background.points[i].yErrs[0] * self._lumi * self._scaleFactorData * binWidth,
+                self._background.points[i].yErrs[1] * self._lumi * self._scaleFactorData * binWidth
+                )
 
     def __fillPoints(self):
         """Internal function to fill conturPoints list
@@ -232,8 +239,13 @@ class histFactory(object):
 
     @property
     def stack(self):
-        """Stacked Signal+background yoda.Scatter2D"""
+        """Stacked, unscaled Signal+background for plotting yoda.Scatter2D"""
         return self._stack
+
+    @property
+    def refplot(self):
+        """unscaled reference data yoda.Scatter2D"""
+        return self._refplot
 
     @property
     def lumi(self):

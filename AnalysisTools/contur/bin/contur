@@ -55,6 +55,12 @@ if __name__ == "__main__":
     contur = ct.conturDepot()
     # conturFactory should take entire yoda files/ list of yoda file as initialization argument but for now loop over aos in yodafile
     for infile in yodafiles:
+
+        if not opts.batchmode:
+            # this is to get the plotting attributes down the line
+            plotdirs = [os.path.abspath(os.path.dirname(f)) for f in infile]
+            plotparser = util.mkStdPlotParser(plotdirs, )
+
         refhistos, mchistos, xsec, Nev = util.getHistos(infile)
 
         # again this looping belongs inside conturDepot
@@ -75,14 +81,15 @@ if __name__ == "__main__":
 
                     # sometimes the list of conturPoints made by hist fact is empty (no signal in any bin), this exception should be properly handled inside histFact
 
+                    # at this point, if we want to see the histogram, we need to write its .dat file.
+                    if not opts.batchmode:
+                        util.writeHistoDat(infile, plotparser, opts.OUTPUTDIR, histo)
+
                     if histo.conturPoints:
 
                         # add the representative (i.e. highest cl bin from each histo) and push it into the factory
                         contur.addPoint(histo.conturPoints[histo.maxcl])
 
-                        # at this point, if we want to see the histogram, we need to write its .dat file.
-                        if not opts.batchmode:
-                            util.writeHistoDat(infile, opts.OUTPUTDIR, histo)
 
         # once we have every point from a given yoda, call the function to sort this
         # eventually conturFact should know which model point each yoda is from, then multiple yodas covering different pools can be pushed in at the same time

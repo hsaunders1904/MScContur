@@ -236,21 +236,26 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
     return bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef
 
 
-def writeHistoDat(infile, outdir, histo):
+def writeHistoDat(mcpath, plotparser, outdir, histo):
     """Write a .dat file for the histogram in the output directory, for later display."""
 
     anaobjects = []
     drawonly = []
-
-    plotdirs = [os.path.abspath(os.path.dirname(f)) for f in infile]
-    plotparser = plotinfo.mkStdPlotParser(plotdirs, )
+    mcpath = "/"+mcpath
 
     ## Check if we have reference data for the histogram
     ratioreference = None
     if histo.ref:
-        refdata = histo.background
+
+        ## unfortunuately this has been scale by bin width and lumi...
+        #refdata = histo.background
+
+        refdata = histo.refplot
+
         sigback = histo.stack
         h = sigback.path
+
+        sigback.setAnnotation('Path', mcpath+h)
 
         refdata.setAnnotation('ErrorBars', '1')
         refdata.setAnnotation('PolyMarker', '*')
@@ -258,12 +263,14 @@ def writeHistoDat(infile, outdir, histo):
         refdata.setAnnotation('Title', 'Data')
         
         anaobjects.append(refdata)
-        drawonly.append('/REF' + str(h))
+        drawonly.append('/REF' + h)
 
-        drawonly.append(h)
+        drawonly.append(mcpath + h)
 
         # write the bin number of the most significant bin, and the bin number for the plot legend
-        sigback.title='[%s] %5.2f' % ( histo.maxbin, histo.conturPoints[histo.maxcl].CLs )
+        if histo.maxbin > 0:
+            sigback.title='[%s] %5.2f' % ( histo.maxbin, histo.conturPoints[histo.maxcl].CLs )
+
         sigback.setAnnotation('LineColor', 'red')
         anaobjects.append(sigback)
         plot = plotinfo.Plot()
