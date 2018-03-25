@@ -236,11 +236,14 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
     return bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef
 
 
-def writeHistoDat(outdir, histo):
+def writeHistoDat(infile, outdir, histo):
     """Write a .dat file for the histogram in the output directory, for later display."""
 
     anaobjects = []
     drawonly = []
+
+    plotdirs = [os.path.abspath(os.path.dirname(f)) for f in infile]
+    plotparser = plotinfo.mkStdPlotParser(plotdirs, )
 
     ## Check if we have reference data for the histogram
     ratioreference = None
@@ -270,6 +273,10 @@ def writeHistoDat(outdir, histo):
         plot['RatioPlotYMin'] = '1'
         plot['LogY'] = '1'
         plot['RatioPlot'] = '1'
+
+        for key, val in plotparser.getHeaders(h).iteritems():
+            # Get any updated attributes from plotinfo files
+             plot[key] = val
         
         ratioreference = '/REF'+h
         plot['RatioPlotReference'] = ratioreference

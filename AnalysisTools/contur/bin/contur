@@ -41,8 +41,8 @@ def write_output(conturFactory):
     print result
     sumfn.close()
     for x in conturFactory.sortedPoints:
-#   don't think anyone cares about these dat files for a single run, especially if we have the pickle dump? 
-#        util.writeOutput(x.__repr__(), x.pools + ".dat")
+#   does anyone care about these dat files anymore, especially if we have the pickle dump? 
+        util.writeOutput(x.__repr__(), x.pools + ".dat")
         with open(opts.ANALYSISDIR + "/" + x.pools + '.map', 'w') as f:
             pickle.dump(x, f)
     with open(opts.ANALYSISDIR + "/combined.map", 'w') as f:
@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
                         # at this point, if we want to see the histogram, we need to write its .dat file.
                         if not opts.batchmode:
-                            util.writeHistoDat(opts.OUTPUTDIR, histo)
+                            util.writeHistoDat(infile, opts.OUTPUTDIR, histo)
 
         # once we have every point from a given yoda, call the function to sort this
         # eventually conturFact should know which model point each yoda is from, then multiple yodas covering different pools can be pushed in at the same time
