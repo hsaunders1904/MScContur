@@ -39,5 +39,9 @@ insert Rivet:Analyses 0 ATLAS_2013_I1219109_EL #W+b (el)
 insert Rivet:Analyses 0 ATLAS_2013_I1219109_MU #W+b (mu)
 insert Rivet:Analyses 0 ATLAS_2014_I1282447 #Wcharm
 
-
+# inclusive W and Z
+insert Rivet:Analyses 0 ATLAS_2016_I1502620_Z_EL
+insert Rivet:Analyses 0 ATLAS_2016_I1502620_Z_MU
+insert Rivet:Analyses 0 ATLAS_2016_I1502620_W_EL
+insert Rivet:Analyses 0 ATLAS_2016_I1502620_W_MU
 
