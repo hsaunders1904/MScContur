@@ -1,22 +1,30 @@
 #!/usr/bin/env python
 
+from optparse import OptionParser
 
 import rivet, yoda, sys, os
+
+parser = OptionParser(usage=__doc__)
+parser.add_option('-t', '--tags', dest='TAGS', action='store',
+                   help='elements of file name', default=('mP','mY'), nargs=2)
+
+opts, dummy = parser.parse_args()
+
 for root, dirs, files in os.walk('.'):
         filelist=''
         outfile=''
         for name in files:
             #filelist=''
-            if '.yoda' not in name:
-                continue
-            if 'mY' not in name and 'mP' not in name:
-                continue
-            yodafile = os.path.join(root, name)
-            filelist += " " + yodafile
-        print filelist
+		if '.yoda' not in name:
+			continue
+		if opts.TAGS[0] not in name or opts.TAGS[1] not in name:
+			continue
+		yodafile = os.path.join(root, name)
+		filelist += " " + yodafile
+	print filelist
         if not filelist:
-            continue
+		continue
         else:
-            os.system("yodamerge -o " + root + "/" +root.strip("./")+".yoda " + filelist)
+		os.system("yodamerge -o " + root + "/" +root.strip("./")+".yoda " + filelist)
 
 #print 'break'
