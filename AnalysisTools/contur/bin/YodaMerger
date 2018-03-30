@@ -6,7 +6,7 @@ import rivet, yoda, sys, os
 
 parser = OptionParser(usage=__doc__)
 parser.add_option('-t', '--tags', dest='TAGS', action='store',
-                   help='elements of file name', default=('mP','mY'), nargs=2)
+                   help='give two elements of file name to be matched, separated by a space', default=('mP','mY'), nargs=2)
 
 opts, dummy = parser.parse_args()
 
