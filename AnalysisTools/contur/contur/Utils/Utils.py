@@ -236,7 +236,7 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
     return bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef
 
 
-def writeHistoDat(mcpath, plotparser, outdir, histo):
+def writeHistoDat(mcpath, plotparser, outdir, nostack, histo):
     """Write a .dat file for the histogram in the output directory, for later display."""
 
     anaobjects = []
@@ -252,7 +252,11 @@ def writeHistoDat(mcpath, plotparser, outdir, histo):
 
         refdata = histo.refplot
 
-        sigback = histo.stack
+        if nostack:
+            sigback = histo.sigplot
+        else:
+            sigback = histo.stack
+
         h = sigback.path
 
         sigback.setAnnotation('Path', mcpath+h)

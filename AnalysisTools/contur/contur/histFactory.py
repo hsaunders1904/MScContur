@@ -55,6 +55,7 @@ class histFactory(object):
         self._ref = False
         self._stack = yoda.Scatter2D
         self._refplot = yoda.Scatter2D
+        self._sigplot = yoda.Scatter2D
         self._lumi = 1
         self._isScaled = False
         self._scaleFactorData = 1
@@ -114,6 +115,7 @@ class histFactory(object):
         if not REFLOAD:
             init_ref()
         for path, ao in refObj.iteritems():
+            self._sigplot = self.signal.clone()
             if self.signal.path in path:
                 self._ref = ao
                 self._refplot = ao.clone()
@@ -245,6 +247,11 @@ class histFactory(object):
     def stack(self):
         """Stacked, unscaled Signal+background for plotting yoda.Scatter2D"""
         return self._stack
+
+    @property
+    def sigplot(self):
+        """Signal for plotting (without event number scaling) yoda.Scatter2D"""
+        return self._sigplot
 
     @property
     def refplot(self):

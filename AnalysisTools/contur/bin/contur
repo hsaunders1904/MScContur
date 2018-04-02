@@ -17,8 +17,11 @@ parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
 parser.add_option("-a", "--analysisdir", dest="ANALYSISDIR",
                   default="ANALYSIS", help="Output directory for analysis cards.")
 parser.add_option("-s", "--single",
-                  action="store_false", dest="batchmode", default=True,
-                  help="single run more - more output")
+                  action="store_false", dest="BATCHMODE", default=True,
+                  help="single run - more output")
+parser.add_option("-n", "--nostack",
+                  action="store_true", dest="NOSTACK", default=False,
+                  help="in single run mode, do not stack the histograms in dat file output")
 
 
 # Command line parsing
@@ -56,7 +59,7 @@ if __name__ == "__main__":
     # conturFactory should take entire yoda files/ list of yoda file as initialization argument but for now loop over aos in yodafile
     for infile in yodafiles:
 
-        if not opts.batchmode:
+        if not opts.BATCHMODE:
             # this is to get the plotting attributes down the line
             plotdirs = [os.path.abspath(os.path.dirname(f)) for f in infile]
             plotparser = util.mkStdPlotParser(plotdirs, )
@@ -82,8 +85,8 @@ if __name__ == "__main__":
                     # sometimes the list of conturPoints made by hist fact is empty (no signal in any bin), this exception should be properly handled inside histFact
 
                     # at this point, if we want to see the histogram, we need to write its .dat file.
-                    if not opts.batchmode:
-                        util.writeHistoDat(infile, plotparser, opts.OUTPUTDIR, histo)
+                    if not opts.BATCHMODE:
+                        util.writeHistoDat(infile, plotparser, opts.OUTPUTDIR, opts.NOSTACK, histo)
 
                     if histo.conturPoints:
 
@@ -97,8 +100,8 @@ if __name__ == "__main__":
 
         contur.sortPoints()
 #
-        if not opts.batchmode:
-            # need to also write out the plots/*.dat files here if contur-mkhtml is going to work
+        if not opts.BATCHMODE:
+            # write summary for plotting
             write_output(contur)
         else:
             print contur.conturPoint.CLs
