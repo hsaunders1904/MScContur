@@ -1,4 +1,5 @@
 // -*- C++ -*-
+// NB THIS FIX HAS BEEN COMMITTED FOR THE NEXT RIVET RELEASE
 #include "Rivet/Analysis.hh"
 #include "Rivet/Projections/ZFinder.hh"
 
