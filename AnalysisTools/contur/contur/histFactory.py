@@ -74,7 +74,10 @@ class histFactory(object):
         self.__getisScaled()
         if self.__has1D():
             self.signal = yoda.mkScatter(self.signal)
-
+            # Make sure it is actually a Scatter2D - mkScatter makes Scatter1D from counter.   
+            if self.signal.type == 'Scatter1D':
+                self.signal = util.mkScatter2D(self.signal) 
+            
         # build stack for plotting
         self.__buildStack()
 
@@ -88,7 +91,7 @@ class histFactory(object):
     def __has1D(self):
         """Check type of input aos
         """
-        if self.signal.type == 'Histo1D' or self.signal.type == 'Profile1D':
+        if self.signal.type == 'Histo1D' or self.signal.type == 'Profile1D' or self.signal.type == 'Counter':
             if self.signal.sumW() == 0.0:
                 self._mcLumi = 0.0
             else:
@@ -118,7 +121,9 @@ class histFactory(object):
             self._sigplot = self.signal.clone()
             if self.signal.path in path:
                 self._ref = ao
-                self._refplot = ao.clone()
+                if self._ref.type=="Scatter1D":
+                    self._ref = util.mkScatter2D(self._ref)
+                self._refplot = self._ref.clone()
 
     def __getMC(self):
         """Lookup for any stored SM MC background calculation
@@ -126,6 +131,9 @@ class histFactory(object):
         """
         try:
             self._background = self._ref.clone()
+            # Make sure it is actually a Scatter2D - mkScatter makes Scatter1D from counter.   
+            if self._background.type=='Scatter1D':
+                self._background = util.mkScatter2D(self._background)
         except:
             print "No reference data found for histo: " + self.signal.path
 

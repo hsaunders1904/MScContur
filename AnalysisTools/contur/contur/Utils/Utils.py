@@ -307,3 +307,32 @@ def writeHistoDat(mcpath, plotparser, outdir, nostack, histo):
         f.write(output)
         f.close()
 
+
+def mkScatter2D(s1):
+    """ Make a Scatter2D from a Scatter1D by treating the points as y values and adding dummy x bins."""
+
+    rtn = yoda.Scatter2D()
+
+    x = 0.5
+    for a in s1.annotations:
+        rtn.setAnnotation(a, s1.annotation(a))
+
+    rtn.setAnnotation("Type", "Scatter2D");
+
+    for point in s1.points:
+        
+        ex_m = x-0.5;
+        ex_p = x+0.5;
+
+        y = point.x;
+        ey_p = point.xMax;
+        ey_m = point.xMin;
+
+        pt = yoda.Point2D(x, y, 0.5, ey_m);
+        rtn.addPoint(pt);
+        x = x + 1.0
+
+    return rtn;
+
+
+
