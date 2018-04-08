@@ -54,12 +54,12 @@ namespace Rivet
           
           const Jets jets = applyProjection<FastJets>(e, "LeptonJets").jetsByPt(5.*GeV);
           foreach (const Jet& jet, jets) {
-	    Particle lepCand;
+            Particle lepCand;
             for (const Particle& cand : jet.particles()) {
-	      const int absPdgId = abs(cand.pdgId());
-	      if (absPdgId == PID::ELECTRON || absPdgId == PID::MUON) {
-		if (cand.pt() > lepCand.pt()) lepCand = cand;
-	      }
+              const int absPdgId = abs(cand.pdgId());
+              if (absPdgId == PID::ELECTRON || absPdgId == PID::MUON) {
+                if (cand.pt() > lepCand.pt()) lepCand = cand;
+              }
             }
 
             //Central lepton must be the major component
