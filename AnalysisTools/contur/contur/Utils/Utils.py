@@ -206,23 +206,20 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
                 sigError.append(float(mclumi)*normFacSig)
  
         else:
-            # Using Chi2 test on two 2D plots. 
-            # One is assumed to be the result of the measurement (measCount, measErr)
-            # One is assumed to be the background-only scenario  (bgCount, bgErr)
-            # One is assumed to be the signal+background scenario (sigCount, sigErr)
-            # Currently only the ATLAS MET+JET measurement is done this way.
-            print 'Why are we here?' 
+            # 
+            print 'Why are we here? Obsolete, cannot deal with this.' 
             print refdata
-            test = 'CSR'
-            print 'values:', i, sighisto.points[i].y, refdata.points[i].y, refdata.points[i].yErrs[1] 
-            sigCount.append(sighisto.points[i].y)
-            bgCount.append(refdata.points[i].y)
-            bgError.append(refdata.points[i].yErrs[1])
+            #test = 'CSR'
+            #print 'values:', i, sighisto.points[i].y, refdata.points[i].y, refdata.points[i].yErrs[1] 
+            #sigCount.append(sighisto.points[i].y)
+            #bgCount.append(refdata.points[i].y)
+            #bgError.append(refdata.points[i].yErrs[1])
                 
             # TODO: at the moment, the 'CS' option is used for comparing ratio plots with and without BSM. The vast majority of the
             # uncertainty is correlated and comes from the background, so we are ignoring the (uncorrelated) signal
             # uncertainty here.
-            sigError.append(0.0)
+            #sigError.append(0.0)
+
                 
         # cater for the case where the refdata bin is empty,
         # occurs notably in ATLAS_2014_I1307243

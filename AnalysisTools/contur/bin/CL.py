@@ -94,6 +94,11 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
             mchistos[infile][h].setAnnotation('Path', mcpath + h)
             sighisto = mchistos[infile][h]
 
+        if sighisto.type != 'Scatter2D':
+            print "WARNING! Not using this histogram!"
+            print h
+            continue
+
         # fill test results for each bin for this histogram
         bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef = util.fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec)
         if (len(CLs)==0):
@@ -254,3 +259,5 @@ def output_single(mapPoints, opts):
         print(result)
         print "Based on " +str(len(sigfinal))+ " found counting tests"
         print "\nMore details output to ", opts.ANALYSISDIR, " folder"
+        print "WARNING: Any results stored as Counters will not have been used."
+        print "WARNING: deprecated! use contur script instead."
