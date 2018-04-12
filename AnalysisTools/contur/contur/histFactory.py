@@ -49,6 +49,8 @@ class histFactory(object):
         self.signal = anaObj
         self.xsec = xSec
         self.nev = nEv
+        self._mcLumi = float(nEv.numEntries())/xSec.point(0).x
+
 
         # Initialize the public members we always want to access
         self._background = False
@@ -61,7 +63,6 @@ class histFactory(object):
         self._scaleFactorData = 1
         self._scaleFactorSig = 1
         self._conturPoints = []
-        self._mcLumi = 0.0
         self._scaleMC = 1.0
         self._maxcl = -1
         self._maxbin = -1
@@ -92,16 +93,10 @@ class histFactory(object):
         """Check type of input aos
         """
         if self.signal.type == 'Histo1D' or self.signal.type == 'Profile1D' or self.signal.type == 'Counter':
-            if self.signal.sumW() == 0.0:
-                self._mcLumi = 0.0
-            else:
-                self._mcLumi = float(self.signal.numEntries()) / float(self.signal.sumW())
             if self._isScaled:
                 # if the Data is scaled, work out the signal scaling from number of events and generator xs
                 try:
-                    self._scaleFactorSig = (
-                        float(self.signal.numEntries()) / float(self.nev.numEntries()) * float(self.xsec.points[0].x))
-
+                    self._scaleFactorSig = float(self.signal.numEntries()) / self._mcLumi
                 except:
                     print "missing info for scalefactor calc"
             return True
@@ -217,8 +212,8 @@ class histFactory(object):
             ctrPt.bg = self._background.points[i].y
             ctrPt.bgErr = self._background.points[i].yErrs[1]
             ctrPt.nObs = self._ref.points[i].y
-            # TODO check how we work mcLumi out
-            ctrPt.sErr = self._mcLumi
+            # TODO currently this only accounts for the MC stat uncertainty, not what would be the stat unc on real data
+            ctrPt.sErr = self.signal.points[i].yErrs[1]
             ctrPt.calcCLs()
 
                 

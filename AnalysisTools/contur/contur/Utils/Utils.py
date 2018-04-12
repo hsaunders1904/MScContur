@@ -162,7 +162,7 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
         # if rivet generated normalised histograms, signal is normalised by its cross section 
         # (generated xsec * fraction appearing in histo)
         if (scaleMC == 1 and Nev.numEntries()>0):
-            print "scaling MC for", h
+             #print "scaling MC for", h
              #print mc1D.numEntries(), Nev.numEntries(), xsec.points[0].x
             normFacSig = (float(mc1D.numEntries()) / float(Nev.numEntries()) * float(xsec.points[0].x))
             
@@ -186,7 +186,7 @@ def fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec):
                 print 'Warning! Effective MC lumi %.2f appears substantially less than data lumi %.2f for %s' % (mclumi, lumi, h)
                 print 'This may be a bin width effect, but if not, consider generating more events.'
         else:
-            print h, ' has zero MC entries'
+             # print h, ' has zero MC entries'
             mclumi = 0
 
 # Loop over the data points.
