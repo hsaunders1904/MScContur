@@ -17,7 +17,7 @@ print "CLTestSingle is now deprecated and will be deleted at some point."
 print "-----------------------------------------------------------------"
 print "Please use"
 print "$  contur -s <YODAFILE>" 
-print "which gives the same functionality."
+print "which gives the same funcitonality."
 print "-----------------------------------------------------------------"
 
 if not yodafiles:

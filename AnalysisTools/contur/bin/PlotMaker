@@ -76,6 +76,7 @@ for root, dirs, files in os.walk('.',topdown=False):
     for listelement in data:
         data[data.index(listelement)][2]= ctr.confLevel(listelement[3],listelement[4],listelement[5],listelement[6])
 
+
     temp = []
     temp =  zip(zip(*data)[0],zip(*data)[1],zip(*data)[2])
     temp.sort(key=lambda x: x[0])

@@ -82,13 +82,12 @@ if __name__ == "__main__":
 
                     histo = ct.histFactory(v2, xsec, Nev)
 
+                    # sometimes the list of conturPoints made by hist fact is empty (no signal in any bin), this exception should be properly handled inside histFact
 
                     # at this point, if we want to see the histogram, we need to write its .dat file.
                     if not opts.BATCHMODE:
                         util.writeHistoDat(infile, plotparser, opts.OUTPUTDIR, opts.NOSTACK, histo)
 
-                    # sometimes the list of conturPoints made by hist fact is empty (no signal in any bin), 
-                    # this exception should be properly handled inside histFact
                     if histo.conturPoints:
 
                         # add the representative (i.e. highest cl bin from each histo) and push it into the factory

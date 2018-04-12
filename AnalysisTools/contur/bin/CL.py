@@ -1,5 +1,6 @@
 from contur import TestingFunctions as ctr
 from contur import Utils as util
+from contur import Legacy as legacy
 import rivet
 import yoda
 import sys
@@ -21,7 +22,7 @@ def grid_add_to_dict(masterDict, mapPoints):
 
     for key in mapPoints:
 	tempName = ctr.LumiFinder(key)[1]
-	mapPoints[key][2] = ctr.confLevel(mapPoints[key][3],mapPoints[key][4],mapPoints[key][5], mapPoints[key][6])
+	mapPoints[key][2] = legacy.confLevel(mapPoints[key][3],mapPoints[key][4],mapPoints[key][5], mapPoints[key][6])
 	if not masterDict[tempName]:
 	    masterDict[tempName].append(mapPoints[key][:])
 	else:
@@ -55,7 +56,7 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
     #     mchistos = mc plots,
     #     xsec     = generated xsec and its uncertainty,
     #     Nev      = sum of weights, sum of squared weight, number of events
-    refhistos, mchistos, xsec, Nev = util.getHistos(infile)
+    refhistos, mchistos, xsec, Nev = legacy.getHistos(infile)
 
     hpaths = []
     for aos in mchistos.values():
@@ -100,7 +101,7 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
             continue
 
         # fill test results for each bin for this histogram
-        bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef = util.fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec)
+        bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef = legacy.fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec)
         if (len(CLs)==0):
             CLs.append(0)
 
@@ -215,7 +216,7 @@ def output_single(mapPoints, opts):
     for key, pts in mapPoints.iteritems():
         poolname = ctr.LumiFinder(key)[1]
         # Need to recalculate this for cases with subpools.
-        pts[0] = ctr.confLevel(pts[1], pts[2], pts[3], pts[4])
+        pts[0] = legacy.confLevel(pts[1], pts[2], pts[3], pts[4])
         if not masterDict[poolname]:
             masterDict[poolname].append(pts[:])
         else:
@@ -246,7 +247,7 @@ def output_single(mapPoints, opts):
         # background values.
         # TODO: when we have mixed methods for doing this, the numbers in the lists
         # stored in masterDict have different meanings, so this is broken!
-        pccl = 100.*ctr.confLevel(sigfinal, bgfinal, bgerrfinal,sigerrfinal)
+        pccl = 100.*legacy.confLevel(sigfinal, bgfinal, bgerrfinal,sigerrfinal)
 
         result = "Combined CL exclusion for these plots is %.1f %%" % pccl
         sumfn.write(result)
