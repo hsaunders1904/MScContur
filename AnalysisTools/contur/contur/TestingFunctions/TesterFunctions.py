@@ -183,18 +183,16 @@ def chisquare(background, signal, measurement, error, mu_test):
     return chis
 
 
-#def confLevel(signal, background, measurement, sgErr, bgErr, measErr, mu_test=1, test='LL'):
-def confLevel(signal, measurement, measErr, sgErr, mu_test=1, test='LL'):
-
+def confLevel(signal, background, measurement, sgErr, bgErr, measErr, tau, mu_test=1, test='LL'):
 
     # 'test' argument decides what statistical test will be used.
     # 'LL' means the CLs likelihood is used (as in contur paper) (poisson error assumption 
     # 'LLA' as LL, but use the qMu_Asimov function to construct the ratio instead, should be equivalent to LL
     # (TODO: add another one here to use the MC method instead of asymptotic/Asimov?)
     # 'CS' means the Chi2 goodness-of-fit is used (Gaussian error assumption)
- 
-    test='LL'
 
+    # tau is (or will be) the ratio of MC to data events in the plot under consideration.
+ 
     p_val=1.0
 
     # We need to know most likely mu, aka mu_hat. In current assumption (data=SM) this is known to be 0
@@ -202,11 +200,10 @@ def confLevel(signal, measurement, measErr, sgErr, mu_test=1, test='LL'):
     # mu_hat = ML_mu_hat(n_obs,bgCount,signal)
     mu_hat = 0
 
-    # for now!
-    background = measurement
-    bgErr = measErr
-
     if test=='LL':
+
+        # this method uses Poisson stats for the MC errors so expects this.
+        sgErr = tau
 
         # When we call the varMatrix, this needs to be passed an additional argument for the measurement
         # currently uses mu_test which is hard coded to 1

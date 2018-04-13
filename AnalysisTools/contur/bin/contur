@@ -65,6 +65,7 @@ if __name__ == "__main__":
             plotparser = util.mkStdPlotParser(plotdirs, )
 
         refhistos, mchistos, xsec, Nev = util.getHistos(infile)
+        print "Monte Carlo Luminosity generated is ", float(Nev.numEntries())/xsec.point(0).x, "inverse pb"
 
         # again this looping belongs inside conturDepot
 

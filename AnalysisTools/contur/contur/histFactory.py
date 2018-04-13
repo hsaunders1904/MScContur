@@ -49,7 +49,9 @@ class histFactory(object):
         self.signal = anaObj
         self.xsec = xSec
         self.nev = nEv
-
+        # Overall effective integrated luminosity has to be calculated plot by plot because units change.
+        self._mcLumi = 0
+ 
         # Initialize the public members we always want to access
         self._background = False
         self._ref = False
@@ -61,7 +63,6 @@ class histFactory(object):
         self._scaleFactorData = 1
         self._scaleFactorSig = 1
         self._conturPoints = []
-        self._mcLumi = 0.0
         self._scaleMC = 1.0
         self._maxcl = -1
         self._maxbin = -1
@@ -92,10 +93,12 @@ class histFactory(object):
         """Check type of input aos
         """
         if self.signal.type == 'Histo1D' or self.signal.type == 'Profile1D' or self.signal.type == 'Counter':
+            # has to be calculated plot-by-plot because units change and some plots are symmetrised. MCLumi is not really a good name for it.
             if self.signal.sumW() == 0.0:
                 self._mcLumi = 0.0
             else:
                 self._mcLumi = float(self.signal.numEntries()) / float(self.signal.sumW())
+
             if self._isScaled:
                 # if the Data is scaled, work out the signal scaling from number of events and generator xs
                 try:
@@ -217,10 +220,12 @@ class histFactory(object):
             ctrPt.bg = self._background.points[i].y
             ctrPt.bgErr = self._background.points[i].yErrs[1]
             ctrPt.nObs = self._ref.points[i].y
-            # TODO check how we work mcLumi out
-            ctrPt.sErr = self._mcLumi*self._scaleFactorSig
-            ctrPt.calcCLs()
+            ctrPt.tau  = self._mcLumi*self._scaleFactorSig
 
+            # TODO currently this only accounts for the MC stat uncertainty, not what would be the stat unc on real data
+            ctrPt.sErr = self.signal.points[i].yErrs[1]
+
+            ctrPt.calcCLs()
                 
             ctrPt.tags = self.signal.path
             ctrPt.pools = self.pool
