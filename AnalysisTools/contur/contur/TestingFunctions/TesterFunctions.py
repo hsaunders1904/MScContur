@@ -185,6 +185,9 @@ def chisquare(background, signal, measurement, error, mu_test):
 
 def confLevel(signal, background, measurement, sgErr, bgErr, measErr, tau, mu_test=1, test='LL'):
 
+    # Does not make use of measurement or error (assumed=data).
+    # Does not make use of sigErr (uses tau to get MC stats)
+
     # 'test' argument decides what statistical test will be used.
     # 'LL' means the CLs likelihood is used (as in contur paper) (poisson error assumption 
     # 'LLA' as LL, but use the qMu_Asimov function to construct the ratio instead, should be equivalent to LL
@@ -202,14 +205,11 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, tau, mu_te
 
     if test=='LL':
 
-        # this method uses Poisson stats for the MC errors so expects this.
-        sgErr = tau
-
         # When we call the varMatrix, this needs to be passed an additional argument for the measurement
         # currently uses mu_test which is hard coded to 1
         # This function should be called twice, once at mu_test=1 and once at mu_test=0
 
-        varMat= Covar_Matrix(background,signal,bgErr,sgErr)[0,0]
+        varMat= Covar_Matrix(background,signal,bgErr,tau)[0,0]
 
         # NOTE: I believe the biggest restructing needed is to take the min_find out of this Covar_matrix, if I have things correct in my head then
         # recipe is as follows:
@@ -243,7 +243,6 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, tau, mu_te
 
         #print 'using the Chi2 test on cross section plots'
 
-        # For now!
         totalErr = measErr
         # Include the MCstats
         for i in range(0, len(measErr)):
