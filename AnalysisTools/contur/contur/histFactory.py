@@ -45,7 +45,7 @@ class histFactory(object):
     Returns metadata attributes and a formated list of conturPoints
     """
 
-    def __init__(self, anaObj, xSec, nEv):
+    def __init__(self, anaObj, xSec, nEv, TestMethod):
         # Construct with an input yoda aos and a scatter1D for the cross section and nEv
         self.signal = anaObj
         self.xsec = xSec
@@ -67,6 +67,7 @@ class histFactory(object):
         self._scaleMC = 1.0
         self._maxcl = -1
         self._maxbin = -1
+        self._testMethod = TestMethod
 
         # Call the internal functions on initialization
         # to fill the above members with what we want, these should all be private
@@ -235,7 +236,7 @@ class histFactory(object):
             # TODO currently this only accounts for the MC stat uncertainty, not what would be the stat unc on real data
             ctrPt.sErr = self.signal.points[i].yErrs[1]
 
-            ctrPt.calcCLs()
+            ctrPt.calcCLs(self._testMethod)
                 
             ctrPt.tags = self.signal.path
             ctrPt.pools = self.pool

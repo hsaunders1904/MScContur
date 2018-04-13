@@ -31,7 +31,7 @@ class conturPoint(object):
         self._subpool=''
 
 
-    def calcCLs(self):
+    def calcCLs(self, TestMethod):
         """Recalculate CLs of this conturPoint
 
         Currently only operates under asymptotic approximation and assumes all observables added to the point
@@ -44,7 +44,7 @@ class conturPoint(object):
             # for now
             meas = self.bg
             measErr = self.bgErr
-            self.CLs = ctr.confLevel(self.s, self.bg, meas, self.sErr, self.bgErr, measErr, self.tau, 1, "LL")
+            self.CLs = ctr.confLevel(self.s, self.bg, meas, self.sErr, self.bgErr, measErr, self.tau, 1, TestMethod)
 
 
     def __checkConsistency(self):
