@@ -185,16 +185,10 @@ class histFactory(object):
             # the current error on the signal derives from the MC stats. There should also be
             # a term due the stat uncertainty on the number of events predicted for this LHC lumi.
             # At this point, y has been scaled to be number of events, so calculate this here (Poisson) and add it in quadrature
-            # TODO is this double-counted now in the LL? 
             statErr2 = self.signal.points[i].y
             yErr0 = np.sqrt( (self.signal.points[i].yErrs[0] * self._lumi * self._scaleFactorSig * binWidth)**2 + statErr2 ) 
             yErr1 = np.sqrt( (self.signal.points[i].yErrs[1] * self._lumi * self._scaleFactorSig * binWidth)**2 + statErr2 ) 
             self.signal.points[i].yErrs = ( yErr0, yErr1 )
-
-            #self.signal.points[i].yErrs = (
-            #    self.signal.points[i].yErrs[0] * self._lumi * self._scaleFactorSig * binWidth, 
-            #    self.signal.points[i].yErrs[1] * self._lumi * self._scaleFactorSig * binWidth
-            #    )
 
         for i in range(0, len(self._ref.points)):
             binWidth = self._ref.points[i].xMax - self._ref.points[i].xMin
@@ -230,10 +224,8 @@ class histFactory(object):
             ctrPt.s = self.signal.points[i].y
             ctrPt.bg = self._background.points[i].y
             ctrPt.bgErr = self._background.points[i].yErrs[1]
-            ctrPt.nObs = self._ref.points[i].y
+            ctrPt.meas = self._ref.points[i].y
             ctrPt.tau  = self._mcLumi*self._scaleFactorSig
-
-            # TODO currently this only accounts for the MC stat uncertainty, not what would be the stat unc on real data
             ctrPt.sErr = self.signal.points[i].yErrs[1]
 
             ctrPt.calcCLs(self._testMethod)

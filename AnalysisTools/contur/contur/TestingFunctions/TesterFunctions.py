@@ -68,7 +68,7 @@ def n_exp(mu, b_hat, s_in):
 #Expected count n, the mean of the poisson used to define event count
   return b_hat + s_in*mu
 
-def Covar_Matrix(b_count,s_count,db_count, ds_count):
+def Covar_Matrix(b_count,s_count,db_count, tau):
 #Construct the inverse variance matrix from expected vals of the 2nd derivatives of the Log Likelihood
 
     # start with a matrix full of zeros
@@ -86,9 +86,9 @@ def Covar_Matrix(b_count,s_count,db_count, ds_count):
         #to be updated to reflect as in the paper
 
         if i < (len(b_count)):
-            res = Min_find(b_count[i], b_count[i], s_count[i], db_count[i], ds_count[i]).x
+            res = Min_find(b_count[i], b_count[i], s_count[i], db_count[i], tau[i]).x
         else:
-            res = Min_find(b_count[i-len(b_count)], b_count[i-len(b_count)], s_count[i-len(b_count)], db_count[i-len(b_count)], ds_count[i-len(b_count)]).x
+            res = Min_find(b_count[i-len(b_count)], b_count[i-len(b_count)], s_count[i-len(b_count)], db_count[i-len(b_count)], tau[i-len(b_count)]).x
         b_hat_hat = res[0]
         s_hat_hat = res[1]
 
@@ -109,7 +109,7 @@ def Covar_Matrix(b_count,s_count,db_count, ds_count):
             Var_matrix_inv[i+1,0]=Var_matrix_inv[0,i+1] = (mu_test*s_hat_hat)/(mu_test*s_hat_hat+b_hat_hat)
             ##s s
             if s_hat_hat >0.0:
-                Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_hat_hat+b_hat_hat) + ds_count[i-len(b_count)]/(s_hat_hat**2)
+                Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_hat_hat+b_hat_hat) + tau[i-len(b_count)]/(s_hat_hat**2)
                 
             else:
                 Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_hat_hat+b_hat_hat)

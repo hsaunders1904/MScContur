@@ -18,7 +18,7 @@ class conturPoint(object):
     collections of conturPoints
     """
 
-    members = ["s", "sErr", "bg", "bgErr", "nobs", "tau"]
+    members = ["s", "sErr", "bg", "bgErr", "meas", "tau"]
     def __init__(self):
         #self.counts = dict.fromkeys(self.members,[])
         #self.counts=defaultdict(self.members)
@@ -152,18 +152,18 @@ class conturPoint(object):
         self.counts["bgErr"].append(value)
 
     @property
-    def nObs(self):
+    def meas(self):
         """Observed count
         """
-        return self.counts["nobs"]
-    @nObs.setter
-    def nObs(self, value):
+        return self.counts["meas"]
+    @meas.setter
+    def meas(self, value):
         """Set the Observed count
 
         Always appends a new value to the stored list, deleting/modifying values done manually
         (although should be avoided)
         """
-        self.counts["nobs"].append(value)
+        self.counts["meas"].append(value)
 
     @property
     def tags(self):
