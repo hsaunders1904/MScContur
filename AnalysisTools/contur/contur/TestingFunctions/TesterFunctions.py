@@ -10,7 +10,7 @@ import scipy.optimize as spopt
 global mu_test
 mu_test=1
 
-def Min_function(x, n_obs, b_obs, s_obs, db, k):
+def Min_function(x, n_obs, b_obs, s_obs, db, kev):
     # defines the functional form of vector function Min_function[0] corresponds to dlnL/db
     # Min_function[1] corresponds to dlnL/ds
     # takes argument x=[b_hat_hat, s_hat_hat]
@@ -27,9 +27,9 @@ def Min_function(x, n_obs, b_obs, s_obs, db, k):
     if fabs(db) >= 1e-5:
         d_lnL_db += (b_obs - x[0]) / db**2
     if x[1] > 0.0:
-        d_lnL_ds += k / x[1]
+        d_lnL_ds += kev / x[1]
     if s_obs > 0.0:
-        d_lnL_ds -= k / s_obs
+        d_lnL_ds -= kev / s_obs
     return [d_lnL_db,d_lnL_ds]
 
 
@@ -68,13 +68,12 @@ def n_exp(mu, b_hat, s_in):
 #Expected count n, the mean of the poisson used to define event count
   return b_hat + s_in*mu
 
-def Covar_Matrix(b_count,s_count,db_count, tau):
+def Covar_Matrix(b_count,s_count,db_count, kev):
 #Construct the inverse variance matrix from expected vals of the 2nd derivatives of the Log Likelihood
 
     # start with a matrix full of zeros
     Var_matrix_inv=np.zeros([(len(b_count)+len(s_count)+1),(len(b_count)+len(s_count)+1)])
 
-     #print "tau = ", tau
 
 #add exception handling if s=/=b
   #loop over all counts
@@ -91,11 +90,11 @@ def Covar_Matrix(b_count,s_count,db_count, tau):
         if i < (len(b_count)):
             if b_count[i]<0:
                 b_count[i]=0
-            res = Min_find(b_count[i], b_count[i], s_count[i], db_count[i], tau[i]).x
+            res = Min_find(b_count[i], b_count[i], s_count[i], db_count[i], kev[i]).x
         else:
             if b_count[i-len(b_count)]<0:
                 b_count[i-len(b_count)]=0
-            res = Min_find(b_count[i-len(b_count)], b_count[i-len(b_count)], s_count[i-len(b_count)], db_count[i-len(b_count)], tau[i-len(b_count)]).x
+            res = Min_find(b_count[i-len(b_count)], b_count[i-len(b_count)], s_count[i-len(b_count)], db_count[i-len(b_count)], kev[i-len(b_count)]).x
 
         b_hat_hat = res[0]
         s_hat_hat = res[1]
@@ -117,9 +116,7 @@ def Covar_Matrix(b_count,s_count,db_count, tau):
             Var_matrix_inv[i+1,0]=Var_matrix_inv[0,i+1] = (mu_test*s_hat_hat)/(mu_test*s_hat_hat+b_hat_hat)
             ##s s
             if s_hat_hat >0.0:
-                # if what comes in is actually tau then this looks wrong
-                Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_hat_hat+b_hat_hat) + tau[i-len(b_count)]/(s_hat_hat**2)
-                #Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_hat_hat+b_hat_hat) + tau[i-len(b_count)]/(s_hat_hat)
+                Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_hat_hat+b_hat_hat) + kev[i-len(b_count)]/(s_hat_hat**2)
                 
             else:
                 Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_hat_hat+b_hat_hat)
@@ -193,10 +190,10 @@ def chisquare(background, signal, measurement, error, mu_test):
     return chis
 
 
-def confLevel(signal, background, measurement, sgErr, bgErr, measErr, tau, mu_test=1, test='LL'):
+def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_test=1, test='LL'):
 
     # Does not make use of measurement or error (assumed=data).
-    # Does not make use of sigErr (uses tau to get MC stats)
+    # Does not make use of sigErr (uses kev to get MC stats)
 
     # 'test' argument decides what statistical test will be used.
     # 'LL' means the CLs likelihood is used (as in contur paper) (poisson error assumption 
@@ -204,7 +201,7 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, tau, mu_te
     # (TODO: add another one here to use the MC method instead of asymptotic/Asimov?)
     # 'CS' means the Chi2 goodness-of-fit is used (Gaussian error assumption)
 
-    # tau is (or will be) the ratio of MC to data events in the plot under consideration.
+    # kev is the actual number of generated events in the bin
  
     p_val=1.0
 
@@ -219,9 +216,7 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, tau, mu_te
         # currently uses mu_test which is hard coded to 1
         # This function should be called twice, once at mu_test=1 and once at mu_test=0
 
-        varMat= Covar_Matrix(background,signal,bgErr,tau)[0,0]
-
-         # print background, signal, bgErr, tau, varMat
+        varMat= Covar_Matrix(background,signal,bgErr,kev)[0,0]
 
         # NOTE: I believe the biggest restructing needed is to take the min_find out of this Covar_matrix, if I have things correct in my head then
         # recipe is as follows:

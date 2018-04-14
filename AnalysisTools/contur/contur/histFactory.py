@@ -235,7 +235,7 @@ class histFactory(object):
             ctrPt.bg = self._background.points[i].y
             ctrPt.bgErr = self._background.points[i].yErrs[1]
             ctrPt.meas = self._ref.points[i].y
-            ctrPt.tau  = self.signal.points[i].y*self._mcLumi/self._lumi
+            ctrPt.kev  = self.signal.points[i].y*self._mcLumi/self._lumi
             ctrPt.sErr = self.signal.points[i].yErrs[1]
 
             ctrPt.calcCLs(self._testMethod)

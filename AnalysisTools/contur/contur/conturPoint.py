@@ -18,7 +18,7 @@ class conturPoint(object):
     collections of conturPoints
     """
 
-    members = ["s", "sErr", "bg", "bgErr", "meas", "tau"]
+    members = ["s", "sErr", "bg", "bgErr", "meas", "kev"]
     def __init__(self):
         #self.counts = dict.fromkeys(self.members,[])
         #self.counts=defaultdict(self.members)
@@ -44,7 +44,7 @@ class conturPoint(object):
             # for now
             meas = self.bg
             measErr = self.bgErr
-            self.CLs = ctr.confLevel(self.s, self.bg, meas, self.sErr, self.bgErr, measErr, self.tau, 1, TestMethod)
+            self.CLs = ctr.confLevel(self.s, self.bg, meas, self.sErr, self.bgErr, measErr, self.kev, 1, TestMethod)
 
 
     def __checkConsistency(self):
@@ -108,19 +108,19 @@ class conturPoint(object):
         self.counts["sErr"].append(value)
 
     @property
-    def tau(self):
+    def kev(self):
         """Ratio of generated MC events to expected Data events for this point
 
         This is needed only for estimating the MC statistical uncertainty, so should be small
         TODO: check the way it is actually used in TesterFunctions.
         """
-        return self.counts["tau"]
-    @tau.setter
-    def tau(self,value):
-        """Set the tau ratio
+        return self.counts["kev"]
+    @kev.setter
+    def kev(self,value):
+        """Set the number of generted events
 
         """
-        self.counts["tau"].append(value)
+        self.counts["kev"].append(value)
 
 
     @property
