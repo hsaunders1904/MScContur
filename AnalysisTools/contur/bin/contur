@@ -36,7 +36,7 @@ version = " Beta pre-release"
 
 if opts.printVersion:
     print version
-    sys.exit(1)
+    sys.exit(0)
 
 if not yodafiles:
     sys.stderr.write("Error: You need to specify some YODA files to be analysed!\n")
@@ -78,8 +78,12 @@ if __name__ == "__main__":
 
         if opts.TESTMETHOD=='CS':
             print "Using Chi2 test method"
-        else:
+        elif opts.TESTMETHOD=='LL':
             print "Using Log Likelihood (Poisson) test method"
+        else:
+            print "Unknown test method: ",opts.TESTMETHOD
+            sys.exit(1)
+
 
 
         refhistos, mchistos, xsec, Nev = util.getHistos(infile)

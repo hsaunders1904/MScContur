@@ -95,20 +95,24 @@ class histFactory(object):
         """Check type of input aos
         """
         if self.signal.type == 'Histo1D' or self.signal.type == 'Profile1D' or self.signal.type == 'Counter':
-            # has to be calculated plot-by-plot because units change and some plots are symmetrised. MCLumi is not really a good name for it.
-            if self.signal.sumW() == 0.0:
-                self._mcLumi = 0.0
-            else:
-                self._mcLumi = float(self.signal.numEntries()) / float(self.signal.sumW())
-
+            
             if self._isScaled:
-                # if the Data is scaled, work out the signal scaling from number of events and generator xs
+                # if the plot is area normalised (ie scaled), work out the factor from number of events and generator xs
+                # (this is just the integrated cross section associated with the plot)
                 try:
                     self._scaleFactorSig = (
-                        float(self.signal.numEntries()) / float(self.nev.numEntries()) * float(self.xsec.points[0].x))
+                        float(self.xsec.points[0].x)) * float(self.signal.numEntries()) / float(self.nev.numEntries())
 
                 except:
                     print "missing info for scalefactor calc"
+
+            # effective MClumi has to be calculated plot-by-plot because units change and some plots are symmetrised (in which
+            # there will be a factor of two between this the mclumi from (number of generated events/xsec) )
+            if self.signal.sumW() == 0.0:
+                self._mcLumi = 0.0
+            else:
+                self._mcLumi = float(self.signal.numEntries()) / (float(self.signal.sumW())*self._scaleFactorSig)
+
             return True
         else:
             return False
@@ -174,7 +178,10 @@ class histFactory(object):
 
         if self.signal.type != "Scatter2D":
             return False
-        # for sig,ref,bg in zip(..,..,..):
+
+        # turn the published plots into numbers of events expected to appear in the measurement
+        # Factors needed are the bin width and the integrated lumi for which the measurement are made, and
+        # for plots which were area normalised in rivet, the integrated cross section associated with the plot, to undo that.
 
         # @TODO is there any reason why we can't do all this in the same loop? Surely the
         # number of points, binwidths etc have to be the same?
@@ -216,6 +223,9 @@ class histFactory(object):
             return False
         # counter to track the maximum discrepant point
         clmax = 0.0
+
+          #print self.signal.path
+
         for i in range(0, len(self.signal.points)):
             # need this as empty s is returning CL=1, this should be fixed in the limit setting functions
             if self.signal.points[i].y == 0.0:
@@ -225,7 +235,7 @@ class histFactory(object):
             ctrPt.bg = self._background.points[i].y
             ctrPt.bgErr = self._background.points[i].yErrs[1]
             ctrPt.meas = self._ref.points[i].y
-            ctrPt.tau  = self._mcLumi*self._scaleFactorSig
+            ctrPt.tau  = self.signal.points[i].y*self._mcLumi/self._lumi
             ctrPt.sErr = self.signal.points[i].yErrs[1]
 
             ctrPt.calcCLs(self._testMethod)
@@ -280,7 +290,7 @@ class histFactory(object):
 
         Note: This can be quoted in pb or fb depending on the hepData record for an analysis.
         Either way this enters into the scale factor applied to the points as a separate factor
-        multiplied with ScaleFactorSig/ScaleFactorData"""
+        multiplied with ScaleFactorSig or ScaleFactorData"""
         return self._lumi
 
     @property

@@ -10,7 +10,7 @@ import scipy.optimize as spopt
 global mu_test
 mu_test=1
 
-def Min_function(x, n_obs, b_obs, s_obs, db, ds):
+def Min_function(x, n_obs, b_obs, s_obs, db, k):
     # defines the functional form of vector function Min_function[0] corresponds to dlnL/db
     # Min_function[1] corresponds to dlnL/ds
     # takes argument x=[b_hat_hat, s_hat_hat]
@@ -27,18 +27,18 @@ def Min_function(x, n_obs, b_obs, s_obs, db, ds):
     if fabs(db) >= 1e-5:
         d_lnL_db += (b_obs - x[0]) / db**2
     if x[1] > 0.0:
-        d_lnL_ds += ds / x[1]
+        d_lnL_ds += k / x[1]
     if s_obs > 0.0:
-        d_lnL_ds -= ds/s_obs
+        d_lnL_ds -= k / s_obs
     return [d_lnL_db,d_lnL_ds]
 
 
-def Min_find(n_obs, b_obs, s_obs, db, ds):
+def Min_find(n_obs, b_obs, s_obs, db, k):
     #Min find just runs the root finding on the Min_function so just needs to pass through the arguments
     # s_hat_hat is called x_1, b_hat_hat is x_0
     # func_0 being the first entry in vector, corresponds to dlnL/db
     # func_1 dlnL/ds
-    return spopt.root(Min_function, [b_obs, s_obs], args=(n_obs, b_obs, s_obs, db, ds))
+    return spopt.root(Min_function, [b_obs, s_obs], args=(n_obs, b_obs, s_obs, db, k))
 
 
 
@@ -74,6 +74,8 @@ def Covar_Matrix(b_count,s_count,db_count, tau):
     # start with a matrix full of zeros
     Var_matrix_inv=np.zeros([(len(b_count)+len(s_count)+1),(len(b_count)+len(s_count)+1)])
 
+     #print "tau = ", tau
+
 #add exception handling if s=/=b
   #loop over all counts
     for i in range(0, len(b_count)+len(s_count)):
@@ -84,11 +86,17 @@ def Covar_Matrix(b_count,s_count,db_count, tau):
         #The big change in the code needed here is to sort out the form of the second derivatives, which are all correct in the paper
         # I used a cancellation of n and mu.s+b here which was fine before but as we separate these two counts, the form of these needs 
         #to be updated to reflect as in the paper
+        
 
         if i < (len(b_count)):
+            if b_count[i]<0:
+                b_count[i]=0
             res = Min_find(b_count[i], b_count[i], s_count[i], db_count[i], tau[i]).x
         else:
+            if b_count[i-len(b_count)]<0:
+                b_count[i-len(b_count)]=0
             res = Min_find(b_count[i-len(b_count)], b_count[i-len(b_count)], s_count[i-len(b_count)], db_count[i-len(b_count)], tau[i-len(b_count)]).x
+
         b_hat_hat = res[0]
         s_hat_hat = res[1]
 
@@ -109,7 +117,9 @@ def Covar_Matrix(b_count,s_count,db_count, tau):
             Var_matrix_inv[i+1,0]=Var_matrix_inv[0,i+1] = (mu_test*s_hat_hat)/(mu_test*s_hat_hat+b_hat_hat)
             ##s s
             if s_hat_hat >0.0:
+                # if what comes in is actually tau then this looks wrong
                 Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_hat_hat+b_hat_hat) + tau[i-len(b_count)]/(s_hat_hat**2)
+                #Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_hat_hat+b_hat_hat) + tau[i-len(b_count)]/(s_hat_hat)
                 
             else:
                 Var_matrix_inv[i+1,i+1]=(mu_test**2)/(mu_test*s_hat_hat+b_hat_hat)
@@ -211,6 +221,8 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, tau, mu_te
 
         varMat= Covar_Matrix(background,signal,bgErr,tau)[0,0]
 
+         # print background, signal, bgErr, tau, varMat
+
         # NOTE: I believe the biggest restructing needed is to take the min_find out of this Covar_matrix, if I have things correct in my head then
         # recipe is as follows:
         # Work out b_hat_hat and s_hat_hat here in this function, using mu_hat as an additional argument to these functions,
@@ -233,6 +245,7 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, tau, mu_te
                 p_val=2.0*spstat.norm.sf(np.sqrt(q_mu))
             elif q_mu > (mu_test**2)/(varMat):
                 p_val=2.0*spstat.norm.sf( (q_mu + (mu_test**2/varMat))/(2*mu_test/(np.sqrt(varMat))) )
+            
 
     elif test=='LLA':
 
@@ -280,6 +293,7 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, tau, mu_te
         
 
     
-     #print 'returning', float('%10.6f' % float(1-p_val))
+    # print 'returning', float('%10.6f' % float(1-p_val))
     
+
     return float('%10.6f' % float(1-p_val))
