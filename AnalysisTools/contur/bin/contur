@@ -24,10 +24,19 @@ parser.add_option("-n", "--nostack",
                   help="in single run mode, do not stack the histograms in dat file output")
 parser.add_option("-t", "--testmethod", dest="TESTMETHOD",
                   default="LL", help="Statistical test to apply. LL=log likelihood/poisson, CS=chi2")
+parser.add_option("-v", "--version", 
+                  action="store_true", dest="printVersion", 
+                  default=False, help="print version number and exit.")
 
 
 # Command line parsing
 opts, yodafiles = parser.parse_args()
+
+version = " Beta pre-release"
+
+if opts.printVersion:
+    print version
+    sys.exit(1)
 
 if not yodafiles:
     sys.stderr.write("Error: You need to specify some YODA files to be analysed!\n")
@@ -55,7 +64,8 @@ def write_output(conturFactory):
 
 
 if __name__ == "__main__":
-    util.writeBanner()
+
+    util.writeBanner(version)
     # Initialise a conturDepot
     contur = ct.conturDepot(opts.TESTMETHOD)
     # conturFactory should take entire yoda files/ list of yoda file as initialization argument but for now loop over aos in yodafile

@@ -4,9 +4,9 @@ import rivet
 import plotinfo
 from contur import TestingFunctions as ctr
 
-def writeBanner():
+def writeBanner(version):
     """Write Ascii banner"""
-    print "Running Contur v1.0 Release \n"
+    print "Running Contur ",version, "\n"
     print "Mail to developers: contur (at) projects.hepforge.org \n"
 
 def mkoutdir(outdir):
