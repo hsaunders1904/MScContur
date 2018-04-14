@@ -80,6 +80,8 @@ if __name__ == "__main__":
             print "Using Chi2 test method"
         elif opts.TESTMETHOD=='LL':
             print "Using Log Likelihood (Poisson) test method"
+        elif opts.TESTMETHOD=='LLA':
+            print "Using Log Likelihood (Azimov) test method"
         else:
             print "Unknown test method: ",opts.TESTMETHOD
             sys.exit(1)

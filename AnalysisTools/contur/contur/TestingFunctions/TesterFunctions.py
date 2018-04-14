@@ -144,6 +144,9 @@ def qMu_Asimov(mu_test,bCount,sCount,db):
 #first find the ML of mu and b
     result = 0
     for i in range(0,len(bCount)):
+        # trap negative backgorund counts (!)
+        if bCount[i]<0:
+            bCount[i]=0
         mu_hat = ML_mu_hat(bCount[i],bCount[i],sCount[i])
         b_hat = ML_b_hat(bCount[i],mu_hat,bCount[i], sCount[i], db[i])
         if mu_hat > 1.0:
