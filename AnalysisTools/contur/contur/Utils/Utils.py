@@ -21,19 +21,6 @@ def mkoutdir(outdir):
         msg = "Can't write to output directory '%s'" % outdir
         raise Exception(msg)
 
-def writeOutputHier(output, h):
-    "Choose output file name and dir"
-    hparts = h.strip("/").split("/")
-    ana = "ANALYSIS"
-    outdir = os.path.join('.', ana)
-    mkoutdir(outdir)
-    outfilepath = os.path.join(outdir, output)
-    f = open(outfilepath, 'w')
-    for item in output:
-        f.write(str(item) + "\n")
-    #f.write(output)
-    f.close()
-
 def writeOutput(output, h):
     mkoutdir("ANALYSIS")
     f = open("./ANALYSIS/"+h, 'w')
@@ -41,16 +28,6 @@ def writeOutput(output, h):
         f.write(str(item) + "\n")
     f.close()
 
-def writeOutput2(output, h, outdir):
-    "Choose output file name and dir"
-    hparts = h.strip("/").split("/")
-    #outdir = opts.OUTPUTDIR
-    outfile = '%s.dat' % "_".join(hparts)
-    mkoutdir(outdir)
-    outfilepath = os.path.join(outdir, outfile)
-    f = open(outfilepath, 'w')
-    f.write(output)
-    f.close()
 
 def getHistos(filelist):
     """Loop over all input files. Only use the first occurrence of any REF-histogram
@@ -113,11 +90,10 @@ def writeHistoDat(mcpath, plotparser, outdir, nostack, histo):
         refdata.setAnnotation('PolyMarker', '*')
         refdata.setAnnotation('ConnectBins', '0')
         refdata.setAnnotation('Title', 'Data')
-        
-        anaobjects.append(refdata)
-
+    
         background.setAnnotation('LineColor', 'green')
         anaobjects.append(background)
+        anaobjects.append(refdata)
 
         drawonly.append('/REF' + h)
         drawonly.append(mcpath + h)

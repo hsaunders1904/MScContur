@@ -26,6 +26,8 @@ class conturPoint(object):
         for m in self.members:
             self.counts[m]=[]
         self.CLs=0.0
+        self.p_b=0.0
+        self.p_sb=0.0
         self._tags=''
         self._pools=''
         self._subpool=''
@@ -42,7 +44,7 @@ class conturPoint(object):
             self.CLs=0.0
         else:
             # for now
-            self.CLs = ctr.confLevel(self.s, self.bg, self.meas, self.sErr, self.bgErr, self.measErr, self.kev, 1, TestMethod)
+            self.CLs, self.p_sb, self.p_b = ctr.confLevel(self.s, self.bg, self.meas, self.sErr, self.bgErr, self.measErr, self.kev, 1, TestMethod)
 
 
     def __checkConsistency(self):

@@ -50,7 +50,7 @@ class histFactory(object):
         self.xsec = xSec
         self.nev = nEv
         # Overall effective integrated luminosity has to be calculated plot by plot because units change.
-        self._mcLumi = 0
+        self._mcLumi = float(nEv.numEntries())/xSec.point(0).x
  
         # Initialize the public members we always want to access
         self._background = False
@@ -108,9 +108,7 @@ class histFactory(object):
 
             # effective MClumi has to be calculated plot-by-plot because units change and some plots are symmetrised (in which
             # there will be a factor of two between this the mclumi from (number of generated events/xsec) )
-            if self.signal.sumW() == 0.0:
-                self._mcLumi = 0.0
-            else:
+            if self.signal.sumW() != 0.0:
                 self._mcLumi = float(self.signal.numEntries()) / (float(self.signal.sumW())*self._scaleFactorSig)
 
             return True
@@ -140,14 +138,18 @@ class histFactory(object):
         """
         if not REFLOAD:
             init_ref()
+
         gotTh = False    
-        for path, ao in refObj.iteritems():
-            if self.signal.path in path and "/THY/" in path:
-                gotTh = True
-                print "got ", path
-                self._background = ao
-                if self._background.type=="Scatter1D":
-                    self._background = util.mkScatter2D(self._background)
+        if self._testMethod == 'CST' or self._testMethod == 'CSDT' or self._testMethod == 'CSTD':
+
+            for path, ao in refObj.iteritems():
+                if self.signal.path in path and "/THY/" in path:
+                    gotTh = True
+                    print "got ", path
+                    self._background = ao
+                    if self._background.type=="Scatter1D":
+                        self._background = util.mkScatter2D(self._background)
+
         if not gotTh:            
             try:
                 self._background = self._ref.clone()
@@ -158,7 +160,6 @@ class histFactory(object):
                 print "No reference data found for histo: " + self.signal.path
 
         self._bgplot = self._background.clone()
-
 
 
     def __getAux(self):
@@ -246,8 +247,8 @@ class histFactory(object):
 
         for i in range(0, len(self.signal.points)):
             # need this as empty s is returning CL=1, this should be fixed in the limit setting functions
-            if self.signal.points[i].y == 0.0:
-                continue
+            #if self.signal.points[i].y == 0.0:
+            #    continue
             ctrPt = conturPoint()
             ctrPt.s = self.signal.points[i].y
             ctrPt.sErr = self.signal.points[i].yErrs[1]

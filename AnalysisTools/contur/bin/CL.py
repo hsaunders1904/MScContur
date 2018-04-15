@@ -160,7 +160,7 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
         sio = StringIO()
         yoda.writeFLAT(anaobjects, sio)
         output += sio.getvalue()
-        util.writeOutput2(output, h, opts.OUTPUTDIR)
+        legacy.writeOutput2(output, h, opts.OUTPUTDIR)
         # All these extra count checks are to stop any plots with no count in most likely bin from being entered
         # into liklihood calc, should be fixed upstream
 

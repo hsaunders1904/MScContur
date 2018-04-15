@@ -46,7 +46,10 @@ def write_output(conturFactory):
     """Temporary function to mimic output of 1 single analysis"""
     util.mkoutdir(opts.ANALYSISDIR)
     sumfn = open(opts.ANALYSISDIR + "/Summary.txt", 'w')
-    result = "Combined CL exclusion for these plots is %.1f %%" % (conturFactory.conturPoint.CLs *100.0)
+    result = "Combined CLs exclusion for these plots is %.1f %% \n" % (conturFactory.conturPoint.CLs *100.0)
+    if opts.TESTMETHOD != 'LL' and opts.TESTMETHOD != 'LLA': 
+        result += "Probability of SM only giving this agreement or worse assuming SM = %.4f \n" % (conturFactory.conturPoint.p_b) 
+        result += "Probability of SM+BSM  giving this agreement or worse assuming SM = %.4f \n" % (conturFactory.conturPoint.p_sb) 
     sumfn.write(result)
     for x in conturFactory.sortedPoints:
         sumfn.write("\n" + x.pools)

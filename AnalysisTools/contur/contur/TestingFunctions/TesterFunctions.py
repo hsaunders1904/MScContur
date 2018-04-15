@@ -207,6 +207,8 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_te
     # kev is the actual number of generated events in the bin
  
     p_val=1.0
+    p_sb =1.0
+    p_b  =1.0
 
     # We need to know most likely mu, aka mu_hat. In current assumption (data=SM) this is known to be 0
     # TODO: this function expects floats, not lists.
@@ -264,6 +266,10 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_te
         #return this value 'cls' to get the confidence interval using a simple chi square fit
         p_val=chisq_p_sb/(1-chisq_p_b)
 
+         #print "Prob. bg only, s+b, cls", chisq_p_b, chisq_p_sb, p_val
+        p_b =  chisq_p_b
+        p_sb = chisq_p_sb
+
     else:
         print 'Unrecognised test type ', test
         
@@ -272,4 +278,4 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_te
     # print 'returning', float('%10.6f' % float(1-p_val))
     
 
-    return float('%10.6f' % float(1-p_val))
+    return float('%10.6f' % float(1-p_val)), p_sb, p_b
