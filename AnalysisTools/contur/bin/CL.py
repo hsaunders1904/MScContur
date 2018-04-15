@@ -64,7 +64,7 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
             if p and p not in hpaths:
                 hpaths.append(p)
 
-    util.getRivetRefData(refhistos)
+    legacy.getRivetRefData(refhistos)
 
     mapPoints = {}
     for h in hpaths:
