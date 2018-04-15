@@ -264,8 +264,6 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_te
         #return this value 'cls' to get the confidence interval using a simple chi square fit
         p_val=chisq_p_sb/(1-chisq_p_b)
 
-        #print 'Chi2 sb, b, p_val', chisq_p_sb, chisq_p_b, p_val
-
     else:
         print 'Unrecognised test type ', test
         

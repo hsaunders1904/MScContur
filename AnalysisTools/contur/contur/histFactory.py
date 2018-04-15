@@ -58,6 +58,7 @@ class histFactory(object):
         self._stack = yoda.Scatter2D
         self._refplot = yoda.Scatter2D
         self._sigplot = yoda.Scatter2D
+        self._bgplot = yoda.Scatter2D
         self._lumi = 1
         self._isScaled = False
         self._scaleFactorData = 1
@@ -155,6 +156,8 @@ class histFactory(object):
                     self._background = util.mkScatter2D(self._background)
             except:
                 print "No reference data found for histo: " + self.signal.path
+
+        self._bgplot = self._background.clone()
 
 
 
@@ -313,6 +316,11 @@ class histFactory(object):
     def refplot(self):
         """unscaled reference data yoda.Scatter2D"""
         return self._refplot
+
+    @property
+    def bgplot(self):
+        """unscaled reference data yoda.Scatter2D"""
+        return self._bgplot
 
     @property
     def lumi(self):

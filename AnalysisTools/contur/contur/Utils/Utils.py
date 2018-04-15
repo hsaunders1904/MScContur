@@ -97,10 +97,8 @@ def writeHistoDat(mcpath, plotparser, outdir, nostack, histo):
     ratioreference = None
     if histo.ref:
 
-        ## unfortunuately this has been scale by bin width and lumi...
-        #refdata = histo.background
-
         refdata = histo.refplot
+        background = histo.bgplot
 
         if nostack:
             sigback = histo.sigplot
@@ -117,9 +115,13 @@ def writeHistoDat(mcpath, plotparser, outdir, nostack, histo):
         refdata.setAnnotation('Title', 'Data')
         
         anaobjects.append(refdata)
-        drawonly.append('/REF' + h)
 
+        background.setAnnotation('LineColor', 'green')
+        anaobjects.append(background)
+
+        drawonly.append('/REF' + h)
         drawonly.append(mcpath + h)
+        drawonly.append('/THY' + h)
 
         # write the bin number of the most significant bin, and the bin number for the plot legend
         if histo.maxbin > 0:
@@ -127,6 +129,7 @@ def writeHistoDat(mcpath, plotparser, outdir, nostack, histo):
 
         sigback.setAnnotation('LineColor', 'red')
         anaobjects.append(sigback)
+
         plot = plotinfo.Plot()
         plot['DrawOnly'] = ' '.join(drawonly).strip()
         plot['Legend'] = '1'
