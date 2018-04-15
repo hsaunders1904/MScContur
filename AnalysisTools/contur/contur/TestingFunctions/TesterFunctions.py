@@ -266,7 +266,7 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_te
         #return this value 'cls' to get the confidence interval using a simple chi square fit
         p_val=chisq_p_sb/(1-chisq_p_b)
 
-         #print "Prob. bg only, s+b, cls", chisq_p_b, chisq_p_sb, p_val
+         #print "Prob. bg only, s+b, p, cls", chisq_p_b, chisq_p_sb, p_val, 1.0-p_val
         p_b =  chisq_p_b
         p_sb = chisq_p_sb
 
