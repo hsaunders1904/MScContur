@@ -18,7 +18,7 @@ class conturPoint(object):
     collections of conturPoints
     """
 
-    members = ["s", "sErr", "bg", "bgErr", "meas", "kev"]
+    members = ["s", "sErr", "bg", "bgErr", "meas", "measErr", "kev"]
     def __init__(self):
         #self.counts = dict.fromkeys(self.members,[])
         #self.counts=defaultdict(self.members)
@@ -42,9 +42,7 @@ class conturPoint(object):
             self.CLs=0.0
         else:
             # for now
-            meas = self.bg
-            measErr = self.bgErr
-            self.CLs = ctr.confLevel(self.s, self.bg, meas, self.sErr, self.bgErr, measErr, self.kev, 1, TestMethod)
+            self.CLs = ctr.confLevel(self.s, self.bg, self.meas, self.sErr, self.bgErr, self.measErr, self.kev, 1, TestMethod)
 
 
     def __checkConsistency(self):
@@ -164,6 +162,20 @@ class conturPoint(object):
         (although should be avoided)
         """
         self.counts["meas"].append(value)
+
+    @property
+    def measErr(self):
+        """Observed count
+        """
+        return self.counts["measErr"]
+    @measErr.setter
+    def measErr(self, value):
+        """Set the Observed count
+
+        Always appends a new value to the stored list, deleting/modifying values done manually
+        (although should be avoided)
+        """
+        self.counts["measErr"].append(value)
 
     @property
     def tags(self):

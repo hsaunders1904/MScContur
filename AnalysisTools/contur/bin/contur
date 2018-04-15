@@ -77,11 +77,17 @@ if __name__ == "__main__":
             plotparser = util.mkStdPlotParser(plotdirs, )
 
         if opts.TESTMETHOD=='CS':
-            print "Using Chi2 test method"
+            print "Using Chi2 test method, theory=data, no theory uncertainty"
+        elif opts.TESTMETHOD=='CSD':
+            print "Using Chi2 test method, no theory prediction, theory error=data error"
+        elif opts.TESTMETHOD=='CST':
+            print "Using Chi2 test method, with theory predictions where availale, else no theory error"
+        elif opts.TESTMETHOD=='CSDT' or opts.TESTMETHOD=='CSTD':
+            print "Using Chi2 test method, theory predictions where available, else theory=data, theory error=data error"
         elif opts.TESTMETHOD=='LL':
-            print "Using Log Likelihood (Poisson) test method"
+            print "Using Log Likelihood (Poisson) test method, theory=data, no theory uncertainty"
         elif opts.TESTMETHOD=='LLA':
-            print "Using Log Likelihood (Azimov) test method"
+            print "Using Log Likelihood (Azimov) test method, theory=data, no theory uncertainty"
         else:
             print "Unknown test method: ",opts.TESTMETHOD
             sys.exit(1)

@@ -215,16 +215,8 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_te
 
     if test=='LL':
 
-        # When we call the varMatrix, this needs to be passed an additional argument for the measurement
-        # currently uses mu_test which is hard coded to 1
-        # This function should be called twice, once at mu_test=1 and once at mu_test=0
-
-        varMat= Covar_Matrix(background,signal,bgErr,kev)[0,0]
-
-        # NOTE: I believe the biggest restructing needed is to take the min_find out of this Covar_matrix, if I have things correct in my head then
-        # recipe is as follows:
-        # Work out b_hat_hat and s_hat_hat here in this function, using mu_hat as an additional argument to these functions,
-        # we need to call this covar matrix twice at the tested mu values, but b_hat_hat and s_hat_hat should be the same in both cases
+        # always assume background = measurement
+        varMat= Covar_Matrix(measurement,signal,measErr,kev)[0,0]
 
         mu_hat = 0
         if varMat <=0:
@@ -247,44 +239,32 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_te
 
     elif test=='LLA':
 
-        q_mu_a = qMu_Asimov(mu_test,background,signal,bgErr)
+        # always assume background = measurement
+        q_mu_a = qMu_Asimov(mu_test,measurement,signal,measErr)
         p_val=2.0*spstat.norm.sf(np.sqrt(q_mu_a))
 
-    elif test=='CS':
+    elif test=='CS' or test=='CST' or test=='CSD' or test=='CSDT' or test=='CSTD':
 
-        #print 'using the Chi2 test on cross section plots'
+        #print "using the Chi2 test on cross section plots"
 
-        totalErr = measErr
+        totalErr = []
+
         # Include the MCstats
         for i in range(0, len(measErr)):
-            totalErr[i] = np.sqrt(measErr[i]**2+sgErr[i]**2)
+            #print background[i], measurement[i], signal[i], bgErr[i], measErr[i], sgErr[i]
+            totalErr.append(np.sqrt(bgErr[i]**2+measErr[i]**2+sgErr[i]**2))
 
 
         # chisquare function above takes argument (background, signal, measurement, total_uncertainty)
-        # Here we are assuming measurement = background, and the measurement error dominates.
+        # signal + background
         chisq_p_sb = spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,totalErr, 1)))
+        # background only
+        chisq_p_b = spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,totalErr, 0)))
 
-        #Explicitly find p_b rather than just use two, no cost to evaluate a norm.sf of 0!
-        chisq_p_b = 1-spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,totalErr, 0)))
         #return this value 'cls' to get the confidence interval using a simple chi square fit
         p_val=chisq_p_sb/(1-chisq_p_b)
 
         #print 'Chi2 sb, b, p_val', chisq_p_sb, chisq_p_b, p_val
-
-    elif test=='CSR':
-
-        #print 'using the Chi2 test on ratio plots'
-
-        # chisquare function above takes argument (background, signal, measurement, total_uncertainty)
-        # TODO: fix this for ratios. Is this really needed? What would change?
-        chisq_p_sb = spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,totalErr, 1)))
-
-        #Explicitly find p_b rather than just use two, no cost to evaluate a norm.sf of 0!
-        chisq_p_b = 1-spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,totalErr, 0)))
-        #return this value 'cls' to get the confidence interval using a simple chi square fit
-        p_val=chisq_p_sb/(1-chisq_p_b)
-
-         #print 'Chi2 sb, b, p_val', chisq_p_sb, chisq_p_b, p_val
 
     else:
         print 'Unrecognised test type ', test

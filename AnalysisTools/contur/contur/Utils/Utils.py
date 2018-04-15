@@ -86,27 +86,6 @@ def getHistos(filelist):
     return refhistos, mchistos, xsec, Nev
 
 
-def getRivetRefData(refhistos, anas=None):
-    "Find all Rivet reference data files"
-    rivet_data_dirs = rivet.getAnalysisRefPaths()
-    dirlist = []
-    for d in rivet_data_dirs:
-        if anas is None:
-            import glob
-            dirlist.append(glob.glob(os.path.join(d, '*.yoda')))
-        else:
-            dirlist.append([os.path.join(d, a + '.yoda') for a in anas])
-    for filelist in dirlist:
-        # TODO: delegate to getHistos?
-        for infile in filelist:
-            analysisobjects = yoda.read(infile)
-            for path, ao in analysisobjects.iteritems():
-                if path.startswith('/REF/'):
-                    if path not in refhistos:
-                        refhistos[path] = ao
-
-
-
 def writeHistoDat(mcpath, plotparser, outdir, nostack, histo):
     """Write a .dat file for the histogram in the output directory, for later display."""
 

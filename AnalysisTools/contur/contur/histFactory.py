@@ -13,10 +13,10 @@ refObj = {}
 
 
 def init_ref():
-    """Function to load all reference *.yoda data"""
+    """Function to load all reference data and theory *.yoda data"""
     refFiles = []
     # refObj = {}
-    print "Gathering all reference Data"
+    print "Gathering all reference Data (and Theory, if available)"
     rivet_data_dirs = rivet.getAnalysisRefPaths()
     for dirs in rivet_data_dirs:
         import glob
@@ -28,7 +28,6 @@ def init_ref():
                 if path.startswith('/REF/'):
                     refObj[path] = ao
                 if path.startswith('/THY/'):
-                    # TODO provide this information in the first place!
                     refObj[path] = ao
     global REFLOAD
     REFLOAD = True
@@ -128,7 +127,7 @@ class histFactory(object):
             init_ref()
         for path, ao in refObj.iteritems():
             self._sigplot = self.signal.clone()
-            if self.signal.path in path:
+            if self.signal.path in path and "/REF/" in path:
                 self._ref = ao
                 if self._ref.type=="Scatter1D":
                     self._ref = util.mkScatter2D(self._ref)
@@ -136,15 +135,28 @@ class histFactory(object):
 
     def __getMC(self):
         """Lookup for any stored SM MC background calculation
-        Currently doesn't exist so just return the refdata
+        If doesn't exist, just return the refdata
         """
-        try:
-            self._background = self._ref.clone()
+        if not REFLOAD:
+            init_ref()
+        gotTh = False    
+        for path, ao in refObj.iteritems():
+            if self.signal.path in path and "/THY/" in path:
+                gotTh = True
+                print "got ", path
+                self._background = ao
+                if self._background.type=="Scatter1D":
+                    self._background = util.mkScatter2D(self._background)
+        if not gotTh:            
+            try:
+                self._background = self._ref.clone()
             # Make sure it is actually a Scatter2D - mkScatter makes Scatter1D from counter.   
-            if self._background.type=='Scatter1D':
-                self._background = util.mkScatter2D(self._background)
-        except:
-            print "No reference data found for histo: " + self.signal.path
+                if self._background.type=='Scatter1D':
+                    self._background = util.mkScatter2D(self._background)
+            except:
+                print "No reference data found for histo: " + self.signal.path
+
+
 
     def __getAux(self):
         """Sets member variables from static lookup tables
@@ -218,6 +230,9 @@ class histFactory(object):
 
         Fills the conturPoints attribute with all calculable conturPoints, requires reference data present and __doScale
         to have successfully run
+
+        Takes into account the requested Test Method
+
         """
         if self.signal.type != "Scatter2D":
             return False
@@ -232,11 +247,26 @@ class histFactory(object):
                 continue
             ctrPt = conturPoint()
             ctrPt.s = self.signal.points[i].y
-            ctrPt.bg = self._background.points[i].y
-            ctrPt.bgErr = self._background.points[i].yErrs[1]
-            ctrPt.meas = self._ref.points[i].y
-            ctrPt.kev  = self.signal.points[i].y*self._mcLumi/self._lumi
             ctrPt.sErr = self.signal.points[i].yErrs[1]
+            ctrPt.meas = self._ref.points[i].y
+            ctrPt.measErr = self._ref.points[i].yErrs[1]
+
+            if self._testMethod == 'CST' or self._testMethod == 'CSDT' or self._testMethod == 'CSTD':
+                # Using theory if it is there
+                ctrPt.bg = self._background.points[i].y
+                if self._testMethod == 'CSDT' or self._ref != self._background:
+                    ctrPt.bgErr = self._background.points[i].yErrs[1]
+                else:
+                    ctrPt.bgErr = 0.0
+            else:    
+                # Not using theory
+                ctrPt.bg = self._ref.points[i].y
+                if self._testMethod == 'CSD':
+                    ctrPt.bgErr = self._ref.points[i].yErrs[1]
+                else:
+                    ctrPt.bgErr = 0.0
+
+            ctrPt.kev  = self.signal.points[i].y*self._mcLumi/self._lumi
 
             ctrPt.calcCLs(self._testMethod)
                 
