@@ -222,7 +222,7 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_te
 
         mu_hat = 0
         if varMat <=0:
-            return 0
+            return 0, 0, 0 
         else:
             q_mu=0
             p_val=0

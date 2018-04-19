@@ -112,8 +112,8 @@ if __name__ == "__main__":
                 if tf.validHisto(v2.path):
 
                      #if "ATLAS_2014_I1306615" not in v2.path:
-                     #if "ATLAS_2014_I1310835" not in v2.path:
-                       #   continue
+                    if "ATLAS_2014_I1310835" not in v2.path:
+                        continue
                     # Currently histfact looks up the ref data every time, this should be factored into conturfact
                     # Conturfact should also hold xsec and Nev eventually
 

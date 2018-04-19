@@ -43,7 +43,6 @@ class conturPoint(object):
         if not self.__checkConsistency():
             self.CLs=0.0
         else:
-            # for now
             self.CLs, self.p_sb, self.p_b = ctr.confLevel(self.s, self.bg, self.meas, self.sErr, self.bgErr, self.measErr, self.kev, 1, TestMethod)
 
 
