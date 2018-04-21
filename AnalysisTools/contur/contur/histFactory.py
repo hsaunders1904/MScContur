@@ -146,7 +146,7 @@ class histFactory(object):
             for path, ao in refObj.iteritems():
                 if self.signal.path in path and "/THY/" in path:
                     gotTh = True
-                    print "got ", path
+                    print "got theory", path
                     self._background = ao
                     if self._background.type=="Scatter1D":
                         self._background = util.mkScatter2D(self._background)
@@ -247,6 +247,12 @@ class histFactory(object):
           #print self.signal.path
 
         for i in range(0, len(self.signal.points)):
+
+            # don't trust unfolded zero (or less!) bins                    
+            if self._ref.points[i].y<=0:
+                continue
+
+
             ctrPt = conturPoint()
             ctrPt.s = self.signal.points[i].y
             ctrPt.sErr = self.signal.points[i].yErrs[1]
@@ -268,14 +274,15 @@ class histFactory(object):
                 else:
                     ctrPt.bgErr = 0.0
 
+
             ctrPt.kev  = self.signal.points[i].y*self._mcLumi/self._lumi
 
-            #if self._has1Dhisto:      (sort something put with sig/back here!)          
+            #if self._has1Dhisto:      (sort something out with sig/back here!)          
 
+             #print i+1, ctrPt.CLs, ctrPt.s, ctrPt.sErr, ctrPt.meas
 
             ctrPt.calcCLs(self._testMethod)
-                
- 
+            
             ctrPt.tags = self.signal.path
             ctrPt.pools = self.pool
             ctrPt.subpools = self.subpool

@@ -182,21 +182,18 @@ def qMu_Asimov(mu_test,bCount,sCount,db):
             result += -2.*(bCount[i]*log(N_exp_b_hat_hat/N_exp_b_hat) + N_exp_b_hat - N_exp_b_hat_hat + gauss_exp(bCount[i],b_hat,db[i]) - gauss_exp(bCount[i],b_hat_hat,db[i]))
     return result
 
-def chisquare(background, signal, measurement, error, mu_test):
+def chisquare(background, signal, measurement, error, sigerr, mu_test):
     # returns the Chi2 based on comparing the data (measurement) to a possible signal (sigCount - scaled by a mu_test. Could be zero.)
-    # and a background prediction (bgCounts - could be identical to n_obs) and a total uncertainty (error).
+    # and a background prediction (background - could be identical to measurement) and a total uncertainty (error).
     # Each argument is a list of values, the returned chi2 is the result of comparing them all.
     chis= 0.0
     for i in range(0,len(background)):
-         if error[i]>0.0:
-            chis+=((float(mu_test*signal[i]+background[i]-measurement[i]))**2.0)/(float(error[i])**2.0)
+         if error[i]>0.0 or sigerr[i]*mu_test>0.0:
+             chis+=((float(mu_test*signal[i]+background[i]-measurement[i]))**2.0)/(float(error[i])**2+(mu_test*sigerr[i])**2)
     return chis
 
 
 def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_test=1, test='LL'):
-
-    # Does not make use of measurement or error (assumed=data).
-    # Does not make use of sigErr (uses kev to get MC stats)
 
     # 'test' argument decides what statistical test will be used.
     # 'LL' means the CLs likelihood is used (as in contur paper) (poisson error assumption 
@@ -214,11 +211,18 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_te
     # TODO: this function expects floats, not lists.
     # mu_hat = ML_mu_hat(n_obs,bgCount,signal)
     mu_hat = 0
-
+    
+     #print "background", background
+ 
     if test=='LL':
+
+        # prevent zeros getting in there, otherwise the matrix barfs and returns 100% exclusion
+        if not np.any(signal):
+            return 0, 0, 0
 
         # always assume background = measurement
         varMat= Covar_Matrix(measurement,signal,measErr,kev)[0,0]
+         #print "varMat", varMat
 
         mu_hat = 0
         if varMat <=0:
@@ -245,23 +249,19 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_te
         q_mu_a = qMu_Asimov(mu_test,measurement,signal,measErr)
         p_val=2.0*spstat.norm.sf(np.sqrt(q_mu_a))
 
-    elif test=='CS' or test=='CST' or test=='CSD' or test=='CSDT' or test=='CSTD':
+    elif test[:2]=='CS':
 
         #print "using the Chi2 test on cross section plots"
-
         totalErr = []
 
-        # Include the MCstats
         for i in range(0, len(measErr)):
-            #print background[i], measurement[i], signal[i], bgErr[i], measErr[i], sgErr[i]
-            totalErr.append(np.sqrt(bgErr[i]**2+measErr[i]**2+sgErr[i]**2))
-
+            totalErr.append(np.sqrt(bgErr[i]**2+measErr[i]**2))
 
         # chisquare function above takes argument (background, signal, measurement, total_uncertainty)
         # signal + background
-        chisq_p_sb = spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,totalErr, 1)))
+        chisq_p_sb = spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,totalErr,sgErr,1)))
         # background only
-        chisq_p_b = spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,totalErr, 0)))
+        chisq_p_b = spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,totalErr,sgErr,0)))
 
         #return this value 'cls' to get the confidence interval using a simple chi square fit
         p_val=chisq_p_sb/(1-chisq_p_b)
