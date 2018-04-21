@@ -141,7 +141,7 @@ class histFactory(object):
             init_ref()
 
         gotTh = False    
-        if self._testMethod == 'CST' or self._testMethod == 'CSDT' or self._testMethod == 'CSTD':
+        if "T" in self._testMethod:
 
             for path, ao in refObj.iteritems():
                 if self.signal.path in path and "/THY/" in path:
@@ -259,17 +259,17 @@ class histFactory(object):
             ctrPt.meas = self._ref.points[i].y
             ctrPt.measErr = self._ref.points[i].yErrs[1]
 
-            if self._testMethod == 'CST' or self._testMethod == 'CSDT' or self._testMethod == 'CSTD':
+            if "T" in self._testMethod:
                 # Using theory if it is there
                 ctrPt.bg = self._background.points[i].y
-                if self._testMethod == 'CSDT' or self._ref != self._background:
+                if "D" in self._testMethod:
                     ctrPt.bgErr = self._background.points[i].yErrs[1]
                 else:
                     ctrPt.bgErr = 0.0
             else:    
                 # Not using theory
                 ctrPt.bg = self._ref.points[i].y
-                if self._testMethod == 'CSD':
+                if "D" in self._testMethod:
                     ctrPt.bgErr = self._ref.points[i].yErrs[1]
                 else:
                     ctrPt.bgErr = 0.0
