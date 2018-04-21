@@ -250,6 +250,8 @@ def output_single(mapPoints, opts):
         pccl = 100.*legacy.confLevel(sigfinal, bgfinal, bgerrfinal,sigerrfinal)
 
         result = "Combined CL exclusion for these plots is %.1f %%" % pccl
+        result += "\n pools"
+
         sumfn.write(result)
         for anapool in masterDict:
             if masterDict[anapool]:
