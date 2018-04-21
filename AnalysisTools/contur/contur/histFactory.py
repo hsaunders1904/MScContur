@@ -49,10 +49,11 @@ class histFactory(object):
         self.signal = anaObj
         self.xsec = xSec
         self.nev = nEv
-        # Overall effective integrated luminosity has to be calculated plot by plot because units change.
+        # Overall effective integrated luminosity may be recalculated plot by plot because units change.
         self._mcLumi = float(nEv.numEntries())/xSec.point(0).x
  
         # Initialize the public members we always want to access
+        self._has1Dhisto = False
         self._background = False
         self._ref = False
         self._stack = yoda.Scatter2D
@@ -75,34 +76,19 @@ class histFactory(object):
         self.__getAux()
         self.__getMC()
         self.__getisScaled()
-        if self.__has1D():
-            self.signal = yoda.mkScatter(self.signal)
-            # Make sure it is actually a Scatter2D - mkScatter makes Scatter1D from counter.   
-            if self.signal.type == 'Scatter1D':
-                self.signal = util.mkScatter2D(self.signal) 
-            
-        # build stack for plotting
-        self.__buildStack()
 
-        if self._ref:
-            self.__doScale()
-            self.__fillPoints()
-
-
-
-
-    def __has1D(self):
-        """Check type of input aos
-        """
+        # Determine the type of object we have, and build a 2D scatter from it if it is not one already
+        # Also recalculate MCLumi, and scalefactor, if appropriate
         if self.signal.type == 'Histo1D' or self.signal.type == 'Profile1D' or self.signal.type == 'Counter':
             
+            self._has1Dhisto = True
+
             if self._isScaled:
                 # if the plot is area normalised (ie scaled), work out the factor from number of events and generator xs
                 # (this is just the integrated cross section associated with the plot)
                 try:
                     self._scaleFactorSig = (
                         float(self.xsec.points[0].x)) * float(self.signal.numEntries()) / float(self.nev.numEntries())
-
                 except:
                     print "missing info for scalefactor calc"
 
@@ -111,9 +97,24 @@ class histFactory(object):
             if self.signal.sumW() != 0.0:
                 self._mcLumi = float(self.signal.numEntries()) / (float(self.signal.sumW())*self._scaleFactorSig)
 
-            return True
+            self.signal = yoda.mkScatter(self.signal)
+            # Make sure it is actually a Scatter2D - mkScatter makes Scatter1D from counter.   
+            if self.signal.type == 'Scatter1D':
+                self.signal = util.mkScatter2D(self.signal) 
+
+            
+        # build stack for plotting, for histogrammed data
+        if self._has1Dhisto:
+            self.__buildStack()
         else:
-            return False
+            self._stack = self.signal.clone()
+
+        if self._ref:
+            # don't scale histograms that came in as 2D scatters
+            if self._has1Dhisto:
+                self.__doScale()
+            self.__fillPoints()
+
 
     def __getisScaled(self):
         """Check if the data to compare to is normalized
@@ -269,8 +270,12 @@ class histFactory(object):
 
             ctrPt.kev  = self.signal.points[i].y*self._mcLumi/self._lumi
 
-            ctrPt.calcCLs(self._testMethod)
+            #if self._has1Dhisto:      (sort something put with sig/back here!)          
 
+
+            ctrPt.calcCLs(self._testMethod)
+                
+ 
             ctrPt.tags = self.signal.path
             ctrPt.pools = self.pool
             ctrPt.subpools = self.subpool
