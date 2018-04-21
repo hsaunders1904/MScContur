@@ -42,7 +42,7 @@ if not yodafiles:
     sys.stderr.write("Error: You need to specify some YODA files to be analysed!\n")
     sys.exit(1)
 
-def write_output(conturFactory):
+def write_output(message, conturFactory):
     """Temporary function to mimic output of 1 single analysis"""
     util.mkoutdir(opts.ANALYSISDIR)
     sumfn = open(opts.ANALYSISDIR + "/Summary.txt", 'w')
@@ -53,7 +53,8 @@ def write_output(conturFactory):
         if conturFactory.conturPoint.p_b+conturFactory.conturPoint.p_sb > 0:
             result += "Compared to the SM, this model is disfavoured at %.2f %% cl \n" % (100.0*conturFactory.conturPoint.p_b/(conturFactory.conturPoint.p_b+conturFactory.conturPoint.p_sb))
 
-    sumfn.write(result)
+    sumfn.write(message+"\n"+result+"\n")
+    sumfn.write("pools")
     for x in conturFactory.sortedPoints:
         sumfn.write("\n" + x.pools)
         sumfn.write("\n" + x.__repr__())
@@ -83,21 +84,22 @@ if __name__ == "__main__":
             plotparser = util.mkStdPlotParser(plotdirs, )
 
         if opts.TESTMETHOD=='CS':
-            print "Using Chi2 test method, theory=data, no theory uncertainty"
+            modeMessage = "Using Chi2 test method, theory=data, no theory uncertainty"
         elif opts.TESTMETHOD=='CSD':
-            print "Using Chi2 test method, no theory prediction, theory error=data error"
+            modeMessage = "Using Chi2 test method, no theory prediction, theory error=data error"
         elif opts.TESTMETHOD=='CST':
-            print "Using Chi2 test method, with theory predictions where available, else no theory error"
+            modeMessage = "Using Chi2 test method, with theory predictions where available, else no theory error"
         elif opts.TESTMETHOD=='CSDT' or opts.TESTMETHOD=='CSTD':
-            print "Using Chi2 test method, theory predictions where available, else theory=data, theory error=data error"
+            modeMessage = "Using Chi2 test method, theory predictions where available, else theory=data, theory error=data error"
         elif opts.TESTMETHOD=='LL':
-            print "Using Log Likelihood (Poisson) test method, theory=data, no theory uncertainty"
+            modeMessage = "Using Log Likelihood (Poisson) test method, theory=data, no theory uncertainty"
         elif opts.TESTMETHOD=='LLA':
-            print "Using Log Likelihood (Azimov) test method, theory=data, no theory uncertainty"
+            modeMessage = "Using Log Likelihood (Azimov) test method, theory=data, no theory uncertainty"
         else:
             print "Unknown test method: ",opts.TESTMETHOD
             sys.exit(1)
 
+        print modeMessage
 
 
         refhistos, mchistos, xsec, Nev = util.getHistos(infile)
@@ -142,7 +144,7 @@ if __name__ == "__main__":
          
         if not opts.BATCHMODE:
             # write summary for plotting
-            write_output(contur)
+            write_output(modeMessage, contur)
         else:
             print contur.conturPoint.CLs
 

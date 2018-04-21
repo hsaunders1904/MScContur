@@ -270,8 +270,18 @@ if not opts.DRY_RUN:
     try:
         summary = open("./ANALYSIS/Summary.txt","r")
 
-        # Add the overall confidence level from these plots
-        index.write("<h3>%s</h3>\n" % summary.readline())    
+        index.write("<p>")
+        
+        heading=True
+        while heading==True:
+            text = summary.readline()
+            if "pools" in text:
+                heading=False
+                continue
+            index.write("%s\n" % text)                
+            index.write("</br>")                
+
+        index.write("</p>")
 
         index.write("<h2>In each analysis pool, these plots contributed:</h2>\n")
 
