@@ -246,9 +246,6 @@ class histFactory(object):
           #print self.signal.path
 
         for i in range(0, len(self.signal.points)):
-            # need this as empty s is returning CL=1, this should be fixed in the limit setting functions
-            #if self.signal.points[i].y == 0.0:
-            #    continue
             ctrPt = conturPoint()
             ctrPt.s = self.signal.points[i].y
             ctrPt.sErr = self.signal.points[i].yErrs[1]
@@ -273,7 +270,7 @@ class histFactory(object):
             ctrPt.kev  = self.signal.points[i].y*self._mcLumi/self._lumi
 
             ctrPt.calcCLs(self._testMethod)
-                
+
             ctrPt.tags = self.signal.path
             ctrPt.pools = self.pool
             ctrPt.subpools = self.subpool
