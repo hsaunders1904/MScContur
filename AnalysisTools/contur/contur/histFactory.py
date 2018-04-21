@@ -277,9 +277,10 @@ class histFactory(object):
 
             ctrPt.kev  = self.signal.points[i].y*self._mcLumi/self._lumi
 
-            #if self._has1Dhisto:      (sort something out with sig/back here!)          
-
-             #print i+1, ctrPt.CLs, ctrPt.s, ctrPt.sErr, ctrPt.meas
+            if self._has1Dhisto:
+                ctrPt.isRatio = False
+            else:
+                ctrPt.isRatio = True
 
             ctrPt.calcCLs(self._testMethod)
             

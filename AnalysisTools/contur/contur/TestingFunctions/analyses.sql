@@ -286,14 +286,6 @@ INSERT INTO blacklist VALUES('CMS_2016_I1491953','d39');
 -- how to handle weighted differential xsecs presented as a 2D scatter.
 INSERT INTO blacklist VALUES('ATLAS_2017_I1598613_BB','d01');
 
-INSERT INTO blacklist VALUES('ATLAS_2017_I1609448','d01-x01-y01');
-INSERT INTO blacklist VALUES('ATLAS_2017_I1609448','d02-x01-y01');
-INSERT INTO blacklist VALUES('ATLAS_2017_I1609448','d03-x01-y01');
-INSERT INTO blacklist VALUES('ATLAS_2017_I1609448','d04-x01-y01');
-INSERT INTO blacklist VALUES('ATLAS_2017_I1609448_Znunu','d01-x01-y01');
-INSERT INTO blacklist VALUES('ATLAS_2017_I1609448_Znunu','d02-x01-y01');
-INSERT INTO blacklist VALUES('ATLAS_2017_I1609448_Znunu','d03-x01-y01');
-INSERT INTO blacklist VALUES('ATLAS_2017_I1609448_Znunu','d04-x01-y01');
 -- remove the normalised versions of the plots from CMS top.
 INSERT INTO blacklist VALUES('CMS_2016_I1491950','d42-x02-y01');
 INSERT INTO blacklist VALUES('CMS_2016_I1491950','d44-x02-y01');

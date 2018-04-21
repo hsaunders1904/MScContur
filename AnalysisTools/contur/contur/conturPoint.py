@@ -18,7 +18,7 @@ class conturPoint(object):
     collections of conturPoints
     """
 
-    members = ["s", "sErr", "bg", "bgErr", "meas", "measErr", "kev"]
+    members = ["s", "sErr", "bg", "bgErr", "meas", "measErr", "isRatio", "kev"]
     def __init__(self):
         #self.counts = dict.fromkeys(self.members,[])
         #self.counts=defaultdict(self.members)
@@ -43,7 +43,7 @@ class conturPoint(object):
         if not self.__checkConsistency():
             self.CLs=0.0
         else:
-            self.CLs, self.p_sb, self.p_b = ctr.confLevel(self.s, self.bg, self.meas, self.sErr, self.bgErr, self.measErr, self.kev, 1, TestMethod)
+            self.CLs, self.p_sb, self.p_b = ctr.confLevel(self.s, self.bg, self.meas, self.sErr, self.bgErr, self.measErr, self.isRatio, self.kev, 1, TestMethod)
 
 
     def __checkConsistency(self):
@@ -177,6 +177,20 @@ class conturPoint(object):
         (although should be avoided)
         """
         self.counts["measErr"].append(value)
+
+    @property
+    def isRatio(self):
+        """is this a ratio (true) or a xsec (false)
+        """
+        return self.counts["isRatio"]
+    @isRatio.setter
+    def isRatio(self, value):
+        """Set the isRatio
+
+        Always appends a new value to the stored list, deleting/modifying values done manually
+        (although should be avoided)
+        """
+        self.counts["isRatio"].append(value)
 
     @property
     def tags(self):

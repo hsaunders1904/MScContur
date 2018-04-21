@@ -182,18 +182,38 @@ def qMu_Asimov(mu_test,bCount,sCount,db):
             result += -2.*(bCount[i]*log(N_exp_b_hat_hat/N_exp_b_hat) + N_exp_b_hat - N_exp_b_hat_hat + gauss_exp(bCount[i],b_hat,db[i]) - gauss_exp(bCount[i],b_hat_hat,db[i]))
     return result
 
-def chisquare(background, signal, measurement, error, sigerr, mu_test):
+def chisquare(background, signal, measurement, bgerr, sigerr, measerr, isRatio, mu_test):
     # returns the Chi2 based on comparing the data (measurement) to a possible signal (sigCount - scaled by a mu_test. Could be zero.)
-    # and a background prediction (background - could be identical to measurement) and a total uncertainty (error).
+    # and a background prediction (background - could be identical to measurement) and the relevant uncertainties
+    # 
+    # if an element is flagged as a ratio, the measurement is compared to signal or background depending on mu_test
+    # if an element is not flagged as a ratio, the measurement is compared to mu_test*signal+background depending on mu_test
+    # 
     # Each argument is a list of values, the returned chi2 is the result of comparing them all.
     chis= 0.0
     for i in range(0,len(background)):
-         if error[i]>0.0 or sigerr[i]*mu_test>0.0:
-             chis+=((float(mu_test*signal[i]+background[i]-measurement[i]))**2.0)/(float(error[i])**2+(mu_test*sigerr[i])**2)
+
+        if isRatio[i]:
+
+            if mu_test==0:
+                error2 = bgerr[i]**2+measerr[i]**2
+                if error2>0:
+                    chis+=((background[i]-measurement[i])**2.0)/error2
+            else:
+                error2 = sigerr[i]**2+measerr[i]**2
+                if error2>0:
+                    chis+=((signal[i]-measurement[i])**2.0)/error2
+
+
+        else:
+            error2 = bgerr[i]**2+measerr[i]**2+(mu_test*sigerr[i])**2
+            if error2>0:
+                chis+=((float(mu_test*signal[i]+background[i]-measurement[i]))**2.0)/error2
+
     return chis
 
 
-def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_test=1, test='LL'):
+def confLevel(signal, background, measurement, sgErr, bgErr, measErr, isRatio, kev, mu_test=1, test='LL'):
 
     # 'test' argument decides what statistical test will be used.
     # 'LL' means the CLs likelihood is used (as in contur paper) (poisson error assumption 
@@ -259,9 +279,9 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, kev, mu_te
 
         # chisquare function above takes argument (background, signal, measurement, total_uncertainty)
         # signal + background
-        chisq_p_sb = spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,totalErr,sgErr,1)))
+        chisq_p_sb = spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,bgErr,sgErr,measErr,isRatio,1)))
         # background only
-        chisq_p_b = spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,totalErr,sgErr,0)))
+        chisq_p_b = spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,bgErr,sgErr,measErr,isRatio,0)))
 
         #return this value 'cls' to get the confidence interval using a simple chi square fit
         p_val=chisq_p_sb/(1-chisq_p_b)
