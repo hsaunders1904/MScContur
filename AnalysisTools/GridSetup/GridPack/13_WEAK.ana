@@ -2,4 +2,5 @@ insert Rivet:Analyses 0 ATLAS_2017_I1514251_MU # Z+jet
 insert Rivet:Analyses 0 ATLAS_2017_I1514251_EL # Z+jet
 insert Rivet:Analyses 0 CMS_2017_I1610623 # W+jet
 insert Rivet:Analyses 0 CMS_2016_I1491950 # top
+insert Rivet:Analyses 0 ATLAS_2017_I1625109  #  Higgs 4l
 

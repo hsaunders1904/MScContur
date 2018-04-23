@@ -262,7 +262,7 @@ class histFactory(object):
             if "T" in self._testMethod:
                 # Using theory if it is there
                 ctrPt.bg = self._background.points[i].y
-                if "D" in self._testMethod:
+                if "D" in self._testMethod or "THY" in self._background.path:
                     ctrPt.bgErr = self._background.points[i].yErrs[1]
                 else:
                     ctrPt.bgErr = 0.0
