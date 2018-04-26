@@ -7,8 +7,12 @@ import math
 from math import *
 import scipy.optimize as spopt
 
+from contur.TestingFunctions import MCTester
+
 global mu_test
 mu_test=1
+
+
 
 def Min_function(x, n_obs, b_obs, s_obs, db, kev):
     # defines the functional form of vector function Min_function[0] corresponds to dlnL/db
@@ -272,8 +276,10 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, isRatio, k
     elif test[:2]=='CS':
 
         #print "using the Chi2 test on cross section plots"
+
         totalErr = []
 
+        # Include the MCstats
         for i in range(0, len(measErr)):
             totalErr.append(np.sqrt(bgErr[i]**2+measErr[i]**2))
 
