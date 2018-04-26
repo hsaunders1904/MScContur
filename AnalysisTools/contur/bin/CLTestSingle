@@ -13,6 +13,13 @@ parser.add_option("-a", "--analysisdir", dest = "ANALYSISDIR",
 # Command line parsing
 opts, yodafiles = parser.parse_args()
 
+print "CLTestSingle is now deprecated and will be deleted at some point."
+print "-----------------------------------------------------------------"
+print "Please use"
+print "$  contur -s <YODAFILE>" 
+print "which gives the same funcitonality."
+print "-----------------------------------------------------------------"
+
 if not yodafiles:
     sys.stderr.write("Error: You need to specify some YODA files to be plotted!\n")
     sys.exit(1)

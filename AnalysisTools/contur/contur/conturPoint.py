@@ -18,7 +18,7 @@ class conturPoint(object):
     collections of conturPoints
     """
 
-    members = ["s", "sErr", "bg", "bgErr", "nobs"]
+    members = ["s", "sErr", "bg", "bgErr", "meas", "measErr", "isRatio", "kev"]
     def __init__(self):
         #self.counts = dict.fromkeys(self.members,[])
         #self.counts=defaultdict(self.members)
@@ -26,12 +26,14 @@ class conturPoint(object):
         for m in self.members:
             self.counts[m]=[]
         self.CLs=0.0
+        self.p_b=0.0
+        self.p_sb=0.0
         self._tags=''
         self._pools=''
         self._subpool=''
 
 
-    def calcCLs(self):
+    def calcCLs(self, TestMethod):
         """Recalculate CLs of this conturPoint
 
         Currently only operates under asymptotic approximation and assumes all observables added to the point
@@ -41,7 +43,7 @@ class conturPoint(object):
         if not self.__checkConsistency():
             self.CLs=0.0
         else:
-            self.CLs = ctr.confLevel(self.s, self.bg, self.bgErr, self.sErr, 1, "LL")
+            self.CLs, self.p_sb, self.p_b = ctr.confLevel(self.s, self.bg, self.meas, self.sErr, self.bgErr, self.measErr, self.isRatio, self.kev, 1, TestMethod)
 
 
     def __checkConsistency(self):
@@ -105,6 +107,22 @@ class conturPoint(object):
         self.counts["sErr"].append(value)
 
     @property
+    def kev(self):
+        """Ratio of generated MC events to expected Data events for this point
+
+        This is needed only for estimating the MC statistical uncertainty, so should be small
+        TODO: check the way it is actually used in TesterFunctions.
+        """
+        return self.counts["kev"]
+    @kev.setter
+    def kev(self,value):
+        """Set the number of generted events
+
+        """
+        self.counts["kev"].append(value)
+
+
+    @property
     def bg(self):
         """Background count
         """
@@ -133,18 +151,46 @@ class conturPoint(object):
         self.counts["bgErr"].append(value)
 
     @property
-    def nObs(self):
+    def meas(self):
         """Observed count
         """
-        return self.counts["nobs"]
-    @nObs.setter
-    def nObs(self, value):
+        return self.counts["meas"]
+    @meas.setter
+    def meas(self, value):
         """Set the Observed count
 
         Always appends a new value to the stored list, deleting/modifying values done manually
         (although should be avoided)
         """
-        self.counts["nobs"].append(value)
+        self.counts["meas"].append(value)
+
+    @property
+    def measErr(self):
+        """Observed count
+        """
+        return self.counts["measErr"]
+    @measErr.setter
+    def measErr(self, value):
+        """Set the Observed count
+
+        Always appends a new value to the stored list, deleting/modifying values done manually
+        (although should be avoided)
+        """
+        self.counts["measErr"].append(value)
+
+    @property
+    def isRatio(self):
+        """is this a ratio (true) or a xsec (false)
+        """
+        return self.counts["isRatio"]
+    @isRatio.setter
+    def isRatio(self, value):
+        """Set the isRatio
+
+        Always appends a new value to the stored list, deleting/modifying values done manually
+        (although should be avoided)
+        """
+        self.counts["isRatio"].append(value)
 
     @property
     def tags(self):
@@ -191,6 +237,8 @@ class conturPoint(object):
 
         """
         self._subpool=value
+
+
 
 
     def __repr__(self):

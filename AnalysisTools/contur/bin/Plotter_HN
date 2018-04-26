@@ -13,7 +13,7 @@ import errno
 #import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from contur.Plotting import *
-from contur import TestingFunctions as ctr
+from contur import Legacy as ctr
 #from TesterFunctions import *
 
 def mkdir_p(path):

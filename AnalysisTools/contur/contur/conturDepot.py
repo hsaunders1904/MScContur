@@ -14,11 +14,12 @@ class conturDepot(object):
     point
     """
 
-    def __init__(self):
+    def __init__(self, TestMethod):
         self.masterDict = {}
         self.conturPoints=[]
         self._sortedPoints=[]
         self._ctPt=conturPoint()
+        self._testMethod=TestMethod
 
     def addPoint(self, ctPt):
         """Add all valid contur points to be sorted from an input file"""
@@ -51,7 +52,7 @@ class conturDepot(object):
                                  if len(result[k].tags) > 0:
                                      result[k].tags += ","
                                  result[k].tags += y.tags
-                        v.calcCLs()
+                        v.calcCLs(self._testMethod)
                         v.pools=p
                         v.tags=result[k].tags
                     #add the max subpool back into the list of points with the pool tag set but no subpool
@@ -67,7 +68,7 @@ class conturDepot(object):
         """Function to build the final contur point out of the safe combination of all input points"""
         for x in self._sortedPoints:
             self._ctPt.addPoint(x)
-        self._ctPt.calcCLs()
+        self._ctPt.calcCLs(self._testMethod)
 
     @property
     def sortedPoints(self):

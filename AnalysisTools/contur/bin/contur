@@ -22,21 +22,39 @@ parser.add_option("-s", "--single",
 parser.add_option("-n", "--nostack",
                   action="store_true", dest="NOSTACK", default=False,
                   help="in single run mode, do not stack the histograms in dat file output")
+parser.add_option("-t", "--testmethod", dest="TESTMETHOD",
+                  default="LL", help="Statistical test to apply. LL=log likelihood/poisson, LLA=log liklihood/poison asimov, CS=chi2 \n (All previous assume background=data, background error=0), CSD=as CS but assuming background error=data error CST=chi2 using theory where available CSDT=chi2 using theory where available, otherwise background and error taken from measurement.")
+parser.add_option("-v", "--version", 
+                  action="store_true", dest="printVersion", 
+                  default=False, help="print version number and exit.")
 
 
 # Command line parsing
 opts, yodafiles = parser.parse_args()
 
+version = " Beta pre-release"
+
+if opts.printVersion:
+    print version
+    sys.exit(0)
+
 if not yodafiles:
     sys.stderr.write("Error: You need to specify some YODA files to be analysed!\n")
     sys.exit(1)
 
-def write_output(conturFactory):
+def write_output(message, conturFactory):
     """Temporary function to mimic output of 1 single analysis"""
     util.mkoutdir(opts.ANALYSISDIR)
     sumfn = open(opts.ANALYSISDIR + "/Summary.txt", 'w')
-    result = "Combined CL exclusion for these plots is %.1f %%" % (conturFactory.conturPoint.CLs *100.0)
-    sumfn.write(result)
+    result = "Combined CLs naive exclusion for these plots is %.1f %% \n" % (conturFactory.conturPoint.CLs *100.0)
+    if opts.TESTMETHOD != 'LL' and opts.TESTMETHOD != 'LLA': 
+        result += "Probability of SM only giving this agreement or worse assuming    SM = %.4f \n" % (conturFactory.conturPoint.p_b) 
+        result += "Probability of SM+BSM giving this agreement or worse assuming SM+BSM = %.4f \n" % (conturFactory.conturPoint.p_sb) 
+        if conturFactory.conturPoint.p_b+conturFactory.conturPoint.p_sb > 0:
+            result += "Compared to the SM, this model is disfavoured at %.2f %% cl \n" % (100.0*conturFactory.conturPoint.p_b/(conturFactory.conturPoint.p_b+conturFactory.conturPoint.p_sb))
+
+    sumfn.write(message+"\n"+result+"\n")
+    sumfn.write("pools")
     for x in conturFactory.sortedPoints:
         sumfn.write("\n" + x.pools)
         sumfn.write("\n" + x.__repr__())
@@ -53,9 +71,10 @@ def write_output(conturFactory):
 
 
 if __name__ == "__main__":
-    util.writeBanner()
+
+    util.writeBanner(version)
     # Initialise a conturDepot
-    contur = ct.conturDepot()
+    contur = ct.conturDepot(opts.TESTMETHOD)
     # conturFactory should take entire yoda files/ list of yoda file as initialization argument but for now loop over aos in yodafile
     for infile in yodafiles:
 
@@ -64,7 +83,27 @@ if __name__ == "__main__":
             plotdirs = [os.path.abspath(os.path.dirname(f)) for f in infile]
             plotparser = util.mkStdPlotParser(plotdirs, )
 
+        if opts.TESTMETHOD=='CS':
+            modeMessage = "Using Chi2 test method, theory=data, no theory uncertainty"
+        elif opts.TESTMETHOD=='CSD':
+            modeMessage = "Using Chi2 test method, no theory prediction, theory error=data error"
+        elif opts.TESTMETHOD=='CST':
+            modeMessage = "Using Chi2 test method, with theory predictions where available, else no theory error"
+        elif opts.TESTMETHOD=='CSDT' or opts.TESTMETHOD=='CSTD':
+            modeMessage = "Using Chi2 test method, theory predictions where available, else theory=data, theory error=data error"
+        elif opts.TESTMETHOD=='LL':
+            modeMessage = "Using Log Likelihood (Poisson) test method, theory=data, no theory uncertainty"
+        elif opts.TESTMETHOD=='LLA':
+            modeMessage = "Using Log Likelihood (Azimov) test method, theory=data, no theory uncertainty"
+        else:
+            print "Unknown test method: ",opts.TESTMETHOD
+            sys.exit(1)
+
+        print modeMessage
+
+
         refhistos, mchistos, xsec, Nev = util.getHistos(infile)
+        print "Monte Carlo Luminosity generated is %.1f inverse pb" % (float(Nev.numEntries())/xsec.point(0).x)
 
         # again this looping belongs inside conturDepot
 
@@ -75,12 +114,13 @@ if __name__ == "__main__":
 
                 if tf.validHisto(v2.path):
 
-                    #if "ATLAS_2014_I1279489" not in v2.path:
-                    #    continue
+                    # if "CMS_2013_I1224539_WJET" not in v2.path:
+                      #if "ATLAS_2017_I1609448" not in v2.path:
+                      #   continue
                     # Currently histfact looks up the ref data every time, this should be factored into conturfact
                     # Conturfact should also hold xsec and Nev eventually
 
-                    histo = ct.histFactory(v2, xsec, Nev)
+                    histo = ct.histFactory(v2, xsec, Nev, opts.TESTMETHOD)
 
                     # sometimes the list of conturPoints made by hist fact is empty (no signal in any bin), this exception should be properly handled inside histFact
 
@@ -99,10 +139,12 @@ if __name__ == "__main__":
         # and eventually construct a point for each parameter space point, for now assume a single input yoda to test
 
         contur.sortPoints()
-#
+
+        #  save the histo.conturPoints objet here, write out later
+         
         if not opts.BATCHMODE:
             # write summary for plotting
-            write_output(contur)
+            write_output(modeMessage, contur)
         else:
             print contur.conturPoint.CLs
 

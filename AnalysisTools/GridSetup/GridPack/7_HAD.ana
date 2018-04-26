@@ -1,7 +1,8 @@
 insert Rivet:Analyses 0 ATLAS_2014_I1325553 #incjet
 insert Rivet:Analyses 0 ATLAS_2014_I1268975 #dijet
 insert Rivet:Analyses 0 ATLAS_2014_I1326641 #3 jet
-insert Rivet:Analyses 0 ATLAS_2014_I1307243 #axim decer
+insert Rivet:Analyses 0 ATLAS_2014_I1307243 #azim decor
 insert Rivet:Analyses 0 CMS_2014_I1298810 #inc ratios
-insert Rivet:Analyses 0 CMS_2013_I1273574 ##4jet
+insert Rivet:Analyses 0 CMS_2013_I1273574 #4jet
+insert Rivet:Analyses 0 CMS_2013_I1208923 ## inc and dijet
 
