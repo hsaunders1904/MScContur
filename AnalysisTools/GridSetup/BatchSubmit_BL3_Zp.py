@@ -40,8 +40,8 @@ k=0
 HerwigSetup="source /unix/cedar/software/sl6/Herwig-Release-fix/setupEnv.sh"
 ConturSetup="source ~/contur/setupContur.sh"
 
-for i in range(500,3101,250):
-    for j in range(4,41,4):
+for i in range(10,2500,250):
+    for j in range(1,100,5):
         i = int(i)
         j = int(j)
         modelpath = 'mZp_'+ str(i) + '_g_' + str(j)
@@ -55,7 +55,7 @@ for i in range(500,3101,250):
         HerwigString += 'set /Herwig/FRModel/FRModel:g1p ' + str(j/100.0) + '\n'
         HerwigString += str(HC.read())
         HC.close()
-        RunCard = open(str(modelpath + '/LHC-FRModel.in'), 'w')
+        RunCard = open(str(modelpath + '/LHC.in'), 'w')
         RunCard.write(str(HerwigString))
         RunCard.close()
         
