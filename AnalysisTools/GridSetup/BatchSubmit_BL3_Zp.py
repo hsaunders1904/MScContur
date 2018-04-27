@@ -40,8 +40,9 @@ k=0
 HerwigSetup="source /unix/cedar/software/sl6/Herwig-Release-fix/setupEnv.sh"
 ConturSetup="source ~/contur/setupContur.sh"
 
-for i in range(10,2500,250):
-    for j in range(1,100,5):
+# log10 scale. 1 GeV to 10 TeV
+for i in range(0,40,2):
+    for j in range(16,0,-1):
         i = int(i)
         j = int(j)
         modelpath = 'mZp_'+ str(i) + '_g_' + str(j)
@@ -51,8 +52,8 @@ for i in range(10,2500,250):
         HC=open('HerwigCommandBL3', 'r')
 
         HerwigString += 'read FRModel.model \n'
-        HerwigString += 'set /Herwig/FRModel/Particles/Zp:NominalMass ' + str(i) + '.*GeV \n'
-        HerwigString += 'set /Herwig/FRModel/FRModel:g1p ' + str(j/100.0) + '\n'
+        HerwigString += 'set /Herwig/FRModel/Particles/Zp:NominalMass 1.0e+' + str(float(i)/10.0) + '*GeV \n'
+        HerwigString += 'set /Herwig/FRModel/FRModel:g1p 1.0e-' + str(float(j)/4.0) + '\n'
         HerwigString += str(HC.read())
         HC.close()
         RunCard = open(str(modelpath + '/LHC.in'), 'w')
@@ -67,7 +68,7 @@ for i in range(10,2500,250):
         batch_command += HerwigSetup + '; '
         batch_command += 'cd ' + pwd + '/' + modelpath +'; '
         batch_command += ConturSetup + "; "
-        #if i < 1500:
+        # #if i < 1500:
         #    numEv=30000
         #else:
         #    numEv=15000
