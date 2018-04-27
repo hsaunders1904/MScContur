@@ -51,8 +51,10 @@ for i in range(0,40,2):
         HerwigString = ''
         HC=open('HerwigCommandBL3', 'r')
 
+        mass = 1.0*np.power(10,float(i)/10.0)
+
         HerwigString += 'read FRModel.model \n'
-        HerwigString += 'set /Herwig/FRModel/Particles/Zp:NominalMass 1.0e+' + str(float(i)/10.0) + '*GeV \n'
+        HerwigString += 'set /Herwig/FRModel/Particles/Zp:NominalMass ' + str(mass) + '*GeV \n'
         HerwigString += 'set /Herwig/FRModel/FRModel:g1p 1.0e-' + str(float(j)/4.0) + '\n'
         HerwigString += str(HC.read())
         HC.close()
@@ -63,7 +65,7 @@ for i in range(0,40,2):
         subprocess.call([HerwigSetup], shell=True)
         subprocess.call([ConturSetup], shell=True)
         os.chdir(modelpath)
-        subprocess.call(['Herwig read LHC-FRModel.in'], shell=True)
+        subprocess.call(['Herwig read LHC.in'], shell=True)
         batch_command = ''
         batch_command += HerwigSetup + '; '
         batch_command += 'cd ' + pwd + '/' + modelpath +'; '
@@ -73,7 +75,7 @@ for i in range(0,40,2):
         #else:
         #    numEv=15000
         numEv=250000
-        batch_command += 'Herwig run --seed='+str(i)+str(j)+' --tag='+str(modelpath)+' --jobs=5 --numevents='+ str(numEv) +' LHC-FRModel.run;'
+        batch_command += 'Herwig run --seed=1'+str(i)+str(j)+' --tag='+str(modelpath)+' --jobs=5 --numevents='+ str(numEv) +' LHC.run;'
         batch_filename = str(modelpath)+'.sh'
         batch_submit = open(batch_filename, 'w')
         batch_submit.write(batch_command)
