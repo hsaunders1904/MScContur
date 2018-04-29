@@ -51,11 +51,19 @@ for i in range(0,40,2):
         HerwigString = ''
         HC=open('HerwigCommandBL3', 'r')
 
-        mass = 1.0*np.power(10,float(i)/10.0)
+        MZp = np.power(10,float(i)/10.0)
+        Mn = MZp/3.0
+        g1p = np.power(10,-1.0*float(j)/4.0)
+        MH2 = MZp/(2.0*g1p)
 
         HerwigString += 'read FRModel.model \n'
-        HerwigString += 'set /Herwig/FRModel/Particles/Zp:NominalMass ' + str(mass) + '*GeV \n'
-        HerwigString += 'set /Herwig/FRModel/FRModel:g1p 1.0e-' + str(float(j)/4.0) + '\n'
+        HerwigString += 'set /Herwig/FRModel/Particles/Zp:NominalMass ' + str(MZp) + '*GeV \n'
+        HerwigString += 'set /Herwig/FRModel/Particles/nH1:NominalMass '+ str(Mn) + '*GeV \n'
+        HerwigString += 'set /Herwig/FRModel/Particles/nH2:NominalMass '+ str(Mn) + '*GeV \n'
+        HerwigString += 'set /Herwig/FRModel/Particles/nH3:NominalMass '+ str(Mn) + '*GeV \n'
+        HerwigString += 'set /Herwig/FRModel/Particles/H2:NominalMass '+ str(MH2) + '*GeV \n'
+        HerwigString += 'set /Herwig/FRModel/FRModel:g1p '+str(g1p) + '\n'
+        HerwigString += 'set /Herwig/FRModel/FRModel:Sa 0 \n'
         HerwigString += str(HC.read())
         HC.close()
         RunCard = open(str(modelpath + '/LHC.in'), 'w')
