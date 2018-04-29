@@ -91,6 +91,9 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
             mc1D.setAnnotation('Path', mcpath + h)
             sighisto = yoda.core.mkScatter(mchistos[infile][h])
         else:
+            # legacy code can't handle these
+            print "Skipping ", h
+            continue
             has1D = False
             mchistos[infile][h].setAnnotation('Path', mcpath + h)
             sighisto = mchistos[infile][h]
