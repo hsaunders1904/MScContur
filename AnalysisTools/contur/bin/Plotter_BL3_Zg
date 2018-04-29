@@ -11,7 +11,8 @@ from os.path import join
 import errno
 
 #import matplotlib.pyplot as plt
-from matplotlib.ticker import MaxNLocator
+#from matplotlib.ticker import MaxNLocator
+from matplotlib.ticker import *
 from contur.Plotting import *
 from contur import Legacy as ctr
 #from TesterFunctions import *
@@ -33,23 +34,27 @@ def writeOutput(output, h):
     f.close()
 
 # decode MZ' from the x axis variable
-def mzprime(x,dummy):
-    return 1.0*np.power(10,x/10.0)
+def mzprime(x,dummy=0):
+    return np.power(10,x/10.0)
 
-# decode g' from the x axis variable
-def gprime(y,dummy):
+# decode g' from the y axis variable
+def gprime(y,dummy=0):
     return 1.0*np.power(10,-y/4.0)
+
+# inverse of mzprime
+def xfromMzp(mzp):
+    return 10.0*np.log10(mzp)
 
 
 # quick function to return the bound from LEP
 # 
 def existingLimit1(y):  
 #  MZ'/g' > 6.9  so MZ' = g' * 6.9 TeV
-    return gprime(y,0)*6900/100.
+    return xfromMzp(gprime(y)*6900)
 
 # quick function to return the bound from ATLAS
 # 
-def existingLimit2(g):    
+def existingLimit2(y):    
 
 #log10 g'/g = k M + c;  M = (log10(g'/g)-c)/k 
 #0.1 = 2900 = -1
@@ -58,8 +63,18 @@ def existingLimit2(g):
 #    sqrt(g'^2 + g^2) (SM) = 0.74
     k = 1.0/2100
     c = -50.0/21.0
-    return (np.log10(g/74.)-c)/k
+    ret = []
+    print y
+    for val in y:
+        mzp = (np.log10(gprime(val/.74))-c)/k
+        print mzp
+        if mzp > 50.:
+            ret.append(xfromMzp(mzp))
+        else:
+            ret.append(np.nan)
 
+    return ret
+           
 
 mkdir_p('plots')
 
@@ -155,16 +170,19 @@ for root, dirs, files in os.walk('.',topdown=False):
 
 ###try and pick ticks intelligently
 
-    my_locator_x = MaxNLocator((int(max(contourXaxis)) / 500) + 1)
-    my_locator_y = MaxNLocator((int(max(contourYaxis)) / 500) + 1)
-    minorLocator_x = MaxNLocator(int(len(contourXaxis)) + 1)
-    minorLocator_y = MaxNLocator(int(len(contourYaxis)) + 1)
+    my_locator_x = MaxNLocator((int(max(contourXaxis)) / 5) + 1)
+    my_locator_y = MaxNLocator((int(max(contourYaxis)) / 10) + 1)
+     #minorLocator_x = MaxNLocator(int(len(contourXaxis)) + 1)
+     #minorLocator_y = MaxNLocator(int(len(contourYaxis)) + 1)
     ax.yaxis.set_major_locator(my_locator_x)
     ax.xaxis.set_major_locator(my_locator_y)
-    ax.xaxis.set_minor_locator(minorLocator_y)
-    ax.yaxis.set_minor_locator(minorLocator_x)
+     #ax.xaxis.set_minor_locator(minorLocator_y)
+     #ax.yaxis.set_minor_locator(minorLocator_x)
 
-    
+    #locmin = LogLocator(base=10.0,subs=(0.2,0.4,0.6,0.8),numticks=12)
+    #ax.xaxis.set_minor_locator(locmin)
+    #ax.xaxis.set_minor_formatter(NullFormatter())
+
     fmt = plt.FuncFormatter(mzprime)
     ax.xaxis.set_major_formatter(fmt)
 
@@ -172,30 +190,31 @@ for root, dirs, files in os.walk('.',topdown=False):
     ax.yaxis.set_major_formatter(fmt2)
 
 
-    #print contourXaxis
-    #print contourYaxis
-    #labels= ['1', '1000']
-
-    #plt.xticks(contourYaxis, labels)
-
-     #ax.set_xticklabels(labels)
-
     del my_locator_x
     del my_locator_y
-    del minorLocator_x
-    del minorLocator_y
+     #del minorLocator_x
+     #del minorLocator_y
 
     plt.pcolormesh(yy,xx,c.T,cmap=plt.cm.magma, vmin=0, vmax=1)
     plt.axis([y_grid_min, y_grid_max,x_grid_min, x_grid_max])
 
- 
+
+###plot the LEP bound
+    y=np.array(contourYaxis)
+    x=existingLimit1(y)
+    plt.plot(x,y,color='navy')
+    ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.3)
+
+###plot the ATLAS bound
+    y=np.array(contourYaxis)
+    x=existingLimit2(y)
+    plt.plot(x,y,color='navy')
+    ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.2)
 
 
 ##axis labels
     plt.xlabel(r"$M_{Z'}$ [GeV]")
-    plt.ylabel(r"$100*g'$")
-
-
+    plt.ylabel(r"$g'$")
 
 #    plt.xlabel(r"$M_{\phi}$ [GeV]")
 #    plt.ylabel(r"$\Lambda$ [GeV]")
@@ -206,6 +225,7 @@ for root, dirs, files in os.walk('.',topdown=False):
 ##supress colorbar, make in a separate plot
 #plt.colorbar().set_label("CL of exclusion")
 
+    plt.gca().invert_yaxis()
 
 ##save the fig and pad it for better layout
     fig.tight_layout(pad=0.1)
@@ -226,15 +246,20 @@ for root, dirs, files in os.walk('.',topdown=False):
 
 ##try and pick ticks intelligently
 
-    my_locator_x = MaxNLocator((int(max(contourXaxis)) / 500)+1)
-    my_locator_y = MaxNLocator((int(max(contourYaxis)) / 500)+1)
+    my_locator_x = MaxNLocator((int(max(contourXaxis)) / 5)+1)
+    my_locator_y = MaxNLocator((int(max(contourYaxis)) / 10)+1)
     minorLocator_x = MaxNLocator(int(len(contourXaxis)) +1)
     minorLocator_y = MaxNLocator(int(len(contourYaxis)) +1)
     ax.yaxis.set_major_locator(my_locator_x)
     ax.xaxis.set_major_locator(my_locator_y)
-    ax.xaxis.set_minor_locator(minorLocator_y)
-    ax.yaxis.set_minor_locator(minorLocator_x)
+    #ax.xaxis.set_minor_locator(minorLocator_y)
+    #ax.yaxis.set_minor_locator(minorLocator_x)
 
+    fmt = plt.FuncFormatter(mzprime)
+    ax.xaxis.set_major_formatter(fmt)
+
+    fmt2 = plt.FuncFormatter(gprime)
+    ax.yaxis.set_major_formatter(fmt2)
 
 ##set axis size, again contour axis different to heatmap axis
     #plt.axis([0.0, max(zip(*data)[0]),0.0, max(zip(*data)[1])])
@@ -254,13 +279,13 @@ for root, dirs, files in os.walk('.',topdown=False):
     y=np.array(contourYaxis)
     x=existingLimit1(y)
     plt.plot(x,y,color='navy')
-    ax.fill_between(x,y,x_grid_max,facecolor='navy',alpha=0.3)
+    ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.3)
 
 ###plot the ATLAS bound
     y=np.array(contourYaxis)
     x=existingLimit2(y)
     plt.plot(x,y,color='navy')
-    ax.fill_between(x,y,x_grid_max,facecolor='navy',alpha=0.5)
+    ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.2)
 
 ###contour labeler
     fmt={}
@@ -278,7 +303,7 @@ for root, dirs, files in os.walk('.',topdown=False):
 #    plt.ylabel(r"$\Lambda$ [GeV]")
 
     plt.xlabel(r"$M_{Z'}$ [GeV]")
-    plt.ylabel(r"$100*g'$")
+    plt.ylabel(r"$g'$")
     artists, labels = CS.legend_elements()
 
 ##potential legend info, edit here:
@@ -292,6 +317,9 @@ for root, dirs, files in os.walk('.',topdown=False):
 #plab.title("CL Contour",y=1.01)
 #legend = ax.legend(loc='upper center', shadow=True)
 #plab.colorbar(ticks=[0,0.5,1.0]).set_label("CL of exclusion")
+
+    plt.gca().invert_yaxis()
+
 
 ##save the fig and pad it for better layout
     fig.tight_layout(pad=0.1)
