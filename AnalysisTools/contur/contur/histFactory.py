@@ -77,6 +77,10 @@ class histFactory(object):
         self.__getMC()
         self.__getisScaled()
 
+        #Public member function to build plots needed for direct histogram visualisation
+        #avoid calling YODA.clone() unless we have to
+        #self.doPlot()
+
         # Determine the type of object we have, and build a 2D scatter from it if it is not one already
         # Also recalculate MCLumi, and scalefactor, if appropriate
         if self.signal.type == 'Histo1D' or self.signal.type == 'Profile1D' or self.signal.type == 'Counter':
@@ -103,12 +107,6 @@ class histFactory(object):
                 self.signal = util.mkScatter2D(self.signal) 
 
             
-        # build stack for plotting, for histogrammed data
-        if self._has1Dhisto:
-            self.__buildStack()
-        else:
-            self._stack = self.signal.clone()
-
         if self._ref:
             # don't scale histograms that came in as 2D scatters
             if self._has1Dhisto:
@@ -126,12 +124,12 @@ class histFactory(object):
         if not REFLOAD:
             init_ref()
         for path, ao in refObj.iteritems():
-            self._sigplot = self.signal.clone()
+#            self._sigplot = self.signal.clone()
             if self.signal.path in path and "/REF/" in path:
                 self._ref = ao
                 if self._ref.type=="Scatter1D":
                     self._ref = util.mkScatter2D(self._ref)
-                self._refplot = self._ref.clone()
+                #self._refplot = self._ref.clone()
 
     def __getMC(self):
         """Lookup for any stored SM MC background calculation
@@ -154,14 +152,24 @@ class histFactory(object):
         if not gotTh:            
             try:
                 self._background = self._ref.clone()
-            # Make sure it is actually a Scatter2D - mkScatter makes Scatter1D from counter.   
+            # Make sure it is actually a Scatter2D - mkScatter makes Scatter1D from counter.
                 if self._background.type=='Scatter1D':
                     self._background = util.mkScatter2D(self._background)
             except:
                 print "No reference data found for histo: " + self.signal.path
 
-        self._bgplot = self._background.clone()
+        #self._bgplot = self._background.clone()
 
+    def doPlot(self):
+        """Public member function to build yoda plot members for interactive runs"""
+        self._bgplot = self._background.clone()
+        self._refplot = self._ref.clone()
+        # build stack for plotting, for histogrammed data
+        if self._has1Dhisto:
+            self.__buildStack()
+        else:
+            self._stack = self.signal.clone()
+        self._sigplot = self.signal.clone()
 
     def __getAux(self):
         """Sets member variables from static lookup tables

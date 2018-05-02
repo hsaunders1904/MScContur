@@ -20,6 +20,10 @@ class conturDepot(object):
         self._sortedPoints=[]
         self._ctPt=conturPoint()
         self._testMethod=TestMethod
+        #For temporary grid functionality here we associate each conturDepot object to a single parameter space point
+        #End goal is to make this object hold all parameter space points for an individual map
+        self.ModelParam1=0.0
+        self.ModelParam2=0.0
 
     def addPoint(self, ctPt):
         """Add all valid contur points to be sorted from an input file"""
