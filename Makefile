@@ -10,3 +10,6 @@ $(LOCATION)/analyses.db : $(LOCATION)/analyses.sql
 	rm -f $@
 	sqlite3 $@ < $<
 
+.PHONY :  $(LOCATION)/analyses.db
+
+
