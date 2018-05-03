@@ -28,6 +28,7 @@ def Min_function(x, n_obs, b_obs, s_obs, db, kev):
     if fabs((x[0] + x[1])) > 0.0:
         d_lnL_db += n_obs / (x[0] + x[1]) - 1
         d_lnL_ds += n_obs / (x[0] + x[1]) - 1
+    #TODO hit some numerical stability here (db**2 too large) handle properly later
     if 1e+100>=fabs(db) >= 1e-5:
         d_lnL_db += (b_obs - x[0]) / db**2
     if x[1] > 0.0:
@@ -112,7 +113,7 @@ def Covar_Matrix(b_count,s_count,db_count, kev):
             Var_matrix_inv[i+1,0]=Var_matrix_inv[0,i+1] = s_hat_hat/(mu_test*s_hat_hat+b_hat_hat)
             ##b b
             #TODO Hit some numerical instability so put a check that db isn't too large, remove later
-            if db_count[i]<=1e100 and db_count[i]**2 > 0.0:
+            if fabs(db_count[i])<=1e100 and db_count[i]**2 > 0.0:
                 Var_matrix_inv[i+1,i+1]=1/(mu_test*s_hat_hat+b_hat_hat) + 1/db_count[i]**2
             else:
                 Var_matrix_inv[i+1,i+1]=1/(mu_test*s_hat_hat+b_hat_hat)
