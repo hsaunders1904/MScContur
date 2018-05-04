@@ -1,0 +1,36 @@
+#! /usr/bin/env python
+
+from optparse import OptionParser
+import sys
+import contur.Utils as util
+import contur as ct
+import pickle
+
+parser = OptionParser(usage=__doc__)
+parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
+                  default="plots", help="Specify output directory for output plots.")
+#parser.add_option("-a", "--analysisdir", dest="ANALYSISDIR",
+#                  default="ANALYSIS", help="Output directory for analysis cards.")
+parser.add_option("-v", "--version",
+                  action="store_true", dest="printVersion",
+                  default=False, help="print version number and exit.")
+
+
+opts, mapfiles = parser.parse_args()
+
+if opts.printVersion:
+    util.writeBanner()
+    sys.exit(0)
+
+if not mapfiles:
+    sys.stderr.write("Error: You need to specify some contur.map files to be analysed!\n")
+    sys.exit(1)
+
+if __name__ == "__main__":
+    util.mkoutdir(opts.OUTPUTDIR)
+    for m in mapfiles:
+        with open(m, 'r+b') as f:
+            x = pickle.load(f)
+        print m
+
+    print "done"

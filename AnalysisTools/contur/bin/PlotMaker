@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+
+
+
 import os, sys
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,6 +18,14 @@ from matplotlib.ticker import MaxNLocator
 from contur.Plotting import *
 from contur import Legacy as ctr
 #from TesterFunctions import *
+
+from optparse import OptionParser
+parser = OptionParser(usage=__doc__)
+parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
+                  default="plots", help="Specify output directory for output plots.")
+parser.add_option("-a", "--analysisdir", dest="ANALYSISDIR",
+                  default="ANALYSIS", help="Output directory for analysis cards.")
+
 
 def mkdir_p(path):
     try:

@@ -38,7 +38,7 @@ opts, yodafiles = parser.parse_args()
 version = " Beta pre-release"
 
 if opts.printVersion:
-    print version
+    util.writeBanner()
     sys.exit(0)
 
 if not yodafiles:
@@ -136,7 +136,7 @@ def analyiseYODA(yodafile):
 
 if __name__ == "__main__":
 
-    util.writeBanner(version)
+    util.writeBanner()
 
     if opts.TESTMETHOD == 'CS':
         modeMessage = "Using Chi2 test method, theory=data, no theory uncertainty"

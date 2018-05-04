@@ -4,7 +4,11 @@ import rivet
 import plotinfo
 from contur import TestingFunctions as ctr
 
-def writeBanner(version):
+#set the version here globally
+global version
+version = " Beta pre-release"
+
+def writeBanner():
     """Write Ascii banner"""
     print "Running Contur ",version, "\n"
     print "Mail to developers: contur (at) projects.hepforge.org \n"
