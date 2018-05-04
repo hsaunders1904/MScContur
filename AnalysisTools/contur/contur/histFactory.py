@@ -217,7 +217,7 @@ class histFactory(object):
             # the current error on the signal derives from the MC stats. There should also be
             # a term due the stat uncertainty on the number of events predicted for this LHC lumi.
             # At this point, y has been scaled to be number of events, so calculate this here (Poisson) and add it in quadrature
-            statErr2 = self.signal.points[i].y
+            statErr2 = np.absolute(self.signal.points[i].y)
             yErr0 = np.sqrt( (self.signal.points[i].yErrs[0] * self._lumi * self._scaleFactorSig * binWidth)**2 + statErr2 ) 
             yErr1 = np.sqrt( (self.signal.points[i].yErrs[1] * self._lumi * self._scaleFactorSig * binWidth)**2 + statErr2 ) 
             self.signal.points[i].yErrs = ( yErr0, yErr1 )
