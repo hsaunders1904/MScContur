@@ -16,7 +16,7 @@ opts, yodafiles = parser.parse_args()
 print "CLTestSingle is now deprecated and will be deleted at some point."
 print "-----------------------------------------------------------------"
 print "Please use"
-print "$  contur -s <YODAFILE>" 
+print "$  contur <YODAFILE>" 
 print "which gives the same funcitonality."
 print "-----------------------------------------------------------------"
 
