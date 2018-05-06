@@ -16,9 +16,9 @@ parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
                   default="plots", help="Specify output directory for output plots.")
 parser.add_option("-a", "--analysisdir", dest="ANALYSISDIR",
                   default="ANALYSIS", help="Output directory for analysis cards.")
-parser.add_option("-s", "--single",
-                  action="store_false", dest="BATCHMODE", default=True,
-                  help="single run - more output")
+#parser.add_option("-s", "--single",
+#                  action="store_false", dest="BATCHMODE", 
+#                  help="single run - more output")
 parser.add_option("-n", "--nostack",
                   action="store_true", dest="NOSTACK", default=False,
                   help="in single run mode, do not stack the histograms in dat file output")
@@ -29,7 +29,7 @@ parser.add_option("-v", "--version",
                   default=False, help="print version number and exit.")
 #parser.add_option("-g", "--grid", dest="GRID",default=False,
 #                  help="specify a folder containing a structured grid of points to analyize")
-parser.add_option("-g", "--grid", action="store_true", dest="GRID",
+parser.add_option("-g", "--grid", action="store_true", dest="GRID", default=False,
                   help="Set this flag to read grids of structured yoda files rather than individual files")
 
 # Command line parsing
@@ -85,7 +85,7 @@ def analyiseYODA(yodafile):
 
     contur = ct.conturDepot(opts.TESTMETHOD)
 
-    if not opts.BATCHMODE:
+    if not opts.GRID:
         # this is to get the plotting attributes down the line
         plotdirs = [os.path.abspath(os.path.dirname(f)) for f in infile]
         plotparser = util.mkStdPlotParser(plotdirs, )
@@ -103,19 +103,19 @@ def analyiseYODA(yodafile):
 
             if tf.validHisto(v2.path):
 
-                # if "CMS_2013_I1224539_WJET" not in v2.path:
+                 #if 'ATLAS_2012_I1203852' not in v2.path:
                 # if "ATLAS_2017_I1609448" not in v2.path:
-                #   continue
+                   #  continue
                 # Currently histfact looks up the ref data every time, this should be factored into conturfact
                 # Conturfact should also hold xsec and Nev eventually
 
-                histo = ct.histFactory(v2, xsec, Nev, opts.TESTMETHOD)
+                histo = ct.histFactory(v2, xsec, Nev, opts.TESTMETHOD, opts.GRID)
 
                 # sometimes the list of conturPoints made by hist fact is empty (no signal in any bin), this exception should be properly handled inside histFact
 
                 # at this point, if we want to see the histogram, we need to write its .dat file.
-                if not opts.BATCHMODE:
-                    histo.doPlot()
+                if not opts.GRID:
+                     #histo.doPlot()
                     util.writeHistoDat(infile, plotparser, opts.OUTPUTDIR, opts.NOSTACK, histo)
 
                 if histo.conturPoints:
@@ -199,7 +199,7 @@ if __name__ == "__main__":
         for infile in yodafiles:
 
             contur=analyiseYODA(infile)
-            if not opts.BATCHMODE:
+            if not opts.GRID:
                 # write summary for plotting
                 write_output(modeMessage, contur)
             else:

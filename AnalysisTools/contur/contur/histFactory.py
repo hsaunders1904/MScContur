@@ -44,7 +44,7 @@ class histFactory(object):
     Returns metadata attributes and a formated list of conturPoints
     """
 
-    def __init__(self, anaObj, xSec, nEv, TestMethod):
+    def __init__(self, anaObj, xSec, nEv, TestMethod, GridMode):
         # Construct with an input yoda aos and a scatter1D for the cross section and nEv
         self.signal = anaObj
         self.xsec = xSec
@@ -77,9 +77,6 @@ class histFactory(object):
         self.__getMC()
         self.__getisScaled()
 
-        #Public member function to build plots needed for direct histogram visualisation
-        #avoid calling YODA.clone() unless we have to
-        #self.doPlot()
 
         # Determine the type of object we have, and build a 2D scatter from it if it is not one already
         # Also recalculate MCLumi, and scalefactor, if appropriate
@@ -107,6 +104,12 @@ class histFactory(object):
                 self.signal = util.mkScatter2D(self.signal) 
 
             
+        if not GridMode:
+        #Public member function to build plots needed for direct histogram visualisation
+        #avoid calling YODA.clone() unless we have to
+        #Must be called before scaling.
+            self.doPlot()            
+
         if self._ref:
             # don't scale histograms that came in as 2D scatters
             if self._has1Dhisto:
@@ -146,8 +149,10 @@ class histFactory(object):
                     gotTh = True
                     print "got theory", path
                     self._background = ao
-                    if self._background.type=="Scatter1D":
-                        self._background = util.mkScatter2D(self._background)
+                    if (self._background != "Scatter2D"):
+                        self._background = yoda.mkScatter(self._background)
+                        if self._background.type=="Scatter1D":
+                            self._background = util.mkScatter2D(self._background)
 
         if not gotTh:            
             try:

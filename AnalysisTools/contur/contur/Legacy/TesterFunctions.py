@@ -213,6 +213,8 @@ def confLevel(signal, measurement, measErr, sgErr, mu_test=1, test='LL'):
         # This function should be called twice, once at mu_test=1 and once at mu_test=0
 
         varMat= Covar_Matrix(background,signal,bgErr,sgErr)[0,0]
+        if varMat > 1e+8:
+            varMat = 1e+8
 
         # NOTE: I believe the biggest restructing needed is to take the min_find out of this Covar_matrix, if I have things correct in my head then
         # recipe is as follows:
@@ -221,7 +223,7 @@ def confLevel(signal, measurement, measErr, sgErr, mu_test=1, test='LL'):
 
         mu_hat = 0
         if varMat <=0:
-            return 0
+            return 0.0
         else:
             q_mu=0
             p_val=0
@@ -236,6 +238,7 @@ def confLevel(signal, measurement, measErr, sgErr, mu_test=1, test='LL'):
                 p_val=2.0*spstat.norm.sf(np.sqrt(q_mu))
             elif q_mu > (mu_test**2)/(varMat):
                 p_val=2.0*spstat.norm.sf( (q_mu + (mu_test**2/varMat))/(2*mu_test/(np.sqrt(varMat))) )
+
 
     elif test=='LLA':
 
@@ -261,6 +264,7 @@ def confLevel(signal, measurement, measErr, sgErr, mu_test=1, test='LL'):
         chisq_p_b = 1-spstat.norm.sf(np.sqrt(chisquare( background,signal,measurement,totalErr, 0)))
         #return this value 'cls' to get the confidence interval using a simple chi square fit
         p_val=chisq_p_sb/(1-chisq_p_b)
+
 
         #print 'Chi2 sb, b, p_val', chisq_p_sb, chisq_p_b, p_val
 

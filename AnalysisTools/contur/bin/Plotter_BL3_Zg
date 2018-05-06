@@ -50,7 +50,14 @@ def xfromMzp(mzp):
 # 
 def existingLimit1(y):  
 #  MZ'/g' > 6.9  so MZ' = g' * 6.9 TeV
-    return xfromMzp(gprime(y)*6900)
+    ret = []
+    for val in y:
+        mzp = gprime(val)*6900
+        if mzp > 200.:
+            ret.append(xfromMzp(mzp))
+        else:
+            ret.append(np.nan)
+    return ret
 
 # quick function to return the bound from ATLAS
 # 
@@ -64,17 +71,18 @@ def existingLimit2(y):
     k = 1.0/2100
     c = -50.0/21.0
     ret = []
-    print y
     for val in y:
-        mzp = (np.log10(gprime(val/.74))-c)/k
-        print mzp
-        if mzp > 50.:
+        mzp = (np.log10(gprime(val)/.74)-c)/k
+        if mzp > 150.:
             ret.append(xfromMzp(mzp))
         else:
             ret.append(np.nan)
-
     return ret
            
+def BorexinoLimit(y):  
+#  MZ'/g' > 250  so MZ' = g' * 250 GeV
+    return xfromMzp(gprime(y)*250)
+
 
 mkdir_p('plots')
 
@@ -110,9 +118,19 @@ for root, dirs, files in os.walk('.',topdown=False):
                     data[j][5].extend(maps[key][i][5])
                     data[j][6].extend(maps[key][i][6])
 
-    for listelement in data:
-        data[data.index(listelement)][2]= ctr.confLevel(listelement[3],listelement[4],listelement[5],listelement[6])
+      #for listelement in data:
+         # data[data.index(listelement)][2]= ctr.confLevel(listelement[3],listelement[4],listelement[5],listelement[6])
 
+    for listelement in data:
+        tmp = ctr.confLevel(listelement[3],listelement[4],listelement[5],listelement[6])
+        print "cls2", tmp
+        if tmp > 0.0:
+            data[data.index(listelement)][2]= tmp
+        elif listelement[3][0]>0.0:
+            print listelement[3]
+            data[data.index(listelement)][2]= 1.0
+        else: 
+            data[data.index(listelement)][2]= 0.0
 
     temp = []
     temp =  zip(zip(*data)[1],zip(*data)[0],zip(*data)[2])
@@ -170,7 +188,7 @@ for root, dirs, files in os.walk('.',topdown=False):
 
 ###try and pick ticks intelligently
 
-    my_locator_x = MaxNLocator((int(max(contourXaxis)) / 5) + 1)
+    my_locator_x = MaxNLocator((int(max(contourXaxis)) / 4) + 1)
     my_locator_y = MaxNLocator((int(max(contourYaxis)) / 10) + 1)
      #minorLocator_x = MaxNLocator(int(len(contourXaxis)) + 1)
      #minorLocator_y = MaxNLocator(int(len(contourYaxis)) + 1)
@@ -206,10 +224,16 @@ for root, dirs, files in os.walk('.',topdown=False):
     ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.3)
 
 ###plot the ATLAS bound
-    y=np.array(contourYaxis)
+    y=[0.,1.,2.,3.,4.,5.,6.,7.,8.,9.1,9.2,9.3,9.4,9.5,9.6,9.7,9.8,9.9,10]
     x=existingLimit2(y)
     plt.plot(x,y,color='navy')
     ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.2)
+
+###plot the Borexino bound
+    y=np.array(contourYaxis)
+    x=BorexinoLimit(y)
+    plt.plot(x,y,color='navy')
+    ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.3)
 
 
 ##axis labels
@@ -246,7 +270,7 @@ for root, dirs, files in os.walk('.',topdown=False):
 
 ##try and pick ticks intelligently
 
-    my_locator_x = MaxNLocator((int(max(contourXaxis)) / 5)+1)
+    my_locator_x = MaxNLocator((int(max(contourXaxis)) / 4)+1)
     my_locator_y = MaxNLocator((int(max(contourYaxis)) / 10)+1)
     minorLocator_x = MaxNLocator(int(len(contourXaxis)) +1)
     minorLocator_y = MaxNLocator(int(len(contourYaxis)) +1)
@@ -282,10 +306,18 @@ for root, dirs, files in os.walk('.',topdown=False):
     ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.3)
 
 ###plot the ATLAS bound
-    y=np.array(contourYaxis)
+    ##y=np.array(contourYaxis)
+    y=[0.,1.,2.,3.,4.,5.,6.,7.,8.,9.1,9.2,9.3,9.4,9.5,9.6,9.7,9.8,9.9,10]
     x=existingLimit2(y)
     plt.plot(x,y,color='navy')
     ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.2)
+
+###plot the Borexino bound
+    y=np.array(contourYaxis)
+    x=BorexinoLimit(y)
+    plt.plot(x,y,color='navy')
+    ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.3)
+
 
 ###contour labeler
     fmt={}
