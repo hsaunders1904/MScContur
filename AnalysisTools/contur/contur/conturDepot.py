@@ -80,7 +80,6 @@ class conturDepot(object):
     @property
     def conturPoint(self):
         return self._ctPt
-
     def __repr__(self):
         return repr(self._ctPt)
 
