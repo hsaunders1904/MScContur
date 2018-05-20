@@ -123,12 +123,11 @@ for root, dirs, files in os.walk('.',topdown=False):
 
     for listelement in data:
         tmp = ctr.confLevel(listelement[3],listelement[4],listelement[5],listelement[6])
-        print "cls2", tmp
         if tmp > 0.0:
             data[data.index(listelement)][2]= tmp
         elif listelement[3][0]>0.0:
             print listelement[3]
-            data[data.index(listelement)][2]= 1.0
+            data[data.index(listelement)][2]= 0.0
         else: 
             data[data.index(listelement)][2]= 0.0
 

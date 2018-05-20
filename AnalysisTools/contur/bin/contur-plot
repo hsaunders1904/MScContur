@@ -32,5 +32,9 @@ if __name__ == "__main__":
         with open(m, 'r+b') as f:
             x = pickle.load(f)
         print m
+        for cDepot in x:
+            for ctp in cDepot.sortedPoints:
+                print ctp.CLs
+
 
     print "done"

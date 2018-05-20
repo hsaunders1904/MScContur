@@ -10,12 +10,11 @@ from conturPoint import conturPoint
 ANALYSIS = re.compile(r'([A-Z0-9]+_\d{4}_[IS]\d{6,8}[^/]*)')
 REFLOAD = False
 refObj = {}
-
+scaledYet = {}
 
 def init_ref():
     """Function to load all reference data and theory *.yoda data"""
     refFiles = []
-    # refObj = {}
     print "Gathering all reference Data (and Theory, if available)"
     rivet_data_dirs = rivet.getAnalysisRefPaths()
     for dirs in rivet_data_dirs:
@@ -27,11 +26,12 @@ def init_ref():
             for path, ao in aos.iteritems():
                 if path.startswith('/REF/'):
                     refObj[path] = ao
+                    scaledYet[path] = False
                 if path.startswith('/THY/'):
                     refObj[path] = ao
+                    scaledYet[path] = False
     global REFLOAD
     REFLOAD = True
-
 
 class histFactory(object):
     """Processes and decorates yoda AnalysisObjects to a testable format, filling candidate conturPoints
@@ -127,12 +127,10 @@ class histFactory(object):
         if not REFLOAD:
             init_ref()
         for path, ao in refObj.iteritems():
-#            self._sigplot = self.signal.clone()
             if self.signal.path in path and "/REF/" in path:
                 self._ref = ao
                 if self._ref.type=="Scatter1D":
                     self._ref = util.mkScatter2D(self._ref)
-                #self._refplot = self._ref.clone()
 
     def __getMC(self):
         """Lookup for any stored SM MC background calculation
@@ -157,13 +155,12 @@ class histFactory(object):
         if not gotTh:            
             try:
                 self._background = self._ref.clone()
-            # Make sure it is actually a Scatter2D - mkScatter makes Scatter1D from counter.
+                # Make sure it is actually a Scatter2D - mkScatter makes Scatter1D from counter.
                 if self._background.type=='Scatter1D':
                     self._background = util.mkScatter2D(self._background)
             except:
                 print "No reference data found for histo: " + self.signal.path
 
-        #self._bgplot = self._background.clone()
 
     def doPlot(self):
         """Public member function to build yoda plot members for interactive runs"""
@@ -227,13 +224,17 @@ class histFactory(object):
             yErr1 = np.sqrt( (self.signal.points[i].yErrs[1] * self._lumi * self._scaleFactorSig * binWidth)**2 + statErr2 ) 
             self.signal.points[i].yErrs = ( yErr0, yErr1 )
 
-        for i in range(0, len(self._ref.points)):
-            binWidth = self._ref.points[i].xMax - self._ref.points[i].xMin
-            self._ref.points[i].y = self._ref.points[i].y * self._lumi * self._scaleFactorData * binWidth                
-            self._ref.points[i].yErrs = (
-                self._ref.points[i].yErrs[0] * self._lumi * self._scaleFactorData * binWidth,
-                self._ref.points[i].yErrs[1] * self._lumi * self._scaleFactorData * binWidth
-                )
+        # for grid running - only scale the REF data once!    
+        if not scaledYet[self._ref.path]:
+            for i in range(0, len(self._ref.points)):
+                binWidth = self._ref.points[i].xMax - self._ref.points[i].xMin
+                self._ref.points[i].y = self._ref.points[i].y * self._lumi * self._scaleFactorData * binWidth                
+                self._ref.points[i].yErrs = (
+                    self._ref.points[i].yErrs[0] * self._lumi * self._scaleFactorData * binWidth,
+                    self._ref.points[i].yErrs[1] * self._lumi * self._scaleFactorData * binWidth
+                    )
+            scaledYet[self._ref.path] = True
+
         for i in range(0, len(self._background.points)):
             # background should have a separate scalefactor later
             binWidth = self._background.points[i].xMax - self._background.points[i].xMin

@@ -10,7 +10,7 @@ from optparse import OptionParser
 import contur.Utils as util
 import sys, os, pickle
 
-# TODO Fix the options so they work! Add option for grid mode etc.
+# 
 parser = OptionParser(usage=__doc__)
 parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
                   default="plots", help="Specify output directory for output plots.")
@@ -32,18 +32,6 @@ parser.add_option("-v", "--version",
 parser.add_option("-g", "--grid", action="store_true", dest="GRID", default=False,
                   help="Set this flag to read grids of structured yoda files rather than individual files")
 
-# Command line parsing
-opts, yodafiles = parser.parse_args()
-
-version = " Beta pre-release"
-
-if opts.printVersion:
-    util.writeBanner()
-    sys.exit(0)
-
-if not yodafiles:
-    sys.stderr.write("Error: You need to specify some YODA files to be analysed!\n")
-    sys.exit(1)
 
 def write_output(message, conturFactory):
     """Temporary function to mimic output of 1 single analysis"""
@@ -115,7 +103,6 @@ def analyiseYODA(yodafile):
 
                 # at this point, if we want to see the histogram, we need to write its .dat file.
                 if not opts.GRID:
-                     #histo.doPlot()
                     util.writeHistoDat(infile, plotparser, opts.OUTPUTDIR, opts.NOSTACK, histo)
 
                 if histo.conturPoints:
@@ -135,6 +122,20 @@ def analyiseYODA(yodafile):
 
 
 if __name__ == "__main__":
+
+# Command line parsing
+    opts, yodafiles = parser.parse_args()
+
+    version = " Beta pre-release"
+
+    if opts.printVersion:
+        util.writeBanner()
+        sys.exit(0)
+
+        if not yodafiles:
+            sys.stderr.write("Error: You need to specify some YODA files to be analysed!\n")
+            sys.exit(1)
+
 
     util.writeBanner()
 
@@ -164,7 +165,7 @@ if __name__ == "__main__":
         for dirs in yodafiles:
                     gridPoints=[]
                     for rt,drs,fls in os.walk(os.path.join(dirs)):
-                        #print fls
+                         # print fls
                         for name in fls:
                             fileliststatic = []
                             if '.yoda' in name and 'LHC' not in name and 'plot' not in name:
@@ -187,6 +188,7 @@ if __name__ == "__main__":
                                 conturDepot = analyiseYODA(yodafile)
                                 conturDepot.ModelParam1=x
                                 conturDepot.ModelParam2=y
+                                print conturDepot.sortedPoints[0].CLs
                                 gridPoints.append(conturDepot)
  #                               masterDict = CL.grid_add_to_dict(masterDict, mapPoints)
                             else:
@@ -199,9 +201,6 @@ if __name__ == "__main__":
         for infile in yodafiles:
 
             contur=analyiseYODA(infile)
-            if not opts.GRID:
-                # write summary for plotting
-                write_output(modeMessage, contur)
-            else:
-                print contur.conturPoint.CLs
-
+            # write summary for plotting
+            write_output(modeMessage, contur)
+    
