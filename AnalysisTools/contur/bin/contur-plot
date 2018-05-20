@@ -1,20 +1,28 @@
 #! /usr/bin/env python
 
 from optparse import OptionParser
-import sys
+import os, sys
 import contur.Utils as util
 import contur as ct
+from contur.Plotting import *
 import pickle
+import os, sys
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.stats as sp
+from os.path import join
+import errno
+from matplotlib.ticker import *
+from collections import defaultdict
 
 parser = OptionParser(usage=__doc__)
 parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
                   default="plots", help="Specify output directory for output plots.")
-#parser.add_option("-a", "--analysisdir", dest="ANALYSISDIR",
-#                  default="ANALYSIS", help="Output directory for analysis cards.")
 parser.add_option("-v", "--version",
                   action="store_true", dest="printVersion",
                   default=False, help="print version number and exit.")
-
+parser.add_option("-s", "--scan", dest="SCAN",
+                  default="DMHF", help="Specify what model/parameters these maps refer to")
 
 opts, mapfiles = parser.parse_args()
 
@@ -26,15 +34,186 @@ if not mapfiles:
     sys.stderr.write("Error: You need to specify some contur.map files to be analysed!\n")
     sys.exit(1)
 
+# function to decode MH from the x axis variable
+def xlab(x,dummy=0):
+    return int(x)
+
+# function to decode sin(alpha) from the y axis variable
+def ylab(y,dummy=0):
+    if opts.SCAN == "MH2-SA":
+        y = np.sin(y*np.pi/40.0)
+        return float('%3.1f' % y )
+    else:
+        return int(y)
+
 if __name__ == "__main__":
     util.mkoutdir(opts.OUTPUTDIR)
+
+    contourXaxis=[]
+    contourYaxis=[]
+
+# Axis labels (should get these from the conturDepot eventually?)
+    if opts.SCAN == "MH2-SA":
+        xAxisLabel = r"$M_{H2}$ [GeV]"
+        yAxisLabel = r"$\sin \alpha$"
+    else:
+        xAxisLabel = r"$M_{Z'}$ [GeV]"
+        yAxisLabel = r"$M_{\textsc{dm}}$ [GeV]"
+
     for m in mapfiles:
         with open(m, 'r+b') as f:
             x = pickle.load(f)
-        print m
-        for cDepot in x:
-            for ctp in cDepot.sortedPoints:
-                print ctp.CLs
 
+        n_pools = len(x[0].sortedPoints)
+        print "Loaded file", m, " which has ", n_pools, " pools"
+
+        # array to store the total CL values this is maximum possible size (ie too big!)
+        confLim = np.zeros((len(x),len(x)))
+
+        # Build a dictionary to store the CL values for individual pools
+        confLims  = defaultdict(list)
+          #bestPlots = defaultdict(list)
+        for ctp in x[0].sortedPoints:
+            pool = ctp.pools
+            confLims[pool] = np.zeros((len(x),len(x)))
+              #bestPlots[pool] = np.array((len(x),len(x)),dtype='string')
+
+        # Sort them so the parameter values are in order.
+        x.sort(key=lambda i: (float(i.ModelParam1), float(i.ModelParam2)))
+
+        # TODO: this isn't going to work if there's more than one file containing the
+        # same paramters points.
+        for cDepot in x:
+              #print "New conturDepot  ----"
+              #print cDepot.ModelParam1, cDepot.ModelParam2
+            if not cDepot.ModelParam1 in contourXaxis:
+                contourXaxis.append(cDepot.ModelParam1)
+            if not cDepot.ModelParam2 in contourYaxis:
+                contourYaxis.append(cDepot.ModelParam2)
+                
+            ctp = cDepot.conturPoint
+              #print "adding", ctp.CLs
+
+            confLim[contourXaxis.index(cDepot.ModelParam1)][contourYaxis.index(cDepot.ModelParam2)]=ctp.CLs
+
+            for ctp in cDepot.sortedPoints:
+                 #print ctp.tags
+                 #print ctp.pools
+                 #print ctp.CLs
+                confLims[ctp.pools][contourXaxis.index(cDepot.ModelParam1)][contourYaxis.index(cDepot.ModelParam2)]  = ctp.CLs
+                 #bestPlots[ctp.pools][contourXaxis.index(cDepot.ModelParam1)][contourYaxis.index(cDepot.ModelParam2)] = ctp.tags
+
+
+# set up for the plots here.
+
+    Xaxis = np.array(map(float, contourXaxis))
+    Yaxis = np.array(map(float, contourYaxis))
+
+    # find the grid spacings:
+
+    dx= ( min(filter(lambda x: x> min(Xaxis), (Xaxis))) - min(Xaxis))/2.0
+    dy= ( min(filter(lambda x: x> min(Yaxis), (Yaxis))) - min(Yaxis))/2.0
+    #print dx, dy
+
+    yy,xx = np.mgrid[min(Yaxis)-dy:max(Yaxis)+2*dy:2*dy,min(Xaxis)-dx:max(Xaxis)+2*dx:2*dx]
+
+    cl_values = confLim[:len(contourXaxis), :len(contourYaxis)]
+
+    # translate from the parameters of the  to something more readable
+    fmt = plt.FuncFormatter(xlab)
+    fmt2 = plt.FuncFormatter(ylab)
+
+
+# make an html index file for browsing them
+
+    index = open("./plots/index.html", "w")
+
+    index.write('<html>\n<head>\n<title>Heatmaps and contours</title>\n</head>\n<body>')
+
+# make the overall heatmap
+    fig=plt.figure(figsize=fig_dims)
+
+    ax = fig.add_subplot(1,1,1)
+    ax.xaxis.set_major_formatter(fmt)
+    ax.yaxis.set_major_formatter(fmt2)
+
+    plt.pcolormesh(xx,yy,cl_values.T,cmap=plt.cm.magma, vmin=0, vmax=1)
+
+    # axis labels
+    plt.xlabel(xAxisLabel)
+    plt.ylabel(yAxisLabel)
+
+    # save the fig and pad it for better layout
+    fig.tight_layout(pad=0.1)
+    pngfile = "./plots/combinedCL.png"
+    pdffile = "./plots/combinedCL.pdf"
+    plt.savefig(pdffile)
+    plt.savefig(pngfile)
+
+    index.write('<h3>Combined Heatmap</h3>')
+    index.write('<img src="%s">\n' % os.path.basename(pngfile))
+
+    # now the heatmaps for the different analysis pools
+    for pool in confLims:
+
+        cl_values_pool = confLims[pool][:len(contourXaxis), :len(contourYaxis)]
+
+        fig=plt.figure(figsize=fig_dims)
+        ax = fig.add_subplot(1,1,1)
+        ax.xaxis.set_major_formatter(fmt)
+        ax.yaxis.set_major_formatter(fmt2)
+
+        plt.pcolormesh(xx,yy,cl_values_pool.T,cmap=plt.cm.magma, vmin=0, vmax=1)
+
+        # axis labels
+        plt.xlabel(xAxisLabel)
+        plt.ylabel(yAxisLabel)
+
+        # save the fig and pad it for better layout
+        fig.tight_layout(pad=0.1)
+        pngfile = "./plots/combinedCL_"+pool+".png"
+        plt.savefig(pngfile)
+        index.write('<h4>%s</h4>' % pool)
+        index.write('<img src="%s">\n' % os.path.basename(pngfile))
+
+        
+
+# Now the overall contour plot ---------------------------------
+    fig=plt.figure(figsize=fig_dims)
+
+    ax = fig.add_subplot(1,1,1)
+    ax.xaxis.set_major_formatter(fmt)
+    ax.yaxis.set_major_formatter(fmt2)
+
+    # draw a filled contour region for the CL excl
+    CS=plt.contourf(Xaxis,Yaxis,cl_values.T,levels=[0.95,1.0],label="CL",cmap=plt.cm.magma, alpha =0.8)
+    # and a black outline
+    CS2=plt.contour(CS, colors = 'black')
+
+    # axis labels
+    plt.xlabel(xAxisLabel)
+    plt.ylabel(yAxisLabel)
+
+    fig.tight_layout(pad=0.1)
+    plt.savefig("./plots/contur.pdf")
+    plt.savefig("./plots/contur.png")
+
+
+# Now the colour bar key ----------------------------------------
+    fig=plt.figure(figsize=[fig_dims[0]*2,0.5])
+    ax = fig.add_subplot(1,1,1)
+    import matplotlib as mpl
+    norm = mpl.colors.Normalize(vmin=0, vmax=1)
+    cb = mpl.colorbar.ColorbarBase(ax, cmap=plt.cm.magma, orientation='horizontal', norm=norm)
+    cb.set_label("CL of exclusion")
+    fig.tight_layout(pad=0.1)
+    plt.savefig('./plots/colorbarkey.pdf')
+    plt.savefig('./plots/colorbarkey.png')
+
+
+# close the html file
+    index.write("\n </body> \n")
+    index.close()
 
     print "done"
+
