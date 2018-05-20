@@ -285,6 +285,11 @@ INSERT INTO blacklist VALUES('CMS_2016_I1491953','d36');
 INSERT INTO blacklist VALUES('CMS_2016_I1491953','d37');
 INSERT INTO blacklist VALUES('CMS_2016_I1491953','d38');
 INSERT INTO blacklist VALUES('CMS_2016_I1491953','d39');
+INSERT INTO blacklist VALUES('ATLAS_2017_I1609448','d01-x01-y01');
+INSERT INTO blacklist VALUES('ATLAS_2017_I1609448','d02-x01-y01');
+INSERT INTO blacklist VALUES('ATLAS_2017_I1609448','d03-x01-y01');
+INSERT INTO blacklist VALUES('ATLAS_2017_I1609448','d04-x01-y01');
+
 
 
 -- have to veto all these at the moment because contur doesn't know
