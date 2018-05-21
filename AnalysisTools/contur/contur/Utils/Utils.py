@@ -160,8 +160,8 @@ def mkScatter2D(s1):
         ex_p = x+0.5;
 
         y = point.x;
-        ey_p = point.xMax;
-        ey_m = point.xMin;
+        ey_p = point.xMax-point.x;
+        ey_m = point.x   -point.xMin;
 
         pt = yoda.Point2D(x, y, 0.5, ey_m);
         rtn.addPoint(pt);
