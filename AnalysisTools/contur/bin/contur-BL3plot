@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
     dx= ( min(filter(lambda x: x> min(Xaxis), (Xaxis))) - min(Xaxis))/2.0
     dy= ( min(filter(lambda x: x> min(Yaxis), (Yaxis))) - min(Yaxis))/2.0
-    print dx, dy
+    #print dx, dy
 
     yy,xx = np.mgrid[min(Yaxis)-dy:max(Yaxis)+2*dy:2*dy,min(Xaxis)-dx:max(Xaxis)+2*dx:2*dx]
 

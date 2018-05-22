@@ -79,7 +79,7 @@ def analyiseYODA(yodafile):
         plotparser = util.mkStdPlotParser(plotdirs, )
 
 
-    refhistos, mchistos, xsec, Nev = util.getHistos(yodafile)
+    mchistos, xsec, Nev = util.getHistos(yodafile)
     print "Monte Carlo Luminosity generated is %.1f inverse pb" % (float(Nev.numEntries()) / xsec.point(0).x)
 
     # again this looping belongs inside conturDepot
@@ -92,9 +92,9 @@ def analyiseYODA(yodafile):
             if tf.validHisto(v2.path):
 
                  #if 'ATLAS_2012_I1203852' not in v2.path:
-                # if "ATLAS_2017_I1609448" not in v2.path:
-                   #  continue
-                # Currently histfact looks up the ref data every time, this should be factored into conturfact
+                   #if "ATLAS_2016_I1492320" not in v2.path and "ATLAS_2016_I1467454_MU" not in v2.path:
+                       #continue
+
                 # Conturfact should also hold xsec and Nev eventually
 
                 histo = ct.histFactory(v2, xsec, Nev, opts.TESTMETHOD, opts.GRID)
@@ -115,7 +115,7 @@ def analyiseYODA(yodafile):
 
     contur.sortPoints()
 
-    #  return the sorted conturpoint
+    #  return the conturDepot
     return contur
 
 
@@ -165,7 +165,6 @@ if __name__ == "__main__":
         for dirs in yodafiles:
                     gridPoints=[]
                     for rt,drs,fls in os.walk(os.path.join(dirs)):
-                         # print fls
                         for name in fls:
                             fileliststatic = []
                             if '.yoda' in name and 'LHC' not in name and 'plot' not in name:
@@ -188,7 +187,7 @@ if __name__ == "__main__":
                                 conturDepot = analyiseYODA(yodafile)
                                 conturDepot.ModelParam1=x
                                 conturDepot.ModelParam2=y
-                                print conturDepot.sortedPoints[0].CLs
+                                print "conf level is ",conturDepot.conturPoint.CLs
                                 gridPoints.append(conturDepot)
  #                               masterDict = CL.grid_add_to_dict(masterDict, mapPoints)
                             else:

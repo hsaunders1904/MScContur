@@ -15,6 +15,7 @@ scaledYet = {}
 def init_ref():
     """Function to load all reference data and theory *.yoda data"""
     refFiles = []
+    global scaledYet
     print "Gathering all reference Data (and Theory, if available)"
     rivet_data_dirs = rivet.getAnalysisRefPaths()
     for dirs in rivet_data_dirs:
@@ -24,12 +25,18 @@ def init_ref():
         for f in fileList:
             aos = yoda.read(f)
             for path, ao in aos.iteritems():
+                if ao.type!="Scatter2D":
+                    ao = yoda.mkScatter(ao)
+                if ao.type=="Scatter1D":
+                     ao = util.mkScatter2D(ao)
                 if path.startswith('/REF/'):
                     refObj[path] = ao
                     scaledYet[path] = False
                 if path.startswith('/THY/'):
                     refObj[path] = ao
                     scaledYet[path] = False
+
+
     global REFLOAD
     REFLOAD = True
 
@@ -45,6 +52,7 @@ class histFactory(object):
     """
 
     def __init__(self, anaObj, xSec, nEv, TestMethod, GridMode):
+
         # Construct with an input yoda aos and a scatter1D for the cross section and nEv
         self.signal = anaObj
         self.xsec = xSec
@@ -116,6 +124,9 @@ class histFactory(object):
                 self.__doScale()
             self.__fillPoints()
 
+           #print "initialised histfactory:", self._ref.path 
+           #print self._ref.points[0], self.background.points[0]
+
 
     def __getisScaled(self):
         """Check if the data to compare to is normalized
@@ -129,8 +140,6 @@ class histFactory(object):
         for path, ao in refObj.iteritems():
             if self.signal.path in path and "/REF/" in path:
                 self._ref = ao
-                if self._ref.type=="Scatter1D":
-                    self._ref = util.mkScatter2D(self._ref)
 
     def __getMC(self):
         """Lookup for any stored SM MC background calculation
@@ -147,17 +156,10 @@ class histFactory(object):
                     gotTh = True
                     print "got theory", path
                     self._background = ao
-                    if (self._background != "Scatter2D"):
-                        self._background = yoda.mkScatter(self._background)
-                        if self._background.type=="Scatter1D":
-                            self._background = util.mkScatter2D(self._background)
 
         if not gotTh:            
             try:
                 self._background = self._ref.clone()
-                # Make sure it is actually a Scatter2D - mkScatter makes Scatter1D from counter.
-                if self._background.type=='Scatter1D':
-                    self._background = util.mkScatter2D(self._background)
             except:
                 print "No reference data found for histo: " + self.signal.path
 
@@ -224,7 +226,8 @@ class histFactory(object):
             yErr1 = np.sqrt( (self.signal.points[i].yErrs[1] * self._lumi * self._scaleFactorSig * binWidth)**2 + statErr2 ) 
             self.signal.points[i].yErrs = ( yErr0, yErr1 )
 
-        # for grid running - only scale the REF data once!    
+        # for grid running - only scale the REF/Background data once!    
+        global scaledYet 
         if not scaledYet[self._ref.path]:
             for i in range(0, len(self._ref.points)):
                 binWidth = self._ref.points[i].xMax - self._ref.points[i].xMin
@@ -233,16 +236,17 @@ class histFactory(object):
                     self._ref.points[i].yErrs[0] * self._lumi * self._scaleFactorData * binWidth,
                     self._ref.points[i].yErrs[1] * self._lumi * self._scaleFactorData * binWidth
                     )
-            scaledYet[self._ref.path] = True
 
-        for i in range(0, len(self._background.points)):
-            # background should have a separate scalefactor later
-            binWidth = self._background.points[i].xMax - self._background.points[i].xMin
-            self._background.points[i].y = self._background.points[i].y * self._lumi * self._scaleFactorData * binWidth                
-            self._background.points[i].yErrs = (
-                self._background.points[i].yErrs[0] * self._lumi * self._scaleFactorData * binWidth,
-                self._background.points[i].yErrs[1] * self._lumi * self._scaleFactorData * binWidth
-                )
+            for i in range(0, len(self._background.points)):
+                # background should have a separate scalefactor later
+                binWidth = self._background.points[i].xMax - self._background.points[i].xMin
+                self._background.points[i].y = self._background.points[i].y * self._lumi * self._scaleFactorData * binWidth                
+                self._background.points[i].yErrs = (
+                    self._background.points[i].yErrs[0] * self._lumi * self._scaleFactorData * binWidth,
+                    self._background.points[i].yErrs[1] * self._lumi * self._scaleFactorData * binWidth
+                    )
+        scaledYet[self._ref.path] = True
+
 
     def __fillPoints(self):
         """Internal function to fill conturPoints list
@@ -258,14 +262,11 @@ class histFactory(object):
         # counter to track the maximum discrepant point
         clmax = 0.0
 
-          #print self.signal.path
-
         for i in range(0, len(self.signal.points)):
 
             # don't trust unfolded zero (or less!) bins                    
             if self._ref.points[i].y<=0:
                 continue
-
 
             ctrPt = conturPoint()
             ctrPt.s = self.signal.points[i].y

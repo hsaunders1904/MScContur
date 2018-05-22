@@ -41,7 +41,6 @@ def getHistos(filelist):
     #        xsec     = generated xsec and its uncertainty,    
     #        Nev      = sum of weights, sum of squared weight, number of events
     # (derived from rivet-cmphistos)
-    refhistos = {}
     mchistos = {}
     xsec = {}
     Nev = {}
@@ -59,12 +58,12 @@ def getHistos(filelist):
         if os.path.basename(path).startswith("_"):
             continue
         if path.startswith('/REF/'):
-            if path not in refhistos:
-                refhistos[path] = ao
+            # Reference histograms are read elsewhere.
+            continue
         else:
             if path not in mchistos[filelist]:
                 mchistos[filelist][path] = ao
-    return refhistos, mchistos, xsec, Nev
+    return mchistos, xsec, Nev
 
 
 def writeHistoDat(mcpath, plotparser, outdir, nostack, histo):
@@ -148,7 +147,7 @@ def mkScatter2D(s1):
 
     rtn = yoda.Scatter2D()
 
-    x = 0.5
+    xval = 0.5
     for a in s1.annotations:
         rtn.setAnnotation(a, s1.annotation(a))
 
@@ -156,18 +155,18 @@ def mkScatter2D(s1):
 
     for point in s1.points:
         
-        ex_m = x-0.5;
-        ex_p = x+0.5;
+        ex_m = xval-0.5
+        ex_p = xval+0.5
 
-        y = point.x;
-        ey_p = point.xMax-point.x;
-        ey_m = point.x   -point.xMin;
+        y = point.x
+        ey_p = point.xMax - point.x
+        ey_m = point.x    - point.xMin
+        
+        pt = yoda.Point2D(xval, y, (0.5,0.5), (ey_p,ey_m))
+        rtn.addPoint(pt)
+        xval = xval + 1.0
 
-        pt = yoda.Point2D(x, y, 0.5, ey_m);
-        rtn.addPoint(pt);
-        x = x + 1.0
-
-    return rtn;
+    return rtn
 
 def walklevel(some_dir, level=1):
     """Like os.walk but can specify a level to walk to

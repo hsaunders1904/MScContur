@@ -45,7 +45,6 @@ class conturPoint(object):
         else:
             self.CLs, self.p_sb, self.p_b = ctr.confLevel(self.s, self.bg, self.meas, self.sErr, self.bgErr, self.measErr, self.isRatio, self.kev, 1, TestMethod)
 
-
     def __checkConsistency(self):
         """Internal function to check if the point is well formed
 
