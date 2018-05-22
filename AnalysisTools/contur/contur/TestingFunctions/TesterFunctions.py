@@ -226,6 +226,7 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, isRatio, k
     # 'LLA' as LL, but use the qMu_Asimov function to construct the ratio instead, should be equivalent to LL
     # (TODO: add another one here to use the MC method instead of asymptotic/Asimov?)
     # 'CS' means the Chi2 goodness-of-fit is used (Gaussian error assumption)
+    # 'MC' means the profile likeilihood but using MC toys.
 
     # kev is the actual number of generated events in the bin
  
@@ -276,7 +277,7 @@ def confLevel(signal, background, measurement, sgErr, bgErr, measErr, isRatio, k
         p_val=2.0*spstat.norm.sf(np.sqrt(q_mu_a))
 
 
-    elif test=='TOYS':
+    elif test=='MC':
         p_val=1-MCTester.qMu_obs_MC(measurement,background, measErr, signal, mu_test_in=1)[2]
 
 

@@ -60,6 +60,12 @@ if __name__ == "__main__":
         xAxisLabel = r"$M_{Z'}$ [GeV]"
         yAxisLabel = r"$M_{\textsc{dm}}$ [GeV]"
 
+    # Build a dictionary to store the CL values for individual pools
+    depots = {}
+
+    # Build a dictionary to store the CL values for individual pools
+    confLims  = defaultdict(list)
+ 
     for m in mapfiles:
         with open(m, 'r+b') as f:
             x = pickle.load(f)
@@ -70,19 +76,15 @@ if __name__ == "__main__":
         # array to store the total CL values this is maximum possible size (ie too big!)
         confLim = np.zeros((len(x),len(x)))
 
-        # Build a dictionary to store the CL values for individual pools
-        confLims  = defaultdict(list)
-          #bestPlots = defaultdict(list)
-        for ctp in x[0].sortedPoints:
-            pool = ctp.pools
-            confLims[pool] = np.zeros((len(x),len(x)))
-              #bestPlots[pool] = np.array((len(x),len(x)),dtype='string')
-
         # Sort them so the parameter values are in order.
         x.sort(key=lambda i: (float(i.ModelParam1), float(i.ModelParam2)))
 
+        for ctp in x[0].sortedPoints:
+            pool = ctp.pools
+            confLims[pool] = np.zeros((len(x),len(x)))
+
         # TODO: this isn't going to work if there's more than one file containing the
-        # same paramters points.
+        # same parameters points.
         for cDepot in x:
               #print "New conturDepot  ----"
               #print cDepot.ModelParam1, cDepot.ModelParam2
@@ -90,10 +92,18 @@ if __name__ == "__main__":
                 contourXaxis.append(cDepot.ModelParam1)
             if not cDepot.ModelParam2 in contourYaxis:
                 contourYaxis.append(cDepot.ModelParam2)
-                
+            
             ctp = cDepot.conturPoint
-              #print "adding", ctp.CLs
+            key = cDepot.ModelParam1+cDepot.ModelParam2
+            if not key in depots:
+                depots[key] = cDepot
+            else:
+                depots[key].addPoint(ctp)
+                depots[key].sortPoints()
 
+              #print "adding", ctp.CLs
+            
+            ctp = depots[key].conturPoint
             confLim[contourXaxis.index(cDepot.ModelParam1)][contourYaxis.index(cDepot.ModelParam2)]=ctp.CLs
 
             for ctp in cDepot.sortedPoints:
@@ -103,6 +113,10 @@ if __name__ == "__main__":
                 confLims[ctp.pools][contourXaxis.index(cDepot.ModelParam1)][contourYaxis.index(cDepot.ModelParam2)]  = ctp.CLs
                  #bestPlots[ctp.pools][contourXaxis.index(cDepot.ModelParam1)][contourYaxis.index(cDepot.ModelParam2)] = ctp.tags
 
+# ended loop over points -------------------------------
+
+
+# ended loop over files -------------------------------
 
 # set up for the plots here.
 

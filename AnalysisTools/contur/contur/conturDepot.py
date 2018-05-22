@@ -70,6 +70,7 @@ class conturDepot(object):
 
     def buildFinal(self):
         """Function to build the final contur point out of the safe combination of all input points"""
+        self._ctPt = conturPoint()
         for x in self._sortedPoints:
             self._ctPt.addPoint(x)
         self._ctPt.calcCLs(self._testMethod)

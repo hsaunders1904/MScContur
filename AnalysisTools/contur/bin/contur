@@ -38,7 +38,7 @@ def write_output(message, conturFactory):
     util.mkoutdir(opts.ANALYSISDIR)
     sumfn = open(opts.ANALYSISDIR + "/Summary.txt", 'w')
     result = "Combined CLs naive exclusion for these plots is %.1f %% \n" % (conturFactory.conturPoint.CLs *100.0)
-    if opts.TESTMETHOD != 'LL' and opts.TESTMETHOD != 'LLA': 
+    if not 'LL' in opts.TESTMETHOD and opts.TESTMETHOD != 'MC': 
         result += "Probability of SM only giving this agreement or worse assuming    SM = %.4f \n" % (conturFactory.conturPoint.p_b) 
         result += "Probability of SM+BSM giving this agreement or worse assuming SM+BSM = %.4f \n" % (conturFactory.conturPoint.p_sb) 
         if conturFactory.conturPoint.p_b+conturFactory.conturPoint.p_sb > 0:
