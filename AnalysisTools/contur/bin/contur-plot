@@ -22,7 +22,9 @@ parser.add_option("-v", "--version",
                   action="store_true", dest="printVersion",
                   default=False, help="print version number and exit.")
 parser.add_option("-s", "--scan", dest="SCAN",
-                  default="DMHF", help="Specify what model/parameters these maps refer to")
+                  default="DMHF", help="Specify what model/parameters these maps refer to: DMLF, DMHF, MH2-SA")
+parser.add_option("-l", "--limit", dest="CLIMIT",
+                  default="0.95", help="Conf limit of the contur")
 
 opts, mapfiles = parser.parse_args()
 
@@ -33,6 +35,14 @@ if opts.printVersion:
 if not mapfiles:
     sys.stderr.write("Error: You need to specify some contur.map files to be analysed!\n")
     sys.exit(1)
+
+##quick function to return the pertubative unitarity bound
+#the 1.0 is gdm, currently hardcoded, grab from model file/ directory info eventually
+def pertUnit(mz):
+    gdm=0.25
+    return np.sqrt(np.pi/2) * (mz/gdm)
+    #return gdm * mdm / np.sqrt(np.pi/2)
+
 
 # function to decode MH from the x axis variable
 def xlab(x,dummy=0):
@@ -46,11 +56,14 @@ def ylab(y,dummy=0):
     else:
         return int(y)
 
+
 if __name__ == "__main__":
     util.mkoutdir(opts.OUTPUTDIR)
 
     contourXaxis=[]
     contourYaxis=[]
+
+    climit = float(opts.CLIMIT)
 
 # Axis labels (should get these from the conturDepot eventually?)
     if opts.SCAN == "MH2-SA":
@@ -100,7 +113,6 @@ if __name__ == "__main__":
             else:
                 depots[key].addPoint(ctp)
                 depots[key].sortPoints()
-
               #print "adding", ctp.CLs
             
             ctp = depots[key].conturPoint
@@ -118,6 +130,7 @@ if __name__ == "__main__":
 
 # ended loop over files -------------------------------
 
+            
 # set up for the plots here.
 
     Xaxis = np.array(map(float, contourXaxis))
@@ -157,15 +170,27 @@ if __name__ == "__main__":
     plt.xlabel(xAxisLabel)
     plt.ylabel(yAxisLabel)
 
+    if opts.SCAN == "DMLF":
+###plot the pert unitarity bound
+        xub=np.array(Xaxis)
+        xub[0]=xub[0]-dx
+        yub=pertUnit(xub)
+        plt.ylim(min(Yaxis)-dy,max(Yaxis)+dy)
+        plt.plot(xub,yub,color='navy')
+        ax.fill_between(xub,yub,max(Yaxis)+dy,facecolor='navy',alpha=0.4)
+
+
     # save the fig and pad it for better layout
     fig.tight_layout(pad=0.1)
     pngfile = "./plots/combinedCL.png"
+    contourpng = "./plots/contur.png"
     pdffile = "./plots/combinedCL.pdf"
     plt.savefig(pdffile)
     plt.savefig(pngfile)
 
-    index.write('<h3>Combined Heatmap</h3>')
+    index.write('<h3>Combined Heatmap and contour</h3>')
     index.write('<img src="%s">\n' % os.path.basename(pngfile))
+    index.write('<img src="%s">\n' % os.path.basename(contourpng))
 
     # now the heatmaps for the different analysis pools
     for pool in confLims:
@@ -200,13 +225,22 @@ if __name__ == "__main__":
     ax.yaxis.set_major_formatter(fmt2)
 
     # draw a filled contour region for the CL excl
-    CS=plt.contourf(Xaxis,Yaxis,cl_values.T,levels=[0.95,1.0],label="CL",cmap=plt.cm.magma, alpha =0.8)
+    CS=plt.contourf(Xaxis,Yaxis,cl_values.T,levels=[climit,1.0],label="CL",cmap=plt.cm.magma, alpha =0.8)
     # and a black outline
     CS2=plt.contour(CS, colors = 'black')
 
     # axis labels
     plt.xlabel(xAxisLabel)
     plt.ylabel(yAxisLabel)
+
+    if opts.SCAN == "DMLF":
+###plot the pert unitarity bound
+        xub=np.array(Xaxis)
+        yub=pertUnit(xub)
+        plt.ylim(min(Yaxis),max(Yaxis))
+        plt.plot(xub,yub,color='navy')
+        ax.fill_between(xub,yub,max(Yaxis),facecolor='navy',alpha=0.4)
+
 
     fig.tight_layout(pad=0.1)
     plt.savefig("./plots/contur.pdf")
