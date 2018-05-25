@@ -19,6 +19,9 @@ for root, dirs, files in os.walk('.'):
 			continue
 		if opts.TAGS[0] not in name or opts.TAGS[1] not in name:
 			continue
+		# protect against rerunning...
+		if 'LHC' not in name:
+			continue
 		yodafile = os.path.join(root, name)
 		filelist += " " + yodafile
 	print filelist
