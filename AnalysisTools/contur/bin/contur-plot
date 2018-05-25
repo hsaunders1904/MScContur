@@ -43,18 +43,68 @@ def pertUnit(mz):
     return np.sqrt(np.pi/2) * (mz/gdm)
     #return gdm * mdm / np.sqrt(np.pi/2)
 
-
 # function to decode MH from the x axis variable
 def xlab(x,dummy=0):
-    return int(x)
+    if opts.SCAN == "Zg":
+        return np.power(10,x/10.0)
+    else:
+        return int(x)
 
 # function to decode sin(alpha) from the y axis variable
 def ylab(y,dummy=0):
     if opts.SCAN == "MH2-SA":
         y = np.sin(y*np.pi/40.0)
         return float('%3.1f' % y )
+    elif opts.SCAN == "Zg":
+        lab = 1.0*np.power(10,-y/4.0)
+        return lab
     else:
         return int(y)
+
+# Various special functions for existing limits on different scans below.
+# -----------------------------------------------------------------------------------------
+
+# inverse of mzprime
+def xfromMzp(mzp):
+    return 10.0*np.log10(mzp)
+
+# quick function to return the bound from LEP
+# 
+def LEPLimit(y):  
+#  MZ'/g' > 6.9  so MZ' = g' * 6.9 TeV
+    ret = []
+    for val in y:
+        mzp = ylab(val)*6900
+        if mzp > 200.:
+            ret.append(xfromMzp(mzp))
+        else:
+            ret.append(np.nan)
+    return ret
+
+# quick function to return the bound from ATLAS
+# 
+def ATLASLimit(y):    
+
+#log10 g'/g = k M + c;  M = (log10(g'/g)-c)/k 
+#0.1 = 2900 = -1
+#1.0 = 5000 =  0
+# so 5000k = -c,    -1 = 2900k + c = -2100k;    k = 1/2100, c = -5000/2100
+#    sqrt(g'^2 + g^2) (SM) = 0.74
+    k = 1.0/2100
+    c = -50.0/21.0
+    ret = []
+    for val in y:
+        mzp = (np.log10(ylab(val)/.74)-c)/k
+        if mzp > 150.:
+            ret.append(xfromMzp(mzp))
+        else:
+            ret.append(np.nan)
+    return ret
+           
+def BorexinoLimit(y):  
+#  MZ'/g' > 250  so MZ' = g' * 250 GeV
+    return xfromMzp(ylab(y)*250)
+
 
 
 if __name__ == "__main__":
@@ -69,6 +119,9 @@ if __name__ == "__main__":
     if opts.SCAN == "MH2-SA":
         xAxisLabel = r"$M_{H2}$ [GeV]"
         yAxisLabel = r"$\sin \alpha$"
+    elif opts.SCAN == "Zg":
+        xAxisLabel = r"$M_{Z'}$ [GeV]"
+        yAxisLabel = r"$g'$"
     else:
         xAxisLabel = r"$M_{Z'}$ [GeV]"
         yAxisLabel = r"$M_{\textsc{dm}}$ [GeV]"
@@ -160,9 +213,15 @@ if __name__ == "__main__":
 # make the overall heatmap
     fig=plt.figure(figsize=fig_dims)
 
+
     ax = fig.add_subplot(1,1,1)
     ax.xaxis.set_major_formatter(fmt)
     ax.yaxis.set_major_formatter(fmt2)
+
+    my_locator_x = MaxNLocator((int(max(Xaxis)) / 10) + 1)
+    my_locator_y = MaxNLocator((int(max(Yaxis)) / 4) + 1)
+    ax.yaxis.set_major_locator(my_locator_y)
+    ax.xaxis.set_major_locator(my_locator_x)
 
     plt.pcolormesh(xx,yy,cl_values.T,cmap=plt.cm.magma, vmin=0, vmax=1)
 
@@ -170,14 +229,36 @@ if __name__ == "__main__":
     plt.xlabel(xAxisLabel)
     plt.ylabel(yAxisLabel)
 
+    x_grid_min = min(Xaxis)
     if opts.SCAN == "DMLF":
-###plot the pert unitarity bound
+        # plot the pert unitarity bound
         xub=np.array(Xaxis)
         xub[0]=xub[0]-dx
         yub=pertUnit(xub)
         plt.ylim(min(Yaxis)-dy,max(Yaxis)+dy)
         plt.plot(xub,yub,color='navy')
         ax.fill_between(xub,yub,max(Yaxis)+dy,facecolor='navy',alpha=0.4)
+    elif opts.SCAN == "Zg":
+        plt.ylim(min(Yaxis)-dy,max(Yaxis)+dy)
+        plt.xlim(min(Xaxis)-dx,max(Xaxis)+dx)
+        # plot the LEP bound
+        y=np.array(Yaxis)
+        x=LEPLimit(y)
+        plt.plot(x,y,color='navy')
+        ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.3)        
+        # plot the ATLAS bound
+        y=[0.,1.,2.,3.,4.,5.,6.,7.,8.,9.1,9.2,9.3,9.4,9.5,9.6,9.7,9.8,9.9,10]
+        x=ATLASLimit(y)
+        plt.plot(x,y,color='navy')
+        ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.2)        
+        # plot the Borexino bound
+        y=np.array(Yaxis)
+        y[0]=y[0]-dy
+        x=BorexinoLimit(y)
+        plt.plot(x,y,color='navy')
+        ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.3)
+        # make g' go the right way.
+        plt.gca().invert_yaxis()
 
 
     # save the fig and pad it for better layout
@@ -201,6 +282,8 @@ if __name__ == "__main__":
         ax = fig.add_subplot(1,1,1)
         ax.xaxis.set_major_formatter(fmt)
         ax.yaxis.set_major_formatter(fmt2)
+        ax.yaxis.set_major_locator(my_locator_y)
+        ax.xaxis.set_major_locator(my_locator_x)
 
         plt.pcolormesh(xx,yy,cl_values_pool.T,cmap=plt.cm.magma, vmin=0, vmax=1)
 
@@ -209,11 +292,14 @@ if __name__ == "__main__":
         plt.ylabel(yAxisLabel)
 
         # save the fig and pad it for better layout
+        if opts.SCAN == "Zg":
+            plt.gca().invert_yaxis()
         fig.tight_layout(pad=0.1)
         pngfile = "./plots/combinedCL_"+pool+".png"
         plt.savefig(pngfile)
         index.write('<h4>%s</h4>' % pool)
         index.write('<img src="%s">\n' % os.path.basename(pngfile))
+        plt.close(fig)
 
         
 
@@ -223,6 +309,8 @@ if __name__ == "__main__":
     ax = fig.add_subplot(1,1,1)
     ax.xaxis.set_major_formatter(fmt)
     ax.yaxis.set_major_formatter(fmt2)
+    ax.yaxis.set_major_locator(my_locator_y)
+    ax.xaxis.set_major_locator(my_locator_x)
 
     # draw a filled contour region for the CL excl
     CS=plt.contourf(Xaxis,Yaxis,cl_values.T,levels=[climit,1.0],label="CL",cmap=plt.cm.magma, alpha =0.8)
@@ -234,13 +322,15 @@ if __name__ == "__main__":
     plt.ylabel(yAxisLabel)
 
     if opts.SCAN == "DMLF":
-###plot the pert unitarity bound
+        # plot the pert unitarity bound
         xub=np.array(Xaxis)
         yub=pertUnit(xub)
         plt.ylim(min(Yaxis),max(Yaxis))
         plt.plot(xub,yub,color='navy')
         ax.fill_between(xub,yub,max(Yaxis),facecolor='navy',alpha=0.4)
 
+    if opts.SCAN == "Zg":
+        plt.gca().invert_yaxis()
 
     fig.tight_layout(pad=0.1)
     plt.savefig("./plots/contur.pdf")
