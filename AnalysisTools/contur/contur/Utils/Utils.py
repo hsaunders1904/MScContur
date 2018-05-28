@@ -107,7 +107,7 @@ def writeHistoDat(mcpath, plotparser, outdir, nostack, histo):
             sigback.title='[%s] %5.2f' % ( histo.maxbin, histo.conturPoints[histo.maxcl].CLs )
 
         sigback.setAnnotation('LineColor', 'red')
-        sigback.setAnnotation('ErrorBars', '1')
+         #sigback.setAnnotation('ErrorBars', '1')
 
         anaobjects.append(sigback)
 
