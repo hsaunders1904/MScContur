@@ -28,7 +28,7 @@ parser.add_option("-v", "--version",
                   action="store_true", dest="printVersion", 
                   default=False, help="print version number and exit.")
 #parser.add_option("-g", "--grid", dest="GRID",default=False,
-#                  help="specify a folder containing a structured grid of points to analyize")
+#                  help="specify a folder containing a structured grid of points to analyse")
 parser.add_option("-g", "--grid", action="store_true", dest="GRID", default=False,
                   help="Set this flag to read grids of structured yoda files rather than individual files")
 
@@ -67,11 +67,12 @@ def write_output_grid(gridPoints,group=''):
     print "Writing output map for " + group + " to folder: " + opts.ANALYSISDIR
 
 
-def analyiseYODA(yodafile):
+def analyseYODA(yodafile):
     #For now we strap the basic functionality of analysing a YODA file into a single common function
     #This will be internalised in conturFactory eventually
 
     contur = ct.conturDepot(opts.TESTMETHOD)
+    ct.modeMessage = modeMessage
 
     if not opts.GRID:
         # this is to get the plotting attributes down the line
@@ -184,7 +185,7 @@ if __name__ == "__main__":
                                 print "Model point info ", x, y
 
                                 # Perform analysis
-                                conturDepot = analyiseYODA(yodafile)
+                                conturDepot = analyseYODA(yodafile)
                                 conturDepot.ModelParam1=x
                                 conturDepot.ModelParam2=y
                                 print "conf level is ",conturDepot.conturPoint.CLs
@@ -199,7 +200,7 @@ if __name__ == "__main__":
         # conturFactory should take entire yoda files/ list of yoda file as initialization argument but for now loop over aos in yodafile
         for infile in yodafiles:
 
-            contur=analyiseYODA(infile)
+            contur=analyseYODA(infile)
             # write summary for plotting
             write_output(modeMessage, contur)
     
