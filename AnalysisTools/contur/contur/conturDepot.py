@@ -13,6 +13,7 @@ class conturDepot(object):
     The sortedPoints and ctPt variables would then be inside dictionaries with a key for each parameter space
     point
     """
+    modeMessage="Statisical test not known"
 
     def __init__(self, TestMethod):
         self.masterDict = {}
@@ -24,6 +25,7 @@ class conturDepot(object):
         #End goal is to make this object hold all parameter space points for an individual map
         self.ModelParam1=0.0
         self.ModelParam2=0.0
+        self.modeMessage="Statisical test not known"
 
     def addPoint(self, ctPt):
         """Add all valid contur points to be sorted from an input file"""

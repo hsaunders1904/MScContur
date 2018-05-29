@@ -69,7 +69,9 @@ class conturPoint(object):
             raise AssertionError("Must be a conturPoint to add to conturPoint")
         for k,v in point.counts.iteritems():
             self.counts[k].extend(v)
-        #self._tags.extend(point.tags)
+
+         #print "conturPoint.addPoint:",point.pools
+         #self._pools = self._pools + " , " + point.pools
 
 
     @property

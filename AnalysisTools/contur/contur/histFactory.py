@@ -166,8 +166,13 @@ class histFactory(object):
 
     def doPlot(self):
         """Public member function to build yoda plot members for interactive runs"""
-        self._bgplot = self._background.clone()
-        self._refplot = self._ref.clone()
+        try:
+            self._bgplot = self._background.clone()
+            self._refplot = self._ref.clone()
+        except:
+            print "No reference data found for histo: " + self.signal.path
+
+
         # build stack for plotting, for histogrammed data
         if self._has1Dhisto:
             self.__buildStack()
