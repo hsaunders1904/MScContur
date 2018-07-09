@@ -6,3 +6,4 @@ syntax: glob
 *.pyd
 *.bak
 *.idea*
+*sync_files.sh
