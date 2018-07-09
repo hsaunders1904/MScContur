@@ -6,7 +6,6 @@ from contur import TestingFunctions as ctr
 import contur.Utils as util
 
 
-
 class conturPoint(object):
     """ A container for counts derived from an observable.
 
@@ -19,19 +18,19 @@ class conturPoint(object):
     """
 
     members = ["s", "sErr", "bg", "bgErr", "meas", "measErr", "isRatio", "kev"]
-    def __init__(self):
-        #self.counts = dict.fromkeys(self.members,[])
-        #self.counts=defaultdict(self.members)
-        self.counts={}
-        for m in self.members:
-            self.counts[m]=[]
-        self.CLs=0.0
-        self.p_b=0.0
-        self.p_sb=0.0
-        self._tags=''
-        self._pools=''
-        self._subpool=''
 
+    def __init__(self):
+        # self.counts = dict.fromkeys(self.members,[])
+        # self.counts=defaultdict(self.members)
+        self.counts = {}
+        for m in self.members:
+            self.counts[m] = []
+        self.CLs = 0.0
+        self.p_b = 0.0
+        self.p_sb = 0.0
+        self._tags = ''
+        self._pools = ''
+        self._subpool = ''
 
     def calcCLs(self, TestMethod):
         """Recalculate CLs of this conturPoint
@@ -39,11 +38,12 @@ class conturPoint(object):
         Currently only operates under asymptotic approximation and assumes all observables added to the point
         are uncorrelated
         """
-        #check points is well formed (equal arg lengths)
+        # check points is well formed (equal arg lengths)
         if not self.__checkConsistency():
-            self.CLs=0.0
+            self.CLs = 0.0
         else:
-            self.CLs, self.p_sb, self.p_b = ctr.confLevel(self.s, self.bg, self.meas, self.sErr, self.bgErr, self.measErr, self.isRatio, self.kev, 1, TestMethod)
+            self.CLs, self.p_sb, self.p_b = ctr.confLevel(self.s, self.bg, self.meas, self.sErr, self.bgErr,
+                                                          self.measErr, self.isRatio, self.kev, 1, TestMethod)
 
     def __checkConsistency(self):
         """Internal function to check if the point is well formed
@@ -52,35 +52,35 @@ class conturPoint(object):
         """
 
         ref = len(self.counts[self.counts.keys()[0]])
-        for k,v in self.counts.iteritems():
-            if len(v) !=ref:
+        for k, v in self.counts.iteritems():
+            if len(v) != ref:
                 raise AssertionError("Unequal lengths of arguments in conturpoint")
         if ref == 0:
             return False
         else:
             return True
 
-    def addPoint(self,point):
+    def addPoint(self, point):
         """Placeholder function to replicate functionality of combining observables
 
         Appends another conturPoint to this instance, errors if types don't match
         """
         if point.__class__ != conturPoint:
             raise AssertionError("Must be a conturPoint to add to conturPoint")
-        for k,v in point.counts.iteritems():
+        for k, v in point.counts.iteritems():
             self.counts[k].extend(v)
 
-         #print "conturPoint.addPoint:",point.pools
-         #self._pools = self._pools + " , " + point.pools
-
+        # print "conturPoint.addPoint:",point.pools
+        # self._pools = self._pools + " , " + point.pools
 
     @property
     def s(self):
         """Signal Count
         """
         return self.counts["s"]
+
     @s.setter
-    def s(self,value):
+    def s(self, value):
         """Set the Signal count
 
         Always appends a new value to the stored list, deleting/modifying values done manually
@@ -96,6 +96,7 @@ class conturPoint(object):
         to data luminosity
         """
         return self.counts["sErr"]
+
     @sErr.setter
     def sErr(self, value):
         """Set the MC error on signal
@@ -115,19 +116,20 @@ class conturPoint(object):
         TODO: check the way it is actually used in TesterFunctions.
         """
         return self.counts["kev"]
+
     @kev.setter
-    def kev(self,value):
+    def kev(self, value):
         """Set the number of generted events
 
         """
         self.counts["kev"].append(value)
-
 
     @property
     def bg(self):
         """Background count
         """
         return self.counts["bg"]
+
     @bg.setter
     def bg(self, value):
         """Set the Background count
@@ -142,6 +144,7 @@ class conturPoint(object):
         """Background error
         """
         return self.counts["bgErr"]
+
     @bgErr.setter
     def bgErr(self, value):
         """Set the Background error
@@ -156,6 +159,7 @@ class conturPoint(object):
         """Observed count
         """
         return self.counts["meas"]
+
     @meas.setter
     def meas(self, value):
         """Set the Observed count
@@ -170,6 +174,7 @@ class conturPoint(object):
         """Observed count
         """
         return self.counts["measErr"]
+
     @measErr.setter
     def measErr(self, value):
         """Set the Observed count
@@ -184,6 +189,7 @@ class conturPoint(object):
         """is this a ratio (true) or a xsec (false)
         """
         return self.counts["isRatio"]
+
     @isRatio.setter
     def isRatio(self, value):
         """Set the isRatio
@@ -200,14 +206,15 @@ class conturPoint(object):
         Use the Rivet analysis ID to define the origin of the observables
         """
         return self._tags
+
     @tags.setter
-    def tags(self,value):
+    def tags(self, value):
         """Set the analysis tag
 
         In contrast to the observable this is a set variable, if combinations of multiple analyses are made this
         should be updated
         """
-        self._tags=value
+        self._tags = value
 
     @property
     def pools(self):
@@ -216,13 +223,14 @@ class conturPoint(object):
         Analysis pool defines statistically correlated (overlapping datasets) groupings of analysis
         """
         return self._pools
+
     @pools.setter
-    def pools(self,value):
+    def pools(self, value):
         """Set the analysis pool
 
         This is automatically set when reading in a histogram, and is used for combinations
         """
-        self._pools=value
+        self._pools = value
 
     @property
     def subpools(self):
@@ -232,15 +240,13 @@ class conturPoint(object):
         will only be available on the conturPoint but won't be stored in a bucket
         """
         return self._subpool
+
     @subpools.setter
-    def subpools(self,value):
+    def subpools(self, value):
         """Set the analysis subpool
 
         """
-        self._subpool=value
-
-
-
+        self._subpool = value
 
     def __repr__(self):
         return repr(self.counts)

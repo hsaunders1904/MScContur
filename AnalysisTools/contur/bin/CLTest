@@ -5,13 +5,13 @@ import os
 from optparse import OptionParser
 
 ## this does appear to work
-parser = OptionParser(usage = __doc__)
-parser.add_option("-o", "--outputdir", dest = "OUTPUTDIR",
-  default = "plots", help = "Specify output directory for output plots.")
+parser = OptionParser(usage=__doc__)
+parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
+                  default="plots", help="Specify output directory for output plots.")
 
 ## this doesn't work - getting over written somewhere
-parser.add_option("-a", "--analysisdir", dest = "ANALYSISDIR",
-  default = "ANALYSIS", help = "Output directory for analysis cards.")
+parser.add_option("-a", "--analysisdir", dest="ANALYSISDIR",
+                  default="ANALYSIS", help="Output directory for analysis cards.")
 
 # Command line parsing
 opts, _ = parser.parse_args()
@@ -32,7 +32,7 @@ for root, dirs, files in os.walk('.'):
                 splitname = name.strip('.yoda').split('_')
                 x = splitname[1]
                 y = splitname[3]
-                _, _ = int(x), int(y) # check we have integers
+                _, _ = int(x), int(y)  # check we have integers
             except (IndexError, ValueError):
                 print 'Yoda file does not appear to have the correct naming style', name
                 continue

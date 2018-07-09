@@ -9,6 +9,7 @@ import errno
 import time
 import subprocess
 
+
 def mkdir_p(path):
     try:
         os.makedirs(path)
@@ -19,6 +20,7 @@ def mkdir_p(path):
             raise
 
 import shutil
+
 
 def copytree(src, dst, symlinks=False, ignore=None):
     if not os.path.exists(dst):
@@ -38,17 +40,16 @@ k=0
 
 # You should check these are executing the correct scripts. Especially the setupContur script
 # should probably be one in your own area.
-HerwigSetup="source /unix/cedar/software/sl6/Herwig-Release-fix/setupEnv.sh"
-ConturSetup="source $HOME/contur/setupContur.sh"
+HerwigSetup="source /usr/share/Herwig/SetupEnv.sh"
+ConturSetup="source $HOME/Contur-Project/contur/setupContur.sh"
 
-for i in range(100,3100,100):
-    for j in range(100,2100,100):
-        modelpath = 'mY_'+ str(i) + '_mX_' + str(j)
-        copytree(pwd + '/GridPack',modelpath)
-        #mkdir_p(str(modelpath))
+for i in range(100, 600, 100):
+    for j in range(100, 600, 100):
+        modelpath = 'mY_' + str(i) + '_mX_' + str(j)
+        copytree(pwd + '/GridPack', modelpath)
+        # mkdir_p(str(modelpath))
         HerwigString = ''
-        HC=open('HerwigCommandHad', 'r')
-
+        HC = open('HerwigCommandHad', 'r')
         HerwigString += 'read FRModel.model \n'
         HerwigString += 'set /Herwig/FRModel/Particles/Y1:NominalMass ' + str(i) + '.*GeV \n'
         HerwigString += 'set /Herwig/FRModel/Particles/Xm:NominalMass ' + str(j) + '.*GeV \n'
@@ -61,20 +62,22 @@ for i in range(100,3100,100):
         subprocess.call([HerwigSetup], shell=True)
         subprocess.call([ConturSetup], shell=True)
         os.chdir(modelpath)
-        subprocess.call(['Herwig read LHC.in'], shell=True)
+        # subprocess.call(['Herwig read LHC.in'], shell=True)
         batch_command = ''
         batch_command += HerwigSetup + '; '
-        batch_command += 'cd ' + pwd + '/' + modelpath +'; '
+        batch_command += 'cd ' + pwd + '/' + modelpath + '; '
         batch_command += ConturSetup + "; "
         if i < 600:
             numEv=30000
         else:
             numEv=15000
-        batch_command += 'Herwig run --seed='+str(i)+str(j)+' --tag='+str(modelpath)+' --jobs=2 --numevents='+ str(numEv) +' LHC.run;'
+        batch_command += ('Herwig run --seed='+str(i)+str(j) +
+                          ' --tag=' + str(modelpath) +
+                          ' --jobs=2 --numevents=' + str(numEv) +
+                          ' LHC.run;')
         batch_filename = str(modelpath)+'.sh'
         batch_submit = open(batch_filename, 'w')
         batch_submit.write(batch_command)
         batch_submit.close()
-        subprocess.call([ "qsub -q medium " + batch_filename],shell=True )
+        # subprocess.call(["qsub -q medium " + batch_filename], shell=True)
         os.chdir(pwd)
-

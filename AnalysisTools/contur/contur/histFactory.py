@@ -12,6 +12,7 @@ REFLOAD = False
 refObj = {}
 scaledYet = {}
 
+
 def init_ref():
     """Function to load all reference data and theory *.yoda data"""
     refFiles = []
@@ -25,10 +26,10 @@ def init_ref():
         for f in fileList:
             aos = yoda.read(f)
             for path, ao in aos.iteritems():
-                if ao.type!="Scatter2D":
+                if ao.type != "Scatter2D":
                     ao = yoda.mkScatter(ao)
-                if ao.type=="Scatter1D":
-                     ao = util.mkScatter2D(ao)
+                if ao.type == "Scatter1D":
+                    ao = util.mkScatter2D(ao)
                 if path.startswith('/REF/'):
                     refObj[path] = ao
                     scaledYet[path] = False
@@ -36,9 +37,9 @@ def init_ref():
                     refObj[path] = ao
                     scaledYet[path] = False
 
-
     global REFLOAD
     REFLOAD = True
+
 
 class histFactory(object):
     """Processes and decorates yoda AnalysisObjects to a testable format, filling candidate conturPoints
@@ -58,8 +59,8 @@ class histFactory(object):
         self.xsec = xSec
         self.nev = nEv
         # Overall effective integrated luminosity may be recalculated plot by plot because units change.
-        self._mcLumi = float(nEv.numEntries())/xSec.point(0).x
- 
+        self._mcLumi = float(nEv.numEntries()) / xSec.point(0).x
+
         # Initialize the public members we always want to access
         self._has1Dhisto = False
         self._background = False
@@ -85,11 +86,10 @@ class histFactory(object):
         self.__getMC()
         self.__getisScaled()
 
-
         # Determine the type of object we have, and build a 2D scatter from it if it is not one already
         # Also recalculate MCLumi, and scalefactor, if appropriate
         if self.signal.type == 'Histo1D' or self.signal.type == 'Profile1D' or self.signal.type == 'Counter':
-            
+
             self._has1Dhisto = True
 
             if self._isScaled:
@@ -97,26 +97,26 @@ class histFactory(object):
                 # (this is just the integrated cross section associated with the plot)
                 try:
                     self._scaleFactorSig = (
-                        float(self.xsec.points[0].x)) * float(self.signal.numEntries()) / float(self.nev.numEntries())
+                                               float(self.xsec.points[0].x)) * float(self.signal.numEntries()) / float(
+                        self.nev.numEntries())
                 except:
                     print "missing info for scalefactor calc"
 
             # effective MClumi has to be calculated plot-by-plot because units change and some plots are symmetrised (in which
             # there will be a factor of two between this the mclumi from (number of generated events/xsec) )
             if self.signal.sumW() != 0.0:
-                self._mcLumi = float(self.signal.numEntries()) / (float(self.signal.sumW())*self._scaleFactorSig)
+                self._mcLumi = float(self.signal.numEntries()) / (float(self.signal.sumW()) * self._scaleFactorSig)
 
             self.signal = yoda.mkScatter(self.signal)
             # Make sure it is actually a Scatter2D - mkScatter makes Scatter1D from counter.   
             if self.signal.type == 'Scatter1D':
-                self.signal = util.mkScatter2D(self.signal) 
+                self.signal = util.mkScatter2D(self.signal)
 
-            
         if not GridMode:
-        #Public member function to build plots needed for direct histogram visualisation
-        #avoid calling YODA.clone() unless we have to
-        #Must be called before scaling.
-            self.doPlot()            
+            # Public member function to build plots needed for direct histogram visualisation
+            # avoid calling YODA.clone() unless we have to
+            # Must be called before scaling.
+            self.doPlot()
 
         if self._ref:
             # don't scale histograms that came in as 2D scatters
@@ -124,9 +124,8 @@ class histFactory(object):
                 self.__doScale()
             self.__fillPoints()
 
-           #print "initialised histfactory:", self._ref.path 
-           #print self._ref.points[0], self.background.points[0]
-
+        # print "initialised histfactory:", self._ref.path
+        # print self._ref.points[0], self.background.points[0]
 
     def __getisScaled(self):
         """Check if the data to compare to is normalized
@@ -148,7 +147,7 @@ class histFactory(object):
         if not REFLOAD:
             init_ref()
 
-        gotTh = False    
+        gotTh = False
         if "T" in self._testMethod:
 
             for path, ao in refObj.iteritems():
@@ -157,12 +156,11 @@ class histFactory(object):
                     print "got theory", path
                     self._background = ao
 
-        if not gotTh:            
+        if not gotTh:
             try:
                 self._background = self._ref.clone()
             except:
                 print "No reference data found for histo: " + self.signal.path
-
 
     def doPlot(self):
         """Public member function to build yoda plot members for interactive runs"""
@@ -171,7 +169,6 @@ class histFactory(object):
             self._refplot = self._ref.clone()
         except:
             print "No reference data found for histo: " + self.signal.path
-
 
         # build stack for plotting, for histogrammed data
         if self._has1Dhisto:
@@ -199,10 +196,13 @@ class histFactory(object):
             assert self._stack.numPoints == self._background.numPoints
 
             for i in range(0, len(self._stack.points)):
-                self._stack.points[i].y = self._stack.points[i].y*self._scaleFactorSig/self._scaleFactorData + self._background.points[i].y
+                self._stack.points[i].y = self._stack.points[i].y * self._scaleFactorSig / self._scaleFactorData + \
+                                          self._background.points[i].y
                 self._stack.points[i].yErrs = (
-                    self._stack.points[i].yErrs[0]*self._scaleFactorSig/self._scaleFactorData + self._background.points[i].yErrs[0], 
-                    self._stack.points[i].yErrs[1]*self._scaleFactorSig/self._scaleFactorData + self._background.points[i].yErrs[1])
+                    self._stack.points[i].yErrs[0] * self._scaleFactorSig / self._scaleFactorData +
+                    self._background.points[i].yErrs[0],
+                    self._stack.points[i].yErrs[1] * self._scaleFactorSig / self._scaleFactorData +
+                    self._background.points[i].yErrs[1])
 
     def __doScale(self):
         """Perform the normalisation of the signal, reference and background data
@@ -227,31 +227,33 @@ class histFactory(object):
             # a term due the stat uncertainty on the number of events predicted for this LHC lumi.
             # At this point, y has been scaled to be number of events, so calculate this here (Poisson) and add it in quadrature
             statErr2 = np.absolute(self.signal.points[i].y)
-            yErr0 = np.sqrt( (self.signal.points[i].yErrs[0] * self._lumi * self._scaleFactorSig * binWidth)**2 + statErr2 ) 
-            yErr1 = np.sqrt( (self.signal.points[i].yErrs[1] * self._lumi * self._scaleFactorSig * binWidth)**2 + statErr2 ) 
-            self.signal.points[i].yErrs = ( yErr0, yErr1 )
+            yErr0 = np.sqrt(
+                (self.signal.points[i].yErrs[0] * self._lumi * self._scaleFactorSig * binWidth) ** 2 + statErr2)
+            yErr1 = np.sqrt(
+                (self.signal.points[i].yErrs[1] * self._lumi * self._scaleFactorSig * binWidth) ** 2 + statErr2)
+            self.signal.points[i].yErrs = (yErr0, yErr1)
 
         # for grid running - only scale the REF/Background data once!    
-        global scaledYet 
+        global scaledYet
         if not scaledYet[self._ref.path]:
             for i in range(0, len(self._ref.points)):
                 binWidth = self._ref.points[i].xMax - self._ref.points[i].xMin
-                self._ref.points[i].y = self._ref.points[i].y * self._lumi * self._scaleFactorData * binWidth                
+                self._ref.points[i].y = self._ref.points[i].y * self._lumi * self._scaleFactorData * binWidth
                 self._ref.points[i].yErrs = (
                     self._ref.points[i].yErrs[0] * self._lumi * self._scaleFactorData * binWidth,
                     self._ref.points[i].yErrs[1] * self._lumi * self._scaleFactorData * binWidth
-                    )
+                )
 
             for i in range(0, len(self._background.points)):
                 # background should have a separate scalefactor later
                 binWidth = self._background.points[i].xMax - self._background.points[i].xMin
-                self._background.points[i].y = self._background.points[i].y * self._lumi * self._scaleFactorData * binWidth                
+                self._background.points[i].y = self._background.points[
+                                                   i].y * self._lumi * self._scaleFactorData * binWidth
                 self._background.points[i].yErrs = (
                     self._background.points[i].yErrs[0] * self._lumi * self._scaleFactorData * binWidth,
                     self._background.points[i].yErrs[1] * self._lumi * self._scaleFactorData * binWidth
-                    )
+                )
         scaledYet[self._ref.path] = True
-
 
     def __fillPoints(self):
         """Internal function to fill conturPoints list
@@ -270,7 +272,7 @@ class histFactory(object):
         for i in range(0, len(self.signal.points)):
 
             # don't trust unfolded zero (or less!) bins                    
-            if self._ref.points[i].y<=0:
+            if self._ref.points[i].y <= 0:
                 continue
 
             ctrPt = conturPoint()
@@ -286,7 +288,7 @@ class histFactory(object):
                     ctrPt.bgErr = self._background.points[i].yErrs[1]
                 else:
                     ctrPt.bgErr = 0.0
-            else:    
+            else:
                 # Not using theory
                 ctrPt.bg = self._ref.points[i].y
                 if "D" in self._testMethod:
@@ -294,8 +296,7 @@ class histFactory(object):
                 else:
                     ctrPt.bgErr = 0.0
 
-
-            ctrPt.kev  = self.signal.points[i].y*self._mcLumi/self._lumi
+            ctrPt.kev = self.signal.points[i].y * self._mcLumi / self._lumi
 
             if self._has1Dhisto:
                 ctrPt.isRatio = False
@@ -303,15 +304,15 @@ class histFactory(object):
                 ctrPt.isRatio = True
 
             ctrPt.calcCLs(self._testMethod)
-            
+
             ctrPt.tags = self.signal.path
             ctrPt.pools = self.pool
             ctrPt.subpools = self.subpool
             self._conturPoints.append(ctrPt)
             if ctrPt.CLs > clmax:
                 clmax = ctrPt.CLs
-                self._maxcl = len(self._conturPoints)-1
-                self._maxbin = i+1
+                self._maxcl = len(self._conturPoints) - 1
+                self._maxbin = i + 1
 
     @property
     def maxcl(self):
@@ -392,4 +393,3 @@ class histFactory(object):
     def scaleMC(self):
         """Separate MC ScaleFactor"""
         return self._stack
-

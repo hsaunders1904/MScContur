@@ -4,11 +4,11 @@ import CL
 import sys
 from optparse import OptionParser
 
-parser = OptionParser(usage = __doc__)
-parser.add_option("-o", "--outputdir", dest = "OUTPUTDIR",
-  default = "plots", help = "Specify output directory for output plots.")
-parser.add_option("-a", "--analysisdir", dest = "ANALYSISDIR",
-  default = "ANALYSIS", help = "Output directory for analysis cards.")
+parser = OptionParser(usage=__doc__)
+parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
+                  default="plots", help="Specify output directory for output plots.")
+parser.add_option("-a", "--analysisdir", dest="ANALYSISDIR",
+                  default="ANALYSIS", help="Output directory for analysis cards.")
 
 # Command line parsing
 opts, yodafiles = parser.parse_args()
@@ -16,7 +16,7 @@ opts, yodafiles = parser.parse_args()
 print "CLTestSingle is now deprecated and will be deleted at some point."
 print "-----------------------------------------------------------------"
 print "Please use"
-print "$  contur <YODAFILE>" 
+print "$  contur <YODAFILE>"
 print "which gives the same funcitonality."
 print "-----------------------------------------------------------------"
 
@@ -24,8 +24,8 @@ if not yodafiles:
     sys.stderr.write("Error: You need to specify some YODA files to be plotted!\n")
     sys.exit(1)
 
-for infile in yodafiles: 
-    mapPoints = CL.contur_analysis(infile, opts) # Performing the analysis
+for infile in yodafiles:
+    mapPoints = CL.contur_analysis(infile, opts)  # Performing the analysis
     CL.output_single(mapPoints, opts)  # Outputing the results
 
 print "Run finished, analysis output to ", opts.ANALYSISDIR, " folder"

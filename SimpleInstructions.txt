@@ -6,7 +6,7 @@ source /unix/cedar/software/sl6/Herwig-7.1.0/setupEnv.sh
 #checkout code and source setup file in top level of the repo
 source setupContur.sh
 
-
+PC 176
 -----------------------------------------
 
 # Also need to build the modified analyses:
@@ -21,7 +21,7 @@ chmod +x buildrivet  # only need to do this once after checkout from repo.
 
 cd $CONTURMODULEDIR
 make
-
+cd 
 # if the make step does not work you may need to install sqlite3
 # and re-run make again
 # Note also that if you run CLTest/CLTestSingle before making the DB, sqlite will

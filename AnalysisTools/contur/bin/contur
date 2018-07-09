@@ -4,8 +4,6 @@ import contur as ct
 # this is just used to check if a histo is a valid contur histo, this should be factored into histFact and taken out
 from contur import TestingFunctions as tf
 
-
-
 from optparse import OptionParser
 import contur.Utils as util
 import sys, os, pickle
@@ -16,18 +14,22 @@ parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
                   default="plots", help="Specify output directory for output plots.")
 parser.add_option("-a", "--analysisdir", dest="ANALYSISDIR",
                   default="ANALYSIS", help="Output directory for analysis cards.")
-#parser.add_option("-s", "--single",
+# parser.add_option("-s", "--single",
 #                  action="store_false", dest="BATCHMODE", 
 #                  help="single run - more output")
 parser.add_option("-n", "--nostack",
                   action="store_true", dest="NOSTACK", default=False,
                   help="in single run mode, do not stack the histograms in dat file output")
 parser.add_option("-t", "--testmethod", dest="TESTMETHOD",
-                  default="LL", help="Statistical test to apply. LL=log likelihood/poisson, LLA=log liklihood/poison asimov, CS=chi2 \n (All previous assume background=data, background error=0), CSD=as CS but assuming background error=data error CST=chi2 using theory where available CSDT=chi2 using theory where available, otherwise background and error taken from measurement.")
-parser.add_option("-v", "--version", 
-                  action="store_true", dest="printVersion", 
+                  default="LL",
+                  help=("Statistical test to apply. LL=log likelihood/poisson, LLA=log liklihood/poison asimov, CS=chi2"
+                        "\n (All previous assume background=data, background error=0), CSD=as CS but assuming "
+                        "background error=data error CST=chi2 using theory where available CSDT=chi2 using theory where"
+                        " available, otherwise background and error taken from measurement."))
+parser.add_option("-v", "--version",
+                  action="store_true", dest="printVersion",
                   default=False, help="print version number and exit.")
-#parser.add_option("-g", "--grid", dest="GRID",default=False,
+# parser.add_option("-g", "--grid", dest="GRID",default=False,
 #                  help="specify a folder containing a structured grid of points to analyse")
 parser.add_option("-g", "--grid", action="store_true", dest="GRID", default=False,
                   help="Set this flag to read grids of structured yoda files rather than individual files")
@@ -37,14 +39,18 @@ def write_output(message, conturFactory):
     """Temporary function to mimic output of 1 single analysis"""
     util.mkoutdir(opts.ANALYSISDIR)
     sumfn = open(opts.ANALYSISDIR + "/Summary.txt", 'w')
-    result = "Combined CLs naive exclusion for these plots is %.1f %% \n" % (conturFactory.conturPoint.CLs *100.0)
-    if not 'LL' in opts.TESTMETHOD and opts.TESTMETHOD != 'MC': 
-        result += "Probability of SM only giving this agreement or worse assuming    SM = %.4f \n" % (conturFactory.conturPoint.p_b) 
-        result += "Probability of SM+BSM giving this agreement or worse assuming SM+BSM = %.4f \n" % (conturFactory.conturPoint.p_sb) 
-        if conturFactory.conturPoint.p_b+conturFactory.conturPoint.p_sb > 0:
-            result += "Compared to the SM, this model is disfavoured at %.2f %% cl \n" % (100.0*conturFactory.conturPoint.p_b/(conturFactory.conturPoint.p_b+conturFactory.conturPoint.p_sb))
+    result = "Combined CLs naive exclusion for these plots is %.1f %% \n" % (conturFactory.conturPoint.CLs * 100.0)
+    if not 'LL' in opts.TESTMETHOD and opts.TESTMETHOD != 'MC':
+        result += "Probability of SM only giving this agreement or worse assuming    SM = %.4f \n" % (
+            conturFactory.conturPoint.p_b)
+        result += "Probability of SM+BSM giving this agreement or worse assuming SM+BSM = %.4f \n" % (
+            conturFactory.conturPoint.p_sb)
+        if conturFactory.conturPoint.p_b + conturFactory.conturPoint.p_sb > 0:
+            result += "Compared to the SM, this model is disfavoured at %.2f %% cl \n" % (
+                        100.0 * conturFactory.conturPoint.p_b / (
+                            conturFactory.conturPoint.p_b + conturFactory.conturPoint.p_sb))
 
-    sumfn.write(message+"\n"+result+"\n")
+    sumfn.write(message + "\n" + result + "\n")
     sumfn.write("pools")
     for x in conturFactory.sortedPoints:
         sumfn.write("\n" + x.pools)
@@ -53,23 +59,24 @@ def write_output(message, conturFactory):
     print result
     sumfn.close()
     for x in conturFactory.sortedPoints:
-#   does anyone care about these dat files anymore, especially if we have the pickle dump? 
+        #   does anyone care about these dat files anymore, especially if we have the pickle dump?
         util.writeOutput(x.__repr__(), x.pools + ".dat")
         with open(opts.ANALYSISDIR + "/" + x.pools + '.map', 'w') as f:
             pickle.dump(x, f)
     with open(opts.ANALYSISDIR + "/combined.map", 'w') as f:
         pickle.dump(conturFactory.conturPoint, f)
 
-def write_output_grid(gridPoints,group=''):
+
+def write_output_grid(gridPoints, group=''):
     util.mkoutdir(opts.ANALYSISDIR)
     with open(opts.ANALYSISDIR + "/" + group + '.map', 'w') as f:
-            pickle.dump(gridPoints, f)
+        pickle.dump(gridPoints, f)
     print "Writing output map for " + group + " to folder: " + opts.ANALYSISDIR
 
 
 def analyseYODA(yodafile):
-    #For now we strap the basic functionality of analysing a YODA file into a single common function
-    #This will be internalised in conturFactory eventually
+    # For now we strap the basic functionality of analysing a YODA file into a single common function
+    # This will be internalised in conturFactory eventually
 
     contur = ct.conturDepot(opts.TESTMETHOD)
     ct.modeMessage = modeMessage
@@ -79,7 +86,6 @@ def analyseYODA(yodafile):
         plotdirs = [os.path.abspath(os.path.dirname(f)) for f in infile]
         plotparser = util.mkStdPlotParser(plotdirs, )
 
-
     mchistos, xsec, Nev = util.getHistos(yodafile)
     print "Monte Carlo Luminosity generated is %.1f inverse pb" % (float(Nev.numEntries()) / xsec.point(0).x)
 
@@ -88,19 +94,21 @@ def analyseYODA(yodafile):
     for k, v in mchistos.iteritems():
         for k2, v2 in v.iteritems():
 
-            # this is just used to check if a histo is a valid contur histo, this should be factored into histFact and taken out as a check here
+            # this is just used to check if a histo is a valid contur histo, this should be factored into histFact and
+            # taken out as a check here
 
             if tf.validHisto(v2.path):
 
-                 #if 'ATLAS_2012_I1203852' not in v2.path:
-                   #if "ATLAS_2016_I1492320" not in v2.path and "ATLAS_2016_I1467454_MU" not in v2.path:
-                       #continue
+                # if 'ATLAS_2012_I1203852' not in v2.path:
+                # if "ATLAS_2016_I1492320" not in v2.path and "ATLAS_2016_I1467454_MU" not in v2.path:
+                # continue
 
                 # Conturfact should also hold xsec and Nev eventually
 
                 histo = ct.histFactory(v2, xsec, Nev, opts.TESTMETHOD, opts.GRID)
 
-                # sometimes the list of conturPoints made by hist fact is empty (no signal in any bin), this exception should be properly handled inside histFact
+                # sometimes the list of conturPoints made by hist fact is empty (no signal in any bin), this exception
+                # should be properly handled inside histFact
 
                 # at this point, if we want to see the histogram, we need to write its .dat file.
                 if not opts.GRID:
@@ -111,7 +119,8 @@ def analyseYODA(yodafile):
                     contur.addPoint(histo.conturPoints[histo.maxcl])
 
     # once we have every point from a given yoda, call the function to sort this
-    # eventually conturFact should know which model point each yoda is from, then multiple yodas covering different pools can be pushed in at the same time
+    # eventually conturFact should know which model point each yoda is from, then multiple yodas covering different
+    # pools can be pushed in at the same time
     # and eventually construct a point for each parameter space point, for now assume a single input yoda to test
 
     contur.sortPoints()
@@ -120,11 +129,9 @@ def analyseYODA(yodafile):
     return contur
 
 
-
-
 if __name__ == "__main__":
 
-# Command line parsing
+    # Command line parsing
     opts, yodafiles = parser.parse_args()
 
     version = " Beta pre-release"
@@ -137,21 +144,26 @@ if __name__ == "__main__":
             sys.stderr.write("Error: You need to specify some YODA files to be analysed!\n")
             sys.exit(1)
 
-
     util.writeBanner()
 
     if opts.TESTMETHOD == 'CS':
-        modeMessage = "Using Chi2 test method, theory=data, no theory uncertainty"
+        modeMessage = ("Using Chi2 test method, theory=data, no theory "
+                       "uncertainty")
     elif opts.TESTMETHOD == 'CSD':
-        modeMessage = "Using Chi2 test method, no theory prediction, theory error=data error"
+        modeMessage = ("Using Chi2 test method, no theory prediction, theory "
+                       "error=data error")
     elif opts.TESTMETHOD == 'CST':
-        modeMessage = "Using Chi2 test method, with theory predictions where available, else no theory error"
+        modeMessage =("Using Chi2 test method, with theory predictions where "
+                      "available, else no theory error")
     elif opts.TESTMETHOD == 'CSDT' or opts.TESTMETHOD == 'CSTD':
-        modeMessage = "Using Chi2 test method, theory predictions where available, else theory=data, theory error=data error"
+        modeMessage = ("Using Chi2 test method, theory predictions where "
+                       "available, else theory=data, theory error=data error")
     elif opts.TESTMETHOD == 'LL':
-        modeMessage = "Using Log Likelihood (Poisson) test method, theory=data, no theory uncertainty"
+        modeMessage = ("Using Log Likelihood (Poisson) test method, theory="
+                       "data, no theory uncertainty")
     elif opts.TESTMETHOD == 'LLA':
-        modeMessage = "Using Log Likelihood (Azimov) test method, theory=data, no theory uncertainty"
+        modeMessage = ("Using Log Likelihood (Azimov) test method, theory="
+                       "data, no theory uncertainty")
     else:
         print "Unknown test method: ", opts.TESTMETHOD
         sys.exit(1)
@@ -159,48 +171,48 @@ if __name__ == "__main__":
     print modeMessage
 
     # Initialise a conturDepot
-    #contur = ct.conturDepot(opts.TESTMETHOD)
+    # contur = ct.conturDepot(opts.TESTMETHOD)
 
     if opts.GRID:
-        #do a grid based scan
+        # do a grid based scan
         for dirs in yodafiles:
-                    gridPoints=[]
-                    for rt,drs,fls in os.walk(os.path.join(dirs)):
-                        for name in fls:
-                            fileliststatic = []
-                            if '.yoda' in name and 'LHC' not in name and 'plot' not in name:
-                                yodafile = os.path.join(rt, name)
-                                fileliststatic = str(yodafile)
-                                try:
-                                    # TODO use regex instead
-                                    splitname = name.strip('.yoda').split('_')
-                                    x = splitname[1]
-                                    y = splitname[3]
-                                    _, _ = int(x), int(y)  # check we have integers
-                                except (IndexError, ValueError):
-                                    print 'Yoda file does not appear to have the correct naming style', name
-                                    continue
+            gridPoints = []
+            for rt, drs, fls in os.walk(os.path.join(dirs)):
+                for name in fls:
+                    fileliststatic = []
+                    if '.yoda' in name and 'LHC' not in name and 'plot' not in name:
+                        yodafile = os.path.join(rt, name)
+                        fileliststatic = str(yodafile)
+                        try:
+                            # TODO use regex instead
+                            splitname = name.strip('.yoda').split('_')
+                            x = splitname[1]
+                            y = splitname[3]
+                            _, _ = int(x), int(y)  # check we have integers
+                        except (IndexError, ValueError):
+                            print('Yoda file does not appear to have the '
+                                  'correct naming style', name)
+                            continue
 
-                                print "Found valid yoda file", yodafile.strip('./')
-                                print "Model point info ", x, y
+                        print "Found valid yoda file", yodafile.strip('./')
+                        print "Model point info ", x, y
 
-                                # Perform analysis
-                                conturDepot = analyseYODA(yodafile)
-                                conturDepot.ModelParam1=x
-                                conturDepot.ModelParam2=y
-                                print "conf level is ",conturDepot.conturPoint.CLs
-                                gridPoints.append(conturDepot)
- #                               masterDict = CL.grid_add_to_dict(masterDict, mapPoints)
-                            else:
-                                continue
-                    #Write output of grid Point
-                    write_output_grid(gridPoints,group=os.path.basename(dirs))
+                        # Perform analysis
+                        conturDepot = analyseYODA(yodafile)
+                        conturDepot.ModelParam1 = x
+                        conturDepot.ModelParam2 = y
+                        print "conf level is ", conturDepot.conturPoint.CLs
+                        gridPoints.append(conturDepot)
+                        # masterDict = CL.grid_add_to_dict(masterDict, mapPoints)
+                    else:
+                        continue
+            # Write output of grid Point
+            write_output_grid(gridPoints, group=os.path.basename(dirs))
 
     else:
-        # conturFactory should take entire yoda files/ list of yoda file as initialization argument but for now loop over aos in yodafile
+        # conturFactory should take entire yoda files/ list of yoda file as
+        # initialization argument but for now loop over aos in yodafile
         for infile in yodafiles:
-
-            contur=analyseYODA(infile)
+            contur = analyseYODA(infile)
             # write summary for plotting
             write_output(modeMessage, contur)
-    

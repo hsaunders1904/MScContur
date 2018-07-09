@@ -24,14 +24,15 @@ ENVIRONMENT:
 """
 
 import rivet, sys, os
+
 rivet.util.check_python_version()
 rivet.util.set_process_name(os.path.basename(__file__))
 
 import glob, shutil
-from subprocess import Popen,PIPE
-
+from subprocess import Popen, PIPE
 
 from optparse import OptionParser, OptionGroup
+
 parser = OptionParser(usage=__doc__)
 parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
                   default="./contur-plots", help="directory for Web page output")
@@ -56,12 +57,13 @@ parser.add_option("--pwd", dest="PATH_PWD", action="store_true", default=False,
 
 stygroup = OptionGroup(parser, "Style options")
 stygroup.add_option("-t", "--title", dest="TITLE",
-                    default="Contur Plots: Constraints On New Theories Using Rivet", help="title to be displayed on the main web page")
+                    default="Contur Plots: Constraints On New Theories Using Rivet",
+                    help="title to be displayed on the main web page")
 stygroup.add_option("--reftitle", dest="REFTITLE",
                     default="Data", help="legend entry for reference data")
 stygroup.add_option("--no-plottitle", dest="NOPLOTTITLE", action="store_true",
                     default=False, help="don't show the plot title on the plot "
-                        "(useful when the plot description should only be given in a caption)")
+                                        "(useful when the plot description should only be given in a caption)")
 stygroup.add_option("-s", "--single", dest="SINGLE", action="store_true",
                     default=False, help="display plots on single webpage.")
 stygroup.add_option("--no-ratio", dest="SHOW_RATIO", action="store_false",
@@ -103,28 +105,26 @@ parser.add_option_group(selgroup)
 
 vrbgroup = OptionGroup(parser, "Verbosity control")
 vrbgroup.add_option("-v", "--verbose", help="add extra debug messages", dest="VERBOSE",
-                  action="store_true", default=False)
+                    action="store_true", default=False)
 parser.add_option_group(vrbgroup)
 
 opts, yodafiles = parser.parse_args()
 
-
-## Add pwd to search paths
+# Add pwd to search paths
 if opts.PATH_PWD:
     rivet.addAnalysisLibPath(os.path.abspath("."))
     rivet.addAnalysisDataPath(os.path.abspath("."))
 
-
-## Check that there are some arguments!
+# Check that there are some arguments!
 if not yodafiles:
     print "Error: You need to specify some YODA files to be plotted!"
     sys.exit(1)
 
-
-## Make output directory
+# Make output directory
 if not opts.DRY_RUN:
-    if os.path.exists(opts.OUTPUTDIR) and not os.path.realpath(opts.OUTPUTDIR)==os.getcwd():
+    if os.path.exists(opts.OUTPUTDIR) and not os.path.realpath(opts.OUTPUTDIR) == os.getcwd():
         import shutil
+
         shutil.rmtree(opts.OUTPUTDIR)
     try:
         os.makedirs(opts.OUTPUTDIR)
@@ -132,11 +132,12 @@ if not opts.DRY_RUN:
         print "Error: failed to make new directory '%s'" % opts.OUTPUTDIR
         sys.exit(1)
 
-## Get set of analyses involved in the runs
+# Get set of analyses involved in the runs
 plotarg = None
 analyses = set()
 blocked_analyses = set()
 import yoda
+
 for yodafile in yodafiles:
     if yodafile.startswith("PLOT:"):
         plotarg = yodafile
@@ -150,35 +151,37 @@ for yodafile in yodafiles:
             sys.exit(2)
 
     try:
-        ## Note: we use -m/-M flags here as well as when calling rivet-cmphistos, to potentially speed this initial loading
+        # Note: we use -m/-M flags here as well as when calling rivet-cmphistos, to potentially speed this initial loading
         analysisobjects = yoda.read(yodafilepath, patterns=opts.PATHPATTERNS, unpatterns=opts.PATHUNPATTERNS)
     except IOError, e:
         print "File reading error: ", e.strerror
         sys.exit(1)
 
     for path, ao in analysisobjects.iteritems():
-        ## Make a path object and ensure the path is in standard form
+        # Make a path object and ensure the path is in standard form
         try:
             aop = rivet.AOPath(path)
         except Exception, e:
-            #print e
+            # print e
             print "Found analysis object with non-standard path structure:", path, "... skipping"
             continue
 
-        ## We don't plot data objects with path components hidden by an underscore prefix
+        # We don't plot data objects with path components hidden by an underscore prefix
         if aop.istmp():
             continue
 
-        ## Identify analysis/histo name parts
+        # Identify analysis/histo name parts
         analysis = "ANALYSIS"
         if aop.basepathparts(keepref=False):
-            analysis = aop.basepathparts(keepref=False)[0] #< TODO: for compatibility with rivet-cmphistos... generalise?
-            #analysis = "_".join(aop.dirnameparts(keepref=False)[:-1]) #< TODO: would this be nicer? Currently incompatible with rivet-cmphistos
+            analysis = aop.basepathparts(keepref=False)[
+                0]  # < TODO: for compatibility with rivet-cmphistos... generalise?
+            # analysis = "_".join(aop.dirnameparts(keepref=False)[:-1]) #< TODO: would this be nicer? Currently incompatible with rivet-cmphistos
 
-        ## Optionally veto on analysis name pattern matching
+        # Optionally veto on analysis name pattern matching
         if analysis in analyses.union(blocked_analyses):
             continue
         import re
+
         matched = True
         if opts.ANAPATTERNS:
             matched = False
@@ -197,8 +200,8 @@ for yodafile in yodafiles:
             blocked_analyses.add(analysis)
 
 
-## Sort analyses: group ascending by analysis name (could specialise grouping by collider), then
-## descending by year, and finally descending by bibliographic archive ID code (INSPIRE first).
+# Sort analyses: group ascending by analysis name (could specialise grouping by collider), then
+# descending by year, and finally descending by bibliographic archive ID code (INSPIRE first).
 def anasort(name):
     rtn = (1, name)
     if name.startswith("MC"):
@@ -216,15 +219,16 @@ def anasort(name):
             pass
     return rtn
 
+
 analyses = sorted(analyses, key=anasort)
 
-## Uncomment to test analysis ordering on index page
+# Uncomment to test analysis ordering on index page
 # print analyses
 # sys.exit(0)
 
-## Write web page containing all (matched) plots
-## Make web pages first so that we can load it locally in
-## a browser to view the output before all plots are made
+# Write web page containing all (matched) plots
+# Make web pages first so that we can load it locally in
+# a browser to view the output before all plots are made
 if not opts.DRY_RUN:
 
     style = '''<style>
@@ -234,7 +238,7 @@ if not opts.DRY_RUN:
     </style>
     '''
 
-    ## Include MathJax configuration
+    # Include MathJax configuration
     script = ''
     if not opts.OFFLINE:
         script = '''\
@@ -248,11 +252,12 @@ if not opts.DRY_RUN:
         </script>
         '''
 
-    ## A helper function for metadata LaTeX -> HTML conversion
+    # A helper function for metadata LaTeX -> HTML conversion
     from rivet.util import htmlify
 
-    ## A timestamp HTML fragment to be used on each page:
+    # A timestamp HTML fragment to be used on each page:
     import datetime
+
     timestamp = '<p>Generated at %s</p>\n' % datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p")
 
     # Open the top-level index file
@@ -266,20 +271,19 @@ if not opts.DRY_RUN:
     else:
         index.write('<h2>%s</h2>\n\n' % opts.TITLE)
 
-
     try:
-        summary = open("./ANALYSIS/Summary.txt","r")
+        summary = open("./ANALYSIS/Summary.txt", "r")
 
         index.write("<p>")
-        
-        heading=True
-        while heading==True:
+
+        heading = True
+        while heading == True:
             text = summary.readline()
             if "pools" in text:
-                heading=False
+                heading = False
                 continue
-            index.write("%s\n" % text)                
-            index.write("</br>")                
+            index.write("%s\n" % text)
+            index.write("</br>")
 
         index.write("</p>")
 
@@ -296,21 +300,21 @@ if not opts.DRY_RUN:
                     # This is a line identifying the analysis pool
                     # TODO would be good to add a human-readable anapool name to the DB.
                     index.write('<div style="float:none; overflow:auto; width:100%">\n')
-                    index.write("<h3>Analysis Pool:"+str(parts[0])+"</h3>")
+                    index.write("<h3>Analysis Pool:" + str(parts[0]) + "</h3>")
                 else:
                     # This is a line identifying histograms
-                    obsname = str(parts[1])+"/"+str(parts[1])+"_"+str(parts[2])
-                    pngfile = obsname+".png"
-                    vecfile = obsname+"."+opts.VECTORFORMAT.lower()
-                    srcfile = obsname+".dat"
+                    obsname = str(parts[1]) + "/" + str(parts[1]) + "_" + str(parts[2])
+                    pngfile = obsname + ".png"
+                    vecfile = obsname + "." + opts.VECTORFORMAT.lower()
+                    srcfile = obsname + ".dat"
                     index.write('  <div style="float:left; font-size:smaller; font-weight:bold;">\n')
                     index.write('    <a href="#%s-%s">&#9875;</a><a href="%s">&#8984</a> %s:<br/>\n' %
-                                (analysis, obsname, srcfile, os.path.splitext(vecfile)[0]) )
-                    index.write('    <a name="%s-%s"><a href="%s">\n' % (analysis, obsname, vecfile) )
-                    index.write('      <img src="%s">\n' % pngfile )
+                                (analysis, obsname, srcfile, os.path.splitext(vecfile)[0]))
+                    index.write('    <a name="%s-%s"><a href="%s">\n' % (analysis, obsname, vecfile))
+                    index.write('      <img src="%s">\n' % pngfile)
                     index.write('    </a></a>\n')
                     index.write('  </div>\n')
-                
+
         summary.close()
 
         index.write('</div>\n')
@@ -318,10 +322,10 @@ if not opts.DRY_RUN:
     except IOError, e:
         print "No Contur summary file found: Summary info omitted"
 
-    index.write("<hr/><h3>List of all the analyses which were tried:</h3>\n")    
+    index.write("<hr/><h3>List of all the analyses which were tried:</h3>\n")
 
     if opts.SINGLE:
-        ## Write table of contents
+        # Write table of contents
         index.write('<ul>\n')
         for analysis in analyses:
             summary = analysis
@@ -330,7 +334,7 @@ if not opts.DRY_RUN:
                 summary = "%s (%s)" % (ana.summary(), analysis)
                 if opts.IGNORE_UNVALIDATED and ana.status() != "VALIDATED":
                     continue
-            index.write('<li><a href="#%s">%s</a>\n' % (analysis, htmlify(summary)) )
+            index.write('<li><a href="#%s">%s</a>\n' % (analysis, htmlify(summary)))
         index.write('</ul>\n')
 
     for analysis in analyses:
@@ -339,9 +343,9 @@ if not opts.DRY_RUN:
         description, inspireid, spiresid = None, None, None
 
         if analysis.find("_I") > 0:
-            inspireid = analysis[analysis.rfind('_I')+2:len(analysis)]
+            inspireid = analysis[analysis.rfind('_I') + 2:len(analysis)]
         elif analysis.find("_S") > 0:
-            spiresid = analysis[analysis.rfind('_S')+2:len(analysis)]
+            spiresid = analysis[analysis.rfind('_S') + 2:len(analysis)]
 
         ana = rivet.AnalysisLoader.getAnalysis(analysis)
         if ana:
@@ -356,22 +360,23 @@ if not opts.DRY_RUN:
         if opts.SINGLE:
             index.write('\n<h3 style="clear:left; padding-top:2em;"><a name="%s">%s</a></h3>\n' % (analysis, summary))
         else:
-            index.write('\n<h3><a href="%s/index.html" style="text-decoration:none;">%s</a></h3>\n' % (analysis, summary))
+            index.write(
+                '\n<h3><a href="%s/index.html" style="text-decoration:none;">%s</a></h3>\n' % (analysis, summary))
 
         reflist = []
         if inspireid:
             reflist.append('<a href="http://inspire-hep.net/record/%s">Inspire</a>' % inspireid)
             reflist.append('<a href="http://hepdata.cedar.ac.uk/view/ins%s">HepData</a>' % inspireid)
         elif spiresid:
-        # elif ana.spiresId():
+            # elif ana.spiresId():
             reflist.append('<a href="http://inspire-hep.net/search?p=find+key+%s">Inspire</a>' % spiresid)
             reflist.append('<a href="http://hepdata.cedar.ac.uk/view/irn%s">HepData</a>' % spiresid)
         reflist += references
         index.write('<p>%s</p>\n' % " &#124; ".join(reflist))
 
         if description:
-            #print inspireid
-            #print description
+            # print inspireid
+            # print description
             index.write('<p style="font-size:smaller;">%s</p>\n' % description)
 
         anapath = os.path.join(opts.OUTPUTDIR, analysis)
@@ -387,15 +392,15 @@ if not opts.DRY_RUN:
                 anaindex.write('<p>\n  %s\n</p>\n' % description)
         else:
             anaindex = index
- 
+
         datfiles = glob.glob("./plots/%s*.dat" % analysis)
- 
+
         anaindex.write('<div style="float:none; overflow:auto; width:100%">\n')
         for datfile in sorted(datfiles):
             obsname = os.path.basename(datfile).replace(".dat", "")
-            pngfile = obsname+".png"
-            vecfile = obsname+"."+opts.VECTORFORMAT.lower()
-            srcfile = obsname+".dat"
+            pngfile = obsname + ".png"
+            vecfile = obsname + "." + opts.VECTORFORMAT.lower()
+            srcfile = obsname + ".dat"
             if opts.SINGLE:
                 pngfile = os.path.join(analysis, pngfile)
                 vecfile = os.path.join(analysis, vecfile)
@@ -403,9 +408,9 @@ if not opts.DRY_RUN:
 
             anaindex.write('  <div style="float:left; font-size:smaller; font-weight:bold;">\n')
             anaindex.write('    <a href="#%s-%s">&#9875;</a><a href="%s">&#8984</a> %s:<br/>\n' %
-                           (analysis, obsname, srcfile, os.path.splitext(vecfile)[0]) )
-            anaindex.write('    <a name="%s-%s"><a href="%s">\n' % (analysis, obsname, vecfile) )
-            anaindex.write('      <img src="%s">\n' % pngfile )
+                           (analysis, obsname, srcfile, os.path.splitext(vecfile)[0]))
+            anaindex.write('    <a name="%s-%s"><a href="%s">\n' % (analysis, obsname, vecfile))
+            anaindex.write('      <img src="%s">\n' % pngfile)
             anaindex.write('    </a></a>\n')
             anaindex.write('  </div>\n')
         anaindex.write('</div>\n')
@@ -416,9 +421,11 @@ if not opts.DRY_RUN:
     index.write('<br>%s</body>\n</html>' % timestamp)
     index.close()
 
+
 # http://stackoverflow.com/questions/377017/test-if-executable-exists-in-python
 def which(program):
     import os
+
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
@@ -435,7 +442,8 @@ def which(program):
 
     return None
 
-## Run make-plots on all generated .dat files
+
+# Run make-plots on all generated .dat files
 # sys.exit(0)
 mp_cmd = ["make-plots"]
 if opts.NUMTHREADS:
@@ -460,7 +468,7 @@ for analysis in analyses:
     anapath = os.path.join(opts.OUTPUTDIR, analysis)
     anadatfiles = glob.glob("./plots/%s_d*.dat" % analysis)
     for anadatfile in anadatfiles:
-        shutil.copyfile(anadatfile,"./contur-plots/%s/%s" % (analysis, os.path.basename(anadatfile)))
+        shutil.copyfile(anadatfile, "./contur-plots/%s/%s" % (analysis, os.path.basename(anadatfile)))
         anadatfiles = glob.glob("./contur-plots/%s/%s*.dat" % (analysis, analysis))
     datfiles += sorted(anadatfiles)
 # Make the PDF and PNG files
@@ -472,7 +480,7 @@ if datfiles:
         print " ".join(mp_cmd)
     if not opts.DRY_RUN:
         Popen(mp_cmd).wait()
-        if opts.BOOKLET and opts.VECTORFORMAT=="PDF":
+        if opts.BOOKLET and opts.VECTORFORMAT == "PDF":
             if which("pdftk") is not None:
                 bookletcmd = ["pdftk"]
                 for analysis in analyses:

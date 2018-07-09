@@ -17,26 +17,27 @@ def init_dict():
 
     return masterDict
 
+
 def grid_add_to_dict(masterDict, mapPoints):
     ''' Adds the results of each cell in the  grid run to the dictionary '''
 
     for key in mapPoints:
-	tempName = ctr.LumiFinder(key)[1]
-	mapPoints[key][2] = legacy.confLevel(mapPoints[key][3],mapPoints[key][4],mapPoints[key][5], mapPoints[key][6])
-	if not masterDict[tempName]:
-	    masterDict[tempName].append(mapPoints[key][:])
-	else:
-	    _overWriteFlag = False
-	    _pointExistsFlag = False
-	    for listelement in masterDict[tempName]:
-	        if mapPoints[key][0] == listelement[0] and mapPoints[key][1] == listelement[1]:
-	            _pointExistsFlag = True
-	            if mapPoints[key][2] > listelement[2]:
-	                masterDict[tempName][masterDict[tempName].index(listelement)] = mapPoints[key][:]
-	                #listelement = mapPoints[key][:]
-	                _overWriteFlag=True
-	    if _overWriteFlag == False and _pointExistsFlag == False:
-	        masterDict[tempName].append(mapPoints[key][:])
+        tempName = ctr.LumiFinder(key)[1]
+        mapPoints[key][2] = legacy.confLevel(mapPoints[key][3], mapPoints[key][4], mapPoints[key][5], mapPoints[key][6])
+        if not masterDict[tempName]:
+            masterDict[tempName].append(mapPoints[key][:])
+        else:
+            _overWriteFlag = False
+            _pointExistsFlag = False
+            for listelement in masterDict[tempName]:
+                if mapPoints[key][0] == listelement[0] and mapPoints[key][1] == listelement[1]:
+                    _pointExistsFlag = True
+                    if mapPoints[key][2] > listelement[2]:
+                        masterDict[tempName][masterDict[tempName].index(listelement)] = mapPoints[key][:]
+                        # listelement = mapPoints[key][:]
+                        _overWriteFlag = True
+            if _overWriteFlag == False and _pointExistsFlag == False:
+                masterDict[tempName].append(mapPoints[key][:])
 
     return masterDict
 
@@ -71,18 +72,18 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
         try:
             refdata = refhistos['/REF%s' % h]
         except KeyError:
-            sys.stderr.write('Ignoring %s, no refdata found.\n'%h)
+            sys.stderr.write('Ignoring %s, no refdata found.\n' % h)
             continue
 
         # Manually store additional plot in a function called LumiFinder, if a Lumi isn't stored vs an
         # analysis name then use that info to veto testing
         # LumiFinder also returns -1 for vetoed/blacklisted histograms
         lumi = ctr.LumiFinder(h)[0]
-        if lumi <=0:
+        if lumi <= 0:
             continue
 
         # Use this switch to view individual analyses
-        mcpath='/'+infile
+        mcpath = '/' + infile
 
         if mchistos[infile][h].type == 'Histo1D':
             # Most of the time we deal with 1D histos
@@ -104,8 +105,9 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
             continue
 
         # fill test results for each bin for this histogram
-        bgCount,bgError,sigCount,sigError,measCount,measError,CLs,normFacSig,normFacRef = legacy.fillResults(refdata,h,lumi,has1D,mc1D,sighisto,Nev,xsec)
-        if (len(CLs)==0):
+        bgCount, bgError, sigCount, sigError, measCount, measError, CLs, normFacSig, normFacRef = legacy.fillResults(
+            refdata, h, lumi, has1D, mc1D, sighisto, Nev, xsec)
+        if (len(CLs) == 0):
             CLs.append(0)
 
         ## DrawOnly is needed to keep the order in the Legend equal to the
@@ -121,9 +123,9 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
             refdata.setAnnotation('PolyMarker', '*')
             refdata.setAnnotation('ConnectBins', '0')
             refdata.setAnnotation('Title', 'Data')
-            #if ctr.isNorm(h)[0] == True:
+            # if ctr.isNorm(h)[0] == True:
             #    refdata.setAnnotation('Scale', str(normFacRef))
-            #if opts.RATIO:
+            # if opts.RATIO:
             #    ratioreference = '/REF'+h
             anaobjects.append(refdata)
             drawonly.append('/REF' + h)
@@ -132,15 +134,18 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
 
         for i in range(0, refdata.numPoints):
             if ctr.isNorm(h)[0] == True:
-                sighisto.points[i].y=(sighisto.points[i].y*normFacSig+refdata.points[i].y*normFacRef)*1/normFacRef
-                sighisto.points[i].yErrs =((refdata.points[i].yErrs[1])**2 + (sighisto.points[i].yErrs[1])**2 )**0.5
+                sighisto.points[i].y = (sighisto.points[i].y * normFacSig + refdata.points[
+                    i].y * normFacRef) * 1 / normFacRef
+                sighisto.points[i].yErrs = ((refdata.points[i].yErrs[1]) ** 2 + (
+                sighisto.points[i].yErrs[1]) ** 2) ** 0.5
             elif has1D:
-                sighisto.points[i].y=sighisto.points[i].y+refdata.points[i].y
-                sighisto.points[i].yErrs =((refdata.points[i].yErrs[1])**2 + (sighisto.points[i].yErrs[1])**2 )**0.5
+                sighisto.points[i].y = sighisto.points[i].y + refdata.points[i].y
+                sighisto.points[i].yErrs = ((refdata.points[i].yErrs[1]) ** 2 + (
+                sighisto.points[i].yErrs[1]) ** 2) ** 0.5
             # if there was no 1D plot, assume we had an already-made ratio (ATLAS MET)
 
         # write the bin number of the most significant bin, and the bin number for the plot legend
-        sighisto.title='[%s] %5.2f' % ( CLs.index(max(CLs))+1, max(CLs) )
+        sighisto.title = '[%s] %5.2f' % (CLs.index(max(CLs)) + 1, max(CLs))
         sighisto.setAnnotation('LineColor', 'red')
         anaobjects.append(sighisto)
         plot = util.Plot()
@@ -153,9 +158,9 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
 
         for key, val in plotparser.getHeaders(h).iteritems():
             # Get any updated attributes from plotinfo files
-             plot[key] = val
+            plot[key] = val
 
-        ratioreference = '/REF'+h
+        ratioreference = '/REF' + h
         plot['RatioPlotReference'] = ratioreference
         output = ''
         output += str(plot)
@@ -172,39 +177,44 @@ def contur_analysis(infile, opts, grid=False, x=0, y=0):
         if ctr.LumiFinder(h)[2]:
             tempKey = h.split('/')[1] + '_' + ctr.LumiFinder(h)[2]
             if tempKey not in mapPoints and bgCount[max_cl] > 0.0:
-                if(grid):
-                    mapPoints[tempKey] = [float(x),float(y), float(max(CLs)) , [sigCount[CLs.index(max(CLs))]],
-                                         [bgCount[CLs.index(max(CLs))]] , [bgError[CLs.index(max(CLs))]], [sigError[CLs.index(max(CLs))]],str(h)]
+                if (grid):
+                    mapPoints[tempKey] = [float(x), float(y), float(max(CLs)), [sigCount[CLs.index(max(CLs))]],
+                                          [bgCount[CLs.index(max(CLs))]], [bgError[CLs.index(max(CLs))]],
+                                          [sigError[CLs.index(max(CLs))]], str(h)]
                 else:
-                    mapPoints[tempKey] = [float(max(CLs)),[ sigCount[max_cl] ],[ bgCount[max_cl]  ],[ bgError[max_cl]  ],[ sigError[max_cl] ], str(h)]
+                    mapPoints[tempKey] = [float(max(CLs)), [sigCount[max_cl]], [bgCount[max_cl]], [bgError[max_cl]],
+                                          [sigError[max_cl]], str(h)]
 
             elif bgCount[max_cl] > 0.0:
                 corr = 0
-                if(grid): corr = 2
+                if (grid): corr = 2
 
-                mapPoints[tempKey][1+corr].append(sigCount[max_cl])
-                mapPoints[tempKey][2+corr].append(bgCount[max_cl])
-                mapPoints[tempKey][3+corr].append(bgError[max_cl])
-                mapPoints[tempKey][4+corr].append(sigError[max_cl])
-                mapPoints[tempKey][5+corr] += "," + (str(h))
+                mapPoints[tempKey][1 + corr].append(sigCount[max_cl])
+                mapPoints[tempKey][2 + corr].append(bgCount[max_cl])
+                mapPoints[tempKey][3 + corr].append(bgError[max_cl])
+                mapPoints[tempKey][4 + corr].append(sigError[max_cl])
+                mapPoints[tempKey][5 + corr] += "," + (str(h))
         else:
             if h not in mapPoints and bgCount[max_cl] > 0.0:
-                if(grid):
-                    mapPoints[h] = [float(x),float(y), float(max(CLs)) , [sigCount[CLs.index(max(CLs))]],
-                                         [bgCount[CLs.index(max(CLs))]] , [bgError[CLs.index(max(CLs))]], [sigError[CLs.index(max(CLs))]],str(h)]
+                if (grid):
+                    mapPoints[h] = [float(x), float(y), float(max(CLs)), [sigCount[CLs.index(max(CLs))]],
+                                    [bgCount[CLs.index(max(CLs))]], [bgError[CLs.index(max(CLs))]],
+                                    [sigError[CLs.index(max(CLs))]], str(h)]
                 else:
-                    mapPoints[h] = [float(max(CLs)),[ sigCount[max_cl] ],[ bgCount[max_cl]  ],[ bgError[max_cl]  ],[ sigError[max_cl] ], str(h)]
+                    mapPoints[h] = [float(max(CLs)), [sigCount[max_cl]], [bgCount[max_cl]], [bgError[max_cl]],
+                                    [sigError[max_cl]], str(h)]
 
         # End of the loop over histograms.
 
     return mapPoints
 
+
 def output_grid(masterDict, opts):
     for key in masterDict:
         if masterDict[key]:
             masterDict[key].sort(key=lambda x: x[0])
-            util.writeOutput(masterDict[key],key + ".dat")
-            with open(opts.ANALYSISDIR+"/"+key+'.map', 'w') as f:
+            util.writeOutput(masterDict[key], key + ".dat")
+            with open(opts.ANALYSISDIR + "/" + key + '.map', 'w') as f:
                 pickle.dump(masterDict[key], f)
 
 
@@ -227,30 +237,30 @@ def output_single(mapPoints, opts):
                 if pts[0] > listelement[0]:
                     masterDict[poolname][masterDict[poolname].index(listelement)] = pts[:]
 
-    sigfinal=[]
-    bgfinal=[]
-    bgerrfinal=[]
-    sigerrfinal=[]
+    sigfinal = []
+    bgfinal = []
+    bgerrfinal = []
+    sigerrfinal = []
     for key in masterDict:
         if masterDict[key]:
-            sigfinal.extend(map(list,zip(*masterDict[key])[1])[0])
-            bgfinal.extend(map(list,zip(*masterDict[key])[2])[0])
-            bgerrfinal.extend(map(list,zip(*masterDict[key])[3])[0])
-            sigerrfinal.extend(map(list,zip(*masterDict[key])[4])[0])
+            sigfinal.extend(map(list, zip(*masterDict[key])[1])[0])
+            bgfinal.extend(map(list, zip(*masterDict[key])[2])[0])
+            bgerrfinal.extend(map(list, zip(*masterDict[key])[3])[0])
+            sigerrfinal.extend(map(list, zip(*masterDict[key])[4])[0])
             masterDict[key].sort(key=lambda x: x[0])
             util.writeOutput(masterDict[key], key + ".dat")
             with open(opts.ANALYSISDIR + "/" + key + '.map', 'w') as f:
                 pickle.dump(masterDict[key], f)
 
-    if len(sigfinal)>0:
+    if len(sigfinal) > 0:
         # Open the summary file for writing.
-        sumfn = open(opts.ANALYSISDIR+"/Summary.txt", 'w')
+        sumfn = open(opts.ANALYSISDIR + "/Summary.txt", 'w')
 
         # Calculate the confidence level from the list of independent signal and
         # background values.
         # TODO: when we have mixed methods for doing this, the numbers in the lists
         # stored in masterDict have different meanings, so this is broken!
-        pccl = 100.*legacy.confLevel(sigfinal, bgfinal, bgerrfinal,sigerrfinal)
+        pccl = 100. * legacy.confLevel(sigfinal, bgfinal, bgerrfinal, sigerrfinal)
 
         result = "Combined CL exclusion for these plots is %.1f %%" % pccl
         result += "\n pools"
@@ -258,12 +268,12 @@ def output_single(mapPoints, opts):
         sumfn.write(result)
         for anapool in masterDict:
             if masterDict[anapool]:
-                sumfn.write("\n"+anapool)
-                sumfn.write("\n"+str(masterDict[anapool][0][5]))
+                sumfn.write("\n" + anapool)
+                sumfn.write("\n" + str(masterDict[anapool][0][5]))
 
         sumfn.close()
         print(result)
-        print "Based on " +str(len(sigfinal))+ " found counting tests"
+        print "Based on " + str(len(sigfinal)) + " found counting tests"
         print "\nMore details output to ", opts.ANALYSISDIR, " folder"
         print "WARNING: Any results stored as Counters will not have been used."
         print "WARNING: deprecated! use contur script instead."
