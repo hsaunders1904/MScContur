@@ -1,0 +1,146 @@
+INSTRUCTIONS TO RUN
+===================
+
+Check Out Repository
+--------------------
+- Check out code from repository.
+    - hg pull https://bitbucket.org/heprivet/contur/
+    
+Set Up Environment
+------------------
+- Set up environments; mostly adding relevant folders to the system path such
+  that you can execute the contur and rivet commands from anywhere.
+    - source /unix/cedar/software/sl6/Herwig-Tip/setupEnv.sh
+    - source contur/setupContur.sh
+
+- You need to do this everytime you login.
+
+Build Analyses Databases
+------------------------
+- Build modified analyses
+    - cd contur/modified_analyses/Analyses/
+    - chmod +x buildrivet.sh
+        --> give 'buildrivet.sh' executable permission.
+    - ./buildrivet.sh
+    
+- Build database of static analysis information
+    - cd contur
+        --> Top level of repository
+    - make (compile C code in to .so object)
+        --> If make step does not work you may need to install sqlite3 and 
+            re-run make.
+
+Create Run Area
+---------------     
+- Create a run area seperate from the repository and copy over default run
+  area. This run area is where you will run everything from now on.
+    - cd ~
+    - mkdir run-area
+    - cp -r contur/AnalysisTools/GridSetup/ run-area/
+
+Choose a Model
+-------------- 
+- Choose a model. The standard run area contains two simplified dark matter
+  models installed as default.
+    > DM_vector_mediator_UFO is the model used in the first contur paper.
+    > DM_vector_mediator_HF_UFO is the same model but with Z' coupling to all
+      generations of quark.
+  
+  The following instructions are specific to running Herwig with one of these 
+  models, a recommended first step. If you are running a different model or 
+  generator, you'll have to modify your actions here; for a single run, once 
+  you have the yoda file from rivet, the procedure should be the same again.
+
+  For convenience, we have two ways of running, specific to the simple DM model
+  but can be modified.
+  Example Herwig .in files are provided in the model directories; see the 
+  comments in there.
+    > First Way: (see for example .in files with HAD in the name) runs 
+      inclusive generation of BSM particles.
+    > Second Way: (see for example .in files with WEAK in the name) forces 
+      associated production modes of weak bosons, and leptonic decays of those 
+      bosons.
+
+- Build the model. Choose one of the example Herwig '.in' files and copy to
+  the GridPack directory.
+    - cd GridSetup/GridPack/
+    - cp DM_vector_mediator_HF_UFO/hf-1000-600-7_WEAK.in TestRun.in
+    - ufo2herwig DM_vector_mediator_HF_UFO
+    - make
+    
+Run a Single Single Set of Analyses
+-----------------------------------
+- Run a single set of analyses with a single beam energy and model point. This
+  will generate histograms for the model point.
+  
+- Build the Herwig run card (LHC.run).
+    - Herwig read TestRun.in
+
+- Run the Herwig run card, specifying the number of events to generate. This 
+  can take a while so as a first test run around 200 events is fine.
+    - Herwig run LHC.run -N 200
+    
+- This will produce the file LHC.yoda containing the results of the Herwig run.
+  Analyse this with contur. You can also specify which statistical test to use
+  with the -t flag, e.g. '-t CS' for chi-squared test. (Run 'contur --help' to
+  see more options).
+    - contur LHC.yoda -t CS
+    
+- The contur script will output a plots folder and an ANALYSIS folder and 
+  print some other information.
+  
+- Generate 'contur-plots' directory containing histograms and an index.html 
+  file to view them all. Whilst still in the GridPack directory, run:
+    - contur-mkhtml LHC.yoda
+    
+Run a Batch Job to Generate Heatmaps
+------------------------------------
+
+- Go to base directory of copied over run area.
+    - cd GridSetup
+    
+- Define a parameter space in 'param_file.dat'. This should be a space 
+  seperated file formatted as:
+    [parameter] [minimum value] [maximum value]
+  
+  You should check that the parameters defined are also defined at the top of 
+  the LHC.in file within the same directory.
+  
+  The example model has parameters 'Xm', 'Y1', 'gYq', 'gYXm' defined in 
+  'params_file.dat' and the LHC.in file has, at the top of the file:
+      read FRModel.model
+      set /Herwig/FRModel/Particles/Y1:NominalMass {Y1}
+      set /Herwig/FRModel/Particles/Xm:NominalMass {Xm}
+      set /Herwig/FRModel/FRModel:gYXm {gYXm}
+      set /Herwig/FRModel/FRModel:gYq {gYq}
+
+  If you wanted to add or remove parameters you must do this in both files.
+  
+- Run a scan over the parameter space defined in 'param_file.dat' and submit it
+  to the batch farm. There are currently two sampling modes, uniform and
+  random. Have a look at the command line options before running.
+     - python batch_submit_prof.py --help
+     - python batch_submit_prof.py -n 20 -m random -N 500 --seed 101
+     
+- This will produce a directory called 'myscan' containing 50 runpoint 
+  directories and file 'sampled_points.txt' that specifies the parameter 
+  values used at each run point.
+  
+- Within each run point directory there will be a 'runpoint_xxxx.sh' script.
+  This is what is submitted to the batch farm. You need to wait for the farm
+  to finish the job before continuing. You can check the progress using the 
+  'qstat' command. 
+  
+- When the batch job is complete there should, in every run point directory, be 
+  files 'LHC-runpoint_xxx-1.yoda' and 'LHC-runpoint_xxxx-2.yoda'.
+  
+- Analyse results with contur. Resulting .map file will be outputted to 
+  ANALYSIS folder.
+    - cd run-area/
+    - contur-prof -g GridSetup/ 
+
+- Plot a heatmap.
+    - cd ANALYSIS/
+    - contur-prof-plot --help
+    - contur-prof-plot xxxx.map Xm Y1 gYq -g 200 -s 100 -t "My First Heatmap"
+

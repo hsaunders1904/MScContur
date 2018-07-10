@@ -51,9 +51,9 @@ parser.add_argument('-g', '--grid_size', type=int, default=200,
 parser.add_argument('-a', '--all', action='store_true',
                     help=('Plot heatmap for all slices in z-dimension.'))
 parser.add_argument('-s', '--slice', type=int,
-                    help='Index of slice of parameter space to plot.\n'
-                         'This must be specified if plotting a heatmap in more'
-                         ' than 2 dimensions.')
+                    help=('Index of slice of parameter space to plot.\n'
+                          'This or -a must be specified if plotting a heatmap'
+                          '\nin more than 2 dimensions.'))
 parser.add_argument('-sc', '--scatter', action='store_true',
                     help='Plot a 3D scatter graph.')
 parser.add_argument('-o', '--output_path', type=str, default='heatmap.png',

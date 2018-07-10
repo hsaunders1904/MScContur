@@ -74,7 +74,7 @@ for directory in os.listdir(opts.out_dir):
             seed = opts.seed
         else:
             seed = str(int(directory))
-        
+
         # Setup Herwig environment
         batch_command = herwig_setup + '; \n'
         # Change directory to run point folder
