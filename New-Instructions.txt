@@ -125,7 +125,7 @@ Run a Batch Job to Generate Heatmaps
      - python batch_submit_prof.py --help
      - python batch_submit_prof.py -n 20 -m random -N 500 --seed 101
      
-- This will produce a directory called 'myscan' containing 50 runpoint 
+- This will produce a directory called 'myscan' containing 20 runpoint 
   directories and file 'sampled_points.txt' that specifies the parameter 
   values used at each run point.
   

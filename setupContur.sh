@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 mydir="$( dirname "${BASH_SOURCE[0]}" )"
 
 # some cd commands issue terminal instructions, so pipe them away

@@ -41,10 +41,12 @@ parser_description = (
 
 parser = ArgumentParser(description=parser_description,
                         formatter_class=RawTextHelpFormatter)
+# Positional arguments
 parser.add_argument('map_file', type=str, help=('Path to .map file '
                     'containing conturDepot objects.'))
 parser.add_argument('variables', nargs='*', type=str,
                     help=('x, y [and z] variables to plot.'))
+# Optional arguments
 parser.add_argument('-g', '--grid_size', type=int, default=200,
                     help='Number of points per dimension in grid.\n'
                          '(default=%(default)s)')

@@ -81,8 +81,8 @@ def uniform_sample(ranges, num_points):
     if points_per_dim != num_points**(float(1./dimensions)):
         permission = ''
         while permission.lower() not in ['no', 'yes', 'n', 'y']:
-            permission = raw_input("Number of points^(1/dimensions) must be "
-                                   "an integer!\n"
+            permission = raw_input("If using uniform mode number of points^"
+                                   "(1/dimensions) must be an integer!\n"
                                    "Do you want to use %i points?\n"
                                    "[y/N]: "
                                    % points_per_dim**dimensions)
@@ -94,7 +94,7 @@ def uniform_sample(ranges, num_points):
         space = np.linspace(p_range[0], p_range[1], points_per_dim)
         param_spaces.append(space)
     grid = np.meshgrid(*param_spaces)
-    coords = [np.reshape(x, x.size) for x in grid]
+    coords = [np.reshape(dim, dim.size) for dim in grid]
     return coords
 
 
@@ -104,6 +104,42 @@ def gen_format_dict(parameters, idx):
     for param, info in sorted(parameters.iteritems()):
         format_dict[param] = info['values'][idx]
     return format_dict
+
+
+def read_param_ranges(param_file):
+    """Read parameter ranges from given parameter file,"""
+    parameters = {}
+    with open(param_file, 'r') as f:
+        for line in f:
+            if line.strip():
+                try:
+                    param, min_val, max_val = line.strip().split(' ')
+                    parameters[param] = {}
+                    parameters[param]['range'] = (float(min_val),
+                                                  float(max_val))
+                    parameters[param]['values'] = []
+                except ValueError:
+                    print("Could not read parameter file.\n%s should be a "
+                          "space separated data file formatted as:\n"
+                          "[param name] [min value] [max value]"
+                          % param_file)
+                    sys.exit()
+    return parameters
+
+
+def check_param_consistency(param_file, template_paths):
+    """Check that parameters in param file match those in templates."""
+    parameters_dict = read_param_ranges(param_file)
+    for template_path in template_paths:
+        with open(template_path, 'r') as template_file:
+            template_text = template_file.read()
+
+        for param in parameters_dict:
+            if "{" + param + "}" not in template_text:
+                print("ParameterError:\n"
+                      "Parameters in %s do not match parameters in %s"
+                      % (param_file, template_path))
+                sys.exit()
 
 
 def run_scan(num_points, template_paths, grid_pack, output_dir='myscan',
@@ -121,7 +157,7 @@ def run_scan(num_points, template_paths, grid_pack, output_dir='myscan',
     template_paths: list
         List of template files (eg. LHC.in).
 
-    grid_pack: str
+    grid_pack: str or None
         Path to directory containing the model grid pack.
 
     output_dir: str (default = 'myscan')
@@ -145,6 +181,9 @@ def run_scan(num_points, template_paths, grid_pack, output_dir='myscan',
         Seed for random number generator to get reproducibility.
 
     """
+
+    check_param_consistency(param_file, template_paths)
+
     if seed:
         random.seed(seed)
 

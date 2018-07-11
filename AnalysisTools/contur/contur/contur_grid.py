@@ -4,7 +4,6 @@ import numpy as np
 import pickle
 import sys
 import matplotlib.pyplot as plt
-from itertools import groupby
 from scipy.interpolate import griddata
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -50,6 +49,7 @@ class ConturGrid:
         return grid
 
     def _get_parameters(self):
+        """Get parameter names from conturDepot object"""
         present_parameters = []
         for param in self.depots[0].params:
             present_parameters.append(param)
@@ -58,6 +58,7 @@ class ConturGrid:
     def plot_imshow(self, slice_idx, x_label=None, y_label=None, z_label=None,
                     title=None, plot_points=False, output_path='heatmap.png',
                     dont_save=False):
+        """Generate heat map of slice of grid"""
         if x_label is None:
             x_label = self.parameters[0]
         if y_label is None:
@@ -107,6 +108,7 @@ class ConturGrid:
     def plot_3d_scatter(self, x_label=None, y_label=None, z_label=None,
                         title=None, dont_save=False,
                         output_path='3d_plot.png'):
+        """Plot a 3D scatter graph"""
         if x_label is None:
             x_label = self.parameters[0]
         if y_label is None:
@@ -129,6 +131,7 @@ class ConturGrid:
 
     def plot_2d_scatter(self, x_label=None, y_label=None, title=None,
                         dont_save=False, output_path='2d_plot.png'):
+        """Plot 2D scatter graph"""
         if x_label is None:
             x_label = self.parameters[0]
         if y_label is None:
