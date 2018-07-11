@@ -13,13 +13,13 @@ from argparse import ArgumentParser, RawTextHelpFormatter, ArgumentError
 from contur.contur_grid import ConturGrid
 
 
-def generate_gif():
-    create_palette = ("ffmpeg -y -f image2 -i plots/%04d.png -vf scale=900"
-                      ":-1:sws_dither=ed,palettegen plots/palette.png")
-    create_gif = ("ffmpeg -y -f image2 -framerate 9 -i plots/%04d.png -i "
-                  "plots/palette.png -lavfi paletteuse plots/heatmap.mp4")
-    gif_command = ' && '.join([create_palette, create_gif])
-    os.system(gif_command)
+# def generate_gif():
+#     create_palette = ("ffmpeg -y -f image2 -i plots/%04d.png -vf scale=900"
+#                       ":-1:sws_dither=ed,palettegen plots/palette.png")
+#     create_gif = ("ffmpeg -y -f image2 -framerate 9 -i plots/%04d.png -i "
+#                   "plots/palette.png -lavfi paletteuse plots/heatmap.mp4")
+#     gif_command = ' && '.join([create_palette, create_gif])
+#     os.system(gif_command)
 
 parser_description = (
     "Plot contur data from a .map file.\n"
@@ -78,11 +78,18 @@ parsing_error_msg = ("To call contur-plot-prof you must specify an input .map "
                      "follow:\ncontur-plot-prof .map_file x_variable "
                      "y_variable [z_variable] [optional_arguments]")
 if len(args.variables) not in [2, 3]:
-    raise ValueError("Error parsing arguments:\n" + parsing_error_msg)
+    print("Error parsing arguments!\n\n" + parsing_error_msg)
+    sys.exit()
 
 if len(args.variables) == 3 and not (args.slice or args.scatter or args.all):
     print("Error:\n-----\nYou must specify a slice index or whether to plot a "
           "scatter graph if you are plotting in 3 dimensions.")
+    sys.exit()
+
+if args.slice >= args.grid_size:
+    print("Error slicing grid!\n"
+          "Specified slice outside of grid dimensions. The slice index must "
+          "be less than grid size (default=200).")
     sys.exit()
 
 contur_grid = ConturGrid(args.map_file, args.grid_size, args.variables)
@@ -94,6 +101,7 @@ if len(args.variables) == 2:
             out_path = '2d_plot.png'
         else:
             out_path = args.output_path
+        print("Generating " + out_path)
         contur_grid.plot_2d_scatter(x_label=args.x_label,
                                     y_label=args.y_label,
                                     title=args.title,
@@ -101,6 +109,7 @@ if len(args.variables) == 2:
                                     output_path=out_path)
     else:
         # Plot 2D heatmap
+        print("Generating " + args.output_path)
         contur_grid.plot_imshow(slice_idx=None,
                                 x_label=args.x_label,
                                 y_label=args.y_label,
@@ -113,6 +122,7 @@ if len(args.variables) == 2:
 else:
     if args.slice:
         # Plot heat map of slice of 3D parameter space
+        print("Generating " + args.output_path)
         contur_grid.plot_imshow(slice_idx=args.slice,
                                 x_label=args.x_label,
                                 y_label=args.y_label,
@@ -128,6 +138,7 @@ else:
         if not os.path.exists(args.output_path):
             os.mkdir(args.output_path)
 
+        print("Generating plots in " + args.output_path)
         for s in range(args.grid_size):
             plt.ioff()
             out_path = os.path.join(args.output_path, '%04i.png' % s)
@@ -147,6 +158,8 @@ else:
             out_path = '3d_plot.png'
         else:
             out_path = args.output_path
+
+        print("Generating " + out_path)
         contur_grid.plot_3d_scatter(x_label=args.x_label,
                                     y_label=args.y_label,
                                     z_label=args.z_label,

@@ -1,6 +1,12 @@
 INSTRUCTIONS TO RUN
 ===================
 
+Sign on to PC
+-------------
+- Log on to plus1 and then on to a pc. You need the '-X' to do plotting.
+    - ssh -X username@plus1.hep.ucl.ac.uk
+    - ssh -X pcXXX
+    
 Check Out Repository
 --------------------
 - Check out code from repository.
@@ -9,7 +15,7 @@ Check Out Repository
 Set Up Environment
 ------------------
 - Set up environments; mostly adding relevant folders to the system path such
-  that you can execute the contur and rivet commands from anywhere.
+  that you can execute the contur and Herwig commands from anywhere.
     - source /unix/cedar/software/sl6/Herwig-Tip/setupEnv.sh
     - source contur/setupContur.sh
 
@@ -32,7 +38,7 @@ Build Analyses Databases
 
 Create Run Area
 ---------------     
-- Create a run area seperate from the repository and copy over default run
+- Create a run area seperate from the repository and copy over GridSetup
   area. This run area is where you will run everything from now on.
     - cd ~
     - mkdir run-area
@@ -70,14 +76,11 @@ Choose a Model
     
 Run a Single Single Set of Analyses
 -----------------------------------
-- Run a single set of analyses with a single beam energy and model point. This
-  will generate histograms for the model point.
-  
 - Build the Herwig run card (LHC.run).
     - Herwig read TestRun.in
 
 - Run the Herwig run card, specifying the number of events to generate. This 
-  can take a while so as a first test run around 200 events is fine.
+  can take a while so, as a first test, running around 200 events is fine.
     - Herwig run LHC.run -N 200
     
 - This will produce the file LHC.yoda containing the results of the Herwig run.
