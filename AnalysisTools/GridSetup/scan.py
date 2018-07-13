@@ -170,7 +170,7 @@ def run_scan(num_points, template_paths, grid_pack, output_dir='myscan',
                      must be an integer.
             Random: Randomly sample the parameter space
 
-    param_file: str (default = 'param4D.dat')
+    param_file: str (default = 'param_file.dat')
         Path to space seperated file containing parameters and their
         value ranges.
         Eg.
