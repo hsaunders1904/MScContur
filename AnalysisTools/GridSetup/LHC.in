@@ -1,7 +1,6 @@
 read FRModel.model
 set /Herwig/FRModel/Particles/Y1:NominalMass {Y1}
 set /Herwig/FRModel/Particles/Xm:NominalMass {Xm}
-set /Herwig/FRModel/FRModel:gYXm {gYXm}
 set /Herwig/FRModel/FRModel:gYq {gYq}
 
 ####################################

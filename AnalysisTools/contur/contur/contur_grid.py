@@ -137,7 +137,7 @@ class ConturGrid:
         if y_label is None:
             y_label = self.parameters[1]
 
-        plt.plot(self.parameter_vals[0], self.parameter_vals[1],'o')
+        plt.plot(self.parameter_vals[0], self.parameter_vals[1], 'o')
         plt.xlabel(x_label)
         plt.ylabel(y_label)
         if title:

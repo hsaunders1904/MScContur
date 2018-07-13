@@ -7,8 +7,7 @@ file.
 batch_submit_prof.py
 --------------------
 
-- Must be called with the -n or --num_points flag to specify how many points
-to sample and run.
+- Must be called specifying the number of points to sample.
 
 - You should check that the paths specified for variables 'herwig_setup' and
 'contur_setup' point to the correct places.

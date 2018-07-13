@@ -79,6 +79,8 @@ parsing_error_msg = ("To call contur-plot-prof you must specify an input .map "
                      "file and 2 or 3 variables to plot!\nThe format must "
                      "follow:\ncontur-plot-prof .map_file x_variable "
                      "y_variable [z_variable] [optional_arguments]")
+
+# Error catching
 if len(args.variables) not in [2, 3]:
     print("Error parsing arguments!\n\n" + parsing_error_msg)
     sys.exit()
@@ -94,6 +96,7 @@ if args.slice >= args.grid_size:
           "be less than grid size (default=200).")
     sys.exit()
 
+# Interpolate grid
 contur_grid = ConturGrid(args.map_file, args.grid_size, args.variables)
 
 if len(args.variables) == 2:

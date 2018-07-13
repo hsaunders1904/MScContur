@@ -10,7 +10,7 @@ Sign on to PC
 Check Out Repository
 --------------------
 - Check out code from repository.
-    - hg pull https://bitbucket.org/heprivet/contur/
+    - hg clone https://bitbucket.org/heprivet/contur/
     
 Set Up Environment
 ------------------
@@ -19,7 +19,7 @@ Set Up Environment
     - source /unix/cedar/software/sl6/Herwig-Tip/setupEnv.sh
     - source contur/setupContur.sh
 
-- You need to do this everytime you login.
+- You need to do this every time you login.
 
 Build Analyses Databases
 ------------------------
@@ -35,6 +35,8 @@ Build Analyses Databases
     - make (compile C code in to .so object)
         --> If make step does not work you may need to install sqlite3 and 
             re-run make.
+
+- You need only do this once.
 
 Create Run Area
 ---------------     
@@ -123,7 +125,7 @@ Run a Batch Job to Generate Heatmaps
   to the batch farm. There are currently two sampling modes, uniform and
   random. Have a look at the command line options before running.
      - python batch_submit_prof.py --help
-     - python batch_submit_prof.py -n 20 -m random -N 500 --seed 101
+     - python batch_submit_prof.py 20 -m random -N 500 --seed 101
      
 - This will produce a directory called 'myscan' containing 20 runpoint 
   directories and file 'sampled_points.txt' that specifies the parameter 
