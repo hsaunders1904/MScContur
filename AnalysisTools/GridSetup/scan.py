@@ -226,6 +226,7 @@ def run_scan(num_points, template_paths, grid_pack, output_dir='myscan',
         coords = uniform_sample(ranges, num_points)
         for idx, param in enumerate(sorted(parameters)):
             parameters[param]['values'] = coords[idx]
+        num_points = len(coords[0])
 
     make_directory(output_dir)
     for run_point in range(num_points):
