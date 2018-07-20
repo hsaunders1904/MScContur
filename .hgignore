@@ -8,3 +8,5 @@ syntax: glob
 *.idea*
 *sync_files.sh
 *myscan
+*TestingFunctions/analyses.db
+*.pytest_cache/*

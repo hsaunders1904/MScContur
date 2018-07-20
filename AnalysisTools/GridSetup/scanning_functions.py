@@ -39,7 +39,7 @@ def make_directory(path):
 
 
 def read_param_file(file_path):
-    """Read one of the produced param.dat files"""
+    """Read one of the produced params.dat files"""
     with open(file_path, 'r') as f:
         raw_params = f.read().strip().split('\n')
     param_dict = {}
@@ -78,7 +78,7 @@ def uniform_sample(ranges, num_points):
     """Sample given ranges uniformly."""
     dimensions = len(ranges)
     points_per_dim = round(num_points**(1./dimensions))
-    if points_per_dim != num_points**(float(1./dimensions)):
+    if not np.isclose(points_per_dim, num_points**(float(1./dimensions))):
         permission = ''
         while permission.lower() not in ['no', 'yes', 'n', 'y']:
             permission = raw_input("If using uniform mode number of points^"

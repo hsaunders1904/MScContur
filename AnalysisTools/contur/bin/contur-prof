@@ -123,27 +123,31 @@ def analyseYODA(yodafile):
 
 
 def yoda_merger(scan_dir, tag='runpoint_'):
-    print(scan_dir)
-    print("Merging .yoda files\n"
+    """Move through directories merging yoda analysis files"""
+    print("Merging yoda files\n"
           "-------------------")
     for root, dirs, files in os.walk(scan_dir):
         file_list = []
-        for name in files:
-            conditions = (name.endswith('.yoda') and
-                          name != 'LHC.yoda' and
-                          'LHC' in name and
-                          tag in name)
-            if conditions:
-                yodafile = os.path.join(root, name)
-                file_list.append(yodafile)
+        run_point_num = os.path.basename(root)
+        if not os.path.exists('runpoint_' + run_point_num + '.yoda'):
+            for name in files:
+                conditions = (name.endswith('.yoda') and
+                              name != 'LHC.yoda' and
+                              'LHC' in name and
+                              tag in name)
+                if conditions:
+                    yodafile = os.path.join(root, name)
+                    file_list.append(yodafile)
 
-        if file_list != []:
-            file_string = ' '.join(file_list)
-            out_file = os.path.join(root, 'runpoint_' + os.path.basename(root)
-                                    + '.yoda')
-            command = ' '.join(['yodamerge -o', out_file, file_string])
-            print(command)
-            os.system(command)
+            if file_list:
+                file_string = ' '.join(file_list)
+                out_file = os.path.join(root, 'runpoint_' + run_point_num
+                                        + '.yoda')
+                command = ' '.join(['yodamerge -o', out_file, file_string])
+                print(command)
+                os.system(command)
+        else:
+            print('runpoint_' + run_point_num + '.yoda already exists.')
 
 
 def analyse_grid(scan_path):
@@ -167,19 +171,19 @@ def analyse_grid(scan_path):
                 # Perform analysis
                 contur_depot = analyseYODA(yoda_file_path)
                 contur_depot.params = params
-                contur_depot.ModelParam1 = params['Xm']
-                contur_depot.ModelParam2 = params['Y1']
-                try:
-                    contur_depot.ModelParam3 = params['gYq']
-                except KeyError:
-                    pass
+                # contur_depot.ModelParam1 = params['Xm']
+                # contur_depot.ModelParam2 = params['Y1']
+                # try:
+                #     contur_depot.ModelParam3 = params['gYq']
+                # except KeyError:
+                #     pass
                 print('Confidence level is ' +
                       str(contur_depot.conturPoint.CLs) + '\n')
 
                 grid_points.append(contur_depot)
 
     print "Found %i yoda files" % yoda_counter
-    write_output_grid(grid_points, group=os.path.basename(scan_path))
+    write_output_grid(grid_points, group='myscan')
 
 
 def read_param_file(file_path):
@@ -237,7 +241,6 @@ if __name__ == "__main__":
 
     print modeMessage
 
-    print(opts.GRID)
     if opts.GRID:
         yoda_merger(opts.GRID, opts.TAG)
         analyse_grid(os.path.abspath(opts.GRID))

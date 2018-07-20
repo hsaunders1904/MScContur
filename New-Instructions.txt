@@ -32,9 +32,13 @@ Build Analyses Databases
 - Build database of static analysis information
     - cd contur
         --> Top level of repository
-    - make (compile C code in to .so object)
+    - make
         --> If make step does not work you may need to install sqlite3 and 
             re-run make.
+        --> If you run contur before doing this step an empty database file
+            will be created
+            (contur/AnalysisTools/contur/contur/TestingFunctions/analyses.db)
+            You will need to delete this and then run this step.
 
 - You need only do this once.
 

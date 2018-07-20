@@ -5,8 +5,6 @@ Created on 29/06/18
 @author: HarryS
 """
 
-import random
-
 from scanning_functions import *
 
 
@@ -65,10 +63,13 @@ def run_scan(num_points, template_paths, grid_pack, output_dir='myscan',
                                              parameters)
     make_directory(output_dir)
     for run_point in range(num_points):
-        # If runpoint directories don't exist, make them
+        # Run point directories are inside the output directory and hold
+        # the necessary files to run Herwig with the parameters associated
+        # with that point
         run_point_path = make_run_point_directory(run_point, output_dir)
 
-        # Write params.dat file
+        # Write params.dat file inside run point directory. This is purely to
+        # record what the parameters are at this run point
         write_param_file(parameters, run_point_path, run_point)
 
         # Write run card template files formatted with parameter values
@@ -79,5 +80,5 @@ def run_scan(num_points, template_paths, grid_pack, output_dir='myscan',
         if grid_pack:
             copy_tree(grid_pack, run_point_path)
 
-    # Write all sampled points to a .dat file
+    # Write all sampled points and their run points to a .dat file
     write_sampled_points(output_dir)

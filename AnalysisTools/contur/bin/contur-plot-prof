@@ -43,7 +43,7 @@ parser = ArgumentParser(description=parser_description,
                         formatter_class=RawTextHelpFormatter)
 # Positional arguments
 parser.add_argument('map_file', type=str, help=('Path to .map file '
-                    'containing conturDepot objects.'))
+                    'containing list of conturDepot objects.'))
 parser.add_argument('variables', nargs='*', type=str,
                     help=('x, y [and z] variables to plot.'))
 # Optional arguments
@@ -143,11 +143,12 @@ else:
         if not os.path.exists(args.output_path):
             os.mkdir(args.output_path)
 
-        print("Generating plots in " + args.output_path)
-        for s in range(args.grid_size):
+        print("Generating %i plots in %s folder."
+              % (args.grid_size, args.output_path))
+        for slice_idx in range(args.grid_size):
             plt.ioff()
-            out_path = os.path.join(args.output_path, '%04i.png' % s)
-            contur_grid.plot_imshow(slice_idx=s,
+            out_path = os.path.join(args.output_path, '%04i.png' % slice_idx)
+            contur_grid.plot_imshow(slice_idx=slice_idx,
                                     x_label=args.x_label,
                                     y_label=args.y_label,
                                     z_label=args.z_label,
@@ -156,7 +157,6 @@ else:
                                     output_path=out_path,
                                     plot_points=args.points)
             plt.close()
-
     elif args.scatter:
         # Plot 3D scatter graph
         if args.output_path == 'heatmap.png':
