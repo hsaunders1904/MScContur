@@ -12,6 +12,7 @@ contur_setup = "source $HOME/contur/setupContur.sh"
 
 
 def get_args():
+    """Parse command line arguments"""
     parser = ArgumentParser(description=(
         "Run a parameter space scan and submit a batch job.\n"
         "Produces a scan directory containing: all files in given grid pack, "
@@ -29,7 +30,7 @@ def get_args():
                              "'random'}")
     parser.add_argument("-o", "--out_dir", dest="out_dir", type=str,
                         metavar="output_dir", default="myscan",
-                        help=("specify the output directory name "))
+                        help="Specify the output directory name ")
     parser.add_argument('-p', '--param_file', dest='param_file',
                         default='param_file.dat', metavar='param_file',
                         help='File specifying parameter space.')
@@ -38,7 +39,7 @@ def get_args():
                         help='Template run card files.')
     parser.add_argument("-g", "--grid", dest="grid_pack", type=str,
                         default='GridPack', metavar='grid_pack',
-                        help=("Provide additional gridpack. Set to 'none' to "
+                        help=("Provide additional grid pack. Set to 'none' to "
                               "not use one."))
     parser.add_argument("-N", "--numevents", dest="num_events",
                         default='10000', metavar='num_events',
@@ -48,13 +49,51 @@ def get_args():
     parser.add_argument('-s', '--scan_only', dest='scan_only', default=False,
                         action='store_true',
                         help='Only perform scan and do not submit batch job.')
-    args = parser.parse_args()
+    return parser.parse_args()
 
-    if args.seed:
-        args.seed = int(args.seed)
+
+def valid_arguments(args):
+    """Check that command line arguments are valid; return True or False"""
+    valid_args = True
+    if args.sample_mode not in ['uniform', 'random']:
+        print("Invalid sample mode! Must be 'uniform' or 'random'.")
+        valid_args = False
+
+    if not os.path.exists(args.param_file):
+        print("Param file %s does not exist!" % args.param_file)
+        valid_args = False
+
+    template_doesnt_exist = False
+    for template_file in args.template_files:
+        if not os.path.exists(template_file):
+            print("Template file %s does not exist!" % template_file)
+            template_doesnt_exist = True
+    if template_doesnt_exist:
+        valid_args = False
+
     if args.grid_pack.lower() == 'none':
         args.grid_pack = None
-    return args
+    else:
+        if not os.path.isdir(args.grid_pack):
+            print("No such grid pack directory '%s'!" % args.grid_pack)
+            valid_args = False
+
+    try:
+        int(args.num_events)
+    except ValueError:
+        print("Number of events '%s' cannot be converted to integer!"
+              % args.num_events)
+        valid_args = False
+
+    if args.seed:
+        try:
+            args.seed = int(args.seed)
+        except ValueError:
+            print("Seed '%s' cannot be converted in integer!" % args.seed)
+            valid_args = False
+
+    return valid_args
+
 
 
 def check_setup_files(contur_setup, herwig_setup):
@@ -69,7 +108,7 @@ def check_setup_files(contur_setup, herwig_setup):
 
 
 def gen_batch_command(directory_name, directory_path, args):
-    """Write shell script to submit to batch"""
+    """Generate commands to write to batch file"""
     if args.seed:
         seed = str(args.seed)
     else:
@@ -95,7 +134,7 @@ def gen_batch_command(directory_name, directory_path, args):
 
 
 def batch_submit(args):
-
+    """Run parameter scan and submit shell scripts to batch"""
     check_setup_files(contur_setup, herwig_setup)
 
     # Run parameter space scan and create run point directories
@@ -111,10 +150,6 @@ def batch_submit(args):
         directory_path = os.path.abspath(os.path.join(args.out_dir,
                                                       directory_name))
         if os.path.isdir(directory_path):
-            # if args.scan_only is False:
-            #     subprocess.call([herwig_setup], shell=True)
-            #     subprocess.call([contur_setup], shell=True)
-
             command, filename = gen_batch_command(directory_name,
                                                   directory_path, args)
             batch_command_path = os.path.join(directory_path, filename)
@@ -127,4 +162,6 @@ def batch_submit(args):
 
 if __name__ == '__main__':
     args = get_args()
+    if not valid_arguments(args):
+        sys.exit()
     batch_submit(args)
