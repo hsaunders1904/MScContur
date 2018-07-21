@@ -41,7 +41,7 @@ def get_args():
                         default='GridPack', metavar='grid_pack',
                         help=("Provide additional grid pack. Set to 'none' to "
                               "not use one."))
-    parser.add_argument("-N", "--numevents", dest="num_events",
+    parser.add_argument("-n", "--numevents", dest="num_events",
                         default='10000', metavar='num_events',
                         help="Number of events to generate in Herwig.")
     parser.add_argument('--seed', dest='seed', metavar='seed', default=None,
@@ -55,18 +55,25 @@ def get_args():
 def valid_arguments(args):
     """Check that command line arguments are valid; return True or False"""
     valid_args = True
+    try:
+        args.num_points = int(args.num_points)
+    except ValueError:
+        print("Number of points '%s' cannot be converted to integer!"
+              % args.num_points)
+        valid_args = False
+
     if args.sample_mode not in ['uniform', 'random']:
         print("Invalid sample mode! Must be 'uniform' or 'random'.")
         valid_args = False
 
     if not os.path.exists(args.param_file):
-        print("Param file %s does not exist!" % args.param_file)
+        print("Param file '%s' does not exist!" % args.param_file)
         valid_args = False
 
     template_doesnt_exist = False
     for template_file in args.template_files:
         if not os.path.exists(template_file):
-            print("Template file %s does not exist!" % template_file)
+            print("Template file '%s' does not exist!" % template_file)
             template_doesnt_exist = True
     if template_doesnt_exist:
         valid_args = False
@@ -85,15 +92,14 @@ def valid_arguments(args):
               % args.num_events)
         valid_args = False
 
-    if args.seed:
+    if args.seed is not None:
         try:
             args.seed = int(args.seed)
         except ValueError:
-            print("Seed '%s' cannot be converted in integer!" % args.seed)
+            print("Seed '%s' cannot be converted to integer!" % args.seed)
             valid_args = False
 
     return valid_args
-
 
 
 def check_setup_files(contur_setup, herwig_setup):

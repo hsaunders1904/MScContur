@@ -4,6 +4,7 @@ import __builtin__
 import os
 import pytest
 import mock
+import shutil
 import numpy as np
 
 import scanning_functions as sf
@@ -22,6 +23,10 @@ test_files_dir = os.path.join(test_dir, 'test_files')
 def get_top_level(path):
     """Get top level files and directories in given directory"""
     return [os.path.join(path, item) for item in os.listdir(path)]
+
+
+def teardown_module():
+    shutil.rmtree(os.path.join(test_files_dir, 'folder2/'))
 
 
 def test_copy_tree():

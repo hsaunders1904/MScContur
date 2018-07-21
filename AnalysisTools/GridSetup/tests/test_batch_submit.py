@@ -1,15 +1,20 @@
 #!/usr/bin/env python
 
 import os
+import yaml
+import pytest
 import shutil
 
 from batch_submit_prof import (contur_setup, herwig_setup, gen_batch_command,
-                               batch_submit)
+                               batch_submit, valid_arguments)
 
 # Get necessary directory paths
 test_dir = os.path.dirname(os.path.abspath(__file__))
 base_grid_dir = os.path.join(test_dir, '..' + os.sep)
 test_files_dir = os.path.join(test_dir, 'test_files')
+
+with open(os.path.join(test_files_dir, 'argument_fixtures.yaml'), 'r') as f:
+    arguments_examples = yaml.load(f)
 
 
 class ArgsMock:
@@ -27,6 +32,37 @@ class ArgsMock:
         self.num_events = num_events
         self.seed = seed
         self.scan_only = scan_only
+
+
+def convert_fixture_to_mock_args(fixture):
+    args_mock = ArgsMock(
+        fixture['num_points'],
+        fixture['sample_mode'],
+        fixture['out_dir'],
+        fixture['param_file'],
+        fixture['templates'],
+        fixture['grid'],
+        fixture['numevents'],
+        fixture['seed'],
+        fixture['scan_only'])
+    return args_mock
+
+
+@pytest.mark.parametrize('fixture', arguments_examples.iteritems())
+def test_valid_arguments(fixture):
+    args = convert_fixture_to_mock_args(fixture[1])
+    if fixture[0] == 'default':
+        try:
+            valid_args = valid_arguments(args)
+            assert valid_args
+        except AssertionError:
+            pytest.fail("Default command line options invalid!")
+        except Exception, exception:
+            print(exception)
+            pytest.fail("Default command line options throws Exception!")
+    else:
+        valid_args = valid_arguments(args)
+        assert not valid_args
 
 
 def make_test_area(source, destination):

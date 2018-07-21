@@ -1,0 +1,87 @@
+default:
+  num_points: 10
+  sample_mode: uniform
+  out_dir: myscan
+  param_file: param_file.dat
+  templates: [LHC.in]
+  grid: GridPack
+  numevents: 10000
+  seed: !!null
+  scan_only: True
+
+invalid_num_points:
+  num_points: 2re
+  sample_mode: uniform
+  out_dir: myscan
+  param_file: param_file.dat
+  templates: [LHC.in]
+  grid: GridPack
+  numevents: 10000
+  seed: !!null
+  scan_only: True
+
+invalid_sample_mode:
+  num_points: 10
+  sample_mode: invalid_mode
+  out_dir: myscan
+  param_file: param_file.dat
+  templates: [LHC.in]
+  grid: GridPack
+  numevents: 10000
+  seed: !!null
+  scan_only: True
+
+invalid_param_file:
+  num_points: 10
+  sample_mode: uniform
+  out_dir: myscan
+  param_file: i/dont/exist
+  templates: [LHC.in]
+  grid: GridPack
+  numevents: 10000
+  seed: !!null
+  scan_only: True
+
+invalid_templates:
+  num_points: 10
+  sample_mode: uniform
+  out_dir: myscan
+  param_file: param_file.dat
+  templates: [i/dont/exist, neither/do/i]
+  grid: GridPack
+  numevents: 10000
+  seed: !!null
+  scan_only: True
+
+invalid_grid:
+  num_points: 10
+  sample_mode: uniform
+  out_dir: myscan
+  param_file: param_file.dat
+  templates: [LHC.in]
+  grid: i/dont/exist
+  numevents: 10000
+  seed: !!null
+  scan_only: True
+
+invalid_numevents:
+  num_points: 10
+  sample_mode: uniform
+  out_dir: myscan
+  param_file: param_file.dat
+  templates: [LHC.in]
+  grid: GridPack
+  numevents: 3re
+  seed: !!null
+  scan_only: True
+
+invalid_seed:
+  num_points: 10
+  sample_mode: uniform
+  out_dir: myscan
+  param_file: param_file.dat
+  templates: [LHC.in]
+  grid: GridPack
+  numevents: 10000
+  seed: 3r2
+  scan_only: True
