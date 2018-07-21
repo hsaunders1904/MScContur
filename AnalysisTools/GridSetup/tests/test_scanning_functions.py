@@ -42,6 +42,7 @@ def test_copy_tree():
 
 
 def test_read_param_ranges_valid():
+    """Test read_param_ranges successful on valid param file"""
     param_file_1 = os.path.join(test_files_dir, 'folder', 'test_file_1')
     params = sf.read_param_ranges(param_file_1)
     expected_params = {'param1': {'range': (0, 1), 'values': []},
@@ -52,12 +53,14 @@ def test_read_param_ranges_valid():
 
 
 def test_read_param_ranges_invalid():
+    """Test read_param_ranges fails on an invalid param file"""
     param_file_2 = os.path.join(test_files_dir, 'folder', 'test_file_2')
     with pytest.raises(ValueError):
         sf.read_param_ranges(param_file_2)
 
 
 def test_read_param_ranges_min_greater_than_max():
+    """Test read_param_ranges fails when min value greater than max"""
     param_file_3 = os.path.join(test_files_dir, 'folder', 'folder_depth_2',
                                 'test_file_3')
     with pytest.raises(ValueError):
@@ -65,6 +68,7 @@ def test_read_param_ranges_min_greater_than_max():
 
 
 def test_uniform_sample():
+    """Test uniform sample gives correct output"""
     ranges = [[0, 10], [2, 4], [5, 10]]
     num_points = 8
     coords = sf.uniform_sample(ranges, num_points)
@@ -79,6 +83,7 @@ def test_uniform_sample():
 
 
 def test_read_param_file():
+    """Test read param_file reads valid param file correctly"""
     param_dict = sf.read_param_file(os.path.join(test_files_dir, 'params.dat'))
     expected_param_dict = {'gYq': 1,
                            'Xm': 200,
@@ -88,6 +93,7 @@ def test_read_param_file():
 
 
 def test_write_param_file():
+    """Test write_param_file writes to file correctly"""
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
     points_to_gen = 10
@@ -107,6 +113,7 @@ def test_write_param_file():
 
 
 def test_generate_points_random_ranges():
+    """Test generate_points with random  gens points within ranges"""
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
     num_points = 8
@@ -117,6 +124,7 @@ def test_generate_points_random_ranges():
 
 
 def test_generate_points_random_num_points():
+    """Test generate_points with random returns correct number of points"""
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
     num_points = 8
@@ -125,6 +133,7 @@ def test_generate_points_random_num_points():
 
 
 def test_generate_points_uniform_ranges():
+    """Test generate_points with uniform gens points within ranges"""
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
     num_points = 16
@@ -134,7 +143,8 @@ def test_generate_points_uniform_ranges():
             assert info['range'][0] <= value <= info['range'][1]
 
 
-def test_generate_points_uniform_num_points():
+def test_generate_points_uniform_num_points_input():
+    """Test generate_points with uniform returns correct number of points"""
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
     num_points = 10
@@ -144,3 +154,11 @@ def test_generate_points_uniform_num_points():
 
     assert num_points_2 == 16
 
+
+def test_generate_points_uniform_num_points():
+    """Test generate_points with uniform returns correct number of points"""
+    param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
+                                                   'test_file_1'))
+    num_points = 16
+    _, num_points_2 = sf.generate_points(num_points, 'uniform', param_dict)
+    assert num_points_2 == num_points

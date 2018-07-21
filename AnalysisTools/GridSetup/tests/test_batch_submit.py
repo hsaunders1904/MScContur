@@ -47,6 +47,7 @@ def make_test_area(source, destination):
 
 
 def setup_module():
+    """Make a test area and mock some command line options"""
     make_test_area('.', os.path.join(test_files_dir, 'GridSetup'))
     args = ArgsMock(1, sample_mode='random', scan_only=True)
     os.chdir(os.path.join(test_files_dir, 'GridSetup'))
@@ -59,10 +60,12 @@ def setup_module():
 
 
 def teardown_module():
+    """Clean up test area"""
     shutil.rmtree(os.path.join(test_files_dir, 'GridSetup'))
 
 
 def test_contur_setup_path():
+    """Test specified Contur setup path exists"""
     setup_path = contur_setup.lstrip('source ').replace('$HOME',
                                                         os.environ['HOME'])
     print("Warning: Contur setup script path points to non-existent file!\n"
@@ -72,6 +75,7 @@ def test_contur_setup_path():
 
 
 def test_herwig_setup_path():
+    """Test specified Herwig setup path exists"""
     setup_path = herwig_setup.lstrip('source ').replace('$HOME',
                                                         os.environ['HOME'])
     print("Warning: Herwig setup script path points to non-existent file!\n"
@@ -81,6 +85,7 @@ def test_herwig_setup_path():
 
 
 def test_gen_batch_command():
+    """Test gen_batch_command produces expected output"""
     args = ArgsMock(10, seed=10, num_events='500')
     command, _ = gen_batch_command('test_dir', 'test/test_dir', args)
     expected_command = (
@@ -95,6 +100,7 @@ def test_gen_batch_command():
 
 
 def test_batch_submit_grid_pack():
+    """Test all files in grid pack are copied to run point directory"""
     grid_pack_files = [f for f in os.listdir('GridPack') if os.path.isfile(f)]
     os.chdir(os.path.join(test_files_dir, 'GridSetup'))
     try:
@@ -106,6 +112,7 @@ def test_batch_submit_grid_pack():
 
 
 def test_batch_submit_param_file():
+    """Test batch submit produces param file in run point directory"""
     os.chdir(os.path.join(test_files_dir, 'GridSetup'))
     try:
         param_file_exists = os.path.exists('myscan/0000/params.dat')
@@ -115,6 +122,7 @@ def test_batch_submit_param_file():
 
 
 def test_batch_submit_template_file():
+    """Test template file is copied to run point directory"""
     os.chdir(os.path.join(test_files_dir, 'GridSetup'))
     try:
         template_file_exists = os.path.exists('myscan/0000/LHC.in')

@@ -150,6 +150,7 @@ def check_param_consistency(param_file, template_paths):
 
 
 def read_template_files(template_paths):
+    """Read in template files and store contents in dictionary"""
     templates = {}
     for template_path in template_paths:
         template_name = os.path.basename(template_path)
@@ -187,6 +188,7 @@ def make_run_point_directory(run_point, output_dir):
 
 
 def write_param_file(param_dict, run_point_path, run_point):
+    """Write param file containing parameter values for given run point"""
     run_point_param_file_path = os.path.join(run_point_path, 'params.dat')
     with open(run_point_param_file_path, 'w') as run_point_param_file:
         for param, info in sorted(param_dict.iteritems()):

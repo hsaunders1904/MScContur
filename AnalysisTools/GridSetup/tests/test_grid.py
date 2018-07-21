@@ -1,14 +1,8 @@
 #!/usr/bin/env python
 
 import os
-import sys
 
 from scan import read_param_ranges
-
-if '__init__.py' not in os.listdir('.'):
-    print("You must run tests in base directory of run area, which includes "
-          "'__init__.py.")
-    sys.exit()
 
 
 def test_grid_pack_exists():
@@ -46,7 +40,8 @@ def test_param_file():
     try:
         read_param_ranges('param_file.dat')
     except ValueError, value_error:
-        print("Warning: 'param_file.dat' not in required format! %s"
+        print("Warning: scanning_functions.read_param_ranges broken or "
+              "'param_file.dat' not in required format! %s"
               % value_error)
         valid_param_file = False
     except IOError, io_error:
