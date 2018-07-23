@@ -172,8 +172,8 @@ def batch_submit(args):
 
 
 if __name__ == '__main__':
-    check_setup_files(contur_setup, herwig_setup)
     args = get_args()
+    check_setup_files(contur_setup, herwig_setup)
     if not valid_arguments(args):
         sys.exit()
     batch_submit(args)
