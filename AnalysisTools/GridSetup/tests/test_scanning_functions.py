@@ -11,6 +11,7 @@ import scanning_functions as sf
 
 
 def move_up_dirs(path, levels):
+    """Move up given number of diretory levels"""
     return os.path.abspath(os.path.join(path, ('..'+os.sep)*levels))
 
 
@@ -26,7 +27,9 @@ def get_top_level(path):
 
 
 def teardown_module():
+    """Delete file created during testing"""
     shutil.rmtree(os.path.join(test_files_dir, 'folder2/'))
+    os.remove(os.path.join(test_files_dir, 'folder', 'params.dat'))
 
 
 def test_copy_tree():

@@ -10,3 +10,4 @@ syntax: glob
 *myscan
 *TestingFunctions/analyses.db
 *.pytest_cache/*
+*__init__.pyc

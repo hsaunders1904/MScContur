@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import pytest
 
 from scan import read_param_ranges
 
@@ -15,10 +16,9 @@ def test_grid_pack_exists():
 
 def test_grid_pack_model_exists():
     """Check grid pack contatins FRModel.model"""
-    model_file_exists = os.path.exists('GridPack/FRModel.model')
-    print("Warning: No FRModel.model file in grid pack! Have you run "
-          "ufo2herwig on your model directory?")
-    assert model_file_exists
+    if not os.path.exists('GridPack/FRModel.model'):
+        pytest.fail("No FRModel.model file in grid pack!\nHave you run "
+                    "ufo2herwig on your model directory?")
 
 
 def test_grid_pack_model_object_exists():
@@ -26,12 +26,11 @@ def test_grid_pack_model_object_exists():
     so_file_exists = os.path.exists('GridPack/FRModel.so')
     if not so_file_exists:
         if os.path.exists('GridPack/Makefile'):
-            print("Warning: No FRModel.so file in grid pack! You need to run "
-                  "make after running ufo2herwig.")
+            pytest.fail("No FRModel.so file in grid pack!\nDid you run make "
+                        "after running ufo2herwig?")
         else:
-            print("Warning: No FRModel.so or Makefile in grid pack! Was "
-                  "ufo2herwig run successfully?")
-    assert so_file_exists
+            pytest.fail("No FRModel.so or Makefile in grid pack!\nWas "
+                        "ufo2herwig run successfully?")
 
 
 def test_param_file():

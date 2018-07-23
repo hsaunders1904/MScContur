@@ -20,7 +20,7 @@ def test_herwig_environment():
         a = subprocess.check_output(['Herwig --version'], shell=True)
         print(a)
     except CalledProcessError:
-        pytest.fail("Error calling Herwig! Is your environment set up "
+        pytest.fail("Error calling Herwig!\nIs your environment set up "
                     "correctly?")
 
 
@@ -28,7 +28,7 @@ def test_python_version():
     """Test python is python 2"""
     python_version = sys.version[:3]
     if python_version > '2.7':
-        pytest.fail("Python version error! You must use a version <= 2.7.")
+        pytest.fail("Python version error!\nYou must use a version <= 2.7.")
 
 
 def test_python_path():
@@ -44,7 +44,7 @@ def test_python_path():
             if required_path not in python_path:
                 pytest.fail("'%s' not in python path" % required_path)
     except KeyError:
-        pytest.fail("No PYTHONPATH environment variable! You need to add "
+        pytest.fail("No PYTHONPATH environment variable!\nYou need to add "
                     "'%s' and '%s' to your python path."
                     % (required_paths[0], required_paths[1]))
 
@@ -76,6 +76,6 @@ def test_platform():
             if 'redhat' not in os_platform and 'Carbon' not in os_platform:
                 flag = True
     if flag:
-        pytest.fail("The OS on this PC may not match the OS on the batch farm. "
-                    "This may cause errors when the farm tries to run "
+        pytest.fail("The OS on this PC may not match the OS on the batch farm."
+                    "\nThis may cause errors when the farm tries to run "
                     "executables compiled on this PC.")

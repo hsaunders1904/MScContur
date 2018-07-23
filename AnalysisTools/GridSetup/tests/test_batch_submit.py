@@ -32,6 +32,7 @@ class WorkingDirectory:
 
 
 def parse_command(command):
+    """Parse given command using parser in 'batch_submit_prof.py'"""
     with mock.patch('sys.argv', command.split(' ')):
         args = get_args()
     return args
@@ -71,23 +72,20 @@ def make_test_area(source, destination):
 def test_contur_setup_path():
     """Test specified Contur setup path exists"""
     setup_path = os.path.expandvars(contur_setup.lstrip('source '))
-    print("Warning: Contur setup script path points to non-existent file!\n"
-          + setup_path)
-    path_exists = os.path.exists(setup_path)
-    assert path_exists
+    if not os.path.exists(setup_path):
+        pytest.fail("Contur setup script path points to non-existent file!")
 
 
 def test_herwig_setup_path():
     """Test specified Herwig setup path exists"""
     setup_path = os.path.expandvars(herwig_setup.lstrip('source '))
-    print("Warning: Herwig setup script path points to non-existent file!\n"
-          + setup_path)
-    path_exists = os.path.exists(setup_path)
-    assert path_exists
+    if not os.path.exists(setup_path):
+        pytest.fail("Herwig setup script path points to non-existent file!")
 
 
 @pytest.mark.parametrize('fixture', arguments_examples.iteritems())
 def test_get_args(fixture):
+    """Test that each flag/option in parser returns expected values"""
     system_args = fixture[1]['command'].split(' ')
     with mock.patch('sys.argv', system_args):
         args = get_args()
@@ -100,6 +98,10 @@ def test_get_args(fixture):
 
 @pytest.mark.parametrize('fixture', arguments_examples.iteritems())
 def test_valid_arguments(fixture):
+    """
+    Test that 'valid_arguments' function recognises valid and invalid
+    args
+    """
     system_args = fixture[1]['command'].split(' ')
     with mock.patch('sys.argv', system_args):
         args = get_args()
