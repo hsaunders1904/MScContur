@@ -9,9 +9,9 @@ from subprocess import CalledProcessError
 
 herwig_directory = '/unix/cedar/software/sl6/Herwig-Tip/'
 try:
-    contur_directory = os.environ['$CONTURMODULEDIR']
+    contur_directory = os.path.expandvars(os.environ['$CONTURMODULEDIR'])
 except KeyError:
-    contur_directory = os.path.join('$HOME', 'contur')
+    contur_directory = os.path.expandvars(os.path.join('$HOME', 'contur'))
 
 
 def test_herwig_environment():
@@ -35,6 +35,7 @@ def test_python_path():
     """Test python path includes Contur and Herwig directories"""
     try:
         python_path = os.environ['PYTHONPATH'].split(':')
+	print(python_path)
 
         required_paths = [os.path.join(contur_directory, 'AnalysisTools',
                                        'contur'),
