@@ -38,3 +38,25 @@ specified using the -g flag. Or you can use '-g none' to not use one.
 running correctly after a change) you can use the -s or --scan_only flag.
 
 'python batch_submit_prof.py --help' for more command line options.
+
+
+Testing
+=======
+
+- To run tests, simply run 
+	$ pytest
+   in the terminal in the same directory as this file.
+
+- There are 4 test modules, two test your run environment the others are unit tests for batch_submit_prof:
+
+    - tests/test_environment.py: This will run tests to make sure your environment is set up correctly, i.e. 
+      correct paths are in your system and python path. 
+
+    - tests/test_grid.py: This will test your GridPack directory throwing errors if it is not compiled properly. 
+      It also checks your param_file.dat is formatted correctly.
+
+    - tests/test_scanning_functions.py: Unit tests for scanning_funtions.py.
+
+    - tests/test_batch_submit.py: Unit tests for batch_submit_prof.py. Check all the correct files are produced
+      etc.
+
