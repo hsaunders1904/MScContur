@@ -6,6 +6,7 @@ import subprocess
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 from scan import run_scan
+from scanning_functions import permission_to_continue
 
 herwig_setup = "source /unix/cedar/software/sl6/Herwig-Tip/setupEnv.sh"
 contur_setup = "source $HOME/contur/setupContur.sh"
@@ -104,13 +105,19 @@ def valid_arguments(args):
 
 def check_setup_files(contur_setup, herwig_setup):
     """Check that Contur and Herwig setup scripts exist"""
+    file_doesnt_exist = False
     contur_setup = contur_setup.replace('$HOME', os.environ['HOME'])
     if not os.path.exists(contur_setup.strip('source ')):
         print("Warning: The path to 'setupContur.sh' does not exist!\n"
               "%s" % contur_setup)
+        file_doesnt_exist = True
     if not os.path.exists(herwig_setup.strip('source ')):
         print("Warning: The path to the Herwig setup script 'setupEnv.sh' "
               "does not exist!\n%s" % herwig_setup)
+        file_doesnt_exist = True
+    if file_doesnt_exist:
+        if not permission_to_continue("Do you wish to continue?\n(y/N): "):
+            sys.exit()
 
 
 def gen_batch_command(directory_name, directory_path, args):
@@ -141,8 +148,6 @@ def gen_batch_command(directory_name, directory_path, args):
 
 def batch_submit(args):
     """Run parameter scan and submit shell scripts to batch"""
-    check_setup_files(contur_setup, herwig_setup)
-
     # Run parameter space scan and create run point directories
     run_scan(num_points=int(args.num_points),
              template_paths=args.template_files,
@@ -153,8 +158,8 @@ def batch_submit(args):
              seed=args.seed)
 
     for directory_name in os.listdir(args.out_dir):
-        directory_path = os.path.abspath(os.path.join(args.out_dir,
-                                                      directory_name))
+        directory_path = os.path.abspath(
+            os.path.join(args.out_dir, directory_name))
         if os.path.isdir(directory_path):
             command, filename = gen_batch_command(directory_name,
                                                   directory_path, args)
@@ -167,6 +172,7 @@ def batch_submit(args):
 
 
 if __name__ == '__main__':
+    check_setup_files(contur_setup, herwig_setup)
     args = get_args()
     if not valid_arguments(args):
         sys.exit()

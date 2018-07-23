@@ -1,87 +1,107 @@
-default:
+valid_default:
+  command: batch_submit_prof.py 10 -s
   num_points: 10
   sample_mode: uniform
   out_dir: myscan
   param_file: param_file.dat
-  templates: [LHC.in]
-  grid: GridPack
-  numevents: 10000
+  template_files: [LHC.in]
+  grid_pack: GridPack
+  num_events: 10000
+  seed: !!null
+  scan_only: True
+
+valid_no_grid_pack:
+  command: batch_submit_prof.py 10 --grid none -s
+  num_points: 10
+  sample_mode: uniform
+  out_dir: myscan
+  param_file: param_file.dat
+  template_files: [LHC.in]
+  grid_pack: none
+  num_events: 10000
   seed: !!null
   scan_only: True
 
 invalid_num_points:
+  command: batch_submit_prof.py 2re -s
   num_points: 2re
   sample_mode: uniform
   out_dir: myscan
   param_file: param_file.dat
-  templates: [LHC.in]
-  grid: GridPack
-  numevents: 10000
+  template_files: [LHC.in]
+  grid_pack: GridPack
+  num_events: 10000
   seed: !!null
   scan_only: True
 
 invalid_sample_mode:
+  command: batch_submit_prof.py 10 -m invalid_mode -s
   num_points: 10
   sample_mode: invalid_mode
   out_dir: myscan
   param_file: param_file.dat
-  templates: [LHC.in]
-  grid: GridPack
-  numevents: 10000
+  template_files: [LHC.in]
+  grid_pack: GridPack
+  num_events: 10000
   seed: !!null
   scan_only: True
 
 invalid_param_file:
+  command: batch_submit_prof.py 10 -p i/dont/exist -s
   num_points: 10
   sample_mode: uniform
   out_dir: myscan
   param_file: i/dont/exist
-  templates: [LHC.in]
-  grid: GridPack
-  numevents: 10000
+  template_files: [LHC.in]
+  grid_pack: GridPack
+  num_events: 10000
   seed: !!null
   scan_only: True
 
-invalid_templates:
+invalid_template_files:
+  command: batch_submit_prof.py 10 -t i/dont/exist neither/do/i -s
   num_points: 10
   sample_mode: uniform
   out_dir: myscan
   param_file: param_file.dat
-  templates: [i/dont/exist, neither/do/i]
-  grid: GridPack
-  numevents: 10000
+  template_files: [i/dont/exist, neither/do/i]
+  grid_pack: GridPack
+  num_events: 10000
   seed: !!null
   scan_only: True
 
-invalid_grid:
+invalid_grid_pack:
+  command: batch_submit_prof.py 10 --grid i/dont/exist -s
   num_points: 10
   sample_mode: uniform
   out_dir: myscan
   param_file: param_file.dat
-  templates: [LHC.in]
-  grid: i/dont/exist
-  numevents: 10000
+  template_files: [LHC.in]
+  grid_pack: i/dont/exist
+  num_events: 10000
   seed: !!null
   scan_only: True
 
-invalid_numevents:
+invalid_num_events:
+  command: batch_submit_prof.py 10 -n 3re -s
   num_points: 10
   sample_mode: uniform
   out_dir: myscan
   param_file: param_file.dat
-  templates: [LHC.in]
-  grid: GridPack
-  numevents: 3re
+  template_files: [LHC.in]
+  grid_pack: GridPack
+  num_events: 3re
   seed: !!null
   scan_only: True
 
 invalid_seed:
+  command: batch_submit_prof.py 10 --seed 3r2 -s
   num_points: 10
   sample_mode: uniform
   out_dir: myscan
   param_file: param_file.dat
-  templates: [LHC.in]
-  grid: GridPack
-  numevents: 10000
+  template_files: [LHC.in]
+  grid_pack: GridPack
+  num_events: 10000
   seed: 3r2
   scan_only: True

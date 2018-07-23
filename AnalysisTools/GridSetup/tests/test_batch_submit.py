@@ -2,67 +2,53 @@
 
 import os
 import yaml
+import mock
 import pytest
 import shutil
 
 from batch_submit_prof import (contur_setup, herwig_setup, gen_batch_command,
-                               batch_submit, valid_arguments)
+                               batch_submit, valid_arguments, get_args)
 
 # Get necessary directory paths
 test_dir = os.path.dirname(os.path.abspath(__file__))
 base_grid_dir = os.path.join(test_dir, '..' + os.sep)
 test_files_dir = os.path.join(test_dir, 'test_files')
-
+# Read in fixtures file
 with open(os.path.join(test_files_dir, 'argument_fixtures.yaml'), 'r') as f:
     arguments_examples = yaml.load(f)
 
 
-class ArgsMock:
-    """Class to mimic arguments object produced by argparse"""
-    def __init__(self, num_points, sample_mode='uniform', out_dir='myscan',
-                 param_file='param_file.dat', template_files=['LHC.in'],
-                 grid_pack='GridPack', num_events='10000', seed=None,
-                 scan_only=False):
-        self.num_points = num_points
-        self.sample_mode =sample_mode
-        self.out_dir = out_dir
-        self.param_file = param_file
-        self.template_files = template_files
-        self.grid_pack = grid_pack
-        self.num_events = num_events
-        self.seed = seed
-        self.scan_only = scan_only
+class WorkingDirectory:
+    """Context manager for changing working directory"""
+    def __init__(self, new_directory):
+        self.new_directory = os.path.expanduser(new_directory)
+
+    def __enter__(self):
+        self.old_directory = os.getcwd()
+        os.chdir(self.new_directory)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        os.chdir(self.old_directory)
 
 
-def convert_fixture_to_mock_args(fixture):
-    args_mock = ArgsMock(
-        fixture['num_points'],
-        fixture['sample_mode'],
-        fixture['out_dir'],
-        fixture['param_file'],
-        fixture['templates'],
-        fixture['grid'],
-        fixture['numevents'],
-        fixture['seed'],
-        fixture['scan_only'])
-    return args_mock
+def parse_command(command):
+    with mock.patch('sys.argv', command.split(' ')):
+        args = get_args()
+    return args
 
 
-@pytest.mark.parametrize('fixture', arguments_examples.iteritems())
-def test_valid_arguments(fixture):
-    args = convert_fixture_to_mock_args(fixture[1])
-    if fixture[0] == 'default':
-        try:
-            valid_args = valid_arguments(args)
-            assert valid_args
-        except AssertionError:
-            pytest.fail("Default command line options invalid!")
-        except Exception, exception:
-            print(exception)
-            pytest.fail("Default command line options throws Exception!")
-    else:
-        valid_args = valid_arguments(args)
-        assert not valid_args
+def setup_module():
+    """Make a test area and mock some command line options"""
+    make_test_area('.', os.path.join(test_files_dir, 'GridSetup'))
+    command = 'batch_submit_prof.py 1 -m random -s'
+    args = parse_command(command)
+    with WorkingDirectory(os.path.join(test_files_dir, 'GridSetup')):
+        batch_submit(args)
+
+
+def teardown_module():
+    """Clean up test area"""
+    shutil.rmtree(os.path.join(test_files_dir, 'GridSetup'))
 
 
 def make_test_area(source, destination):
@@ -82,28 +68,9 @@ def make_test_area(source, destination):
                     shutil.copy(abs_path, copy_to_path)
 
 
-def setup_module():
-    """Make a test area and mock some command line options"""
-    make_test_area('.', os.path.join(test_files_dir, 'GridSetup'))
-    args = ArgsMock(1, sample_mode='random', scan_only=True)
-    os.chdir(os.path.join(test_files_dir, 'GridSetup'))
-    try:
-        batch_submit(args)
-    except Exception, exception:
-        os.chdir(base_grid_dir)
-        raise exception
-    os.chdir(base_grid_dir)
-
-
-def teardown_module():
-    """Clean up test area"""
-    shutil.rmtree(os.path.join(test_files_dir, 'GridSetup'))
-
-
 def test_contur_setup_path():
     """Test specified Contur setup path exists"""
-    setup_path = contur_setup.lstrip('source ').replace('$HOME',
-                                                        os.environ['HOME'])
+    setup_path = os.path.expandvars(contur_setup.lstrip('source '))
     print("Warning: Contur setup script path points to non-existent file!\n"
           + setup_path)
     path_exists = os.path.exists(setup_path)
@@ -112,18 +79,43 @@ def test_contur_setup_path():
 
 def test_herwig_setup_path():
     """Test specified Herwig setup path exists"""
-    setup_path = herwig_setup.lstrip('source ').replace('$HOME',
-                                                        os.environ['HOME'])
+    setup_path = os.path.expandvars(herwig_setup.lstrip('source '))
     print("Warning: Herwig setup script path points to non-existent file!\n"
           + setup_path)
     path_exists = os.path.exists(setup_path)
     assert path_exists
 
 
+@pytest.mark.parametrize('fixture', arguments_examples.iteritems())
+def test_get_args(fixture):
+    system_args = fixture[1]['command'].split(' ')
+    with mock.patch('sys.argv', system_args):
+        args = get_args()
+    for key, item in fixture[1].iteritems():
+        if key != 'command':
+            if type(item) == int:
+                item = str(item)
+            assert eval('args.' + key) == item
+
+
+@pytest.mark.parametrize('fixture', arguments_examples.iteritems())
+def test_valid_arguments(fixture):
+    system_args = fixture[1]['command'].split(' ')
+    with mock.patch('sys.argv', system_args):
+        args = get_args()
+    if fixture[0].startswith('valid_'):
+        valid_args = valid_arguments(args)
+        assert valid_args
+    else:
+        valid_args = valid_arguments(args)
+        assert not valid_args
+
+
 def test_gen_batch_command():
     """Test gen_batch_command produces expected output"""
-    args = ArgsMock(10, seed=10, num_events='500')
-    command, _ = gen_batch_command('test_dir', 'test/test_dir', args)
+    terminal_command = 'batch_submit_prof.py 10 --seed 10 -n 500'
+    args = parse_command(terminal_command)
+    batch_command, _ = gen_batch_command('test_dir', 'test/test_dir', args)
     expected_command = (
         "%s;\n"
         "cd test/test_dir;\n"
@@ -132,7 +124,7 @@ def test_gen_batch_command():
         "Herwig run LHC.run --seed=10 --tag=runpoint_test_dir --jobs=2 " 
         "--numevents=500;\n"
         % (herwig_setup, contur_setup))
-    assert command == expected_command
+    assert batch_command == expected_command
 
 
 def test_batch_submit_grid_pack():
@@ -165,4 +157,3 @@ def test_batch_submit_template_file():
     finally:
         os.chdir(base_grid_dir)
     assert template_file_exists
-

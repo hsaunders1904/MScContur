@@ -74,26 +74,35 @@ def write_sampled_points(output_dir):
             f.write('\n')
 
 
+def permission_to_continue(message):
+    """Get permission to continue program"""
+    permission = ''
+    while permission.lower() not in ['no', 'yes', 'n', 'y']:
+        permission = raw_input(message)
+    if permission.lower() in ['n', 'no']:
+        return False
+    else:
+        return True
+
+
 def uniform_sample(ranges, num_points):
     """Sample given ranges uniformly."""
     dimensions = len(ranges)
-    points_per_dim = round(num_points**(1./dimensions))
-    if not np.isclose(points_per_dim, num_points**(float(1./dimensions))):
-        permission = ''
-        while permission.lower() not in ['no', 'yes', 'n', 'y']:
-            permission = raw_input("If using uniform mode number of points^"
-                                   "(1/dimensions) must be an integer!\n"
-                                   "Do you want to use %i points?\n"
-                                   "[y/N]: "
-                                   % points_per_dim**dimensions)
-        if permission.lower() in ['n', 'no']:
+    points_per_dim = round(num_points ** (1. / dimensions))
+    if not np.isclose(points_per_dim, num_points ** (float(1. / dimensions))):
+        permission_message = ("If using uniform mode number of points^"
+                              "(1/dimensions) must be an integer!\n"
+                              "Do you want to use %i points?\n"
+                              "[y/N]: "
+                              % points_per_dim ** dimensions)
+        if not permission_to_continue(permission_message):
             sys.exit()
-
     param_spaces = []
-    for p_range in ranges:
-        space = np.linspace(p_range[0], p_range[1], points_per_dim)
+    for param_range in ranges:
+        space = np.linspace(param_range[0], param_range[1], points_per_dim)
         param_spaces.append(space)
     grid = np.meshgrid(*param_spaces)
+    print('grid:', grid)
     coords = [np.reshape(dim, dim.size) for dim in grid]
     return coords
 
@@ -172,6 +181,7 @@ def generate_points(num_points, mode, param_dict):
         for _, param in sorted(param_dict.iteritems()):
             ranges.append(param['range'])
         coords = uniform_sample(ranges, num_points)
+        print(coords)
         for idx, param in enumerate(sorted(param_dict)):
             param_dict[param]['values'] = coords[idx]
         num_points = len(coords[0])
