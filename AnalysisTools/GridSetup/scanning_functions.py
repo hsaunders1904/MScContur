@@ -215,7 +215,8 @@ def write_template_files(templates, param_dict, run_point, run_point_path,
         except KeyError:
             print("Error: Parameters in %s do not match the "
                   "parameters in %s."
-                  % (param_file, template_path))
+                  % (param_file, template_name))
+            sys.exit()
         template_path = os.path.join(run_point_path, template_name)
         with open(template_path, 'w') as f:
             f.write(template_text)
