@@ -102,7 +102,6 @@ def uniform_sample(ranges, num_points):
         space = np.linspace(param_range[0], param_range[1], points_per_dim)
         param_spaces.append(space)
     grid = np.meshgrid(*param_spaces)
-    print('grid:', grid)
     coords = [np.reshape(dim, dim.size) for dim in grid]
     return coords
 
@@ -181,7 +180,6 @@ def generate_points(num_points, mode, param_dict):
         for _, param in sorted(param_dict.iteritems()):
             ranges.append(param['range'])
         coords = uniform_sample(ranges, num_points)
-        print(coords)
         for idx, param in enumerate(sorted(param_dict)):
             param_dict[param]['values'] = coords[idx]
         num_points = len(coords[0])

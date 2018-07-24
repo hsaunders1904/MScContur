@@ -168,7 +168,8 @@ def batch_submit(args):
                 batch_file.write(command)
 
             if args.scan_only is False:
-                subprocess.call(["qsub -q medium " + filename], shell=True)
+                subprocess.call(["qsub -q medium " + batch_command_path],
+                                shell=True)
 
 
 if __name__ == '__main__':
