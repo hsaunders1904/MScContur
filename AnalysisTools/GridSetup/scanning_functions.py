@@ -219,3 +219,16 @@ def write_template_files(templates, param_dict, run_point, run_point_path,
         template_path = os.path.join(run_point_path, template_name)
         with open(template_path, 'w') as f:
             f.write(template_text)
+
+
+class WorkingDirectory:
+    """Context manager to temporarily change working directory"""
+    def __init__(self, temp_working_directory):
+        self.temp_working_directory = os.path.abspath(temp_working_directory)
+
+    def __enter__(self):
+        self.working_directory = os.getcwd()
+        os.chdir(self.temp_working_directory)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        os.chdir(self.working_directory)

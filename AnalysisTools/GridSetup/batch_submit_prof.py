@@ -6,7 +6,7 @@ import subprocess
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 from scan import run_scan
-from scanning_functions import permission_to_continue
+from scanning_functions import permission_to_continue, WorkingDirectory
 
 herwig_setup = "source /unix/cedar/software/sl6/Herwig-Tip/setupEnv.sh"
 contur_setup = "source $HOME/contur/setupContur.sh"
@@ -168,8 +168,9 @@ def batch_submit(args):
                 batch_file.write(command)
 
             if args.scan_only is False:
-                subprocess.call(["qsub -q medium " + batch_command_path],
-                                shell=True)
+                with WorkingDirectory(directory_path):
+                    subprocess.call(["qsub -q medium " + batch_command_path],
+                                    shell=True)
 
 
 if __name__ == '__main__':
