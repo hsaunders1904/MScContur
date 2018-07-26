@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+
+import pickle
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+# from scipy.interpolate import griddata
+from matplotlib.mlab import griddata
+
+with open('myscan.map', 'rb') as f:
+    map_object = pickle.load(f)
+
+num_points = len(map_object)
+x = [map_object[i].ModelParam1 for i in range(num_points)]
+y = [map_object[i].ModelParam2 for i in range(num_points)]
+z = [map_object[i].ModelParam3 for i in range(num_points)]
+confidence_lvls = [map_object[i].conturPoint.CLs for i in range(num_points)]
+#
+# print('x', min(x), max(x), len(confidence_lvls))
+# print('y', min(y), max(y), len(confidence_lvls))
+# print('z', min(z), max(z), len(confidence_lvls))
+# print('confidence_lvls', min(confidence_lvls), max(confidence_lvls), len(confidence_lvls))
+#
+grid_size = 200
+xx = np.linspace(min(x)*0.9, max(x)*1.1, grid_size)
+yy = np.linspace(min(y)*0.9, max(y)*1.1, grid_size)
+zz = griddata(x, y, confidence_lvls, xx, yy, interp='linear')
+
+contour_plot = plt.contourf(xx, yy, zz, 15, vmax=abs(zz).max(),
+                            vmin=-abs(zz).max())
+plt.colorbar()
+plt.scatter(x, y, marker='o')
+for i in range(len(x)):
+    plt.text(x[i], y[i], '%04i' % i, fontsize=8)
+plt.xlabel(r'$M_{X_M}$ [GeV]')
+plt.ylabel(r'$M_{Y_1}$')
+plt.savefig('h_fig.png')
+
+with open('data.txt', 'w') as f:
+    f.write('Runpoint\tXm\tY1\tgYq\tConfidence\n')
+    for i in range(len(x)):
+        f.write("%04i\t%f\t%f\t%f\t%f\n" % (i, x[i], y[i], z[i], confidence_lvls[i]))
+
+# fig = plt.figure()
+# ax = fig.add_subplot(111, projection='3d')
+
+# ax.scatter(x, y, z)
+# ax.set_xlabel(r'$M_{X_M}$')
+# ax.set_ylabel(r'$M_{Y_1}$')
+# ax.set_zlabel(r'$g_Y$')
+# plt.savefig('h_fig.png')
+
+
+# grid = griddata((x, y, z), confidence_lvls)
+# zz = griddata(x, y, confidence_lvls, xx, yy, interp='linear')
+#
+# contour_plot = plt.contourf(xx, yy, zz, 15, vmax=abs(zz).max(),
+#                             vmin=-abs(zz).max())
+# plt.colorbar()
+# plt.scatter(x, y, marker='o')
+# # plt.xlabel("$M_{Z'}$ [GeV]")
+# # plt.ylabel(r"$M_{\textsc{dm}}$ [GeV]")
+# plt.savefig('h_fig.png')
