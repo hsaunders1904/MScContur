@@ -91,6 +91,7 @@ you.
 #### Choose a Model
 - Choose a model. The standard run area contains two simplified dark matter
   models installed as default.
+  
     > DM_vector_mediator_UFO is the model used in the first contur paper.
     
     > DM_vector_mediator_HF_UFO is the same model but with Z' coupling to all
@@ -104,7 +105,7 @@ you.
   For convenience, we have two ways of running, specific to the simple DM model
   but can be modified.
   Example Herwig .in files are provided in the model directories; see the 
-  comments in there.
+  
     > First Way: (see for example .in files with HAD in the name) runs 
       inclusive generation of BSM particles.
       
@@ -168,7 +169,7 @@ you.
       set /Herwig/FRModel/Particles/Y1:NominalMass {Y1}
       set /Herwig/FRModel/Particles/Xm:NominalMass {Xm}
       set /Herwig/FRModel/FRModel:gYXm {gYXm}
-      set /Herwig/FRModel/FRModel:gYq {gYq}```
+      set /Herwig/FRModel/FRModel:gYq {gYq}
 
   If you wanted to add or remove parameters you must do this in both files.
   
