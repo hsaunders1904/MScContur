@@ -8,14 +8,13 @@ from optparse import OptionParser
 import contur.Utils as util
 import sys, os, pickle
 
-# 
 parser = OptionParser(usage=__doc__)
 parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
                   default="plots", help="Specify output directory for output plots.")
 parser.add_option("-a", "--analysisdir", dest="ANALYSISDIR",
                   default="ANALYSIS", help="Output directory for analysis cards.")
 # parser.add_option("-s", "--single",
-#                  action="store_false", dest="BATCHMODE", 
+#                  action="store_false", dest="BATCHMODE",
 #                  help="single run - more output")
 parser.add_option("-n", "--nostack",
                   action="store_true", dest="NOSTACK", default=False,
@@ -26,13 +25,12 @@ parser.add_option("-t", "--testmethod", dest="TESTMETHOD",
                         "\n (All previous assume background=data, background error=0), CSD=as CS but assuming "
                         "background error=data error CST=chi2 using theory where available CSDT=chi2 using theory where"
                         " available, otherwise background and error taken from measurement."))
-parser.add_option("-v", "--version",
-                  action="store_true", dest="printVersion",
+parser.add_option("-v", "--version", action="store_true", dest="printVersion",
                   default=False, help="print version number and exit.")
-# parser.add_option("-g", "--grid", dest="GRID",default=False,
-#                  help="specify a folder containing a structured grid of points to analyse")
-parser.add_option("-g", "--grid", action="store_true", dest="GRID", default=False,
-                  help="Set this flag to read grids of structured yoda files rather than individual files")
+parser.add_option("-g", "--grid", dest="GRID",default=False,
+                 help="specify a folder containing a structured grid of points to analyse. Usually 'myscan'.")
+parser.add_option('-T', '--tag', dest='TAG', default='runpoint_',
+                  help='Identifier for yoda files when using yoda_merger.')
 
 
 def write_output(message, conturFactory):
@@ -96,15 +94,12 @@ def analyseYODA(yodafile):
 
             # this is just used to check if a histo is a valid contur histo, this should be factored into histFact and
             # taken out as a check here
-
             if tf.validHisto(v2.path):
-
                 # if 'ATLAS_2012_I1203852' not in v2.path:
                 # if "ATLAS_2016_I1492320" not in v2.path and "ATLAS_2016_I1467454_MU" not in v2.path:
                 # continue
 
                 # Conturfact should also hold xsec and Nev eventually
-
                 histo = ct.histFactory(v2, xsec, Nev, opts.TESTMETHOD, opts.GRID)
 
                 # sometimes the list of conturPoints made by hist fact is empty (no signal in any bin), this exception
@@ -122,16 +117,91 @@ def analyseYODA(yodafile):
     # eventually conturFact should know which model point each yoda is from, then multiple yodas covering different
     # pools can be pushed in at the same time
     # and eventually construct a point for each parameter space point, for now assume a single input yoda to test
-
     contur.sortPoints()
-
     #  return the conturDepot
     return contur
 
 
-if __name__ == "__main__":
+def yoda_merger(scan_dir, tag='runpoint_'):
+    """Move through directories merging yoda analysis files"""
+    print("Merging yoda files\n"
+          "-------------------")
+    for root, dirs, files in os.walk(scan_dir):
+        file_list = []
+        run_point_num = os.path.basename(root)
+        if not os.path.exists('runpoint_' + run_point_num + '.yoda'):
+            for name in files:
+                conditions = (name.endswith('.yoda') and
+                              name != 'LHC.yoda' and
+                              'LHC' in name and
+                              tag in name)
+                if conditions:
+                    yodafile = os.path.join(root, name)
+                    file_list.append(yodafile)
 
+            if file_list:
+                file_string = ' '.join(file_list)
+                out_file = os.path.join(root, 'runpoint_' + run_point_num
+                                        + '.yoda')
+                command = ' '.join(['yodamerge -o', out_file, file_string])
+                print(command)
+                os.system(command)
+        else:
+            print('runpoint_' + run_point_num + '.yoda already exists.')
+
+
+def analyse_grid(scan_path):
+    grid_points = []
+    yoda_counter = 0
+    for root, dirs, files in os.walk(scan_path):
+        for file_name in files:
+            valid_yoda_file = (file_name.endswith('.yoda') and
+                               'LHC' not in file_name and
+                               'run' in file_name)
+            if valid_yoda_file is True:
+                yoda_counter += 1
+                yoda_file_path = os.path.join(root, file_name)
+                param_file_path = os.path.join(root, 'params.dat')
+                params = read_param_file(param_file_path)
+                print('\nFound valid yoda file ' + yoda_file_path.strip('./'))
+                print('Sampled at:')
+                for param, val in params.iteritems():
+                    print(param + ': ' + str(val))
+
+                # Perform analysis
+                contur_depot = analyseYODA(yoda_file_path)
+                contur_depot.params = params
+                # contur_depot.ModelParam1 = params['Xm']
+                # contur_depot.ModelParam2 = params['Y1']
+                # try:
+                #     contur_depot.ModelParam3 = params['gYq']
+                # except KeyError:
+                #     pass
+                print('Confidence level is ' +
+                      str(contur_depot.conturPoint.CLs) + '\n')
+
+                grid_points.append(contur_depot)
+
+    print "Found %i yoda files" % yoda_counter
+    write_output_grid(grid_points, group='myscan')
+
+
+def read_param_file(file_path):
+    """Read a params.dat file and return dictionary of contents"""
+    with open(file_path, 'r') as param_file:
+        raw_params = param_file.read().strip().split('\n')
+
+    param_dict = {}
+    for param in raw_params:
+        name, value = param.split(' ')
+        param_dict[name] = float(value)
+
+    return param_dict
+
+
+if __name__ == "__main__":
     # Command line parsing
+    # yodafiles = Grid for heat maps or yoda files for single analysis
     opts, yodafiles = parser.parse_args()
 
     version = " Beta pre-release"
@@ -140,9 +210,10 @@ if __name__ == "__main__":
         util.writeBanner()
         sys.exit(0)
 
-        if not yodafiles:
-            sys.stderr.write("Error: You need to specify some YODA files to be analysed!\n")
-            sys.exit(1)
+    if not yodafiles and not opts.GRID:
+        sys.stderr.write("Error: You need to specify some YODA files to be "
+                         "analysed!\n")
+        sys.exit(1)
 
     util.writeBanner()
 
@@ -170,49 +241,11 @@ if __name__ == "__main__":
 
     print modeMessage
 
-    # Initialise a conturDepot
-    # contur = ct.conturDepot(opts.TESTMETHOD)
-
     if opts.GRID:
-        # do a grid based scan
-        for dirs in yodafiles:
-            gridPoints = []
-            for rt, drs, fls in os.walk(os.path.join(dirs)):
-                for name in fls:
-                    fileliststatic = []
-                    if '.yoda' in name and 'LHC' not in name and 'plot' not in name:
-                        yodafile = os.path.join(rt, name)
-                        fileliststatic = str(yodafile)
-                        try:
-                            # TODO use regex instead
-                            splitname = name.strip('.yoda').split('_')
-                            x = splitname[1]
-                            y = splitname[3]
-                            _, _ = int(x), int(y)  # check we have integers
-                        except (IndexError, ValueError):
-                            print('Yoda file does not appear to have the '
-                                  'correct naming style', name)
-                            continue
-
-                        print "Found valid yoda file", yodafile.strip('./')
-                        print "Model point info ", x, y
-
-                        # Perform analysis
-                        conturDepot = analyseYODA(yodafile)
-                        conturDepot.ModelParam1 = x
-                        conturDepot.ModelParam2 = y
-                        print "conf level is ", conturDepot.conturPoint.CLs
-                        gridPoints.append(conturDepot)
-                        # masterDict = CL.grid_add_to_dict(masterDict, mapPoints)
-                    else:
-                        continue
-            # Write output of grid Point
-            write_output_grid(gridPoints, group=os.path.basename(dirs))
-
+        yoda_merger(opts.GRID, opts.TAG)
+        analyse_grid(os.path.abspath(opts.GRID))
     else:
-        # conturFactory should take entire yoda files/ list of yoda file as
-        # initialization argument but for now loop over aos in yodafile
+        yoda_merger('.', opts.TAG)
         for infile in yodafiles:
             contur = analyseYODA(infile)
-            # write summary for plotting
             write_output(modeMessage, contur)

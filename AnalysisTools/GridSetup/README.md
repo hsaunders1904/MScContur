@@ -41,7 +41,7 @@ specified using the `-g` flag. Or you can use `-g none` to not use one.
 - If you only want to run a scan and not submit to batch (maybe to check it's 
 running correctly after a change) you can use the `-s` or `--scan_only` flag.
 
-`python batch_submit_prof.py --help` for more command line options.
+`$ python batch_submit_prof.py --help` for more command line options.
 
 
 ## Testing

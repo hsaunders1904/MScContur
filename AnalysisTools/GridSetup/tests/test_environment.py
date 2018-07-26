@@ -7,6 +7,7 @@ import sys
 import platform
 from subprocess import CalledProcessError
 
+# Could replace this with os.dirname(os.envrion['LHAPATH'].strip(os.sep)
 herwig_directory = '/unix/cedar/software/sl6/Herwig-Tip/'
 try:
     contur_directory = os.path.expandvars(os.environ['$CONTURMODULEDIR'])
@@ -35,7 +36,8 @@ def test_python_path():
     """Test python path includes Contur and Herwig directories"""
     try:
         python_path = os.environ['PYTHONPATH'].split(':')
-	print(python_path)
+        print("$PYTHONPATH:")
+        print(python_path)
 
         required_paths = [os.path.join(contur_directory, 'AnalysisTools',
                                        'contur'),
@@ -73,9 +75,9 @@ def test_platform():
         if 'Scientific Linux' not in redhat_release:
             flag = True
     except(IOError, OSError):
-            os_platform = platform.platform(aliased=True)
-            if 'redhat' not in os_platform and 'Carbon' not in os_platform:
-                flag = True
+        os_platform = platform.platform(aliased=True)
+        if 'redhat' not in os_platform and 'Carbon' not in os_platform:
+            flag = True
     if flag:
         pytest.fail("The OS on this PC may not match the OS on the batch farm."
                     "\nThis may cause errors when the farm tries to run "

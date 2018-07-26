@@ -6,8 +6,8 @@ import mock
 import pytest
 import shutil
 
-from batch_submit_prof import (contur_setup, herwig_setup, gen_batch_command,
-                               batch_submit, valid_arguments, get_args)
+from batch_submit import (contur_setup, herwig_setup, gen_batch_command,
+                          batch_submit, valid_arguments, get_args)
 
 # Get necessary directory paths
 test_dir = os.path.dirname(os.path.abspath(__file__))
@@ -32,7 +32,7 @@ class WorkingDirectory:
 
 
 def parse_command(command):
-    """Parse given command using parser in 'batch_submit_prof.py'"""
+    """Parse given command using parser in 'batch_submit.py'"""
     with mock.patch('sys.argv', command.split(' ')):
         args = get_args()
     return args
@@ -41,7 +41,7 @@ def parse_command(command):
 def setup_module():
     """Make a test area and mock some command line options"""
     make_test_area('.', os.path.join(test_files_dir, 'GridSetup'))
-    command = 'batch_submit_prof.py 1 -m random -s'
+    command = 'batch_submit.py 1 -m random -s'
     args = parse_command(command)
     with WorkingDirectory(os.path.join(test_files_dir, 'GridSetup')):
         batch_submit(args)
@@ -115,7 +115,7 @@ def test_valid_arguments(fixture):
 
 def test_gen_batch_command():
     """Test gen_batch_command produces expected output"""
-    terminal_command = 'batch_submit_prof.py 10 --seed 10 -n 500'
+    terminal_command = 'batch_submit.py 10 --seed 10 -n 500'
     args = parse_command(terminal_command)
     batch_command, _ = gen_batch_command('test_dir', 'test/test_dir', args)
     expected_command = (

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import numpy as np
-import pickle
 import sys
+import pickle
+import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import griddata
 from mpl_toolkits.mplot3d import Axes3D
@@ -38,6 +38,12 @@ class ConturGrid:
         self.parameter_vals = [self.params[param] for param in parameters]
         self.grid = self._generate_grid()
 
+    def __str__(self):
+        return str(self.grid)
+
+    def __repr__(self):
+        return "ConturGrid object: " + str(self._get_parameters())
+
     def _generate_grid(self):
         """Interpolate between points in the grid"""
         self.parameter_space = []
@@ -45,7 +51,8 @@ class ConturGrid:
             param_range = np.linspace(min(vals), max(vals), self.grid_size)
             self.parameter_space.append(param_range)
         mesh_points = tuple(np.meshgrid(*self.parameter_space))
-        grid = griddata(tuple(self.parameter_vals), self.conf_lvls, mesh_points)
+        grid = griddata(tuple(self.parameter_vals), self.conf_lvls,
+                        mesh_points)
         return grid
 
     def _get_parameters(self):
@@ -71,10 +78,14 @@ class ConturGrid:
                 title += '\n%s=%.4f' % (self.parameters[2],
                                         self.parameter_space[-1][slice_idx])
 
-        axis_limits = (np.floor(min(self.parameter_vals[0])),
-                       np.ceil(max(self.parameter_vals[0])),
-                       np.floor(min(self.parameter_vals[1])),
-                       np.ceil(max(self.parameter_vals[1])))
+        # axis_limits = (np.floor(min(self.parameter_vals[0])),
+        #                np.ceil(max(self.parameter_vals[0])),
+        #                np.floor(min(self.parameter_vals[1])),
+        #                np.ceil(max(self.parameter_vals[1])))
+        axis_limits = (min(self.parameter_vals[0]),
+                       max(self.parameter_vals[0]),
+                       min(self.parameter_vals[1]),
+                       max(self.parameter_vals[1]))
 
         if len(self.grid.shape) == 2:
             grid_slice = self.grid

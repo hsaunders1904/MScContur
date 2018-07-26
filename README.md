@@ -198,15 +198,15 @@ you.
   
     `$ cd run-area/`
     
-    `$ contur-prof -g GridSetup/` 
+    `$ contur -g GridSetup/` 
 
 - Plot a heatmap.
 
     `$ cd ANALYSIS/`
     
-    `$ contur-prof-plot --help`
+    `$ contur-plot --help`
     
-    `$ contur-prof-plot xxxx.map Xm Y1 gYq -g 200 -s 100 -t "My First Heatmap"`
+    `$ contur-plot xxxx.map Xm Y1 gYq -g 200 -s 100 -t "My First Heatmap"`
     
     
 ## Authors

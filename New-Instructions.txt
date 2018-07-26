@@ -146,10 +146,10 @@ Run a Batch Job to Generate Heatmaps
 - Analyse results with contur. Resulting .map file will be outputted to 
   ANALYSIS folder.
     - cd run-area/
-    - contur-prof -g GridSetup/ 
+    - contur -g GridSetup/
 
 - Plot a heatmap.
     - cd ANALYSIS/
-    - contur-prof-plot --help
-    - contur-prof-plot xxxx.map Xm Y1 gYq -g 200 -s 100 -t "My First Heatmap"
+    - contur-plot --help
+    - contur-plot xxxx.map Xm Y1 gYq -g 200 -s 100 -t "My First Heatmap"
 

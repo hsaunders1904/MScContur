@@ -1,361 +1,173 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+TODO:
+- Fix 'gen_gif' to read all '*.png's in directory and produce .gif
+"""
 
-from optparse import OptionParser
-import os, sys
-import contur.Utils as util
-import contur as ct
-from contur.Plotting import *
-import pickle
-import os, sys
-import numpy as np
+import os
+import sys
 import matplotlib.pyplot as plt
-import scipy.stats as sp
-from os.path import join
-import errno
-from matplotlib.ticker import *
-from collections import defaultdict
+from argparse import ArgumentParser, RawTextHelpFormatter, ArgumentError
 
-parser = OptionParser(usage=__doc__)
-parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
-                  default="plots", help="Specify output directory for output plots.")
-parser.add_option("-v", "--version",
-                  action="store_true", dest="printVersion",
-                  default=False, help="print version number and exit.")
-parser.add_option("-s", "--scan", dest="SCAN",
-                  default="DMHF", help="Specify what model/parameters these maps refer to: DMLF, DMHF, MH2SA, ZPGP")
-parser.add_option("-l", "--limit", dest="CLIMIT",
-                  default="0.95", help="Conf limit of the contur")
-
-opts, mapfiles = parser.parse_args()
-
-if opts.printVersion:
-    util.writeBanner()
-    sys.exit(0)
-
-if not mapfiles:
-    sys.stderr.write("Error: You need to specify some contur.map files to be analysed!\n")
-    sys.exit(1)
+from contur.contur_grid import ConturGrid
 
 
-# function to decode the physical X value from the x axis grid variable
-def xlab(x,dummy=0):
-    if opts.SCAN == "ZPGP":
-        return np.power(10,x/10.0)
+# def generate_gif():
+#     create_palette = ("ffmpeg -y -f image2 -i plots/%04d.png -vf scale=900"
+#                       ":-1:sws_dither=ed,palettegen plots/palette.png")
+#     create_gif = ("ffmpeg -y -f image2 -framerate 9 -i plots/%04d.png -i "
+#                   "plots/palette.png -lavfi paletteuse plots/heatmap.mp4")
+#     gif_command = ' && '.join([create_palette, create_gif])
+#     os.system(gif_command)
+
+parser_description = (
+    "Plot contur data from a .map file.\n"
+    "You should specify a .map file to read and 2 or 3 variable to plot\n"
+    "\n"
+    "Usage examples:\n"
+    "---------------\n"
+    "contur-plot myscan.map Xm Y1\n"
+    "    --> to plot heat map with Xm on x-axis and Y1 on y-axis\n"
+    "\n"
+    "contur-plot myscan.map Xm Y1 gYq -s 50\n"
+    "    --> to plot Xm on x-axis Y1 on y-axis and slice 50 of gYq (z-axis)\n"
+    "\n"   
+    "contur-plot myscan.map Xm Y1 gYq -sc\n"
+    "    --> to plot 3d scatter graph\n"
+    "\n"
+    "contur-plot myscan.map Xm Y1 gYq -a\n"
+    "    --> to plot Xm on x-axis, Y1 on y-axis and all slices of gYq\n")
+
+parser = ArgumentParser(description=parser_description,
+                        formatter_class=RawTextHelpFormatter)
+# Positional arguments
+parser.add_argument('map_file', type=str, help=('Path to .map file '
+                    'containing list of conturDepot objects.'))
+parser.add_argument('variables', nargs='*', type=str,
+                    help=('x, y [and z] variables to plot.'))
+# Optional arguments
+parser.add_argument('-g', '--grid_size', type=int, default=200,
+                    help='Number of points per dimension in grid.\n'
+                         '(default=%(default)s)')
+parser.add_argument('-a', '--all', action='store_true',
+                    help=('Plot heatmap for all slices in z-dimension.'))
+parser.add_argument('-s', '--slice', type=int,
+                    help=('Index of slice of parameter space to plot.\n'
+                          'This or -a must be specified if plotting a heatmap'
+                          '\nin more than 2 dimensions.'))
+parser.add_argument('-sc', '--scatter', action='store_true',
+                    help='Plot a 3D scatter graph.')
+parser.add_argument('-o', '--output_path', type=str, default='heatmap.png',
+                    help=("Path to output plot(s) to. Should be a filename\n"
+                          "unless using '--all' flag, in which case this\n"
+                          "should point to a directory."))
+parser.add_argument('-x', '--x_label', type=str, default=None,
+                    help='x-axis label.')
+parser.add_argument('-y', '--y_label', type=str, default=None,
+                    help='y-axis label.')
+parser.add_argument('-z', '--z_label', type=str, default=None,
+                    help='z-axis label.')
+parser.add_argument('-t', '--title', type=str, help='Title for plot.')
+parser.add_argument('-p', '--points', action='store_true',
+                    help='Plot positions of data points over heatmap.')
+parser.add_argument('-ds', '--dont_save', action='store_true',
+                    help="Don't save plot (can be useful in development).")
+args = parser.parse_args()
+
+parsing_error_msg = ("To call contur-plot you must specify an input .map " 
+                     "file and 2 or 3 variables to plot!\nThe format must "
+                     "follow:\ncontur-plot .map_file x_variable "
+                     "y_variable [z_variable] [optional_arguments]")
+
+# Error catching
+if len(args.variables) not in [2, 3]:
+    print("Error parsing arguments!\n\n" + parsing_error_msg)
+    sys.exit()
+
+if len(args.variables) == 3 and not (args.slice or args.scatter or args.all):
+    print("Error:\n-----\nYou must specify a slice index or whether to plot a "
+          "scatter graph if you are plotting in 3 dimensions.")
+    sys.exit()
+
+if args.slice >= args.grid_size:
+    print("Error slicing grid!\n"
+          "Specified slice outside of grid dimensions. The slice index must "
+          "be less than grid size (default=200).")
+    sys.exit()
+
+# Interpolate grid
+contur_grid = ConturGrid(args.map_file, args.grid_size, args.variables)
+
+if len(args.variables) == 2:
+    if args.scatter:
+        # Plot a 2D scatter graph
+        if args.output_path == 'heatmap.png':
+            out_path = '2d_plot.png'
+        else:
+            out_path = args.output_path
+        print("Generating " + out_path)
+        contur_grid.plot_2d_scatter(x_label=args.x_label,
+                                    y_label=args.y_label,
+                                    title=args.title,
+                                    dont_save=args.dont_save,
+                                    output_path=out_path)
     else:
-        return x
-
-# function to decode the physical Y value from the y axis variable
-def ylab(y,dummy=0):
-    if opts.SCAN == "MH2SA":
-        y = np.sin(y*np.pi/40.0)
-        return float('%3.1f' % y )
-    elif opts.SCAN == "ZPGP":
-        lab = 1.0*np.power(10,-y/4.0)
-        return lab
-    else:
-        return y
-
-
-# -------------------------- MAIN -----------------------
-if __name__ == "__main__":
-    util.mkoutdir(opts.OUTPUTDIR)
-
-    contourXaxis=[]
-    contourYaxis=[]
-    modeMessage = ""
-
-    climit = float(opts.CLIMIT)
-
-# Axis labels (should get these from the conturDepot eventually?)
-    if opts.SCAN == "MH2SA":
-        xAxisLabel = r"$M_{H2}$ [GeV]"
-        yAxisLabel = r"$\sin \alpha$"
-    elif opts.SCAN == "ZPGP":
-        xAxisLabel = r"$M_{Z'}$ [GeV]"
-        yAxisLabel = r"$g'$"
-    else:
-        xAxisLabel = r"$M_{Z'}$ [GeV]"
-        yAxisLabel = r"$M_{\textsc{dm}}$ [GeV]"
-
-    # Build a dictionary to build the CL values for individual pools
-    depots = {}
-
-    # Build a dictionary to store the CL values for individual pools
-    confLims  = defaultdict(list)
-    bestPlots = {}
-
-    for m in mapfiles:
-        with open(m, 'r+b') as f:
-            x = pickle.load(f)
-
-        n_pools = len(x[0].sortedPoints)
-        print "Loaded file", m, " which has ", n_pools, " pools"
-
-        # Sort them so the parameter values are in order.
-        x.sort(key=lambda i: (float(i.ModelParam1), float(i.ModelParam2)))
-
-        # array to store the total CL values this is maximum possible size (ie too big!)
-        confLim = np.zeros((len(x),len(x)))
-
-        for ctp in x[0].sortedPoints:
-            pool = ctp.pools
-            confLims[pool] = np.zeros((len(x),len(x)))
-
-        modeMessage = x[0].modeMessage
-
-        for cDepot in x:
-            if not cDepot.ModelParam1 in contourXaxis:
-                contourXaxis.append(cDepot.ModelParam1)
-            if not cDepot.ModelParam2 in contourYaxis:
-                contourYaxis.append(cDepot.ModelParam2)
-
-            key = cDepot.ModelParam1+cDepot.ModelParam2
-             #if not key == "2609":
-               #  continue
-
-            if not key in depots:
-                depots[key] = cDepot
-            else:
-                for ctpt in cDepot.sortedPoints:
-                    depots[key].addPoint(ctpt)
-
-
-
-# ended loop over points -------------------------------
-
-
-# ended loop over files -------------------------------
-
-    print "Recalculating"
-    for key in depots:
-
-        cDepot = depots[key]
-        confLim[contourXaxis.index(cDepot.ModelParam1)][contourYaxis.index(cDepot.ModelParam2)]=depots[key].conturPoint.CLs
-
-        for ctp in depots[key].sortedPoints:
-            confLims[ctp.pools][contourXaxis.index(cDepot.ModelParam1)][contourYaxis.index(cDepot.ModelParam2)]  = ctp.CLs
-            if ctp.CLs>0.5 and not ctp.pools in bestPlots:
-                bestPlots[ctp.pools] = ctp.tags+":"+str(ctp.CLs)
-                if ctp.CLs>0.5 and not ctp.tags in bestPlots[ctp.pools]:
-                    bestPlots[ctp.pools] = ctp.tags+":"+str(ctp.CLs)
-
-
-# set up for the plots here.
-    print "Setting up plots"
-
-    Xaxis = np.array(map(float, contourXaxis))
-    Yaxis = np.array(map(float, contourYaxis))
-
-    # find the grid spacings:
-
-    dx= ( min(filter(lambda x: x> min(Xaxis), (Xaxis))) - min(Xaxis))/2.0
-    dy= ( min(filter(lambda x: x> min(Yaxis), (Yaxis))) - min(Yaxis))/2.0
-    #print dx, dy
-
-    yy,xx = np.mgrid[min(Yaxis)-dy:max(Yaxis)+2*dy:2*dy,min(Xaxis)-dx:max(Xaxis)+2*dx:2*dx]
-
-    cl_values = confLim[:len(contourXaxis), :len(contourYaxis)]
-
-    # translate from the parameters of the  to something more readable
-    fmt = plt.FuncFormatter(xlab)
-    fmt2 = plt.FuncFormatter(ylab)
-
-
-# make an html index file for browsing them
-
-    index = open("./plots/index.html", "w")
-    index.write('<html>\n<head>\n<title>Heatmaps and contours</title>\n</head>\n<body>')
-
-# make the overall heatmap
-    print "Overall heatmap"
-
-    fig=plt.figure(figsize=fig_dims)
-
-
-    ax = fig.add_subplot(1,1,1)
-    ax.xaxis.set_major_formatter(fmt)
-    ax.yaxis.set_major_formatter(fmt2)
-
-    if (opts.SCAN == "ZPGP"):
-        my_locator_x = MaxNLocator((int(max(Xaxis)) / 10) + 1)
-        my_locator_y = MaxNLocator((int(max(Yaxis)) / 4) + 1)
-        ax.yaxis.set_major_locator(my_locator_y)
-        ax.xaxis.set_major_locator(my_locator_x)
-
-    plt.pcolormesh(xx,yy,cl_values.T,cmap=plt.cm.magma, vmin=0, vmax=1)
-
-    # axis labels
-    plt.xlabel(xAxisLabel)
-    plt.ylabel(yAxisLabel)
-
-    x_grid_min = min(Xaxis)
-    if opts.SCAN == "DMLF":
-        # plot the pert unitarity bound
-        xub=np.array(Xaxis)
-        xub[0]=xub[0]-dx
-        yub=util.pertUnit(xub)
-        plt.ylim(min(Yaxis)-dy,max(Yaxis)+dy)
-        plt.plot(xub,yub,color='navy')
-        ax.fill_between(xub,yub,max(Yaxis)+dy,facecolor='navy',alpha=0.4)
-    elif opts.SCAN == "ZPGP":
-        plt.ylim(min(Yaxis)-dy,max(Yaxis)+dy)
-        plt.xlim(min(Xaxis)-dx,max(Xaxis)+dx)
-        # plot the LEP bound
-        y=np.array(Yaxis)
-        x=util.LEPLimit(ylab(y))
-        plt.plot(x,y,color='navy')
-        ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.3)
-        # plot the ATLAS bound
-        y=np.array([0.,1.,2.,3.,4.,5.,6.,7.,8.,9.1,9.2,9.3,9.4,9.5,9.6,9.7,9.8,9.9,10])
-        x=util.ATLASLimit(ylab(y))
-        plt.plot(x,y,color='navy')
-        ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.2)
-        # plot the Borexino bound
-        y=np.array(Yaxis)
-        y[0]=y[0]-dy
-        x=util.BorexinoLimit(ylab(y))
-        plt.plot(x,y,color='navy')
-        ax.fill_between(x,y,x_grid_min,facecolor='navy',alpha=0.3)
-        # make g' go the right way.
-        plt.gca().invert_yaxis()
-
-
-    # save the fig and pad it for better layout
-    fig.tight_layout(pad=0.1)
-    pngfile = "./plots/combinedCL.png"
-    contourpng = "./plots/contur.png"
-    pdffile = "./plots/combinedCL.pdf"
-    plt.savefig(pdffile)
-    plt.savefig(pngfile)
-
-    index.write('<h3>Combined Heatmap and contour</h3>')
-    index.write('<h4>'+modeMessage+'</h4>')
-    index.write('<img src="%s">\n' % os.path.basename(pngfile))
-    index.write('<img src="%s">\n' % os.path.basename(contourpng))
-
-    # now the heatmaps for the different analysis pools
-    print "Subpool heatmaps"
-    for pool in confLims:
-
-        cl_values_pool = confLims[pool][:len(contourXaxis), :len(contourYaxis)]
-
-        fig=plt.figure(figsize=fig_dims)
-        ax = fig.add_subplot(1,1,1)
-        ax.xaxis.set_major_formatter(fmt)
-        ax.yaxis.set_major_formatter(fmt2)
-        if opts.SCAN == "ZPGP":
-            ax.yaxis.set_major_locator(my_locator_y)
-            ax.xaxis.set_major_locator(my_locator_x)
-
-        plt.pcolormesh(xx,yy,cl_values_pool.T,cmap=plt.cm.magma, vmin=0, vmax=1)
-
-        # axis labels
-        plt.xlabel(xAxisLabel)
-        plt.ylabel(yAxisLabel)
-
-        # save the fig and pad it for better layout
-        if opts.SCAN == "ZPGP":
-            plt.gca().invert_yaxis()
-        fig.tight_layout(pad=0.1)
-        pngfile = "./plots/combinedCL_"+pool+".png"
-        plt.savefig(pngfile)
-        index.write('<h4>%s</h4>' % pool)
-        index.write('<img src="%s">\n' % os.path.basename(pngfile))
-        if pool in bestPlots:
-            index.write(bestPlots[pool])
-
-        plt.close(fig)
-
-
-
-# Now the overall contour plot -------------------------------------------------------------------------------
-    print "Overall contour plot"
-    fig=plt.figure(figsize=fig_dims)
-
-    ax = fig.add_subplot(1,1,1)
-    ax.xaxis.set_major_formatter(fmt)
-    ax.yaxis.set_major_formatter(fmt2)
-    if (opts.SCAN == "ZPGP"):
-        ax.yaxis.set_major_locator(my_locator_y)
-        ax.xaxis.set_major_locator(my_locator_x)
-
-    # draw a filled contour region for the CL excl
-    CS=plt.contourf(Xaxis,Yaxis,cl_values.T,levels=[climit,1.0],label="CL",cmap=plt.cm.magma, alpha =0.8)
-    # and a black outline
-    CS2=plt.contour(CS, colors = 'black')
-
-
-    # axis labels
-    plt.xlabel(xAxisLabel)
-    plt.ylabel(yAxisLabel)
-
-    if opts.SCAN == "DMLF":
-        # plot the pert unitarity bound
-        xub=np.array(Xaxis)
-        yub=util.pertUnit(xub)
-        plt.ylim(min(Yaxis),max(Yaxis))
-        plt.plot(xub,yub,color='navy')
-        ax.fill_between(xub,yub,max(Yaxis),facecolor='navy',alpha=0.4)
-
-    elif opts.SCAN == "ZPGP":
-        # the theory constraints
-        for i, x in enumerate(Xaxis):
-            for j, y in enumerate(Yaxis):
- # ------------------
-                mzp = xlab(x).item()
-                g1p = ylab(y).item()
-                mh2 = mzp/(2.0*g1p)
-                sina = 0.0
- # ------------------
-                  #sina = 4.0*1.772*g1p*246.0/mzp
-                  #if sina > 0.4:
-                     # sina = 0.4
- # ------------------
-                vacon, percon, vapercon = util.bl3theory(mzp,g1p,mh2,sina)
-                cl_values[i][j] = vapercon
-
-        # draw a filled contour region for the CL excl
-        CS=plt.contourf(Xaxis,Yaxis,cl_values.T,levels=[climit,1.0],label="CL",cmap=plt.cm.Greens, alpha =0.5)
-        # and a black outline
-        CS2=plt.contour(CS, colors = 'red')
-
-        plt.gca().invert_yaxis()
-
-    elif opts.SCAN == "MH2SA":
-        # the theory constraints
-        for i, x in enumerate(Xaxis):
-            for j, y in enumerate(Yaxis):
-                mh2 = xlab(x).item()
-                sina = ylab(y)
-                mzp = 7000.
-                g1p = 1.0
-                vacon, percon, vapercon = util.bl3theory(mzp,g1p,mh2,sina)
-                cl_values[i][j] = vapercon
-        # draw a filled contour region for the CL excl
-        CS=plt.contourf(Xaxis,Yaxis,cl_values.T,levels=[climit,1.0],label="CL",cmap=plt.cm.Greens, alpha =0.5)
-        # and a black outline
-        CS2=plt.contour(CS, colors = 'red')
-
-    fig.tight_layout(pad=0.1)
-    plt.savefig("./plots/contur.pdf")
-    plt.savefig("./plots/contur.png")
-
-
-# Now the colour bar key --------------------------------------------------------------------------
-    fig=plt.figure(figsize=[fig_dims[0]*2,0.5])
-    ax = fig.add_subplot(1,1,1)
-    import matplotlib as mpl
-    norm = mpl.colors.Normalize(vmin=0, vmax=1)
-    cb = mpl.colorbar.ColorbarBase(ax, cmap=plt.cm.magma, orientation='horizontal', norm=norm)
-    cb.set_label("CL of exclusion")
-    fig.tight_layout(pad=0.1)
-    plt.savefig('./plots/colorbarkey.pdf')
-    plt.savefig('./plots/colorbarkey.png')
-
-
-# close the html file
-    index.write("\n </body> \n")
-    index.close()
-
-    print "done"
-
+        # Plot 2D heatmap
+        print("Generating " + args.output_path)
+        contur_grid.plot_imshow(slice_idx=None,
+                                x_label=args.x_label,
+                                y_label=args.y_label,
+                                z_label=args.z_label,
+                                title=args.title,
+                                dont_save=args.dont_save,
+                                output_path=args.output_path,
+                                plot_points=args.points)
+
+else:
+    if args.slice:
+        # Plot heat map of slice of 3D parameter space
+        print("Generating " + args.output_path)
+        contur_grid.plot_imshow(slice_idx=args.slice,
+                                x_label=args.x_label,
+                                y_label=args.y_label,
+                                z_label=args.z_label,
+                                title=args.title,
+                                dont_save=args.dont_save,
+                                output_path=args.output_path,
+                                plot_points=args.points)
+    elif args.all:
+        # Plot a heat map for every slice of 3D parameter space
+        if args.output_path == 'heatmap.png':
+            args.output_path = 'plots'
+        if not os.path.exists(args.output_path):
+            os.mkdir(args.output_path)
+
+        print("Generating %i plots in %s folder."
+              % (args.grid_size, args.output_path))
+        for slice_idx in range(args.grid_size):
+            plt.ioff()
+            out_path = os.path.join(args.output_path, '%04i.png' % slice_idx)
+            contur_grid.plot_imshow(slice_idx=slice_idx,
+                                    x_label=args.x_label,
+                                    y_label=args.y_label,
+                                    z_label=args.z_label,
+                                    title=args.title,
+                                    dont_save=args.dont_save,
+                                    output_path=out_path,
+                                    plot_points=args.points)
+            plt.close()
+    elif args.scatter:
+        # Plot 3D scatter graph
+        if args.output_path == 'heatmap.png':
+            out_path = '3d_plot.png'
+        else:
+            out_path = args.output_path
+
+        print("Generating " + out_path)
+        contur_grid.plot_3d_scatter(x_label=args.x_label,
+                                    y_label=args.y_label,
+                                    z_label=args.z_label,
+                                    title=args.title,
+                                    dont_save=args.dont_save,
+                                    output_path=out_path)
