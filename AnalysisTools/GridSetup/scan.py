@@ -5,8 +5,6 @@ Created on 29/06/18
 @author: HarryS
 """
 
-from copy import copy
-
 from scanning_functions import *
 
 
@@ -49,15 +47,7 @@ def run_scan(num_points, template_paths, grid_pack, seed, output_dir='myscan',
         Seed for random number generator to get reproducibility.
 
     """
-
     check_param_consistency(param_file, template_paths)
-
-    if os.path.isdir(output_dir):
-        output_dir_copy = copy(output_dir)
-        counter = 1
-        while os.path.isdir(output_dir):
-            output_dir = output_dir_copy + "%02i" % counter
-            counter += 1
 
     np.random.seed(seed)
 

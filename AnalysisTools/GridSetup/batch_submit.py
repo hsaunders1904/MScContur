@@ -3,6 +3,7 @@
 import os
 import sys
 import subprocess
+from copy import copy
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 from scan import run_scan
@@ -157,6 +158,15 @@ def gen_batch_command(directory_name, directory_path, args):
 
 def batch_submit(args):
     """Run parameter scan and submit shell scripts to batch"""
+
+    # Make sure scan is not overwriting previous scans
+    if os.path.isdir(args.out_dir):
+        out_dir_copy = copy(args.out_dir)
+        counter = 1
+        while os.path.isdir(args.out_dir):
+            args.out_dir = out_dir_copy + "%02i" % counter
+            counter += 1
+
     # Run parameter space scan and create run point directories
     run_scan(num_points=int(args.num_points),
              template_paths=args.template_files,
@@ -178,6 +188,7 @@ def batch_submit(args):
             with open(batch_command_path, 'w') as batch_file:
                 batch_file.write(command)
 
+            print("Submitting: " + batch_command_path)
             if args.scan_only is False:
                 with WorkingDirectory(directory_path):
                     # Changing working directory is necessary here since
