@@ -9,7 +9,7 @@ from scan import run_scan
 from scanning_functions import permission_to_continue, WorkingDirectory
 
 herwig_setup = "source /unix/cedar/software/sl6/Herwig-Tip/setupEnv.sh"
-contur_setup = "source $HOME/contur/setupContur.sh"
+contur_setup = "source " + os.path.expanduser("$HOME/contur/setupContur.sh")
 
 
 def get_args():
@@ -28,7 +28,7 @@ def get_args():
     parser.add_argument("-m", "--sample_mode", dest="sample_mode",
                         default="uniform", metavar="sample_mode",
                         help="Which sampling mode to use. {'uniform', "
-                             "'random'}")
+                             "'random', 'weighted'}")
     parser.add_argument("-o", "--out_dir", dest="out_dir", type=str,
                         metavar="output_dir", default="myscan",
                         help="Specify the output directory name ")
@@ -42,10 +42,15 @@ def get_args():
                         default='GridPack', metavar='grid_pack',
                         help=("Provide additional grid pack. Set to 'none' to "
                               "not use one."))
+    parser.add_argument('-r', '--rescan', metavar='rescan', default=None,
+                        help="Specify a .map file to base new points off.")
+    parser.add_argument('-w', '--weight_factor', metavar='weight_factor',
+                        help=("Factor to use when using weighted random mode."
+                              "[weight_i = (CL^f_i)/(sum_j(CL^j)]"))
     parser.add_argument("-n", "--numevents", dest="num_events",
                         default='10000', metavar='num_events',
                         help="Number of events to generate in Herwig.")
-    parser.add_argument('--seed', dest='seed', metavar='seed', default=None,
+    parser.add_argument('--seed', dest='seed', metavar='seed', default='101',
                         help="Seed for random number generator.")
     parser.add_argument('-s', '--scan_only', dest='scan_only', default=False,
                         action='store_true',
@@ -63,8 +68,13 @@ def valid_arguments(args):
               % args.num_points)
         valid_args = False
 
-    if args.sample_mode not in ['uniform', 'random']:
-        print("Invalid sample mode! Must be 'uniform' or 'random'.")
+    if args.sample_mode not in ['uniform', 'random', 'weighted']:
+        print("Invalid sample mode! Must be 'uniform' or 'random' or "
+              "weighted.")
+        valid_args = False
+
+    if args.sample_mode == 'weighted' and not args.rescan:
+        print("Weighted random mode is only available when rescanning.")
         valid_args = False
 
     if not os.path.exists(args.param_file):
@@ -93,12 +103,15 @@ def valid_arguments(args):
               % args.num_events)
         valid_args = False
 
-    if args.seed is not None:
-        try:
-            args.seed = int(args.seed)
-        except ValueError:
-            print("Seed '%s' cannot be converted to integer!" % args.seed)
-            valid_args = False
+    try:
+        args.seed = int(args.seed)
+    except ValueError:
+        print("Seed '%s' cannot be converted to integer!" % args.seed)
+        valid_args = False
+
+    if args.rescan:
+        if not os.path.isfile(args.rescan):
+            print("No such file %s to use for rescan!" % args.rescan)
 
     return valid_args
 
@@ -116,16 +129,12 @@ def check_setup_files(contur_setup, herwig_setup):
               "does not exist!\n%s" % herwig_setup)
         file_doesnt_exist = True
     if file_doesnt_exist:
-        if not permission_to_continue("Do you wish to continue?\n(y/N): "):
+        if not permission_to_continue("Do you wish to continue?"):
             sys.exit()
 
 
 def gen_batch_command(directory_name, directory_path, args):
     """Generate commands to write to batch file"""
-    if args.seed:
-        seed = str(args.seed)
-    else:
-        seed = str(int(directory_name))
 
     # Setup Herwig environment
     batch_command = herwig_setup + ';\n'
@@ -136,7 +145,7 @@ def gen_batch_command(directory_name, directory_path, args):
     # Create Herwig run card from LHC.in
     batch_command += 'Herwig read LHC.in;\n'
     # Run Herwig run card LHC.run
-    batch_command += ('Herwig run LHC.run --seed=' + seed +
+    batch_command += ('Herwig run LHC.run --seed=' + str(args.seed) +
                       ' --tag=runpoint_' + directory_name +
                       ' --jobs=2' +
                       ' --numevents=' + str(args.num_events) + ';\n')
@@ -155,6 +164,7 @@ def batch_submit(args):
              output_dir=args.out_dir,
              sample_mode=args.sample_mode,
              param_file=args.param_file,
+             rescan=args.rescan,
              seed=args.seed)
 
     for directory_name in os.listdir(args.out_dir):
@@ -164,11 +174,14 @@ def batch_submit(args):
             command, filename = gen_batch_command(directory_name,
                                                   directory_path, args)
             batch_command_path = os.path.join(directory_path, filename)
+            # Write batch file command (commands to run Herwig)
             with open(batch_command_path, 'w') as batch_file:
                 batch_file.write(command)
 
             if args.scan_only is False:
                 with WorkingDirectory(directory_path):
+                    # Changing working directory is necessary here since
+                    # qsub reports are outputted to current working directory
                     subprocess.call(["qsub -q medium " + batch_command_path],
                                     shell=True)
 

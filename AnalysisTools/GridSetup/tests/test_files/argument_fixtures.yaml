@@ -7,7 +7,7 @@ valid_default:
   template_files: [LHC.in]
   grid_pack: GridPack
   num_events: 10000
-  seed: !!null
+  seed: 101
   scan_only: True
 
 valid_no_grid_pack:
@@ -19,7 +19,7 @@ valid_no_grid_pack:
   template_files: [LHC.in]
   grid_pack: none
   num_events: 10000
-  seed: !!null
+  seed: 101
   scan_only: True
 
 invalid_num_points:
@@ -31,7 +31,7 @@ invalid_num_points:
   template_files: [LHC.in]
   grid_pack: GridPack
   num_events: 10000
-  seed: !!null
+  seed: 101
   scan_only: True
 
 invalid_sample_mode:
@@ -43,7 +43,7 @@ invalid_sample_mode:
   template_files: [LHC.in]
   grid_pack: GridPack
   num_events: 10000
-  seed: !!null
+  seed: 101
   scan_only: True
 
 invalid_param_file:
@@ -55,7 +55,7 @@ invalid_param_file:
   template_files: [LHC.in]
   grid_pack: GridPack
   num_events: 10000
-  seed: !!null
+  seed: 101
   scan_only: True
 
 invalid_template_files:
@@ -67,7 +67,7 @@ invalid_template_files:
   template_files: [i/dont/exist, neither/do/i]
   grid_pack: GridPack
   num_events: 10000
-  seed: !!null
+  seed: 101
   scan_only: True
 
 invalid_grid_pack:
@@ -79,7 +79,7 @@ invalid_grid_pack:
   template_files: [LHC.in]
   grid_pack: i/dont/exist
   num_events: 10000
-  seed: !!null
+  seed: 101
   scan_only: True
 
 invalid_num_events:
@@ -91,7 +91,7 @@ invalid_num_events:
   template_files: [LHC.in]
   grid_pack: GridPack
   num_events: 3re
-  seed: !!null
+  seed: 101
   scan_only: True
 
 invalid_seed:

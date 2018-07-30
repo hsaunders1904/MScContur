@@ -44,6 +44,7 @@ def setup_module():
     command = 'batch_submit.py 1 -m random -s'
     args = parse_command(command)
     with WorkingDirectory(os.path.join(test_files_dir, 'GridSetup')):
+        valid_arguments(args)
         batch_submit(args)
 
 
@@ -93,7 +94,8 @@ def test_get_args(fixture):
         if key != 'command':
             if type(item) == int:
                 item = str(item)
-            assert eval('args.' + key) == item
+            print getattr(args, key), type(getattr(args, key))
+            assert getattr(args, key) == item
 
 
 @pytest.mark.parametrize('fixture', arguments_examples.iteritems())
