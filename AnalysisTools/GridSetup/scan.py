@@ -5,11 +5,13 @@ Created on 29/06/18
 @author: HarryS
 """
 
+from copy import copy
+
 from scanning_functions import *
 
 
-def run_scan(num_points, template_paths, grid_pack, output_dir='myscan',
-             sample_mode='uniform', param_file='param_file.dat', seed=None):
+def run_scan(num_points, template_paths, grid_pack, seed, output_dir='myscan',
+             sample_mode='uniform', rescan=False, param_file='param_file.dat'):
     """
     Run a scan over parameter space defined in param_file.dat using a
     given sampling mode and write relevant run cards and param files.
@@ -47,10 +49,17 @@ def run_scan(num_points, template_paths, grid_pack, output_dir='myscan',
         Seed for random number generator to get reproducibility.
 
     """
+
     check_param_consistency(param_file, template_paths)
 
-    if seed:
-        random.seed(seed)
+    if os.path.isdir(output_dir):
+        output_dir_copy = copy(output_dir)
+        counter = 1
+        while os.path.isdir(output_dir):
+            output_dir = output_dir_copy + "%02i" % counter
+            counter += 1
+
+    np.random.seed(seed)
 
     # Read in run card template files
     templates = read_template_files(template_paths)
@@ -60,7 +69,7 @@ def run_scan(num_points, template_paths, grid_pack, output_dir='myscan',
 
     # Generate parameter values depending on sampling mode
     parameters, num_points = generate_points(num_points, sample_mode,
-                                             parameters)
+                                             parameters, map_file=rescan)
     make_directory(output_dir)
     for run_point in range(num_points):
         # Run point directories are inside the output directory and hold

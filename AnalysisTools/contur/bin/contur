@@ -1,34 +1,40 @@
 #!/usr/bin/env python
 
 import contur as ct
-# this is just used to check if a histo is a valid contur histo, this should be factored into histFact and taken out
+# this is just used to check if a histo is a valid contur histo, this should be
+# factored into histFact and taken out
 from contur import TestingFunctions as tf
 
 from optparse import OptionParser
+from copy import copy
 import contur.Utils as util
 import sys, os, pickle
 
 parser = OptionParser(usage=__doc__)
 parser.add_option("-o", "--outputdir", dest="OUTPUTDIR",
-                  default="plots", help="Specify output directory for output plots.")
+                  default="plots", help="Specify output directory for output "
+                                        "plots.")
 parser.add_option("-a", "--analysisdir", dest="ANALYSISDIR",
-                  default="ANALYSIS", help="Output directory for analysis cards.")
-# parser.add_option("-s", "--single",
-#                  action="store_false", dest="BATCHMODE",
-#                  help="single run - more output")
+                  default="ANALYSIS", help="Output directory for analysis "
+                                           "cards.")
 parser.add_option("-n", "--nostack",
                   action="store_true", dest="NOSTACK", default=False,
-                  help="in single run mode, do not stack the histograms in dat file output")
+                  help="in single run mode, do not stack the histograms in dat "
+                       "file output")
 parser.add_option("-t", "--testmethod", dest="TESTMETHOD",
                   default="LL",
-                  help=("Statistical test to apply. LL=log likelihood/poisson, LLA=log liklihood/poison asimov, CS=chi2"
-                        "\n (All previous assume background=data, background error=0), CSD=as CS but assuming "
-                        "background error=data error CST=chi2 using theory where available CSDT=chi2 using theory where"
-                        " available, otherwise background and error taken from measurement."))
+                  help=("Statistical test to apply. LL=log likelihood/poisson,"
+                        " LLA=log liklihood/poison asimov, CS=chi2"
+                        "\n (All previous assume background=data, background "
+                        "error=0), CSD=as CS but assuming background error="
+                        "data error CST=chi2 using theory where available CSDT"
+                        "=chi2 using theory where available, otherwise "
+                        "background and error taken from measurement."))
 parser.add_option("-v", "--version", action="store_true", dest="printVersion",
                   default=False, help="print version number and exit.")
-parser.add_option("-g", "--grid", dest="GRID",default=False,
-                 help="specify a folder containing a structured grid of points to analyse. Usually 'myscan'.")
+parser.add_option("-g", "--grid", dest="GRID", default=False,
+                  help="specify a folder containing a structured grid of points"
+                       " to analyse. Usually 'myscan'.")
 parser.add_option('-T', '--tag', dest='TAG', default='runpoint_',
                   help='Identifier for yoda files when using yoda_merger.')
 
@@ -45,8 +51,8 @@ def write_output(message, conturFactory):
             conturFactory.conturPoint.p_sb)
         if conturFactory.conturPoint.p_b + conturFactory.conturPoint.p_sb > 0:
             result += "Compared to the SM, this model is disfavoured at %.2f %% cl \n" % (
-                        100.0 * conturFactory.conturPoint.p_b / (
-                            conturFactory.conturPoint.p_b + conturFactory.conturPoint.p_sb))
+                    100.0 * conturFactory.conturPoint.p_b / (
+                    conturFactory.conturPoint.p_b + conturFactory.conturPoint.p_sb))
 
     sumfn.write(message + "\n" + result + "\n")
     sumfn.write("pools")
@@ -57,7 +63,8 @@ def write_output(message, conturFactory):
     print result
     sumfn.close()
     for x in conturFactory.sortedPoints:
-        #   does anyone care about these dat files anymore, especially if we have the pickle dump?
+        #  does anyone care about these dat files anymore, especially if we
+        #  have the pickle dump?
         util.writeOutput(x.__repr__(), x.pools + ".dat")
         with open(opts.ANALYSISDIR + "/" + x.pools + '.map', 'w') as f:
             pickle.dump(x, f)
@@ -65,15 +72,19 @@ def write_output(message, conturFactory):
         pickle.dump(conturFactory.conturPoint, f)
 
 
-def write_output_grid(gridPoints, group=''):
+def write_output_grid(gridPoints):
     util.mkoutdir(opts.ANALYSISDIR)
-    with open(opts.ANALYSISDIR + "/" + group + '.map', 'w') as f:
+    path_out = os.path.join(opts.ANALYSISDIR, opts.GRID.strip(os.sep) + '.map')
+
+    with open(path_out, 'w') as f:
         pickle.dump(gridPoints, f)
-    print "Writing output map for " + group + " to folder: " + opts.ANALYSISDIR
+    print("Writing output map for " + opts.GRID.rstrip(os.sep) + " to : " +
+          path_out)
 
 
 def analyseYODA(yodafile):
-    # For now we strap the basic functionality of analysing a YODA file into a single common function
+    # For now we strap the basic functionality of analysing a YODA file into a
+    # single common function
     # This will be internalised in conturFactory eventually
 
     contur = ct.conturDepot(opts.TESTMETHOD)
@@ -85,38 +96,47 @@ def analyseYODA(yodafile):
         plotparser = util.mkStdPlotParser(plotdirs, )
 
     mchistos, xsec, Nev = util.getHistos(yodafile)
-    print "Monte Carlo Luminosity generated is %.1f inverse pb" % (float(Nev.numEntries()) / xsec.point(0).x)
+    print("Monte Carlo Luminosity generated is %.1f inverse pb"
+          % (float(Nev.numEntries()) / xsec.point(0).x))
 
     # again this looping belongs inside conturDepot
 
     for k, v in mchistos.iteritems():
         for k2, v2 in v.iteritems():
 
-            # this is just used to check if a histo is a valid contur histo, this should be factored into histFact and
-            # taken out as a check here
+            # this is just used to check if a histo is a valid contur histo,
+            # this should be factored into histFact and taken out as a check
+            # here
             if tf.validHisto(v2.path):
                 # if 'ATLAS_2012_I1203852' not in v2.path:
-                # if "ATLAS_2016_I1492320" not in v2.path and "ATLAS_2016_I1467454_MU" not in v2.path:
+                # if ("ATLAS_2016_I1492320" not in v2.path and
+                #     "ATLAS_2016_I1467454_MU" not in v2.path):
                 # continue
 
                 # Conturfact should also hold xsec and Nev eventually
-                histo = ct.histFactory(v2, xsec, Nev, opts.TESTMETHOD, opts.GRID)
+                histo = ct.histFactory(v2, xsec, Nev, opts.TESTMETHOD,
+                                       opts.GRID)
 
-                # sometimes the list of conturPoints made by hist fact is empty (no signal in any bin), this exception
+                # sometimes the list of conturPoints made by hist fact is empty
+                # (no signal in any bin), this exception
                 # should be properly handled inside histFact
 
-                # at this point, if we want to see the histogram, we need to write its .dat file.
+                # at this point, if we want to see the histogram, we need to
+                # write its .dat file.
                 if not opts.GRID:
-                    util.writeHistoDat(infile, plotparser, opts.OUTPUTDIR, opts.NOSTACK, histo)
+                    util.writeHistoDat(infile, plotparser, opts.OUTPUTDIR,
+                                       opts.NOSTACK, histo)
 
                 if histo.conturPoints:
-                    # add the representative (i.e. highest cl bin from each histo) and push it into the factory
+                    # add the representative (i.e. highest cl bin from each
+                    # histo) and push it into the factory
                     contur.addPoint(histo.conturPoints[histo.maxcl])
 
-    # once we have every point from a given yoda, call the function to sort this
-    # eventually conturFact should know which model point each yoda is from, then multiple yodas covering different
-    # pools can be pushed in at the same time
-    # and eventually construct a point for each parameter space point, for now assume a single input yoda to test
+    # once we have every point from a given yoda, call the function to sort
+    # this eventually conturFact should know which model point each yoda is
+    # from, then multiple yodas covering different pools can be pushed in at
+    # the same time and eventually construct a point for each parameter space
+    # point, for now assume a single input yoda to test
     contur.sortPoints()
     #  return the conturDepot
     return contur
@@ -171,19 +191,13 @@ def analyse_grid(scan_path):
                 # Perform analysis
                 contur_depot = analyseYODA(yoda_file_path)
                 contur_depot.params = params
-                # contur_depot.ModelParam1 = params['Xm']
-                # contur_depot.ModelParam2 = params['Y1']
-                # try:
-                #     contur_depot.ModelParam3 = params['gYq']
-                # except KeyError:
-                #     pass
                 print('Confidence level is ' +
                       str(contur_depot.conturPoint.CLs) + '\n')
 
                 grid_points.append(contur_depot)
 
     print "Found %i yoda files" % yoda_counter
-    write_output_grid(grid_points, group='myscan')
+    write_output_grid(grid_points)
 
 
 def read_param_file(file_path):
@@ -224,8 +238,8 @@ if __name__ == "__main__":
         modeMessage = ("Using Chi2 test method, no theory prediction, theory "
                        "error=data error")
     elif opts.TESTMETHOD == 'CST':
-        modeMessage =("Using Chi2 test method, with theory predictions where "
-                      "available, else no theory error")
+        modeMessage = ("Using Chi2 test method, with theory predictions where "
+                       "available, else no theory error")
     elif opts.TESTMETHOD == 'CSDT' or opts.TESTMETHOD == 'CSTD':
         modeMessage = ("Using Chi2 test method, theory predictions where "
                        "available, else theory=data, theory error=data error")
