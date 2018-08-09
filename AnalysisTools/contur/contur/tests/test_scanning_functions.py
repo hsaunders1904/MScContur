@@ -7,7 +7,7 @@ import mock
 import shutil
 import numpy as np
 
-import scanning_functions as sf
+import contur.Scanning.scanning_functions as sf
 
 
 def move_up_dirs(path, levels):

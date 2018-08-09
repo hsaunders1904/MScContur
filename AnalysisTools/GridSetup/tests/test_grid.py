@@ -3,7 +3,7 @@
 import os
 import pytest
 
-from scan import read_param_ranges
+from contur.Scanning.scan import read_param_ranges
 
 
 def test_grid_pack_exists():

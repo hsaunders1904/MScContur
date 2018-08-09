@@ -10,7 +10,7 @@ from subprocess import CalledProcessError
 # Could replace this with os.dirname(os.envrion['LHAPATH'].strip(os.sep)
 herwig_directory = '/unix/cedar/software/sl6/Herwig-Tip/'
 try:
-    contur_directory = os.path.expandvars(os.environ['$CONTURMODULEDIR'])
+    contur_directory = os.path.expandvars(os.environ['CONTURMODULEDIR'])
 except KeyError:
     contur_directory = os.path.expandvars(os.path.join('$HOME', 'contur'))
 
@@ -34,15 +34,15 @@ def test_python_version():
 
 def test_python_path():
     """Test python path includes Contur and Herwig directories"""
+    required_paths = [os.path.join(contur_directory, 'AnalysisTools',
+                                   'contur' + os.sep),
+                      os.path.join(herwig_directory, 'lib64', 'python2.7',
+                                   'site-packages')]
     try:
         python_path = os.environ['PYTHONPATH'].split(':')
         print("$PYTHONPATH:")
         print(python_path)
 
-        required_paths = [os.path.join(contur_directory, 'AnalysisTools',
-                                       'contur'),
-                          os.path.join(herwig_directory, 'lib64', 'python2.7',
-                                       'site-packages')]
         for required_path in required_paths:
             if required_path not in python_path:
                 pytest.fail("'%s' not in python path" % required_path)

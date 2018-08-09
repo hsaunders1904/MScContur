@@ -1,16 +1,11 @@
-#!/home/hs/anaconda3/envs/contur/bin/python
+#!/usr/bin/env python
 
 import os
-import sys
 import subprocess
-from copy import copy
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
-from scan import run_scan
-from scanning_functions import permission_to_continue, WorkingDirectory
-
-herwig_setup = "source /unix/cedar/software/sl6/Herwig-Tip/setupEnv.sh"
-contur_setup = "source " + os.path.expanduser("$HOME/contur/setupContur.sh")
+from contur.Scanning.scan import run_scan
+from contur.Scanning.scanning_functions import permission_to_continue, WorkingDirectory
 
 
 def get_args():
@@ -117,32 +112,15 @@ def valid_arguments(args):
     return valid_args
 
 
-def check_setup_files(contur_setup, herwig_setup):
-    """Check that Contur and Herwig setup scripts exist"""
-    file_doesnt_exist = False
-    contur_setup = contur_setup.replace('$HOME', os.environ['HOME'])
-    if not os.path.exists(contur_setup.strip('source ')):
-        print("Warning: The path to 'setupContur.sh' does not exist!\n"
-              "%s" % contur_setup)
-        file_doesnt_exist = True
-    if not os.path.exists(herwig_setup.strip('source ')):
-        print("Warning: The path to the Herwig setup script 'setupEnv.sh' "
-              "does not exist!\n%s" % herwig_setup)
-        file_doesnt_exist = True
-    if file_doesnt_exist:
-        if not permission_to_continue("Do you wish to continue?"):
-            sys.exit()
-
-
-def gen_batch_command(directory_name, directory_path, args):
+def gen_batch_command(directory_name, directory_path, args, setup_commands):
     """Generate commands to write to batch file"""
 
     # Setup Herwig environment
-    batch_command = herwig_setup + ';\n'
+    batch_command = setup_commands['Herwig'] + ';\n'
     # Change directory to run point folder
     batch_command += 'cd ' + directory_path + ';\n'
     # Setup Contur environment
-    batch_command += contur_setup + ';\n'
+    batch_command += setup_commands['Contur'] + ';\n'
     # Create Herwig run card from LHC.in
     batch_command += 'Herwig read LHC.in;\n'
     # Run Herwig run card LHC.run
@@ -156,12 +134,11 @@ def gen_batch_command(directory_name, directory_path, args):
     return batch_command, batch_filename
 
 
-def batch_submit(args):
+def batch_submit(args, setup_commands):
     """Run parameter scan and submit shell scripts to batch"""
-
     # Make sure scan is not overwriting previous scans
     if os.path.isdir(args.out_dir):
-        out_dir_copy = copy(args.out_dir)
+        out_dir_copy = args.out_dir[:-2]
         counter = 1
         while os.path.isdir(args.out_dir):
             args.out_dir = out_dir_copy + "%02i" % counter
@@ -181,8 +158,8 @@ def batch_submit(args):
         directory_path = os.path.abspath(
             os.path.join(args.out_dir, directory_name))
         if os.path.isdir(directory_path):
-            command, filename = gen_batch_command(directory_name,
-                                                  directory_path, args)
+            command, filename = gen_batch_command(
+                directory_name, directory_path, args, setup_commands)
             batch_command_path = os.path.join(directory_path, filename)
             # Write batch file command (commands to run Herwig)
             with open(batch_command_path, 'w') as batch_file:
@@ -195,11 +172,3 @@ def batch_submit(args):
                     # qsub reports are outputted to current working directory
                     subprocess.call(["qsub -q medium " + batch_command_path],
                                     shell=True)
-
-
-if __name__ == '__main__':
-    args = get_args()
-    check_setup_files(contur_setup, herwig_setup)
-    if not valid_arguments(args):
-        sys.exit()
-    batch_submit(args)

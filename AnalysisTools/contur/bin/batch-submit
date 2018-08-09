@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+
+import os
+import sys
+
+from contur.Scanning.batch_submit import (get_args, valid_arguments, 
+                                          batch_submit)
+from contur.Scanning.scanning_functions import permission_to_continue
+
+
+def move_up_dirs(path, levels):
+    """Move up given number of levels from given directory"""
+    return os.path.abspath(os.path.join(path, ('..' + os.sep)*levels))
+
+
+base_contur_dir = move_up_dirs(os.path.dirname(__file__), 3)
+contur_setup_path = os.path.join(base_contur_dir, 'setupContur.sh')
+setup_commands = {
+    'Herwig': "source /unix/cedar/software/sl6/Herwig-Tip/setupEnv.sh",
+    'Contur': "source " + contur_setup_path}
+
+
+def check_setup_files(setup_commands):
+    """Check that Contur and Herwig setup scripts exist"""
+    file_doesnt_exist = False
+    for key, command in setup_commands.iteritems():
+        path = command.strip('source ')
+        if not os.path.exists(path):
+            print("Warning: The %s setup path does not exist!\n"
+                  "%s" % (key, path))
+            file_doesnt_exist = True
+
+    if file_doesnt_exist:
+        if not permission_to_continue("Do you wish to continue?"):
+            sys.exit()
+            
+
+if __name__ == '__main__':
+    args = get_args()
+    check_setup_files(setup_commands)
+    if not valid_arguments(args):
+        sys.exit()
+    batch_submit(args, setup_commands)
