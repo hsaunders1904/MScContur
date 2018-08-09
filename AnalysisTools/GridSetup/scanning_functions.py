@@ -252,9 +252,6 @@ def generate_points(num_points, mode, param_dict, map_file=None):
 
         coords = sample_random_weighted(num_points, contur_grid.parameter_space,
                                         contur_grid.grid)
-        print coords
-
-        print param_dict
 
         for idx, param in enumerate(sorted(param_dict)):
             param_dict[param]['values'] = coords[idx]

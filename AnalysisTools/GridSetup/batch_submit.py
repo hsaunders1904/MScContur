@@ -31,7 +31,7 @@ def get_args():
                         help="Which sampling mode to use. {'uniform', "
                              "'random', 'weighted'}")
     parser.add_argument("-o", "--out_dir", dest="out_dir", type=str,
-                        metavar="output_dir", default="myscan",
+                        metavar="output_dir", default="myscan00",
                         help="Specify the output directory name ")
     parser.add_argument('-p', '--param_file', dest='param_file',
                         default='param_file.dat', metavar='param_file',
@@ -47,7 +47,7 @@ def get_args():
                         help="Specify a .map file to base new points off.")
     parser.add_argument('-w', '--weight_factor', metavar='weight_factor',
                         help=("Factor to use when using weighted random mode."
-                              "[weight_i = (CL^f_i)/(sum_j(CL^j)]"))
+                              "[weight_i = (CL^f_i)/(sum_j(CL^f_j)]"))
     parser.add_argument("-n", "--numevents", dest="num_events",
                         default='10000', metavar='num_events',
                         help="Number of events to generate in Herwig.")

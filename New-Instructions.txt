@@ -143,10 +143,10 @@ Run a Batch Job to Generate Heatmaps
 - When the batch job is complete there should, in every run point directory, be 
   files 'LHC-runpoint_xxx-1.yoda' and 'LHC-runpoint_xxxx-2.yoda'.
   
-- Analyse results with contur. Resulting .map file will be outputted to 
+- Analyse results with contur. Resulting .map file will be outputted to new
   ANALYSIS folder.
-    - cd run-area/
-    - contur -g GridSetup/
+    - cd run-area/GridSetup/
+    - contur -g myscan
 
 - Plot a heatmap.
     - cd ANALYSIS/

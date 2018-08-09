@@ -1,10 +1,13 @@
-# Running a Batch Job
+# Grid Run Area
+
+This is the grid run area. Copy this directory to a new location and build your
+model using ufo2herwig.
+
+## batch_submit_prof.py
 
 Submit a batch job in order to generate heat maps by running:
 
     $ python batch_submit_prof.py number_of_points [options]
-
-## batch_submit_prof.py
 
 - Must be called specifying the number of points to sample.
 
