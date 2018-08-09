@@ -78,10 +78,6 @@ class ConturGrid:
                 title += '\n%s=%.4f' % (self.parameters[2],
                                         self.parameter_space[-1][slice_idx])
 
-        # axis_limits = (np.floor(min(self.parameter_vals[0])),
-        #                np.ceil(max(self.parameter_vals[0])),
-        #                np.floor(min(self.parameter_vals[1])),
-        #                np.ceil(max(self.parameter_vals[1])))
         axis_limits = (min(self.parameter_vals[0]),
                        max(self.parameter_vals[0]),
                        min(self.parameter_vals[1]),
