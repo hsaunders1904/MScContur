@@ -10,19 +10,22 @@ from mpl_toolkits.mplot3d import Axes3D
 
 class ConturGrid:
 
-    def __init__(self, map_file_path, grid_size, parameters):
-
-        self.grid_size = grid_size
-        self.parameters = parameters
+    def __init__(self, map_file_path, grid_size, parameters=None):
 
         with open(map_file_path, 'rb') as f:
             self.depots = pickle.load(f)
+
+        self.grid_size = grid_size
+        if parameters is None:
+            self.parameters = sorted([p for p in self.depots[0].params])
+        else:
+            self.parameters = parameters
 
         # Read parameter values from .map file to a dictionary
         self.params = {}
         self.conf_lvls = []
         for depot in self.depots:
-            for param in parameters:
+            for param in self.parameters:
                 try:
                     self.params[param].append(depot.params[param])
                 except KeyError:
@@ -35,7 +38,7 @@ class ConturGrid:
                         sys.exit()
             self.conf_lvls.append(depot.conturPoint.CLs)
 
-        self.parameter_vals = [self.params[param] for param in parameters]
+        self.parameter_vals = [self.params[param] for param in self.parameters]
         self.grid = self._generate_grid()
 
     def __str__(self):
