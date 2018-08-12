@@ -4,7 +4,7 @@ valid_default:
   sample_mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
-  template_files: [LHC.in]
+  template_file: LHC.in
   grid_pack: GridPack
   num_events: 10000
   seed: 101
@@ -16,7 +16,7 @@ valid_no_grid_pack:
   sample_mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
-  template_files: [LHC.in]
+  template_file: LHC.in
   grid_pack: none
   num_events: 10000
   seed: 101
@@ -28,7 +28,7 @@ valid_custom_out_dir:
   sample_mode: uniform
   out_dir: myscan123
   param_file: param_file.dat
-  template_files: [LHC.in]
+  template_file: LHC.in
   grid_pack: GridPack
   num_events: 10000
   seed: 101
@@ -40,7 +40,7 @@ invalid_num_points:
   sample_mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
-  template_files: [LHC.in]
+  template_file: LHC.in
   grid_pack: GridPack
   num_events: 10000
   seed: 101
@@ -52,7 +52,7 @@ invalid_sample_mode:
   sample_mode: invalid_mode
   out_dir: myscan00
   param_file: param_file.dat
-  template_files: [LHC.in]
+  template_file: LHC.in
   grid_pack: GridPack
   num_events: 10000
   seed: 101
@@ -64,19 +64,19 @@ invalid_param_file:
   sample_mode: uniform
   out_dir: myscan00
   param_file: i/dont/exist
-  template_files: [LHC.in]
+  template_file: LHC.in
   grid_pack: GridPack
   num_events: 10000
   seed: 101
   scan_only: True
 
-invalid_template_files:
-  command: batch_submit.py 10 -t i/dont/exist neither/do/i -s
+invalid_template_file:
+  command: batch_submit.py 10 -t i/dont/exist -s
   num_points: 10
   sample_mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
-  template_files: [i/dont/exist, neither/do/i]
+  template_file: i/dont/exist
   grid_pack: GridPack
   num_events: 10000
   seed: 101
@@ -88,7 +88,7 @@ invalid_grid_pack:
   sample_mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
-  template_files: [LHC.in]
+  template_file: LHC.in
   grid_pack: i/dont/exist
   num_events: 10000
   seed: 101
@@ -100,7 +100,7 @@ invalid_num_events:
   sample_mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
-  template_files: [LHC.in]
+  template_file: LHC.in
   grid_pack: GridPack
   num_events: 3re
   seed: 101
@@ -112,7 +112,7 @@ invalid_seed:
   sample_mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
-  template_files: [LHC.in]
+  template_file: LHC.in
   grid_pack: GridPack
   num_events: 10000
   seed: 3r2

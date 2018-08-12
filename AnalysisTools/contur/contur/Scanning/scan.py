@@ -8,7 +8,7 @@ Created on 29/06/18
 from scanning_functions import *
 
 
-def run_scan(num_points, template_paths, grid_pack, seed=101,
+def run_scan(num_points, template_path, grid_pack, seed=101,
              output_dir='myscan00', sample_mode='uniform', rescan=False,
              param_file='param_file.dat', factor=None):
     """
@@ -51,12 +51,12 @@ def run_scan(num_points, template_paths, grid_pack, seed=101,
         Path to a .map file containing a previous Contur run's results.
 
     """
-    check_param_consistency(param_file, template_paths)
+    check_param_consistency(param_file, template_path)
 
     np.random.seed(seed)
 
     # Read in run card template files
-    templates = read_template_files(template_paths)
+    templates = read_template_file(template_path)
 
     # Param dict has parameter names as keys and then each item is a
     # dictionary with keys 'range' and 'values'

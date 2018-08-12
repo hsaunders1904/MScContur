@@ -111,16 +111,16 @@ def test_valid_arguments(fixture):
 
 def test_gen_batch_command():
     """Test gen_batch_command produces expected output"""
-    terminal_command = 'batch_submit.py 10 --seed 10 -n 500'
+    terminal_command = 'batch_submit.py 10 --seed 10 -n 500 -t LHC-trial.in'
     args = parse_command(terminal_command)
     batch_command, _ = gen_batch_command('test_dir', 'test/test_dir', args,
                                          setup_commands)
     expected_command = (
         "{Herwig};\n"
-        "cd test/test_dir;\n"
         "{Contur};\n"
-        "Herwig read LHC.in;\n"
-        "Herwig run LHC.run --seed=10 --tag=runpoint_test_dir --jobs=2 " 
+        "cd test/test_dir;\n"
+        "Herwig read LHC-trial.in;\n"
+        "Herwig run LHC-trial.run --seed=10 --tag=runpoint_test_dir --jobs=2 " 
         "--numevents=500;\n".format(**setup_commands))
     assert batch_command == expected_command
 

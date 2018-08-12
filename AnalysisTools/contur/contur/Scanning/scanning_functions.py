@@ -19,29 +19,26 @@ def permission_to_continue(message):
         return True
 
 
-def read_template_files(template_paths):
+def read_template_file(template_path):
     """Read in template files and store contents in dictionary"""
-    templates = {}
-    for template_path in template_paths:
-        template_name = os.path.basename(template_path)
-        with open(template_path, 'r') as f:
-            templates[template_name] = f.read()
-    return templates
+    template = {}
+    with open(template_path, 'r') as f:
+        template[template_path] = f.read()
+    return template
 
 
-def check_param_consistency(param_file, template_paths):
+def check_param_consistency(param_file, template_path):
     """Check that parameters in param file match those in templates."""
     parameters_dict = read_param_ranges(param_file)
-    for template_path in template_paths:
-        with open(template_path, 'r') as template_file:
-            template_text = template_file.read()
+    with open(template_path, 'r') as template_file:
+        template_text = template_file.read()
 
-        for param in parameters_dict:
-            if "{" + param + "}" not in template_text:
-                print("ParameterError:\n"
-                      "Parameters in %s do not match parameters in %s"
-                      % (param_file, template_path))
-                sys.exit()
+    for param in parameters_dict:
+        if "{" + param + "}" not in template_text:
+            print("ParameterError:\n"
+                  "Parameters in %s do not match parameters in %s"
+                  % (param_file, template_path))
+            sys.exit()
 
 
 def uniform_sample(ranges, num_points):

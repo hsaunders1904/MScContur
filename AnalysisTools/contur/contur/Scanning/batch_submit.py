@@ -31,8 +31,8 @@ def get_args():
     parser.add_argument('-p', '--param_file', dest='param_file',
                         default='param_file.dat', metavar='param_file',
                         help='File specifying parameter space.')
-    parser.add_argument('-t', '--templates', dest='template_files', nargs='*',
-                        default=['LHC.in'], metavar='template_files',
+    parser.add_argument('-t', '--template', dest='template_file',
+                        default='LHC.in', metavar='template_files',
                         help='Template run card files.')
     parser.add_argument("-g", "--grid", dest="grid_pack", type=str,
                         default='GridPack', metavar='grid_pack',
@@ -84,12 +84,8 @@ def valid_arguments(args):
         print("Param file '%s' does not exist!" % args.param_file)
         valid_args = False
 
-    template_doesnt_exist = False
-    for template_file in args.template_files:
-        if not os.path.exists(template_file):
-            print("Template file '%s' does not exist!" % template_file)
-            template_doesnt_exist = True
-    if template_doesnt_exist:
+    if not os.path.exists(args.template_file):
+        print("Template file '%s' does not exist!" % args.template_file)
         valid_args = False
 
     if args.grid_pack.lower() == 'none':
@@ -129,17 +125,18 @@ def valid_arguments(args):
 
 def gen_batch_command(directory_name, directory_path, args, setup_commands):
     """Generate commands to write to batch file"""
-
     # Setup Herwig environment
     batch_command = setup_commands['Herwig'] + ';\n'
-    # Change directory to run point folder
-    batch_command += 'cd ' + directory_path + ';\n'
     # Setup Contur environment
     batch_command += setup_commands['Contur'] + ';\n'
+    # Change directory to run point folder
+    batch_command += 'cd ' + directory_path + ';\n'
     # Create Herwig run card from LHC.in
-    batch_command += 'Herwig read LHC.in;\n'
+    batch_command += 'Herwig read %s;\n' % args.template_file
     # Run Herwig run card LHC.run
-    batch_command += ('Herwig run LHC.run --seed=' + str(args.seed) +
+    run_card_name = os.path.splitext(args.template_file)[0] + '.run'
+    batch_command += ('Herwig run ' + run_card_name +
+                      ' --seed=' + str(args.seed) +
                       ' --tag=runpoint_' + directory_name +
                       ' --jobs=2' +
                       ' --numevents=' + str(args.num_events) + ';\n')
@@ -153,15 +150,15 @@ def batch_submit(args, setup_commands):
     """Run parameter scan and submit shell scripts to batch"""
     # Make sure scan is not overwriting previous scans
     if os.path.isdir(args.out_dir):
-        out_dir_copy = args.out_dir[:-2]
+        out_dir_basename = args.out_dir[:-2]
         counter = 1
         while os.path.isdir(args.out_dir):
-            args.out_dir = out_dir_copy + "%02i" % counter
+            args.out_dir = out_dir_basename + "%02i" % counter
             counter += 1
 
     # Run parameter space scan and create run point directories
     run_scan(num_points=int(args.num_points),
-             template_paths=args.template_files,
+             template_path=args.template_file,
              grid_pack=args.grid_pack,
              output_dir=args.out_dir,
              sample_mode=args.sample_mode,
