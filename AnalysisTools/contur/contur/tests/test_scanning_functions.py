@@ -104,8 +104,9 @@ def test_write_param_file():
     """Test write_param_file writes to file correctly"""
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
-    points_to_gen = 10
-    param_dict, _ = sf.generate_points(points_to_gen, 'random', param_dict)
+    num_points = 10
+    param_dict, _ = sf.generate_points(
+        num_points, 'random', param_dict, map_file=False, factor=None)
     point_idx = 5
     output_path = os.path.join(test_files_dir, 'folder', 'params.dat')
     sf.write_param_file(param_dict, os.path.join(test_files_dir, 'folder'),
@@ -125,7 +126,8 @@ def test_generate_points_random_ranges():
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
     num_points = 8
-    param_dict, _ = sf.generate_points(num_points, 'random', param_dict)
+    param_dict, _ = sf.generate_points(
+        num_points, 'random', param_dict, map_file=False, factor=None)
     for param, info in param_dict.iteritems():
         for value in info['values']:
             assert info['range'][0] <= value <= info['range'][1]
@@ -136,7 +138,8 @@ def test_generate_points_random_num_points():
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
     num_points = 8
-    _, num_points_2 = sf.generate_points(num_points, 'random', param_dict)
+    _, num_points_2 = sf.generate_points(
+        num_points, 'random', param_dict, map_file=False, factor=None)
     assert num_points == num_points_2
 
 
@@ -145,7 +148,8 @@ def test_generate_points_uniform_ranges():
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
     num_points = 16
-    param_dict, _ = sf.generate_points(num_points, 'uniform', param_dict)
+    param_dict, _ = sf.generate_points(
+        num_points, 'uniform', param_dict, map_file=False, factor=None)
     for param, info in param_dict.iteritems():
         for value in info['values']:
             assert info['range'][0] <= value <= info['range'][1]
@@ -158,7 +162,8 @@ def test_generate_points_uniform_num_points_input():
     num_points = 10
     # Create mock object to replace raw_input and return 'yes' when called
     with mock.patch.object(__builtin__, 'raw_input', lambda x: 'yes'):
-        _, num_points_2 = sf.generate_points(num_points, 'uniform', param_dict)
+        _, num_points_2 = sf.generate_points(
+            num_points, 'uniform', param_dict, map_file=False, factor=None)
 
     assert num_points_2 == 16
 
@@ -168,5 +173,6 @@ def test_generate_points_uniform_num_points():
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
     num_points = 16
-    _, num_points_2 = sf.generate_points(num_points, 'uniform', param_dict)
+    _, num_points_2 = sf.generate_points(
+        num_points, 'uniform', param_dict, map_file=False, factor=None)
     assert num_points_2 == num_points

@@ -2,9 +2,9 @@
 
 import pickle
 import numpy as np
-from collections import defaultdict
 
 from contur.contur_grid import ConturGrid
+from contur.Scanning import weighted_bins, weighted_random
 from os_functions import *
 
 
@@ -64,57 +64,21 @@ def uniform_sample(ranges, num_points):
     return coords
 
 
-def sample_random_weighted(num_points, parameter_space, cl_grid, factor=1,
-                           seed=None):
-    """
-    Sample parameter space with a weighting to sample more points
-    around higher confidence levels. Or you can provide a negative
-    factor argument to sample around areas with lower confidence
-    levels.
+def read_old_points(map_file):
+    """Read coordinates of points sampled in .map file"""
+    with open(map_file, 'rb') as f:
+        depots = pickle.load(f)
 
-    Parameters
-    ----------
+    points = []
+    for depot in depots:
+        points.append([depot.params[param] for param in sorted(depot.params)])
+    old_points = np.array(points)
 
-    num_points: int
-        Number of points to sample.
-
-    parameter_space: list of arrays
-        List of arrays giving the space of values in each dimension.
-        e.g. [np.linspace(min(x), max(x), grid_size),
-              np.linspace(min(y), max(y), grid_size)]
-
-    cl_grid: ndarray
-        Grid containing confidence levels.
-
-    factor: int, float
-        Factor to give to weighting. The higher this number the more
-        points will be selected around high confidence levels.
-
-    Returns
-    -------
-
-    coords: list of arrays
-        Coordinates of sampled points (length of list = number of
-        dimensions).
-    """
-    if seed:
-        np.random.seed(seed)
-
-    meshes = np.meshgrid(*parameter_space)
-    print len(meshes)
-    flat_meshes = [mesh.reshape(mesh.size) for mesh in meshes]
-
-    weights = np.power(cl_grid.reshape(cl_grid.size), factor)
-    normalized_weights = weights/np.sum(weights)
-    coords = []
-    for flat_mesh in flat_meshes:
-        coords.append(np.random.choice(flat_mesh, p=normalized_weights,
-                                       size=num_points))
-    return coords
+    return old_points
 
 
-def generate_points(num_points, mode, param_dict, map_file=None):
-
+def generate_points(num_points, mode, param_dict, map_file, factor):
+    """Generate points to sample using given mode"""
     if mode == 'random':
         for param, info in sorted(param_dict.iteritems()):
             random_vals = np.random.uniform(info['range'][0], info['range'][1],
@@ -131,28 +95,34 @@ def generate_points(num_points, mode, param_dict, map_file=None):
         num_points = len(coords[0])
 
     elif mode == 'weighted':
-        with open(map_file, 'rb') as f:
-            point_list = pickle.load(f)
+        contur_grid = ConturGrid(map_file, 300)
 
-        old_parameter_vals = defaultdict(list)
-        combined_CLs = []
-        for point in point_list:
-            for param, value in point.params.iteritems():
-                old_parameter_vals[param].append(value)
-            combined_CLs.append(point.conturPoint.CLs)
+        # Replace any NaNs with the mean CLs in interpolated grid.
+        nan_indices = np.isnan(contur_grid.grid)
+        contur_grid.grid[nan_indices] = np.mean(contur_grid.grid[~nan_indices])
+        new_points = weighted_random.get_points(num_points,
+                                                contur_grid.parameter_space,
+                                                contur_grid.grid,
+                                                factor)
+        for idx, param in enumerate(sorted(param_dict)):
+            param_dict[param]['values'] = new_points[:, idx]
 
-        parameter_list = [param for param in param_dict]
+    elif mode == 'bins':
+        old_points = read_old_points(map_file)
+        ranges = []
+        for _, param in sorted(param_dict.iteritems()):
+            ranges.append(param['range'])
+        cells_per_dim = weighted_bins.get_cells_per_dimension(
+            old_points, num_points, ranges)
 
-        contur_grid = ConturGrid(map_file, 300, parameter_list)
+        contur_grid = ConturGrid(map_file, cells_per_dim)
 
-        coords = sample_random_weighted(num_points, contur_grid.parameter_space,
-                                        contur_grid.grid)
+        new_points = weighted_bins.get_points(
+            old_points, num_points, ranges, contur_grid.grid, factor)
 
         for idx, param in enumerate(sorted(param_dict)):
-            param_dict[param]['values'] = coords[idx]
+            param_dict[param]['values'] = new_points[:, idx]
+
+        print param_dict
 
     return param_dict, num_points
-
-
-
-

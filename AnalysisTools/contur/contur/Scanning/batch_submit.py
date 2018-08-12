@@ -17,14 +17,14 @@ def get_args():
         "and a shell script to run Herwig that is then submitted to batch.\n"),
         formatter_class=ArgumentDefaultsHelpFormatter)
     # Positional arguments
-    parser.add_argument("num_points", default=None, metavar="num_points",
+    parser.add_argument("num_points", metavar="num_points",
                         help=("Number of points to sample within the parameter"
                               " space."))
     # Optional arguments
     parser.add_argument("-m", "--sample_mode", dest="sample_mode",
                         default="uniform", metavar="sample_mode",
                         help="Which sampling mode to use. {'uniform', "
-                             "'random', 'weighted'}")
+                             "'random', 'weighted', 'bins'}")
     parser.add_argument("-o", "--out_dir", dest="out_dir", type=str,
                         metavar="output_dir", default="myscan00",
                         help="Specify the output directory name ")
@@ -38,11 +38,17 @@ def get_args():
                         default='GridPack', metavar='grid_pack',
                         help=("Provide additional grid pack. Set to 'none' to "
                               "not use one."))
-    parser.add_argument('-r', '--rescan', metavar='rescan', default=None,
-                        help="Specify a .map file to base new points off.")
-    parser.add_argument('-w', '--weight_factor', metavar='weight_factor',
-                        help=("Factor to use when using weighted random mode."
-                              "[weight_i = (CL^f_i)/(sum_j(CL^f_j)]"))
+    parser.add_argument('-r', '--rescan', dest='rescan', default=False,
+                        help="Specify a .map file to resample points from.")
+    parser.add_argument('-f', '--factor', default=None,
+                        help=("Factor to use with resampling. If mode is "
+                              "'weighted' CLs are raised by this factor to "
+                              "calculate weightings."
+                              "If mode is 'bins' this is the factor bins' "
+                              "weights are multiplied by when a point is "
+                              "sampled nearby (should be between 0 and 1, "
+                              "smaller factor means more clustered points). "
+                              "(bins default=0.66, weighted default=1."))
     parser.add_argument("-n", "--numevents", dest="num_events",
                         default='10000', metavar='num_events',
                         help="Number of events to generate in Herwig.")
@@ -64,13 +70,14 @@ def valid_arguments(args):
               % args.num_points)
         valid_args = False
 
-    if args.sample_mode not in ['uniform', 'random', 'weighted']:
-        print("Invalid sample mode! Must be 'uniform' or 'random' or "
-              "weighted.")
+    if args.sample_mode not in ['uniform', 'random', 'weighted', 'bins']:
+        print("Invalid sample mode! Must be 'uniform' or 'random', or if "
+              "rescanning weighted or bins.")
         valid_args = False
 
-    if args.sample_mode == 'weighted' and not args.rescan:
-        print("Weighted random mode is only available when rescanning.")
+    if args.sample_mode in ['weighted', 'bins'] and not args.rescan:
+        print("Mode '%s' is only available when performing a rescan."
+              % args.sample_mode)
         valid_args = False
 
     if not os.path.exists(args.param_file):
@@ -108,6 +115,14 @@ def valid_arguments(args):
     if args.rescan:
         if not os.path.isfile(args.rescan):
             print("No such file %s to use for rescan!" % args.rescan)
+            valid_args = False
+
+    if args.rescan:
+        if not args.factor:
+            if args.sample_mode == 'weighted':
+                args.factor = 1
+            elif args.sample_mode == 'bins':
+                args.factor = 0.66
 
     return valid_args
 
@@ -150,9 +165,10 @@ def batch_submit(args, setup_commands):
              grid_pack=args.grid_pack,
              output_dir=args.out_dir,
              sample_mode=args.sample_mode,
-             param_file=args.param_file,
              rescan=args.rescan,
-             seed=args.seed)
+             param_file=args.param_file,
+             seed=args.seed,
+             factor=args.factor)
 
     for directory_name in os.listdir(args.out_dir):
         directory_path = os.path.abspath(
