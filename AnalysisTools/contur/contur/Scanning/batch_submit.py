@@ -14,15 +14,16 @@ def get_args():
         "Run a parameter space scan and submit a batch job.\n"
         "Produces a scan directory containing: all files in given grid pack, "
         "a parameters file detailing the parameters used at that run point "
-        "and a shell script to run Herwig that is then submitted to batch.\n"),
-        formatter_class=ArgumentDefaultsHelpFormatter)
+        "and a shell script to run Herwig that is then submitted to batch.\n"
+        "Can specify to run a 'rescan' on an old .map file using the -r "
+        "option."))
     # Positional arguments
     parser.add_argument("num_points", metavar="num_points",
                         help=("Number of points to sample within the parameter"
                               " space."))
     # Optional arguments
     parser.add_argument("-m", "--sample_mode", dest="sample_mode",
-                        default="uniform", metavar="sample_mode",
+                        default=None, metavar="sample_mode",
                         help="Which sampling mode to use. {'uniform', "
                              "'random', 'weighted', 'bins'}")
     parser.add_argument("-o", "--out_dir", dest="out_dir", type=str,
@@ -60,7 +61,22 @@ def get_args():
     parser.add_argument('-s', '--scan_only', dest='scan_only', default=False,
                         action='store_true',
                         help='Only perform scan and do not submit batch job.')
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    if args.rescan:
+        if not args.factor:
+            if args.sample_mode == 'weighted':
+                args.factor = 1
+            elif args.sample_mode == 'bins':
+                args.factor = 0.66
+
+    if not args.sample_mode:
+        if not args.rescan:
+            args.sample_mode = 'uniform'
+        else:
+            args.sample_mode = 'bins'
+
+    return args
 
 
 def valid_arguments(args):
@@ -115,13 +131,6 @@ def valid_arguments(args):
         if not os.path.isfile(args.rescan):
             print("No such file %s to use for rescan!" % args.rescan)
             valid_args = False
-
-    if args.rescan:
-        if not args.factor:
-            if args.sample_mode == 'weighted':
-                args.factor = 1
-            elif args.sample_mode == 'bins':
-                args.factor = 0.66
 
     if args.cl_focus != 0.95 and not args.sample_mode == 'bins':
         print("You must be performing a rescan in 'bins' mode to use the "
