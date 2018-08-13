@@ -28,9 +28,11 @@ class ConturGrid:
             for param in self.parameters:
                 try:
                     self.params[param].append(depot.params[param])
+                # We expect to fail with KeyError first time for each param
                 except KeyError:
                     try:
                         self.params[param] = [depot.params[param]]
+                    # If we get key error again parameter not in map file
                     except KeyError:
                         print("No parameter '%s'!" % param)
                         print("Present parameters are:")

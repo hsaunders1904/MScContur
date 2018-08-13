@@ -8,9 +8,9 @@ Created on 29/06/18
 from scanning_functions import *
 
 
-def run_scan(num_points, template_path, grid_pack, seed=101,
-             output_dir='myscan00', sample_mode='uniform', rescan=False,
-             param_file='param_file.dat', factor=None):
+def run_scan(num_points, template_path, grid_pack, seed,
+             output_dir, sample_mode, rescan,
+             param_file, factor, cl_focus):
     """
     Run a scan over parameter space defined in param_file.dat using a
     given sampling mode and write relevant run cards and param files.
@@ -64,7 +64,7 @@ def run_scan(num_points, template_path, grid_pack, seed=101,
 
     # Generate parameter values depending on sampling mode
     param_dict, num_points = generate_points(
-        num_points, sample_mode, param_dict, map_file=rescan, factor=factor)
+        num_points, sample_mode, param_dict, rescan, factor, cl_focus)
     make_directory(output_dir)
     for run_point in range(num_points):
         # Run point directories are inside the output directory and hold

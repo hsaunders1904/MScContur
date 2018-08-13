@@ -47,14 +47,19 @@ def get_cell_centres(cell_edges):
 def get_cells_per_dimension(old_points, num_new_points, ranges):
     """Calculate the number of cells per dimension that are needed"""
     dimensions = len(ranges)
-    # We want this to be prime so that ...
-    cells_per_dim = find_next_prime(
-        2*int((len(old_points) + num_new_points)**(1. / dimensions)))
+    # Number of bins needed to fit the new points so there's one point per bin
+    cells_needed = int((len(old_points) + num_new_points)**(1./dimensions))
+    # We want this to be prime so, if this is run again, new points won't lie
+    # on the boundaries of the cells
+    cells_per_dim = find_next_prime(2*cells_needed)
     return cells_per_dim
 
 
-def get_cell_weights(map_file_path, cells_per_dim):
-    cell_weights = ConturGrid(map_file_path, cells_per_dim)
+def get_cell_weights(map_file_path, cells_per_dim, CL_focus):
+    """Get cell weightings for ndhistogram cells from CLs"""
+    contur_grid = ConturGrid(map_file_path, cells_per_dim)
+    # Give the highest weights to points on CL_focus value
+    cell_weights = np.mod(contur_grid + (1 - CL_focus), 1)
     nan_indices = np.isnan(cell_weights)
     cell_weights[nan_indices] = np.mean(cell_weights[~nan_indices])
     return cell_weights

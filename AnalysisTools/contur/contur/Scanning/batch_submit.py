@@ -40,6 +40,9 @@ def get_args():
                               "not use one."))
     parser.add_argument('-r', '--rescan', dest='rescan', default=False,
                         help="Specify a .map file to resample points from.")
+    parser.add_argument('-cf', '--cl_focus', type=float, default=0.95,
+                        help=("Specify a CL value to focus re-sampling points "
+                              "around. Must be between 0 and 1."))
     parser.add_argument('-f', '--factor', default=None,
                         help=("Factor to use with resampling. If mode is "
                               "'weighted' CLs are raised by this factor to "
@@ -120,6 +123,15 @@ def valid_arguments(args):
             elif args.sample_mode == 'bins':
                 args.factor = 0.66
 
+    if args.cl_focus != 0.95 and not args.sample_mode == 'bins':
+        print("You must be performing a rescan in 'bins' mode to use the "
+              "cl_focus option!")
+        valid_args = False
+
+    elif not (0 <= args.cl_focus <= 1):
+        print("'cl_focus' focus option must be float between greater than 0 "
+              "and less than or equal to 1.")
+
     return valid_args
 
 
@@ -165,7 +177,8 @@ def batch_submit(args, setup_commands):
              rescan=args.rescan,
              param_file=args.param_file,
              seed=args.seed,
-             factor=args.factor)
+             factor=args.factor,
+             cl_focus=args.cl_focus)
 
     for directory_name in os.listdir(args.out_dir):
         directory_path = os.path.abspath(
@@ -178,8 +191,8 @@ def batch_submit(args, setup_commands):
             with open(batch_command_path, 'w') as batch_file:
                 batch_file.write(command)
 
-            print("Submitting: " + batch_command_path)
             if args.scan_only is False:
+                print("Submitting: " + batch_command_path)
                 with WorkingDirectory(directory_path):
                     # Changing working directory is necessary here since
                     # qsub reports are outputted to current working directory
