@@ -35,7 +35,7 @@ def test_python_version():
 def test_python_path():
     """Test python path includes Contur and Herwig directories"""
     required_paths = [os.path.join(contur_directory, 'AnalysisTools',
-                                   'contur' + os.sep),
+                                   'contur'),
                       os.path.join(herwig_directory, 'lib64', 'python2.7',
                                    'site-packages')]
     try:

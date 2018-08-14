@@ -44,7 +44,7 @@ def get_args():
     parser.add_argument('-cf', '--cl_focus', type=float, default=0.95,
                         help=("Specify a CL value to focus re-sampling points "
                               "around. Must be between 0 and 1."))
-    parser.add_argument('-f', '--factor', default=None,
+    parser.add_argument('-f', '--factor', default=None, type=float,
                         help=("Factor to use with resampling. If mode is "
                               "'weighted' CLs are raised by this factor to "
                               "calculate weightings."
@@ -63,18 +63,18 @@ def get_args():
                         help='Only perform scan and do not submit batch job.')
     args = parser.parse_args()
 
+    if not args.sample_mode:
+        if not args.rescan:
+            args.sample_mode = 'uniform'
+        else:
+            args.sample_mode = 'bins'
+
     if args.rescan:
         if not args.factor:
             if args.sample_mode == 'weighted':
                 args.factor = 1
             elif args.sample_mode == 'bins':
                 args.factor = 0.66
-
-    if not args.sample_mode:
-        if not args.rescan:
-            args.sample_mode = 'uniform'
-        else:
-            args.sample_mode = 'bins'
 
     return args
 
@@ -138,7 +138,7 @@ def valid_arguments(args):
         valid_args = False
 
     elif not (0 <= args.cl_focus <= 1):
-        print("'cl_focus' focus option must be float between greater than 0 "
+        print("'cl_focus' focus option must be a float between greater than 0 "
               "and less than or equal to 1.")
 
     return valid_args
