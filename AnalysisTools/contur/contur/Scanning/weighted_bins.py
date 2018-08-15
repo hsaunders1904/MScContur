@@ -57,9 +57,12 @@ def get_cells_per_dimension(old_points, num_new_points, ranges):
 
 def get_cell_weights(map_file_path, cells_per_dim, cl_focus):
     """Get cell weightings for ndhistogram from CLs"""
-    contur_grid = ConturGrid(map_file_path, cells_per_dim).grid
-    # Give the highest weights to points on CL_focus value
-    cell_weights = np.mod(contur_grid + (1 - cl_focus), 1)
+    contur_grid = ConturGrid(map_file_path, cells_per_dim)
+    cell_weights = contur_grid.grid
+    # Set all weights below cl_focus to zero
+    where_greater_than_cl = np.greater(cell_weights, cl_focus)
+    cell_weights[where_greater_than_cl] = 0
+    # Set all nan values to mean weight
     nan_indices = np.isnan(cell_weights)
     cell_weights[nan_indices] = np.mean(cell_weights[~nan_indices])
     return cell_weights

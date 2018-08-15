@@ -2,7 +2,7 @@
 
 import os
 import subprocess
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+from argparse import ArgumentParser
 
 from contur.Scanning.scan import run_scan
 from contur.Scanning.scanning_functions import permission_to_continue, WorkingDirectory
@@ -45,7 +45,11 @@ def get_args():
                         help="Specify a .map file to resample points from.")
     parser.add_argument('-cf', '--cl_focus', type=float, default=0.95,
                         help=("Specify a CL value to focus re-sampling points "
-                              "around. Must be between 0 and 1."))
+                              "around. Only available with rescan option. "
+                              "For 'bins' mode this is the maximum CL value "
+                              "that will be sample, for 'weighted' mode this "
+                              "is the centre of the probability distribution. "
+                              "Must be between 0 and 1."))
     parser.add_argument('-f', '--factor', default=None, type=float,
                         help=("Factor to use with resampling. If mode is "
                               "'weighted' CLs are raised by this factor to "
