@@ -53,7 +53,8 @@ class ConturGrid:
         """Interpolate between points in the grid"""
         self.parameter_space = []
         for vals in self.parameter_vals:
-            param_range = np.linspace(min(vals), max(vals), self.grid_size)
+            param_range = np.linspace(min(vals), max(vals), self.grid_size,
+                                      dtype=np.float32)
             self.parameter_space.append(param_range)
         mesh_points = tuple(np.meshgrid(*self.parameter_space))
         grid = griddata(tuple(self.parameter_vals), self.conf_lvls,
@@ -94,7 +95,7 @@ class ConturGrid:
             grid_slice = self.grid[:, :, slice_idx]
 
         plt.figure()
-        plt.imshow(grid_slice, origin='lower', aspect='auto',
+        plt.imshow(grid_slice.T, origin='lower', aspect='auto',
                    vmin=min(self.conf_lvls), vmax=1, extent=axis_limits,
                    cmap=plt.get_cmap('magma'))
 
@@ -106,7 +107,7 @@ class ConturGrid:
         plt.xlim([axis_limits[0] - x_axis_pad, axis_limits[1] + x_axis_pad])
         plt.ylim([axis_limits[2] - y_axis_pad, axis_limits[3] + y_axis_pad])
         cbar = plt.colorbar()
-        cbar.ax.set_ylabel('Confidence Level', rotation=270)
+        cbar.ax.set_ylabel('CL of Exclusion', rotation=270)
         cbar.ax.get_yaxis().labelpad = 15
 
         if plot_points is True:

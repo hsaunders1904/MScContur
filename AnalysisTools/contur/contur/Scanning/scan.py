@@ -64,7 +64,7 @@ def run_scan(num_points, template_path, grid_pack, seed,
 
     # Generate parameter values depending on sampling mode
     param_dict, num_points = generate_points(
-        num_points, sample_mode, param_dict, rescan, factor, cl_focus)
+        num_points, sample_mode, param_dict, rescan, factor, cl_focus, seed)
     make_directory(output_dir)
     for run_point in range(num_points):
         # Run point directories are inside the output directory and hold

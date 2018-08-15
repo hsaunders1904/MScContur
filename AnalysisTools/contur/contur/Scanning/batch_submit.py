@@ -25,7 +25,9 @@ def get_args():
     parser.add_argument("-m", "--sample_mode", dest="sample_mode",
                         default=None, metavar="sample_mode",
                         help="Which sampling mode to use. {'uniform', "
-                             "'random', 'weighted', 'bins'}")
+                             "'random', 'weighted', 'bins'}\n"
+                             "'weighted' and 'bins' only valid alongside "
+                             "'--rescan' option")
     parser.add_argument("-o", "--out_dir", dest="out_dir", type=str,
                         metavar="output_dir", default="myscan00",
                         help="Specify the output directory name ")
@@ -33,7 +35,7 @@ def get_args():
                         default='param_file.dat', metavar='param_file',
                         help='File specifying parameter space.')
     parser.add_argument('-t', '--template', dest='template_file',
-                        default='LHC.in', metavar='template_files',
+                        default='LHC.in', metavar='template_file',
                         help='Template run card files.')
     parser.add_argument("-g", "--grid", dest="grid_pack", type=str,
                         default='GridPack', metavar='grid_pack',
@@ -54,7 +56,7 @@ def get_args():
                               "smaller factor means more clustered points). "
                               "(bins default=0.66, weighted default=1."))
     parser.add_argument("-n", "--numevents", dest="num_events",
-                        default='10000', metavar='num_events',
+                        default='30000', metavar='num_events',
                         help="Number of events to generate in Herwig.")
     parser.add_argument('--seed', dest='seed', metavar='seed', default='101',
                         help="Seed for random number generator.")
@@ -132,9 +134,8 @@ def valid_arguments(args):
             print("No such file %s to use for rescan!" % args.rescan)
             valid_args = False
 
-    if args.cl_focus != 0.95 and not args.sample_mode == 'bins':
-        print("You must be performing a rescan in 'bins' mode to use the "
-              "cl_focus option!")
+    if args.cl_focus != 0.95 and not args.rescan:
+        print("You must be performing a rescan to use the cl_focus option!")
         valid_args = False
 
     elif not (0 <= args.cl_focus <= 1):

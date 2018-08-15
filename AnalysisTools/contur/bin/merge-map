@@ -8,7 +8,7 @@ from argparse import ArgumentParser
 parser = ArgumentParser(description="Concatenate multiple .map files.")
 parser.add_argument('map_files', nargs='*', metavar='map_files',
                     help='Specify .map files to concatenate.')
-parser.add_argument('-o', '--output_path', metavar='map_files', type=str,
+parser.add_argument('-o', '--output_path', metavar='out_path', type=str,
                     default='merged.map',
                     help='Output path to write new .map file to.')
 args = parser.parse_args()

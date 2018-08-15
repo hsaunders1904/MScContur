@@ -3,7 +3,7 @@
 import numpy as np
 
 
-def get_points(num_points, parameter_space, weight_grid, factor=1, seed=None):
+def get_points(num_points, parameter_space, weight_grid, factor, cl_focus):
     """
     Sample parameter space with a weighting to sample more points
     around higher confidence levels. Or you can provide a negative
@@ -35,13 +35,12 @@ def get_points(num_points, parameter_space, weight_grid, factor=1, seed=None):
         Coordinates of sampled points (length of list = number of
         dimensions).
     """
-    if seed:
-        np.random.seed(seed)
 
     meshes = np.meshgrid(*parameter_space)
     flat_meshes = [mesh.reshape(mesh.size) for mesh in meshes]
 
-    weights = np.power(weight_grid.reshape(weight_grid.size), factor)
+    weight_grid = np.power(1 - np.abs(weight_grid - cl_focus), factor)
+    weights = weight_grid.reshape(weight_grid.size)
     normalized_weights = weights/np.sum(weights)
     coords = []
 

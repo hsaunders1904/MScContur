@@ -55,11 +55,11 @@ def get_cells_per_dimension(old_points, num_new_points, ranges):
     return cells_per_dim
 
 
-def get_cell_weights(map_file_path, cells_per_dim, CL_focus):
-    """Get cell weightings for ndhistogram cells from CLs"""
-    contur_grid = ConturGrid(map_file_path, cells_per_dim)
+def get_cell_weights(map_file_path, cells_per_dim, cl_focus):
+    """Get cell weightings for ndhistogram from CLs"""
+    contur_grid = ConturGrid(map_file_path, cells_per_dim).grid
     # Give the highest weights to points on CL_focus value
-    cell_weights = np.mod(contur_grid + (1 - CL_focus), 1)
+    cell_weights = np.mod(contur_grid + (1 - cl_focus), 1)
     nan_indices = np.isnan(cell_weights)
     cell_weights[nan_indices] = np.mean(cell_weights[~nan_indices])
     return cell_weights
@@ -124,7 +124,7 @@ def get_points(old_points, num_new_points, ranges, cell_weights=None,
         # Get centre of bins
         cell_centres = get_cell_centres(cell_edges)
 
-        # Give 0 weight to bins in which there are already a point(s) at 0
+        # Give 0 weight to bins in which there are already point(s)
         cell_weights = np.where(empty_cells, cell_weights,
                                 np.zeros(cell_weights.shape))
         # Get index with largest weighting

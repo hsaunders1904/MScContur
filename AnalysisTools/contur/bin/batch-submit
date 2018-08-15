@@ -15,9 +15,11 @@ def move_up_dirs(path, levels):
 
 this_dirs_path = os.path.dirname(__file__)
 base_contur_dir = move_up_dirs(this_dirs_path, 3)
+with open(os.path.join(base_contur_dir, 'herwigPath'), 'r') as f:
+    herwig_setup_path = f.read().strip()
 contur_setup_path = os.path.join(base_contur_dir, 'setupContur.sh')
 setup_commands = {
-    'Herwig': "source /unix/cedar/software/sl6/Herwig-Tip/setupEnv.sh",
+    'Herwig': "source " + herwig_setup_path,
     'Contur': "source " + contur_setup_path}
 
 

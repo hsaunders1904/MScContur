@@ -7,12 +7,15 @@ import sys
 import platform
 from subprocess import CalledProcessError
 
-# Could replace this with os.dirname(os.envrion['LHAPATH'].strip(os.sep)
-herwig_directory = '/unix/cedar/software/sl6/Herwig-Tip/'
-try:
-    contur_directory = os.path.expandvars(os.environ['CONTURMODULEDIR'])
-except KeyError:
-    contur_directory = os.path.expandvars(os.path.join('$HOME', 'contur'))
+contur_directory = os.path.expandvars(os.environ['CONTURMODULEDIR'])
+with open(os.path.join(contur_directory, 'herwigPath')) as f:
+    herwig_directory = f.read().strip()
+
+
+def test_contur_path():
+    if not os.path.exists(contur_directory):
+        pytest.fail("'CONTURMODULEDIR' system variable not found!\n"
+                    "Have you run the conturSetup.sh script?")
 
 
 def test_herwig_environment():
@@ -38,8 +41,11 @@ def test_python_path():
                                    'contur'),
                       os.path.join(herwig_directory, 'lib64', 'python2.7',
                                    'site-packages')]
+    required_paths = [os.path.normpath(path) for path in required_paths]
+
     try:
         python_path = os.environ['PYTHONPATH'].split(':')
+        python_path = [os.path.normpath(path) for path in python_path]
         print("$PYTHONPATH:")
         print(python_path)
 
@@ -54,6 +60,8 @@ def test_python_path():
 
 def test_bash_path():
     """Test necessary paths are in system path"""
+    fail_flag = False
+    messages = ''
     bash_path = os.environ['PATH'].split(':')
     required_paths = [
         os.path.join(contur_directory, 'AnalysisTools', 'contur', 'bin'),
@@ -63,7 +71,10 @@ def test_bash_path():
         os.path.abspath('/opt/rh/devtoolset-4/root/usr/bin')]
     for required_path in required_paths:
         if required_path not in bash_path:
-            pytest.fail("'%s' not in system path!" % required_path)
+            fail_flag = True
+            messages += required_path + 'not in system path!\n'
+    if fail_flag:
+        pytest.fail(messages + "Have you run the conturSetup.sh script?")
 
 
 def test_platform():

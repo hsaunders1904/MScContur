@@ -19,7 +19,7 @@ with open(os.path.join(test_files_dir, 'argument_fixtures.yaml'), 'r') as f:
     arguments_examples = yaml.load(f)
 
 # These do not need to be real paths, they're just to check they're written
-# correctly to Herwig run card
+# correctly to batch shell script
 setup_commands = {
     'Herwig': "source .../Herwig-Tip/setupEnv.sh",
     'Contur': "source .../contur/setupContur.sh"}

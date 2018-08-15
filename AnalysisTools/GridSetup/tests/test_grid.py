@@ -72,3 +72,27 @@ def test_param_file_lhc_consistency():
                   " in 'LHC.in'." % param)
             consistent_variables = False
     assert consistent_variables
+
+
+def test_lhc_ana_files():
+    """Test that any .ana files read by LHC.in exist inside the GridPack"""
+    with open('LHC.in', 'r') as f:
+        lines = f.readlines()
+
+    ana_files = []
+    for line in lines:
+        line = line.strip()
+        if line.startswith('read ') and line.endswith('.ana'):
+            ana_files.append(line.split()[-1])
+
+    fail_flag = False
+    message = ''
+    for file_name in ana_files:
+        path = os.path.join('GridPack', file_name)
+        if not os.path.exists(path):
+            message += ('Required .ana file in LHC.in %s does not exist in '
+                        'GridPack!\n'% file_name)
+            fail_flag = True
+
+    if fail_flag:
+        pytest.fail(message)

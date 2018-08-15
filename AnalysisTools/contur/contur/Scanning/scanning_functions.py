@@ -74,7 +74,8 @@ def read_old_points(map_file):
     return old_points
 
 
-def generate_points(num_points, mode, param_dict, map_file, factor, cl_focus):
+def generate_points(num_points, mode, param_dict, map_file, factor, cl_focus,
+                    seed):
     """Generate points to sample using given mode"""
     if mode == 'random':
         for param, info in sorted(param_dict.iteritems()):
@@ -92,15 +93,22 @@ def generate_points(num_points, mode, param_dict, map_file, factor, cl_focus):
         num_points = len(coords[0])
 
     elif mode == 'weighted':
-        contur_grid = ConturGrid(map_file, 300)
+        # Check the amount of memory the ConturGrid object will use before
+        # creating it. Use a coarser grid if memory limit exceeded
+        num_dims = len(param_dict)
+        mem_limit = 1.6e9  # bits
+        grid_size = 300
+        if grid_size**num_dims > mem_limit:
+            grid_size = int(mem_limit**(1./num_dims))
+
+        contur_grid = ConturGrid(map_file, grid_size)
 
         # Replace any NaNs with the mean CLs in interpolated grid.
         nan_indices = np.isnan(contur_grid.grid)
         contur_grid.grid[nan_indices] = np.mean(contur_grid.grid[~nan_indices])
-        new_points = weighted_random.get_points(num_points,
-                                                contur_grid.parameter_space,
-                                                contur_grid.grid,
-                                                factor)
+        new_points = weighted_random.get_points(
+            num_points, contur_grid.parameter_space, contur_grid.grid,
+            factor, seed, cl_focus)
         for idx, param in enumerate(sorted(param_dict)):
             param_dict[param]['values'] = new_points[:, idx]
 

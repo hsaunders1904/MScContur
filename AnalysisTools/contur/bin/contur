@@ -149,7 +149,8 @@ def yoda_merger(scan_dir, tag='runpoint_'):
     for root, dirs, files in os.walk(scan_dir):
         file_list = []
         run_point_num = os.path.basename(root)
-        if not os.path.exists('runpoint_' + run_point_num + '.yoda'):
+        out_file = os.path.join(root, 'runpoint_' + run_point_num + '.yoda')
+        if not os.path.exists(out_file):
             for name in files:
                 conditions = (name.endswith('.yoda') and
                               name != 'LHC.yoda' and

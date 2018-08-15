@@ -13,14 +13,6 @@ from argparse import ArgumentParser, RawTextHelpFormatter, ArgumentError
 from contur.contur_grid import ConturGrid
 
 
-# def generate_gif():
-#     create_palette = ("ffmpeg -y -f image2 -i plots/%04d.png -vf scale=900"
-#                       ":-1:sws_dither=ed,palettegen plots/palette.png")
-#     create_gif = ("ffmpeg -y -f image2 -framerate 9 -i plots/%04d.png -i "
-#                   "plots/palette.png -lavfi paletteuse plots/heatmap.mp4")
-#     gif_command = ' && '.join([create_palette, create_gif])
-#     os.system(gif_command)
-
 parser_description = (
     "Plot contur data from a .map file.\n"
     "You should specify a .map file to read and 2 or 3 variable to plot\n"
@@ -52,12 +44,12 @@ parser.add_argument('-g', '--grid_size', type=int, default=200,
                          '(default=%(default)s)')
 parser.add_argument('-a', '--all', action='store_true',
                     help=('Plot heatmap for all slices in z-dimension.'))
-parser.add_argument('-s', '--slice', type=int,
+parser.add_argument('-s', '--slice', type=int, default=False,
                     help=('Index of slice of parameter space to plot.\n'
                           'This or -a must be specified if plotting a heatmap'
                           '\nin more than 2 dimensions.'))
 parser.add_argument('-sc', '--scatter', action='store_true',
-                    help='Plot a 3D scatter graph.')
+                    help='Plot a scatter graph.')
 parser.add_argument('-o', '--output_path', type=str, default='heatmap.png',
                     help=("Path to output plot(s) to. Should be a filename\n"
                           "unless using '--all' flag, in which case this\n"
@@ -86,9 +78,12 @@ if len(args.variables) not in [2, 3]:
     sys.exit()
 
 if len(args.variables) == 3 and not (args.slice or args.scatter or args.all):
-    print("Error:\n-----\nYou must specify a slice index or whether to plot a "
-          "scatter graph if you are plotting in 3 dimensions.")
-    sys.exit()
+    if args.slice == 0:
+        pass
+    else:
+        print("Error:\n-----\nYou must specify a slice index or whether to plot a "
+              "scatter graph if you are plotting in 3 dimensions.")
+        sys.exit()
 
 if args.slice >= args.grid_size:
     print("Error slicing grid!\n"
@@ -125,7 +120,7 @@ if len(args.variables) == 2:
                                 plot_points=args.points)
 
 else:
-    if args.slice:
+    if args.slice is not False:
         # Plot heat map of slice of 3D parameter space
         print("Generating " + args.output_path)
         contur_grid.plot_imshow(slice_idx=args.slice,
@@ -143,7 +138,7 @@ else:
         if not os.path.exists(args.output_path):
             os.mkdir(args.output_path)
 
-        print("Generating %i plots in %s folder."
+        print("Generating %i plots in '%s' folder."
               % (args.grid_size, args.output_path))
         for slice_idx in range(args.grid_size):
             plt.ioff()
