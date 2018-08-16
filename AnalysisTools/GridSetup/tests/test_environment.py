@@ -8,8 +8,8 @@ import platform
 from subprocess import CalledProcessError
 
 contur_directory = os.path.expandvars(os.environ['CONTURMODULEDIR'])
-with open(os.path.join(contur_directory, 'herwigPath')) as f:
-    herwig_directory = f.read().strip()
+with open(os.path.join(contur_directory, 'herwigPath.sh')) as f:
+    herwig_directory = os.path.dirname(f.read().strip('source '))
 
 
 def test_contur_path():
@@ -21,11 +21,20 @@ def test_contur_path():
 def test_herwig_environment():
     """Test Herwig can be called from shell"""
     try:
-        a = subprocess.check_output(['Herwig --version'], shell=True)
-        print(a)
+        output = subprocess.check_output(['Herwig --version'], shell=True)
+        print(output)
     except CalledProcessError:
         pytest.fail("Error calling Herwig!\nIs your environment set up "
                     "correctly?")
+
+
+def test_herwig_setup_path():
+    """Test that the setupEnv.sh path for Herwig exists."""
+    herwig_setup_path = os.path.join(herwig_directory, 'setupEnv.sh')
+    if not os.path.exists(herwig_setup_path):
+        pytest.fail("Herwig setup path '%s' does not exist!\n You need to "
+                    "change this in contur/herwigPath.sh."
+                    % herwig_setup_path)
 
 
 def test_python_version():
@@ -72,9 +81,9 @@ def test_bash_path():
     for required_path in required_paths:
         if required_path not in bash_path:
             fail_flag = True
-            messages += required_path + 'not in system path!\n'
+            messages += required_path + ' not in system path!\n'
     if fail_flag:
-        pytest.fail(messages + "Have you run the conturSetup.sh script?")
+        pytest.fail(messages + "\nHave you run the conturSetup.sh script?")
 
 
 def test_platform():

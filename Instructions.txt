@@ -31,9 +31,7 @@ Build Analyses Databases
 ------------------------
 - Build modified analyses
     $ cd contur/modified_analyses/Analyses/
-    $ chmod +x buildrivet.sh
-        --> give 'buildrivet.sh' executable permission.
-    $ ./buildrivet.sh
+    $ source buildrivet.sh
     
 - Build database of static analysis information
     $ cd contur

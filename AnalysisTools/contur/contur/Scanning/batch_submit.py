@@ -111,7 +111,7 @@ def valid_arguments(args):
         valid_args = False
 
     if args.mode not in ['uniform', 'random', 'weighted', 'bins']:
-        print("Invalid sample mode! Must be 'uniform' or 'random', or if "
+        print("Invalid sample mode! Must be 'uniform' or 'random', or, if "
               "rescanning weighted or bins.")
         valid_args = False
 

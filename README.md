@@ -74,9 +74,7 @@ you.
 
     `$ cd contur/modified_analyses/Analyses/`
 
-    `$ chmod +x buildrivet.sh` 
-
-    `$ ./buildrivet.sh`
+    `$ source buildrivet.sh`
 
 - Build database of static analysis information
 
