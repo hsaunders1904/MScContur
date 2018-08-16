@@ -4,7 +4,6 @@ import __builtin__
 import os
 import pytest
 import mock
-import shutil
 import numpy as np
 
 import contur.Scanning.scanning_functions as sf
@@ -26,29 +25,6 @@ def get_top_level(path):
     return [os.path.join(path, item) for item in os.listdir(path)]
 
 
-def teardown_module():
-    """Delete file created during testing"""
-    shutil.rmtree(os.path.join(test_files_dir, 'folder2/'))
-    os.remove(os.path.join(test_files_dir, 'folder', 'params.dat'))
-
-
-def test_copy_tree():
-    """Test copy_tree copies top level file and only top level files"""
-    source = os.path.join(test_files_dir, 'folder/')
-    destination = os.path.join(test_files_dir, 'folder2/')
-    sf.copy_tree(source, destination)
-    # Get absolute paths of top level items in source directory
-    abs_source_files = get_top_level(source)
-    # Get all top level item names in destination directory (not full path)
-    dest_file_names = os.listdir(destination)
-    # Get names of only files in source directory
-    source_file_names = []
-    for path in abs_source_files:
-        if os.path.isfile(path):
-            source_file_names.append(os.path.basename(path))
-    assert sorted(dest_file_names) == sorted(source_file_names)
-
-
 def test_read_param_ranges_valid():
     """Test read_param_ranges successful on valid param file"""
     param_file_1 = os.path.join(test_files_dir, 'folder', 'test_file_1')
@@ -68,7 +44,7 @@ def test_read_param_ranges_invalid():
 
 
 def test_read_param_ranges_min_greater_than_max():
-    """Test read_param_ranges fails when min value greater than max"""
+    """Test read_param_ranges fails when min value greater or equal to max"""
     param_file_3 = os.path.join(test_files_dir, 'folder', 'folder_depth_2',
                                 'test_file_3')
     with pytest.raises(ValueError):
@@ -176,3 +152,8 @@ def test_generate_points_uniform_num_points():
     _, num_points_2 = sf.generate_points(
         num_points, 'uniform', param_dict, False, None, 0.95, None)
     assert num_points_2 == num_points
+
+
+def teardown_module():
+    """Delete file created during testing"""
+    os.remove(os.path.join(test_files_dir, 'folder', 'params.dat'))

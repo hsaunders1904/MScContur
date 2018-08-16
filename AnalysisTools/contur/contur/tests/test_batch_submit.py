@@ -14,8 +14,9 @@ test_dir = os.path.dirname(os.path.abspath(__file__))
 base_grid_dir = os.path.abspath(os.path.join(test_dir, '../../../GridSetup'))
 test_files_dir = os.path.join(test_dir, 'test_files')
 
-# Read in fixtures file
-with open(os.path.join(test_files_dir, 'argument_fixtures.yaml'), 'r') as f:
+# Read in fixtures file with example terminal commands
+fixtures_path = os.path.join(test_files_dir, 'argument_fixtures.yaml')
+with open(fixtures_path, 'r') as f:
     arguments_examples = yaml.load(f)
 
 # These do not need to be real paths, they're just to check they're written
@@ -26,7 +27,20 @@ setup_commands = {
 
 
 class WorkingDirectory:
-    """Context manager for changing working directory"""
+    """
+    Context manager for changing working directory. Use with Python's
+    'with' statement.
+
+    Usage:
+    -----
+
+    # Current directory = old/pwd/
+    with WorkingDirectory('path/to/dir'):
+        # Current working directory = path/to/dir
+        do work
+
+    # Current working directory = old/pwd/
+    """
     def __init__(self, new_directory):
         self.new_directory = os.path.expanduser(new_directory)
 
@@ -119,21 +133,14 @@ def test_gen_batch_command():
         "{Herwig};\n"
         "{Contur};\n"
         "cd test/test_dir;\n"
-        "Herwig read LHC-trial.in;\n"
+        "Herwig read LHC-trial.in -I {grid_pack} -L {grid_pack};\n" 
         "Herwig run LHC-trial.run --seed=10 --tag=runpoint_test_dir --jobs=2 " 
-        "--numevents=500;\n".format(**setup_commands))
+        "--numevents=500;\n".format(
+            Herwig=setup_commands['Herwig'],
+            Contur=setup_commands['Contur'],
+            grid_pack=args.grid_pack))
+
     assert batch_command == expected_command
-
-
-def test_batch_submit_grid_pack():
-    """Test all files in grid pack are copied to run point directory"""
-    with WorkingDirectory(os.path.join(test_files_dir, 'GridSetup')):
-        grid_pack_files = [
-            f for f in os.listdir('GridPack') if os.path.isfile(f)]
-        scan_dir_files = [
-            f for f in os.listdir('myscan00/0000/')]
-        for grid_pack_file in grid_pack_files:
-            assert grid_pack_file in scan_dir_files
 
 
 def test_batch_submit_param_file():

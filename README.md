@@ -49,30 +49,38 @@ you.
 - Check out code from repository.
 
     `$ hg clone https://bitbucket.org/heprivet/contur/`
+    
+  or
+
+    `$ git clone https://github.com/hsaunders1904/MScContur`
+
 
 #### Set Up Environment
 - Set up environments; mostly adding relevant folders to the system path such
-  that you can execute the contur and Herwig commands from anywhere.
-
-    `$ source /unix/cedar/software/sl6/Herwig-Tip/setupEnv.sh`
-
+  that you can execute the contur commands from anywhere.
+  
     `$ source contur/setupContur.sh`
 
 - You need to do this every time you login.
+
+- You also need to make sure the 'herwigSetup.sh' file contains the path to the
+  Herwig setup script (on the UCL cluster this should be
+  /unix/cedar/software/sl6/Herwig-Tip/setupEnv.sh), then source this.
+  
+    `$ source herwigSetup.sh`
 
 #### Build Analyses Databases
 - Build modified analyses
 
     `$ cd contur/modified_analyses/Analyses/`
 
-    `$ chmod +x buildrivet.sh` <sub><sup>(give buildrivet.sh executable
-    permissions.)</sup></sub>
+    `$ chmod +x buildrivet.sh` 
 
     `$ ./buildrivet.sh`
 
 - Build database of static analysis information
 
-    `$ cd contur` <sup><sub>Top level of repository</sub></sup>
+    `$ cd contur`
 
     `$ make`
 
@@ -83,8 +91,6 @@ you.
   area. This run area is where you will run everything from now on.
 
     `$ cd ~`
-
-    `$ mkdir run-area`
 
     `$ cp -r contur/AnalysisTools/GridSetup/ run-area/`
 
@@ -113,18 +119,20 @@ generations of quark.
      associated production modes of weak bosons, and leptonic decays of those
      bosons.
 
-- Build the model. Choose one of the example Herwig '.in' files and copy to
-  the GridPack directory.
+- Build the UFO model using Herwig's 'ufo2herwig' command.
 
-    `$ cd GridSetup/GridPack/`
-
-    `$ cp DM_vector_mediator_HF_UFO/hf-1000-600-7_WEAK.in TestRun.in`
-
-    `$ ufo2herwig DM_vector_mediator_HF_UFO`
-
+    `$ cd run-area/GridPack/`
+    
+    `$ ufo2herwig DM_vector_mediator_HF_UFO/`
+    
     `$ make`
 
 #### Run a Single Single Set of Analyses
+- Copy one of the .in files from inside the model to the top level of the
+  grid pack.
+  
+    `$ cp DM_vector_mediator_HF_UFO/hf-1000-600-7_HAD.in TestRun.in`
+    
 - Build the Herwig run card (LHC.run).
 
     `$ Herwig read TestRun.in`
@@ -152,7 +160,7 @@ generations of quark.
 #### Run a Batch Job to Generate Heatmaps
 - Go to base directory of copied over run area.
 
-    `$ cd GridSetup`
+    `$ cd run-area`
 
 - Define a parameter space in 'param_file.dat'. This should be a space
   seperated file formatted as:
@@ -162,26 +170,31 @@ generations of quark.
   You should check that the parameters defined are also defined at the top of
   the LHC.in file within the same directory.
 
-  The example model has parameters 'Xm', 'Y1', 'gYq', 'gYXm' defined in
+  The example model has parameters 'Xm', 'Y1', 'gYq', defined in
   'params_file.dat' and the LHC.in file has, at the top of the file:
 
       read FRModel.model
       set /Herwig/FRModel/Particles/Y1:NominalMass {Y1}
       set /Herwig/FRModel/Particles/Xm:NominalMass {Xm}
       set /Herwig/FRModel/FRModel:gYXm {gYXm}
-      set /Herwig/FRModel/FRModel:gYq {gYq}
 
   If you wanted to add or remove parameters you must do this in both files.
+  
+- You can check that your model is built correctly and necessary files are
+  present to by executing 'pytest' in the run-area directory.
+  
+    `$ pytest`
+  
 
 - Run a scan over the parameter space defined in 'param_file.dat' and submit it
   to the batch farm. There are currently two sampling modes, uniform and
   random. Have a look at the command line options before running.
 
-     `$ python batch_submit_prof.py --help`
+     `$ batch-submit --help`
 
-     `$ python batch_submit_prof.py 20 -m random -N 500 --seed 101`
+     `$ batch-submit 27 -N 1000 --seed 101`
 
-- This will produce a directory called 'myscan' containing 20 runpoint
+- This will produce a directory called 'myscan00' containing 27 runpoint
   directories and file 'sampled_points.txt' that specifies the parameter
   values used at each run point.
 
@@ -196,9 +209,7 @@ generations of quark.
 - Analyse results with contur. Resulting .map file will be outputted to
   ANALYSIS folder.
 
-    `$ cd run-area/`
-
-    `$ contur -g GridSetup/`
+    `$ contur -g msycan00/`
 
 - Plot a heatmap.
 
@@ -206,10 +217,41 @@ generations of quark.
 
     `$ contur-plot --help`
 
-    `$ contur-plot xxxx.map Xm Y1 gYq -g 200 -s 100 -t "My First Heatmap"`
+    `$ contur-plot xxxx.map Xm Y1 gYq -s 100 -t "My First Heatmap"`
 
+#### Re-scanning
+
+- To scan new points based on a previous scan's results use batch submit again
+  but specify the previous run's .map file.
+    $ batch-submit 20 -r ANALYSIS/myscan00.map
+
+- This will generate directory 'myscan01'; when the batch is complete you can
+  run Contur's analysis on this directory
+  
+    `$ contur -g myscan01/`
+
+- This will ouptut 'myscan01.map' inside the ANALYSIS directory. You can then
+  merge the two map files and plot the joint results.
+  
+    `$ cd ANALYSIS/`
+    
+    `$ merge-map myscan00.map myscan01.map -o merged.map`
+    
+    `$ contur-plot Xm Y1 gYq -s 100 -t "My First Merged Heatmap"`
+
+
+#### Running Tests
+
+- You can run tests on some of Contur's code using pytest.
+
+    `$ cd contur/AnalysisTools/contur/`
+    
+    `$ pytest`
+
+- Currently this runs tests on the code responsible for the batch submitting
+  process.
 
 ## Authors
 Jonathan Butterworth, David Grellscheid, Michael Krämer, Björn Sarrazin,
-David Yallup, with others contributing to specific studies and credited on
-those pages.
+David Yallup, Harry Saunders, with others contributing to specific studies and 
+credited on those pages.

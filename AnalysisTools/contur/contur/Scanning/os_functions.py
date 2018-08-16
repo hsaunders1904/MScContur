@@ -1,30 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-import shutil
 import os
-
-
-def copy_tree(source, destination):
-    """Copy a directory and its top level contents to a new location"""
-    source = os.path.abspath(source)
-    if not source.endswith(os.sep):
-        source += os.sep
-    destination = os.path.abspath(destination)
-    if not destination.endswith(os.sep):
-        # Paths ending in separator guarantees top level of source copied
-        destination += os.sep
-    for root, dirs, files in os.walk(source):
-        for file_name in files:
-            abs_path = os.path.join(root, file_name)
-            rel_path = os.path.relpath(abs_path, source)
-            copy_to_path = os.path.join(destination, rel_path)
-            try:
-                shutil.copy(abs_path, copy_to_path)
-            except IOError:
-                os.makedirs(os.path.dirname(copy_to_path))
-                shutil.copy(abs_path, copy_to_path)
-        break
 
 
 def make_directory(path):

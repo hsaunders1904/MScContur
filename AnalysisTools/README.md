@@ -10,7 +10,7 @@ pack.
 
 ## contur
 Inside the 'contur' directory is the main contur code. The 'bin' directory
-contains the packages executables; this will be added to your system path when
+contains the package's executables; this will be added to your system path when
 ../setupContur.sh. Inside the 'contur' directory are the main utilities and
 functions imported by the executables.
 

@@ -86,7 +86,10 @@ def get_args():
 
 
 def valid_arguments(args):
-    """Check that command line arguments are valid; return True or False"""
+    """
+    Check that command line arguments are valid; return True or False.
+    This function is also responsible for formatting some arguments e.g.
+    converting the GridPack path to an absolute path."""
     valid_args = True
     try:
         args.num_points = int(args.num_points)
@@ -116,6 +119,7 @@ def valid_arguments(args):
     if args.grid_pack.lower() == 'none':
         args.grid_pack = None
     else:
+        args.grid_pack = os.path.abspath(args.grid_pack)
         if not os.path.isdir(args.grid_pack):
             print("No such grid pack directory '%s'!" % args.grid_pack)
             valid_args = False
@@ -157,8 +161,10 @@ def gen_batch_command(directory_name, directory_path, args, setup_commands):
     batch_command += setup_commands['Contur'] + ';\n'
     # Change directory to run point folder
     batch_command += 'cd ' + directory_path + ';\n'
-    # Create Herwig run card from LHC.in
-    batch_command += 'Herwig read %s;\n' % args.template_file
+    # Create Herwig run card from LHC.in. Pass it the the full grid pack
+    # directory path to read model files from
+    batch_command += ('Herwig read %s -I %s -L %s;\n' %
+                      (args.template_file, args.grid_pack, args.grid_pack))
     # Run Herwig run card LHC.run
     run_card_name = os.path.splitext(args.template_file)[0] + '.run'
     batch_command += ('Herwig run ' + run_card_name +

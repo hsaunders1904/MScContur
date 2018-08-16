@@ -80,9 +80,5 @@ def run_scan(num_points, template_path, grid_pack, seed,
         write_template_files(templates, param_dict, run_point, run_point_path,
                              param_file)
 
-        # Copy across all files in GridPack
-        if grid_pack:
-            copy_tree(grid_pack, run_point_path)
-
     # Write all sampled points and their run points to a .dat file
     write_sampled_points(output_dir)

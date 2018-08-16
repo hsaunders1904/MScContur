@@ -13,3 +13,7 @@ syntax: glob
 *__init__.pyc
 *~
 *.cache
+*.gitignore
+*.so
+*.o
+*.git/*
