@@ -1,0 +1,17 @@
+*.pyc
+*.pyo
+*.pyd
+*.bak
+*.idea*
+*sync_files.sh
+*myscan
+*analyses.db
+*.pytest_cache/*
+*__init__.pyc
+*~
+*.cache
+*.hgignore
+*.so
+*.o
+*hg/*
+*.pytest_cache*

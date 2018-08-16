@@ -92,12 +92,18 @@ def setup_module():
 def test_get_args(fixture):
     """Test that each flag/option in parser returns expected values"""
     system_args = fixture[1]['command'].split(' ')
-    with mock.patch('sys.argv', system_args):
-        args = get_args()
+    try:
+        with mock.patch('sys.argv', system_args):
+            args = get_args()
+    except SystemExit, system_exit:
+        if fixture[0].startswith('invalid'):
+            return
+        else:
+            # Fail if error raised on a valid input
+            raise system_exit
+
     for key, item in fixture[1].iteritems():
         if key != 'command':
-            if type(item) == int:
-                item = str(item)
             print key, '=', getattr(args, key), type(getattr(args, key))
             if getattr(args, key) != item:
                 pytest.fail(
@@ -112,8 +118,15 @@ def test_valid_arguments(fixture):
     args
     """
     system_args = fixture[1]['command'].split(' ')
-    with mock.patch('sys.argv', system_args):
-        args = get_args()
+    try:
+        with mock.patch('sys.argv', system_args):
+            args = get_args()
+    except SystemExit, system_exit:
+        if fixture[0].startswith('invalid'):
+            return
+        else:
+            raise system_exit
+
     with WorkingDirectory(base_grid_dir):
         if fixture[0].startswith('valid_'):
             valid_args = valid_arguments(args)

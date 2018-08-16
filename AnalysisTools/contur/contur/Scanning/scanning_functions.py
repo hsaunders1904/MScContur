@@ -74,25 +74,52 @@ def read_old_points(map_file):
     return old_points
 
 
-def generate_points(num_points, mode, param_dict, map_file, factor, cl_focus,
-                    seed):
-    """Generate points to sample using given mode"""
-    if mode == 'random':
+def generate_points(args, param_dict):
+    """
+    Generate points to sample using given mode.
+
+    Parameters
+    ----------
+
+    args: argparse.Namespace object
+        Namespace object containing values of command line options.
+
+    param_dict: dict
+        Dictionary with parameter names as keys each containing another
+        dictionary with keys 'range' and 'values'.
+
+     Returns
+     -------
+
+     param_dict: dict
+        Same param_dict as was passed in to the function but now filled
+        with points.
+
+    num_points: int
+        The number of points generated.
+
+    """
+    if args.mode == 'random':
+        # Random coordinates within parameter space
         for param, info in sorted(param_dict.iteritems()):
             random_vals = np.random.uniform(info['range'][0], info['range'][1],
-                                            size=num_points)
+                                            size=args.num_points)
             param_dict[param]['values'] = random_vals
 
-    elif mode == 'uniform':
+    elif args.mode == 'uniform':
+        # Points generated equally spaced throughout parameter space
         ranges = []
         for _, param in sorted(param_dict.iteritems()):
             ranges.append(param['range'])
-        coords = uniform_sample(ranges, num_points)
+        coords = uniform_sample(ranges, args.num_points)
         for idx, param in enumerate(sorted(param_dict)):
             param_dict[param]['values'] = coords[idx]
-        num_points = len(coords[0])
+        args.num_points = len(coords[0])
 
-    elif mode == 'weighted':
+    elif args.mode == 'weighted':
+        # Points generated randomly with weights dictated by args.rescan .map
+        # file
+
         # Check the amount of memory the ConturGrid object will use before
         # creating it. Use a coarser grid if memory limit exceeded
         num_dims = len(param_dict)
@@ -101,32 +128,33 @@ def generate_points(num_points, mode, param_dict, map_file, factor, cl_focus,
         if grid_size**num_dims > mem_limit:
             grid_size = int(mem_limit**(1./num_dims))
 
-        contur_grid = ConturGrid(map_file, grid_size)
+        contur_grid = ConturGrid(args.map_file, grid_size)
 
         # Replace any NaNs with the mean CLs in interpolated grid.
         nan_indices = np.isnan(contur_grid.grid)
         contur_grid.grid[nan_indices] = np.mean(contur_grid.grid[~nan_indices])
         new_points = weighted_random.get_points(
-            num_points, contur_grid.parameter_space, contur_grid.grid.T,
-            factor, cl_focus)
+            args.num_points, contur_grid.parameter_space, contur_grid.grid.T,
+            args.factor, args.cl_focus)
         for idx, param in enumerate(sorted(param_dict)):
             param_dict[param]['values'] = new_points[:, idx]
 
-    elif mode == 'bins':
-        old_points = read_old_points(map_file)
+    elif args.mode == 'bins':
+        # Generate points based on bins method
+        old_points = read_old_points(args.map_file)
         ranges = []
         for _, param in sorted(param_dict.iteritems()):
             ranges.append(param['range'])
 
         cells_per_dim = weighted_bins.get_cells_per_dimension(
-            old_points, num_points, ranges)
+            old_points, args.num_points, ranges)
 
-        contur_grid = ConturGrid(map_file, cells_per_dim)
+        contur_grid = ConturGrid(args.map_file, cells_per_dim)
 
         new_points = weighted_bins.get_points(
-            old_points, num_points, ranges, contur_grid.grid, factor)
+            old_points, args.num_points, ranges, contur_grid.grid, args.factor)
 
         for idx, param in enumerate(sorted(param_dict)):
             param_dict[param]['values'] = new_points[:, idx]
 
-    return param_dict, num_points
+    return param_dict, args.num_points

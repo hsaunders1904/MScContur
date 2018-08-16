@@ -18,7 +18,7 @@ Set Up Environment
 ------------------
 - Set up environments; mostly adding relevant folders to the system path such
   that you can execute the contur commands from anywhere.
-    - source contur/setupContur.sh
+    $ source contur/setupContur.sh
 
 - You need to do this every time you login.
 

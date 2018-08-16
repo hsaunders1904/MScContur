@@ -8,77 +8,45 @@ Created on 29/06/18
 from scanning_functions import *
 
 
-def run_scan(num_points, template_path, grid_pack, seed,
-             output_dir, sample_mode, rescan,
-             param_file, factor, cl_focus):
+def run_scan(param_dict, args):
     """
-    Run a scan over parameter space defined in param_file.dat using a
-    given sampling mode and write relevant run cards and param files.
+    Given points defined in param_dict run create run point directories
+    and populate with Herwig .in file and params.dat file.
 
     Parameters
     ----------
 
-    num_points: int
-        Number of points to sample.
+    param_dict: dict
+        Dictionary with parameter names as keys each containing another
+        dictionary with keys 'range' and 'values'.
 
-    template_paths: list
-        List of template files (eg. LHC.in).
+    args: argparse.Namespace object
+        Argparse object with attributes containing command line options.
 
-    grid_pack: str or None
-        Path to directory containing the model grid pack.
+    Returns
+    -------
 
-    seed: int (default = 101)
-        Seed for random number generator to get reproducibility.
-
-    output_dir: str (default = 'myscan')
-        Path to output scan results to.
-
-    sample_mode: str ['uniform', 'random'] (default = 'uniform')
-        The mode to sample in.
-            Uniform: Sample points uniformly within parameter space. The
-                     number of points sampled^(1/number of dimensions)
-                     must be an integer.
-            Random: Randomly sample the parameter space
-
-    param_file: str (default = 'param_file.dat')
-        Path to space seperated file containing parameters and their
-        value ranges.
-        Eg.
-            Xm 50 100
-            Y1 75 150
-
-    rescan: str
-        Path to a .map file containing a previous Contur run's results.
+    None
 
     """
-    check_param_consistency(param_file, template_path)
-
-    np.random.seed(seed)
 
     # Read in run card template files
-    templates = read_template_file(template_path)
+    template = read_template_file(args.template_file)
 
-    # Param dict has parameter names as keys and then each item is a
-    # dictionary with keys 'range' and 'values'
-    param_dict = read_param_ranges(param_file)
-
-    # Generate parameter values depending on sampling mode
-    param_dict, num_points = generate_points(
-        num_points, sample_mode, param_dict, rescan, factor, cl_focus, seed)
-    make_directory(output_dir)
-    for run_point in range(num_points):
+    make_directory(args.out_dir)
+    for run_point in range(args.num_points):
         # Run point directories are inside the output directory and hold
         # the necessary files to run Herwig with the param_dict associated
         # with that point
-        run_point_path = make_run_point_directory(run_point, output_dir)
+        run_point_path = make_run_point_directory(run_point, args.out_dir)
 
         # Write params.dat file inside run point directory. This is purely to
         # record what the param_dict are at this run point
         write_param_file(param_dict, run_point_path, run_point)
 
         # Write run card template files formatted with parameter values
-        write_template_files(templates, param_dict, run_point, run_point_path,
-                             param_file)
+        write_template_files(template, param_dict, run_point,
+                             run_point_path, args.param_file)
 
     # Write all sampled points and their run points to a .dat file
-    write_sampled_points(output_dir)
+    write_sampled_points(args.out_dir)

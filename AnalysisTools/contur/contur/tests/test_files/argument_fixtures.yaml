@@ -1,7 +1,7 @@
 valid_default:
   command: batch_submit.py 10 -s
   num_points: 10
-  sample_mode: uniform
+  mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
   template_file: LHC.in
@@ -9,11 +9,13 @@ valid_default:
   num_events: 30000
   seed: 101
   scan_only: True
+  factor: !!null
+  cl_focus: 0.95
 
 valid_no_grid_pack:
   command: batch_submit.py 10 --grid none -s
   num_points: 10
-  sample_mode: uniform
+  mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
   template_file: LHC.in
@@ -21,11 +23,13 @@ valid_no_grid_pack:
   num_events: 30000
   seed: 101
   scan_only: True
+  factor: !!null
+  cl_focus: 0.95
 
 valid_custom_out_dir:
   command: batch_submit.py 10 -o myscan123 -s
   num_points: 10
-  sample_mode: uniform
+  mode: uniform
   out_dir: myscan123
   param_file: param_file.dat
   template_file: LHC.in
@@ -33,11 +37,13 @@ valid_custom_out_dir:
   num_events: 30000
   seed: 101
   scan_only: True
+  factor: !!null
+  cl_focus: 0.95
 
 invalid_num_points:
   command: batch_submit.py 2re -s
   num_points: 2re
-  sample_mode: uniform
+  mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
   template_file: LHC.in
@@ -45,11 +51,13 @@ invalid_num_points:
   num_events: 30000
   seed: 101
   scan_only: True
+  factor: !!null
+  cl_focus: 0.95
 
-invalid_sample_mode:
+invalid_mode:
   command: batch_submit.py 10 -m invalid_mode -s
   num_points: 10
-  sample_mode: invalid_mode
+  mode: invalid_mode
   out_dir: myscan00
   param_file: param_file.dat
   template_file: LHC.in
@@ -57,11 +65,13 @@ invalid_sample_mode:
   num_events: 30000
   seed: 101
   scan_only: True
+  factor: !!null
+  cl_focus: 0.95
 
 invalid_param_file:
   command: batch_submit.py 10 -p i/dont/exist -s
   num_points: 10
-  sample_mode: uniform
+  mode: uniform
   out_dir: myscan00
   param_file: i/dont/exist
   template_file: LHC.in
@@ -69,11 +79,13 @@ invalid_param_file:
   num_events: 30000
   seed: 101
   scan_only: True
+  factor: !!null
+  cl_focus: 0.95
 
 invalid_template_file:
   command: batch_submit.py 10 -t i/dont/exist -s
   num_points: 10
-  sample_mode: uniform
+  mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
   template_file: i/dont/exist
@@ -81,11 +93,13 @@ invalid_template_file:
   num_events: 30000
   seed: 101
   scan_only: True
+  factor: !!null
+  cl_focus: 0.95
 
 invalid_grid_pack:
   command: batch_submit.py 10 --grid i/dont/exist -s
   num_points: 10
-  sample_mode: uniform
+  mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
   template_file: LHC.in
@@ -93,11 +107,13 @@ invalid_grid_pack:
   num_events: 30000
   seed: 101
   scan_only: True
+  factor: !!null
+  cl_focus: 0.95
 
 invalid_num_events:
   command: batch_submit.py 10 -n 3re -s
   num_points: 10
-  sample_mode: uniform
+  mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
   template_file: LHC.in
@@ -105,11 +121,13 @@ invalid_num_events:
   num_events: 3re
   seed: 101
   scan_only: True
+  factor: !!null
+  cl_focus: 0.95
 
 invalid_seed:
   command: batch_submit.py 10 --seed 3r2 -s
   num_points: 10
-  sample_mode: uniform
+  mode: uniform
   out_dir: myscan00
   param_file: param_file.dat
   template_file: LHC.in
@@ -117,3 +135,33 @@ invalid_seed:
   num_events: 30000
   seed: 3r2
   scan_only: True
+  factor: !!null
+  cl_focus: 0.95
+
+invalid_cl_focus:
+  command: batch_submit.py 10 --cl_focus 0.5 -s
+  num_points: 10
+  mode: uniform
+  out_dir: myscan00
+  param_file: param_file.dat
+  template_file: LHC.in
+  grid_pack: GridPack
+  num_events: 30000
+  seed: 101
+  scan_only: True
+  factor: !!null
+  cl_focus: 0.5
+
+invalid_cl_focus2:
+  command: batch_submit.py 10 --cl_focus 3 -s
+  num_points: 10
+  mode: uniform
+  out_dir: myscan00
+  param_file: param_file.dat
+  template_file: LHC.in
+  grid_pack: GridPack
+  num_events: 30000
+  seed: 101
+  scan_only: True
+  factor: !!null
+  cl_focus: 3.0

@@ -7,6 +7,7 @@ import mock
 import numpy as np
 
 import contur.Scanning.scanning_functions as sf
+from contur.Scanning.batch_submit import get_args
 
 
 def move_up_dirs(path, levels):
@@ -78,22 +79,22 @@ def test_read_param_file():
 
 def test_write_param_file():
     """Test write_param_file writes to file correctly"""
-    param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
-                                                   'test_file_1'))
-    num_points = 10
-    param_dict, _ = sf.generate_points(
-        num_points, 'random', param_dict, False, None, 0.95, None)
-    point_idx = 5
+    param_dict = {'Xm': {'range': (100, 2000),
+                         'values': [1, 2, 3, 4]},
+                  'Y1': {'range': (100, 3000),
+                         'values': [5, 6, 7, 8]}}
+    point_idx = 3
     output_path = os.path.join(test_files_dir, 'folder', 'params.dat')
     sf.write_param_file(param_dict, os.path.join(test_files_dir, 'folder'),
                         point_idx)
+
     with open(output_path, 'r') as f:
-        contents = f.read()
-    expected_contents_list = []
-    for i in range(1, 5):
-        expected_contents_list.append(
-            'param%i %e' %(i, param_dict['param%i' % i]['values'][point_idx]))
-    expected_contents = '\n'.join(expected_contents_list) + '\n'
+        contents = f.read().strip()
+
+    expected_contents = "Xm %e\nY1 %e" % \
+                        (param_dict['Xm']['values'][point_idx],
+                         param_dict['Y1']['values'][point_idx])
+
     assert contents == expected_contents
 
 
@@ -101,9 +102,11 @@ def test_generate_points_random_ranges():
     """Test generate_points with random  gens points within ranges"""
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
-    num_points = 8
-    param_dict, _ = sf.generate_points(
-        num_points, 'random', param_dict, False, None, 0.95, None)
+    command = 'batch-submit 16 -m random -s'
+    with mock.patch('sys.argv', command.split(' ')):
+        args = get_args()
+
+    param_dict, num_points_ = sf.generate_points(args, param_dict)
     for param, info in param_dict.iteritems():
         for value in info['values']:
             assert info['range'][0] <= value <= info['range'][1]
@@ -113,19 +116,24 @@ def test_generate_points_random_num_points():
     """Test generate_points with random returns correct number of points"""
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
-    num_points = 8
-    _, num_points_2 = sf.generate_points(
-        num_points, 'random', param_dict, False, None, 0.95, None)
-    assert num_points == num_points_2
+    command = 'batch-submit 16 -m random -s'
+    with mock.patch('sys.argv', command.split(' ')):
+        args = get_args()
+
+    _, num_points = sf.generate_points(args, param_dict)
+    assert num_points == 16
 
 
 def test_generate_points_uniform_ranges():
     """Test generate_points with uniform gens points within ranges"""
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
-    num_points = 16
-    param_dict, _ = sf.generate_points(
-        num_points, 'uniform', param_dict, False, None, 0.95, None)
+
+    command = 'batch-submit 16 -s'
+    with mock.patch('sys.argv', command.split(' ')):
+        args = get_args()
+
+    param_dict, _ = sf.generate_points(args, param_dict)
     for param, info in param_dict.iteritems():
         for value in info['values']:
             assert info['range'][0] <= value <= info['range'][1]
@@ -135,23 +143,29 @@ def test_generate_points_uniform_num_points_input():
     """Test generate_points with uniform returns correct number of points"""
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
-    num_points = 10
+    command = 'batch-submit 10 -m uniform -s'
+    with mock.patch('sys.argv', command.split(' ')):
+        args = get_args()
+
     # Create mock object to replace raw_input and return 'yes' when called
     with mock.patch.object(__builtin__, 'raw_input', lambda x: 'yes'):
-        _, num_points_2 = sf.generate_points(
-            num_points, 'uniform', param_dict, False, None, 0.95, None)
+        _, num_points = param_dict, _ = sf.generate_points(args, param_dict)
 
-    assert num_points_2 == 16
+    assert num_points == 16
 
 
 def test_generate_points_uniform_num_points():
     """Test generate_points with uniform returns correct number of points"""
     param_dict = sf.read_param_ranges(os.path.join(test_files_dir, 'folder',
                                                    'test_file_1'))
-    num_points = 16
-    _, num_points_2 = sf.generate_points(
-        num_points, 'uniform', param_dict, False, None, 0.95, None)
-    assert num_points_2 == num_points
+
+    command = 'batch-submit 16 -m uniform -s'
+    with mock.patch('sys.argv', command.split(' ')):
+        args = get_args()
+
+    _, num_points = sf.generate_points(args, param_dict)
+
+    assert num_points == 16
 
 
 def teardown_module():
